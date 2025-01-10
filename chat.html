@@ -45,24 +45,29 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h2>Settings</h2>
-                <button id="close-settings" class="close">
-                    <svg width="20" height="20" viewBox="0 0 20 20">
-                        <path fill="currentColor" d="M11.41 10l4.29-4.29a1 1 0 10-1.42-1.42L10 8.59 5.71 4.29a1 1 0 10-1.42 1.42L8.59 10l-4.3 4.29a1 1 0 101.42 1.42L10 11.41l4.29 4.3a1 1 0 001.42-1.42L11.41 10z"/>
-                    </svg>
-                </button>
+                <button id="close-settings" class="close">×</button>
             </div>
             <div class="modal-body">
                 <div class="input-group">
                     <label for="endpoint">Endpoint URL</label>
-                    <input type="text" id="endpoint" placeholder="https://YOUR_RESOURCE_NAME.openai.azure.com" />
+                    <div class="input-wrapper">
+                        <input type="text" id="endpoint" placeholder="https://YOUR_RESOURCE_NAME.openai.azure.com" />
+                        <span class="input-icon">🌐</span>
+                    </div>
                 </div>
                 <div class="input-group">
                     <label for="deployment">Deployment Name</label>
-                    <input type="text" id="deployment" placeholder="YOUR_DEPLOYMENT_NAME" />
+                    <div class="input-wrapper">
+                        <input type="text" id="deployment" placeholder="YOUR_DEPLOYMENT_NAME" />
+                        <span class="input-icon">⚙️</span>
+                    </div>
                 </div>
                 <div class="input-group">
                     <label for="api-key">API Key</label>
-                    <input type="password" id="api-key" placeholder="YOUR_API_KEY" />
+                    <div class="input-wrapper">
+                        <input type="password" id="api-key" placeholder="YOUR_API_KEY" />
+                        <span class="input-icon">🔑</span>
+                    </div>
                 </div>
                 <div class="input-group">
                     <span>Theme</span>
