@@ -111,7 +111,11 @@ const InputModule = (function() {
         document.getElementById('endpoint').value = config.endpoint;
         document.getElementById('deployment').value = config.deployment;
         document.getElementById('api-key').value = config.apiKey;
-        document.getElementById('theme-select').value = config.theme || 'light-mode';
+        // Set the theme radio button based on the current theme
+        const themeRadios = document.getElementsByName('theme');
+        themeRadios.forEach(radio => {
+            radio.checked = (radio.value === (config.theme || 'light-mode'));
+        });
         document.getElementById('settings-modal').style.display = 'block';
     }
 
@@ -128,7 +132,14 @@ const InputModule = (function() {
         const endpoint = document.getElementById('endpoint').value.trim();
         const deployment = document.getElementById('deployment').value.trim();
         const apiKey = document.getElementById('api-key').value.trim();
-        const theme = document.getElementById('theme-select').value;
+        // Retrieve the selected theme from the radio buttons
+        let theme = 'light-mode'; // Default theme
+        const themeRadios = document.getElementsByName('theme');
+        themeRadios.forEach(radio => {
+            if (radio.checked) {
+                theme = radio.value;
+            }
+        });
 
         if (!endpoint || !deployment || !apiKey) {
             alert('Please fill in all fields.');

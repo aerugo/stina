@@ -51,11 +51,17 @@
             <input type="text" id="deployment" placeholder="YOUR_DEPLOYMENT_NAME" />
             <label for="api-key">API Key:</label>
             <input type="password" id="api-key" placeholder="YOUR_API_KEY" />
-            <label for="theme-select">Theme:</label>
-            <select id="theme-select">
-                <option value="light-mode">Light Mode</option>
-                <option value="dark-mode">Dark Mode</option>
-            </select>
+            <div class="theme-selection">
+                <span>Theme:</span>
+                <label class="theme-option">
+                    <input type="radio" name="theme" value="light-mode" />
+                    Light Mode
+                </label>
+                <label class="theme-option">
+                    <input type="radio" name="theme" value="dark-mode" />
+                    Dark Mode
+                </label>
+            </div>
             <button id="save-settings-btn">Save</button>
         </div>
     </div>
