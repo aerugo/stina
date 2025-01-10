@@ -100,6 +100,15 @@ const InputModule = (function() {
             currentState.conversation.push(assistantMessage);
             RenderingModule.renderConversation(currentState.conversation);
             LogicModule.saveConversation();
+
+            // Check if the chat title needs updating
+            const chat = LogicModule.getCurrentChat();
+            if (chat.name === 'New chat') {
+                // Generate a title based on the first user message
+                const title = await LogicModule.generateChatTitle(currentState.conversation[0].content);
+                LogicModule.updateChatTitle(chat.id, title);
+                RenderingModule.renderChatList(LogicModule.getCurrentState().chats, currentState.currentChatId);
+            }
         } catch (error) {
             console.error('Error:', error);
             alert('An error occurred while communicating with the Azure OpenAI API. Check the console for details.');
@@ -111,6 +120,7 @@ const InputModule = (function() {
         document.getElementById('endpoint').value = config.endpoint;
         document.getElementById('deployment').value = config.deployment;
         document.getElementById('api-key').value = config.apiKey;
+        document.getElementById('title-deployment').value = config.titleDeployment || '';
         // Set the theme radio button based on the current theme
         const themeRadios = document.getElementsByName('theme');
         themeRadios.forEach(radio => {
@@ -132,6 +142,7 @@ const InputModule = (function() {
         const endpoint = document.getElementById('endpoint').value.trim();
         const deployment = document.getElementById('deployment').value.trim();
         const apiKey = document.getElementById('api-key').value.trim();
+        const titleDeployment = document.getElementById('title-deployment').value.trim();
         // Retrieve the selected theme from the radio buttons
         let theme = 'light-mode'; // Default theme
         const themeRadios = document.getElementsByName('theme');
@@ -146,7 +157,7 @@ const InputModule = (function() {
             return;
         }
 
-        LogicModule.updateConfig(endpoint, deployment, apiKey, theme);
+        LogicModule.updateConfig(endpoint, deployment, apiKey, theme, titleDeployment);
         applyTheme(theme);
         alert('Settings saved successfully.');
         closeSettingsModal();

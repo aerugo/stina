@@ -13,12 +13,13 @@ const LogicModule = (function() {
     let deployment = localStorage.getItem('deployment') || '';
     let apiKey = localStorage.getItem('apiKey') || '';
     let theme = localStorage.getItem('theme') || 'light-mode';
+    let titleDeployment = localStorage.getItem('titleDeployment') || '';
 
     function createNewChat() {
         const chatId = Date.now().toString();
         const chat = {
             id: chatId,
-            name: `Chat ${chats.length + 1}`,
+            name: 'New chat',
             conversation: []
         };
         chats.push(chat);
@@ -78,15 +79,17 @@ const LogicModule = (function() {
         return { chats, currentChatId };
     }
 
-    function updateConfig(newEndpoint, newDeployment, newApiKey, newTheme) {
+    function updateConfig(newEndpoint, newDeployment, newApiKey, newTheme, newTitleDeployment) {
         endpoint = newEndpoint;
         deployment = newDeployment;
         apiKey = newApiKey;
         theme = newTheme;
+        titleDeployment = newTitleDeployment;
         localStorage.setItem('endpoint', endpoint);
         localStorage.setItem('deployment', deployment);
         localStorage.setItem('apiKey', apiKey);
         localStorage.setItem('theme', theme);
+        localStorage.setItem('titleDeployment', titleDeployment);
     }
 
     function getConfig() {
@@ -94,11 +97,31 @@ const LogicModule = (function() {
             endpoint,
             deployment,
             apiKey,
-            theme
+            theme,
+            titleDeployment
         };
     }
 
-    async function fetchAzureOpenAIChatCompletion(messages) {
+    function getCurrentChat() {
+        return chats.find(c => c.id === currentChatId);
+    }
+
+    async function generateChatTitle(userMessage) {
+        const prompt = `Provide a short (maximum 5 words) and descriptive chat title based on the following message:\n"${userMessage}"`;
+        const titleMessage = { role: 'user', content: prompt };
+        const response = await fetchAzureOpenAIChatCompletion([titleMessage], titleDeployment);
+        return response.content.trim().replace(/[\n\r]/g, '');
+    }
+
+    function updateChatTitle(chatId, newTitle) {
+        const chat = chats.find(c => c.id === chatId);
+        if (chat) {
+            chat.name = newTitle || 'New chat';
+            saveChats();
+        }
+    }
+
+    async function fetchAzureOpenAIChatCompletion(messages, overrideDeployment = null) {
         const body = {
             messages,
             max_tokens: 800,
@@ -110,7 +133,8 @@ const LogicModule = (function() {
             stream: false
         };
 
-        const response = await fetch(endpoint, {
+        const apiUrl = `${endpoint}/openai/deployments/${overrideDeployment || deployment}/chat/completions?api-version=2023-03-15-preview`;
+        const response = await fetch(apiUrl, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
