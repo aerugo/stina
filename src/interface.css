@@ -144,16 +144,27 @@ body {
 /* Style for the copy button */
 .copy-button {
     position: absolute;
-    top: 10px;
-    right: 10px;
+    bottom: 10px;
+    left: 10px;
     background: none;
     border: none;
     color: #AAA;
     cursor: pointer;
-    font-size: 14px;
     padding: 5px;
     border-radius: 5px;
     transition: background 0.2s, color 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.copy-button svg {
+    width: 16px;
+    height: 16px;
+}
+
+.copy-button path {
+    fill: currentColor;
 }
 
 .copy-button:hover {
@@ -162,11 +173,11 @@ body {
 }
 
 /* Adjustments for light mode */
-body .copy-button {
+body.light-mode .copy-button {
     color: #666;
 }
 
-body .copy-button:hover {
+body.light-mode .copy-button:hover {
     background: rgba(0, 0, 0, 0.1);
     color: #000;
 }
