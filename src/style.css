@@ -1,3 +1,61 @@
+/* Dark Mode Styles */
+body.dark-mode {
+    background-color: #1a1a1a;
+    color: #ffffff;
+}
+
+body.dark-mode .sidebar {
+    background-color: #2d2d2d;
+    border-right-color: #404040;
+}
+
+body.dark-mode .chat-container {
+    background-color: #2d2d2d;
+}
+
+body.dark-mode .chat-header {
+    background-color: #2d2d2d;
+    border-bottom-color: #404040;
+}
+
+body.dark-mode #chat-list li {
+    border-bottom-color: #404040;
+}
+
+body.dark-mode #chat-list li.active {
+    background-color: #404040;
+}
+
+body.dark-mode #chat-list li:hover {
+    background-color: #363636;
+}
+
+body.dark-mode .message.user .text {
+    background-color: #404040;
+    color: #ffffff;
+}
+
+body.dark-mode .message.assistant .text {
+    background-color: #363636;
+    color: #ffffff;
+}
+
+body.dark-mode .chat-input-container {
+    background-color: #2d2d2d;
+    border-top-color: #404040;
+}
+
+body.dark-mode #user-input {
+    background-color: #363636;
+    color: #ffffff;
+    border-color: #404040;
+}
+
+body.dark-mode .modal-content {
+    background-color: #2d2d2d;
+    color: #ffffff;
+}
+
 /* General Styles */  
 body {
     background-color: #F5F7FA;

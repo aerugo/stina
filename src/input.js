@@ -8,6 +8,7 @@ const InputModule = (function() {
         const sendBtn = document.getElementById('send-btn');
         const newChatBtn = document.getElementById('new-chat-btn');
         const settingsBtn = document.getElementById('settings-btn');
+        const themeSwitchBtn = document.getElementById('theme-switch-btn');
         const closeSettings = document.getElementById('close-settings');
         const saveSettingsBtn = document.getElementById('save-settings-btn');
         const settingsModal = document.getElementById('settings-modal');
@@ -68,6 +69,16 @@ const InputModule = (function() {
                 closeSettingsModal();
             }
         });
+
+        themeSwitchBtn.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+        });
+
+        // Initialize theme from localStorage
+        if (localStorage.getItem('darkMode') === 'true') {
+            document.body.classList.add('dark-mode');
+        }
     }
 
     async function sendMessage() {
