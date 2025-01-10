@@ -460,3 +460,8 @@ body.light-mode {
 .light-mode #save-settings-btn:hover {
     background: #005BB5;
 }
+
+/* Light Mode Chat Name Color */
+body.light-mode .chat-name {
+    color: #000000;
+}
