@@ -71,13 +71,26 @@ const InputModule = (function() {
         });
 
         themeSwitchBtn.addEventListener('click', () => {
-            document.body.classList.toggle('dark-mode');
-            localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+            if (document.body.classList.contains('dark-mode')) {
+                document.body.classList.remove('dark-mode');
+                document.body.classList.add('light-mode');
+                localStorage.setItem('theme', 'light-mode');
+            } else {
+                document.body.classList.remove('light-mode');
+                document.body.classList.add('dark-mode');
+                localStorage.setItem('theme', 'dark-mode');
+            }
         });
 
         // Initialize theme from localStorage
-        if (localStorage.getItem('darkMode') === 'true') {
+        const storedTheme = localStorage.getItem('theme');
+        if (storedTheme === 'dark-mode') {
             document.body.classList.add('dark-mode');
+        } else if (storedTheme === 'light-mode') {
+            document.body.classList.add('light-mode');
+        } else {
+            // Default to light mode
+            document.body.classList.add('light-mode');
         }
     }
 

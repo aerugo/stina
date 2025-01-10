@@ -262,3 +262,126 @@ body {
 #save-settings-btn:hover {
     background: #0D8C6F;
 }
+
+/* Light Mode Styles */
+body.light-mode {
+    background-color: #F5F5F5;
+    color: #000000;
+}
+
+.light-mode .sidebar {
+    background: #FFFFFF;
+    color: #000000;
+}
+
+.light-mode .new-chat {
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    color: #000000;
+}
+
+.light-mode .new-chat:hover {
+    background: rgba(0, 0, 0, 0.1);
+}
+
+.light-mode .chat-list-container {
+    background: #FFFFFF;
+}
+
+.light-mode #chat-list li {
+    background: #FFFFFF;
+    color: #000000;
+}
+
+.light-mode #chat-list li:hover,
+.light-mode #chat-list li.active {
+    background: rgba(0, 0, 0, 0.1);
+}
+
+.light-mode .delete-chat-btn {
+    color: rgba(0, 0, 0, 0.5);
+}
+
+.light-mode .delete-chat-btn:hover {
+    color: #FF3B30;
+}
+
+.light-mode .nav-footer {
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.light-mode .settings-button {
+    color: rgba(0, 0, 0, 0.8);
+}
+
+.light-mode .settings-button:hover {
+    background: rgba(0, 0, 0, 0.1);
+}
+
+.light-mode .main-chat {
+    background: #F5F5F5;
+}
+
+.light-mode .messages {
+    background: #F5F5F5;
+}
+
+.light-mode .message.user {
+    background: #E5E5EA;
+}
+
+.light-mode .message.assistant {
+    background: #FFFFFF;
+}
+
+.light-mode .message .text {
+    color: #000000;
+}
+
+.light-mode .input-area {
+    background: #F5F5F5;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.light-mode .input-container {
+    background: #FFFFFF;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.light-mode #user-input {
+    color: #000000;
+}
+
+.light-mode .send-button {
+    color: #000000;
+}
+
+.light-mode .send-button:hover {
+    background: rgba(0, 0, 0, 0.1);
+}
+
+.light-mode .modal-content {
+    background: #FFFFFF;
+    color: #000000;
+}
+
+.light-mode .modal-content h2 {
+    color: #000000;
+}
+
+.light-mode .modal-content label {
+    color: rgba(0, 0, 0, 0.8);
+}
+
+.light-mode .modal-content input {
+    background: #E5E5EA;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    color: #000000;
+}
+
+.light-mode #save-settings-btn {
+    background: #007AFF;
+}
+
+.light-mode #save-settings-btn:hover {
+    background: #005BB5;
+}
