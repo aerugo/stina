@@ -43,6 +43,16 @@
         </div>  
     </div>  
   
-    <script src="app.js"></script>  
+    <script src="logic.js"></script>
+    <script src="rendering.js"></script>
+    <script src="input.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const state = LogicModule.initialize();
+            RenderingModule.renderChatList(state.chats, state.currentChatId);
+            RenderingModule.renderConversation(state.conversation);
+            InputModule.setupEventListeners();
+        });
+    </script>
 </body>  
 </html>  
