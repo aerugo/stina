@@ -8,7 +8,6 @@ const InputModule = (function() {
         const sendBtn = document.getElementById('send-btn');
         const newChatBtn = document.getElementById('new-chat-btn');
         const settingsBtn = document.getElementById('settings-btn');
-        const themeSwitchBtn = document.getElementById('theme-switch-btn');
         const closeSettings = document.getElementById('close-settings');
         const saveSettingsBtn = document.getElementById('save-settings-btn');
         const settingsModal = document.getElementById('settings-modal');
@@ -70,28 +69,9 @@ const InputModule = (function() {
             }
         });
 
-        themeSwitchBtn.addEventListener('click', () => {
-            if (document.body.classList.contains('dark-mode')) {
-                document.body.classList.remove('dark-mode');
-                document.body.classList.add('light-mode');
-                localStorage.setItem('theme', 'light-mode');
-            } else {
-                document.body.classList.remove('light-mode');
-                document.body.classList.add('dark-mode');
-                localStorage.setItem('theme', 'dark-mode');
-            }
-        });
-
-        // Initialize theme from localStorage
-        const storedTheme = localStorage.getItem('theme');
-        if (storedTheme === 'dark-mode') {
-            document.body.classList.add('dark-mode');
-        } else if (storedTheme === 'light-mode') {
-            document.body.classList.add('light-mode');
-        } else {
-            // Default to light mode
-            document.body.classList.add('light-mode');
-        }
+        // Initialize theme on page load
+        const storedTheme = LogicModule.getConfig().theme || 'light-mode';
+        applyTheme(storedTheme);
     }
 
     async function sendMessage() {
@@ -131,7 +111,13 @@ const InputModule = (function() {
         document.getElementById('endpoint').value = config.endpoint;
         document.getElementById('deployment').value = config.deployment;
         document.getElementById('api-key').value = config.apiKey;
+        document.getElementById('theme-select').value = config.theme || 'light-mode';
         document.getElementById('settings-modal').style.display = 'block';
+    }
+
+    function applyTheme(theme) {
+        document.body.classList.remove('light-mode', 'dark-mode');
+        document.body.classList.add(theme);
     }
 
     function closeSettingsModal() {
@@ -142,13 +128,15 @@ const InputModule = (function() {
         const endpoint = document.getElementById('endpoint').value.trim();
         const deployment = document.getElementById('deployment').value.trim();
         const apiKey = document.getElementById('api-key').value.trim();
+        const theme = document.getElementById('theme-select').value;
 
         if (!endpoint || !deployment || !apiKey) {
             alert('Please fill in all fields.');
             return;
         }
 
-        LogicModule.updateConfig(endpoint, deployment, apiKey);
+        LogicModule.updateConfig(endpoint, deployment, apiKey, theme);
+        applyTheme(theme);
         alert('Settings saved successfully.');
         closeSettingsModal();
     }

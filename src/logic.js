@@ -12,6 +12,7 @@ const LogicModule = (function() {
     let endpoint = localStorage.getItem('endpoint') || '';
     let deployment = localStorage.getItem('deployment') || '';
     let apiKey = localStorage.getItem('apiKey') || '';
+    let theme = localStorage.getItem('theme') || 'light-mode';
 
     function createNewChat() {
         const chatId = Date.now().toString();
@@ -77,20 +78,23 @@ const LogicModule = (function() {
         return { chats, currentChatId };
     }
 
-    function updateConfig(newEndpoint, newDeployment, newApiKey) {
+    function updateConfig(newEndpoint, newDeployment, newApiKey, newTheme) {
         endpoint = newEndpoint;
         deployment = newDeployment;
         apiKey = newApiKey;
+        theme = newTheme;
         localStorage.setItem('endpoint', endpoint);
         localStorage.setItem('deployment', deployment);
         localStorage.setItem('apiKey', apiKey);
+        localStorage.setItem('theme', theme);
     }
 
     function getConfig() {
         return {
             endpoint,
             deployment,
-            apiKey
+            apiKey,
+            theme
         };
     }
 
