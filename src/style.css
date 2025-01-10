@@ -8,11 +8,14 @@ body {
 }
   
 /* Main Container */  
-.main-container {  
-    display: flex;  
-    height: 100vh;  
-    overflow: hidden;  
-}  
+.main-container {
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+    background-color: #F8F9FA;
+    padding: 10px;
+    box-sizing: border-box;
+}
   
 /* Sidebar Styles */  
 .sidebar {
@@ -20,7 +23,7 @@ body {
     background-color: #FFFFFF;
     color: #333333;
     border-right: 1px solid #DDDDDD;
-    box-sizing: border-box;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
     padding: 15px;
     display: flex;
     flex-direction: column;
@@ -86,20 +89,24 @@ body {
     display: flex;
     flex-direction: column;
     background-color: #FFFFFF;
-    border: none;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     overflow: hidden;
 }
   
 .chat-header {
-    background-color: #F0F2F5;
+    background-color: #FFFFFF;
     color: #333333;
-    padding: 15px;
+    padding: 20px 15px;
+    border-bottom: 1px solid #DDDDDD;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
     position: relative;
 }
-  
-.chat-header h2 {  
-    margin: 0;  
-}  
+
+.chat-header h2 {
+    margin: 0;
+    font-size: 18px;
+}
   
 /* Settings Button Style */  
 #settings-btn {  
@@ -129,7 +136,7 @@ body {
 }
 
 .message.user .text {
-    background-color: #E3E3E3;
+    background-color: #E0F3FF;
     color: #333333;
     align-self: flex-end;
 }
@@ -143,7 +150,8 @@ body {
 .message .text {
     max-width: 75%;
     padding: 12px;
-    border-radius: 5px;
+    border-radius: 18px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
     word-wrap: break-word;
     line-height: 1.4;
     font-size: 14px;
@@ -169,12 +177,12 @@ body {
 }
 
 #send-btn {
-    background-color: #0069D9;
+    background-color: #007BFF;
     color: #FFFFFF;
     border: none;
-    padding: 0 15px;
+    padding: 0 20px;
     cursor: pointer;
-    font-size: 14px;
+    font-size: 15px;
     margin-left: 8px;
     border-radius: 4px;
 }
