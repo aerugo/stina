@@ -201,47 +201,68 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0,0,0,0.7);
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
     z-index: 1000;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 .modal-content {
-    background: #FFFFFF;
-    color: #000000;
+    background: #fff;
+    color: #000;
     width: 90%;
     max-width: 400px;
-    margin: 100px auto;
-    padding: 0;
-    border-radius: 12px;
+    margin: 80px auto;
+    border-radius: 16px;
     overflow: hidden;
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    animation: fadeIn 0.3s ease;
     position: relative;
 }
 
 /* Modal Header */
-.modal-content h2 {
-    margin: 0;
+.modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
     padding: 20px;
-    background: #F2F2F7;
-    border-bottom: 1px solid #E5E5EA;
-    font-size: 18px;
+    background: #f2f2f7;
+    border-bottom: 1px solid #e5e5ea;
+}
+
+.modal-header h2 {
+    margin: 0;
+    font-size: 20px;
     font-weight: 600;
-    color: #1C1C1E;
+    color: #1c1c1e;
 }
 
 /* Close Button */
 .close {
     position: absolute;
-    top: 15px;
-    right: 15px;
-    font-size: 24px;
-    color: #1C1C1E;
+    top: 20px;
+    right: 20px;
+    background: none;
+    border: none;
+    padding: 0;
     cursor: pointer;
-    transition: color 0.2s;
+    transition: transform 0.2s;
+}
+
+.close svg {
+    width: 20px;
+    height: 20px;
+    fill: #1c1c1e;
 }
 
 .close:hover {
-    color: #007AFF;
+    transform: rotate(90deg);
 }
 
 /* Modal Body */
@@ -258,24 +279,25 @@ body {
     display: block;
     margin-bottom: 8px;
     font-size: 14px;
-    color: #3A3A3C;
+    color: #3a3a3c;
 }
 
 .input-group input[type="text"],
 .input-group input[type="password"] {
     width: 100%;
     padding: 12px;
-    border: 1px solid #CED0D4;
-    border-radius: 8px;
+    border: 1px solid #ced0d4;
+    border-radius: 10px;
     font-size: 16px;
-    color: #1C1C1E;
-    background: #FFFFFF;
-    transition: border-color 0.2s;
+    color: #1c1c1e;
+    background: #fefefe;
+    transition: border-color 0.2s, box-shadow 0.2s;
 }
 
 .input-group input[type="text"]:focus,
 .input-group input[type="password"]:focus {
-    border-color: #007AFF;
+    border-color: #007aff;
+    box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.3);
     outline: none;
 }
 
@@ -283,19 +305,20 @@ body {
 .radio-group {
     display: flex;
     gap: 20px;
+    margin-top: 10px;
 }
 
 .theme-option {
     display: flex;
     align-items: center;
     font-size: 16px;
-    color: #1C1C1E;
+    color: #3a3a3c;
     cursor: pointer;
 }
 
 .theme-option input[type="radio"] {
     margin-right: 8px;
-    accent-color: #007AFF;
+    accent-color: #007aff;
     width: 18px;
     height: 18px;
 }
@@ -304,18 +327,72 @@ body {
 #save-settings-btn {
     width: 100%;
     padding: 15px;
-    background: #007AFF;
-    color: #FFFFFF;
+    background: #007aff;
+    color: #fff;
     border: none;
-    border-radius: 8px;
+    border-radius: 10px;
     font-size: 16px;
     font-weight: 600;
     cursor: pointer;
-    transition: background-color 0.2s;
+    transition: background-color 0.2s, transform 0.2s;
 }
 
 #save-settings-btn:hover {
-    background-color: #005BBB;
+    background-color: #005bbb;
+    transform: scale(1.02);
+}
+
+/* Dark Mode Styles */
+body.dark-mode .modal-content {
+    background: #1c1c1e;
+    color: #fff;
+}
+
+body.dark-mode .modal-header {
+    background: #2c2c2e;
+    border-bottom: 1px solid #3a3a3c;
+}
+
+body.dark-mode .modal-header h2 {
+    color: #fff;
+}
+
+body.dark-mode .close svg {
+    fill: #fff;
+}
+
+body.dark-mode .input-group label,
+body.dark-mode .input-group span {
+    color: #d1d1d6;
+}
+
+body.dark-mode .input-group input[type="text"],
+body.dark-mode .input-group input[type="password"] {
+    background: #2c2c2e;
+    border: 1px solid #48484a;
+    color: #fff;
+}
+
+body.dark-mode .input-group input[type="text"]:focus,
+body.dark-mode .input-group input[type="password"]:focus {
+    border-color: #0a84ff;
+    box-shadow: 0 0 0 3px rgba(10, 132, 255, 0.3);
+}
+
+body.dark-mode .theme-option {
+    color: #d1d1d6;
+}
+
+body.dark-mode .theme-option input[type="radio"] {
+    accent-color: #0a84ff;
+}
+
+body.dark-mode #save-settings-btn {
+    background: #0a84ff;
+}
+
+body.dark-mode #save-settings-btn:hover {
+    background: #0060df;
 }
 
 /* Dark Mode Adjustments */
