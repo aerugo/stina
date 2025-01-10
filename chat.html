@@ -1,103 +1,98 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <meta charset="UTF-8" />
     <title>ChatGPT-Style Interface</title>
     <link rel="stylesheet" href="src/interface.css" />
-</head>
-<body>
+  </head>
+  <body>
     <div class="chat-layout">
-        <!-- Sidebar -->
-        <nav class="sidebar">
-            <div class="nav-header">
-                <button id="new-chat-btn" class="new-chat">New chat</button>
-            </div>
-            <div class="chat-list-container">
-                <ul id="chat-list"></ul>
-            </div>
-            <div class="nav-footer">
-                <button id="settings-btn" class="settings-button">Settings</button>
-            </div>
-        </nav>
+      <!-- Sidebar -->
+      <nav class="sidebar">
+        <div class="nav-header">
+          <button id="new-chat-btn" class="new-chat">New chat</button>
+        </div>
+        <div class="chat-list-container">
+          <ul id="chat-list"></ul>
+        </div>
+        <div class="nav-footer">
+          <button id="settings-btn" class="settings-button">Settings</button>
+        </div>
+      </nav>
 
-        <!-- Main Chat Area -->
-        <main class="main-chat">
-            <div id="chat-history" class="messages"></div>
-            <div class="input-area">
-                <div class="input-container">
-                    <textarea 
-                        id="user-input" 
-                        placeholder="Send a message..."
-                        rows="1"
-                    ></textarea>
-                    <button id="send-btn" class="send-button">
-                        <svg width="24" height="24" viewBox="0 0 24 24">
-                            <path fill="currentColor" d="M2,21L23,12L2,3V10L17,12L2,14V21Z" />
-                        </svg>
-                    </button>
-                </div>
-            </div>
-        </main>
+      <!-- Main Chat Area -->
+      <main class="main-chat">
+        <div id="chat-history" class="messages"></div>
+        <div class="input-area">
+          <div class="input-container">
+            <textarea
+              id="user-input"
+              placeholder="Send a message..."
+              rows="1"
+            ></textarea>
+            <button id="send-btn" class="send-button">
+              <svg width="24" height="24" viewBox="0 0 24 24">
+                <path
+                  fill="currentColor"
+                  d="M2,21L23,12L2,3V10L17,12L2,14V21Z"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </main>
     </div>
 
     <!-- Settings Modal -->
     <div id="settings-modal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>Settings</h2>
-                <button id="close-settings" class="close">×</button>
-            </div>
-            <div class="modal-body">
-                <div class="input-group">
-                    <label for="endpoint">Endpoint URL</label>
-                    <div class="input-wrapper">
-                        <input type="text" id="endpoint" placeholder="https://YOUR_RESOURCE_NAME.openai.azure.com" />
-                        <span class="input-icon">🌐</span>
-                    </div>
-                </div>
-                <div class="input-group">
-                    <label for="deployment">Deployment Name</label>
-                    <div class="input-wrapper">
-                        <input type="text" id="deployment" placeholder="YOUR_DEPLOYMENT_NAME" />
-                        <span class="input-icon">⚙️</span>
-                    </div>
-                </div>
-                <div class="input-group">
-                    <label for="api-key">API Key</label>
-                    <div class="input-wrapper">
-                        <input type="password" id="api-key" placeholder="YOUR_API_KEY" />
-                        <span class="input-icon">🔑</span>
-                    </div>
-                </div>
-                <div class="input-group">
-                    <span>Theme</span>
-                    <div class="radio-group">
-                        <label class="theme-option">
-                            <input type="radio" name="theme" value="light-mode" />
-                            Light Mode
-                        </label>
-                        <label class="theme-option">
-                            <input type="radio" name="theme" value="dark-mode" />
-                            Dark Mode
-                        </label>
-                    </div>
-                </div>
-                <button id="save-settings-btn">Save Changes</button>
-            </div>
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Settings</h2>
+          <button id="close-settings" class="close">×</button>
         </div>
+        <div class="modal-body">
+          <div class="input-group">
+            <label for="endpoint">Endpoint URL</label>
+            <div class="input-wrapper">
+              <input
+                type="text"
+                id="endpoint"
+                placeholder="https://YOUR_RESOURCE_NAME.openai.azure.com"
+              />
+            </div>
+          </div>
+          <div class="input-group">
+            <label for="deployment">Deployment Name</label>
+            <div class="input-wrapper">
+              <input
+                type="text"
+                id="deployment"
+                placeholder="YOUR_DEPLOYMENT_NAME"
+              />
+            </div>
+          </div>
+          <div class="input-group">
+            <label for="api-key">API Key</label>
+            <div class="input-wrapper">
+              <input type="password" id="api-key" placeholder="YOUR_API_KEY" />
+            </div>
+          </div>
+          <button id="save-settings-btn">Save Changes</button>
+        </div>
+      </div>
     </div>
 
     <script src="src/logic.js"></script>
     <script src="src/rendering.js"></script>
     <script src="src/input.js"></script>
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            LogicModule.initialize();
-            const state = LogicModule.getCurrentState();
-            RenderingModule.renderChatList(state.chats, state.currentChatId);
-            RenderingModule.renderConversation(state.conversation);
-            InputModule.setupEventListeners();
-        });
+      document.addEventListener("DOMContentLoaded", function () {
+        LogicModule.initialize();
+        const state = LogicModule.getCurrentState();
+        RenderingModule.renderChatList(state.chats, state.currentChatId);
+        RenderingModule.renderConversation(state.conversation);
+        InputModule.setupEventListeners();
+      });
     </script>
-</body>
+  </body>
 </html>
