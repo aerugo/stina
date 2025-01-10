@@ -22,6 +22,30 @@ const RenderingModule = (function() {
                 textElem.innerText = message.content;
             }
             messageElem.appendChild(textElem);
+
+            // Create copy button
+            const copyButton = document.createElement('button');
+            copyButton.classList.add('copy-button');
+            copyButton.innerText = 'Copy';
+
+            // Add click event listener to copy the message content to clipboard
+            copyButton.addEventListener('click', () => {
+                const contentToCopy = textElem.innerText;
+                navigator.clipboard.writeText(contentToCopy)
+                    .then(() => {
+                        // Optional: provide feedback to the user
+                        copyButton.innerText = 'Copied!';
+                        setTimeout(() => {
+                            copyButton.innerText = 'Copy';
+                        }, 2000);
+                    })
+                    .catch(err => {
+                        console.error('Failed to copy text: ', err);
+                    });
+            });
+
+            // Append copy button to the message element
+            messageElem.appendChild(copyButton);
             chatHistory.appendChild(messageElem);
         });
         chatHistory.scrollTop = chatHistory.scrollHeight;
