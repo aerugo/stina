@@ -1,7 +1,8 @@
 /* General Styles */  
 body {  
+    background-color: #343541;  
+    color: #FFFFFF;  
     font-family: Arial, sans-serif;  
-    background-color: #f2f2f2;  
     margin: 0;  
     padding: 0;  
 }  
@@ -15,8 +16,9 @@ body {
   
 /* Sidebar Styles */  
 .sidebar {  
-    width: 200px;  
-    background-color: #fff;  
+    width: 240px;  
+    background-color: #202123;  
+    color: #D1D5DA;  
     border-right: 1px solid #ccc;  
     box-sizing: border-box;  
     padding: 15px;  
@@ -37,7 +39,7 @@ body {
 }  
   
 #chat-list li.active {  
-    background-color: #e5ddd5;  
+    background-color: #3E3F4B;  
 }  
   
 #chat-list li:hover {  
@@ -82,7 +84,8 @@ body {
     flex: 1;  
     display: flex;  
     flex-direction: column;  
-    background-color: #fff;  
+    background-color: #343541;  
+    border: none;  
     overflow: hidden;  
 }  
   
@@ -113,7 +116,7 @@ body {
 .chat-history {  
     flex: 1;  
     padding: 15px;  
-    background-color: #e5ddd5;  
+    background-color: #343541;  
     overflow-y: auto;  
     box-sizing: border-box;  
 }  
@@ -125,12 +128,14 @@ body {
 }  
   
 .message.user .text {  
-    background-color: #dcf8c6;  
+    background-color: #40414F;  
+    color: #FFFFFF;  
     align-self: flex-end;  
 }  
   
 .message.assistant .text {  
-    background-color: #fff;  
+    background-color: #444654;  
+    color: #FFFFFF;  
     align-self: flex-start;  
 }  
   
@@ -146,6 +151,7 @@ body {
     display: flex;  
     padding: 15px;  
     border-top: 1px solid #ccc;  
+    background-color: #40414F;  
 }  
   
 #user-input {  
@@ -154,11 +160,13 @@ body {
     height: 50px;  
     padding: 10px;  
     font-size: 16px;  
+    background-color: #343541;  
+    color: #FFFFFF;  
 }  
   
 #send-btn {  
-    background-color: #4CAF50;  
-    color: #fff;  
+    background-color: #19C37D;  
+    color: #FFFFFF;  
     border: none;  
     padding: 0 15px;  
     cursor: pointer;  
