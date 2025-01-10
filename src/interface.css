@@ -322,27 +322,6 @@ body {
     outline: none;
 }
 
-/* Radio Buttons */
-.radio-group {
-    display: flex;
-    gap: 20px;
-    margin-top: 10px;
-}
-
-.theme-option {
-    display: flex;
-    align-items: center;
-    font-size: 16px;
-    color: #3a3a3c;
-    cursor: pointer;
-}
-
-.theme-option input[type="radio"] {
-    margin-right: 8px;
-    accent-color: #007aff;
-    width: 18px;
-    height: 18px;
-}
 
 /* Save Button */
 #save-settings-btn {
@@ -363,167 +342,10 @@ body {
     transform: scale(1.02);
 }
 
-/* Dark Mode Styles */
-body.dark-mode .modal-content {
-    background: #1c1c1e;
-    color: #fff;
-}
-
-body.dark-mode .modal-header {
-    background: #2c2c2e;
-    border-bottom: 1px solid #3a3a3c;
-}
-
-body.dark-mode .modal-header h2 {
-    color: #fff;
-}
-
-body.dark-mode .close svg {
-    fill: #fff;
-}
-
-body.dark-mode .input-group label,
-body.dark-mode .input-group span {
-    color: #d1d1d6;
-}
-
-body.dark-mode .input-group input[type="text"],
-body.dark-mode .input-group input[type="password"] {
-    background: #2c2c2e;
-    border: 1px solid #48484a;
-    color: #fff;
-}
-
-body.dark-mode .input-group input[type="text"]:focus,
-body.dark-mode .input-group input[type="password"]:focus {
-    border-color: #0a84ff;
-    box-shadow: 0 0 0 3px rgba(10, 132, 255, 0.3);
-}
-
-body.dark-mode .theme-option {
-    color: #d1d1d6;
-}
-
-body.dark-mode .theme-option input[type="radio"] {
-    accent-color: #0a84ff;
-}
-
-body.dark-mode #save-settings-btn {
-    background: #0a84ff;
-}
-
-body.dark-mode #save-settings-btn:hover {
-    background: #0060df;
-}
-
-/* Dark Mode Adjustments */
-body.dark-mode .modal-content {
-    background: #1C1C1E;
-    color: #FFFFFF;
-}
-
-body.dark-mode .modal-content h2 {
-    background: #2C2C2E;
-    border-bottom: 1px solid #3A3A3C;
-    color: #FFFFFF;
-}
-
-body.dark-mode .close {
-    color: #FFFFFF;
-}
-
-body.dark-mode .close:hover {
-    color: #0A84FF;
-}
-
-body.dark-mode .input-group label,
-body.dark-mode .input-group span {
-    color: #FFFFFF;
-}
-
-body.dark-mode .input-group input[type="text"],
-body.dark-mode .input-group input[type="password"] {
-    background: #2C2C2E;
-    border: 1px solid #48484A;
-    color: #FFFFFF;
-}
-
-body.dark-mode .input-group input[type="text"]:focus,
-body.dark-mode .input-group input[type="password"]:focus {
-    border-color: #0A84FF;
-}
-
-body.dark-mode .theme-option {
-    color: #FFFFFF;
-}
-
-body.dark-mode .theme-option input[type="radio"] {
-    accent-color: #0A84FF;
-}
-
-body.dark-mode #save-settings-btn {
-    background: #0A84FF;
-}
-
-body.dark-mode #save-settings-btn:hover {
-    background: #0060DF;
-}
-
-/* Theme Selection Styles */
-.theme-selection {
-    margin: 20px 0;
-}
-
-.theme-selection span {
-    display: block;
-    margin-bottom: 10px;
-    font-size: 16px;
-    color: rgba(255, 255, 255, 0.8);
-}
-
-.theme-option {
-    display: flex;
-    align-items: center;
-    margin-bottom: 10px;
-    cursor: pointer;
-    font-size: 14px;
-    color: rgba(255, 255, 255, 0.7);
-}
-
-.theme-option input[type="radio"] {
-    margin-right: 10px;
-    accent-color: #10A37F;
-    transform: scale(1.2);
-}
-
-.theme-option:hover {
-    color: #FFFFFF;
-}
-
-.theme-option input[type="radio"]:focus {
-    outline: 2px solid #10A37F;
-}
-
-/* Light Mode Theme Selection Styles */
-body.light-mode .theme-option input[type="radio"] {
-    accent-color: #007AFF;
-}
-
-body.light-mode .theme-option {
-    color: rgba(0, 0, 0, 0.7);
-}
-
-body.light-mode .theme-option:hover {
-    color: #000000;
-}
-
-body.light-mode .theme-selection span {
-    color: rgba(0, 0, 0, 0.8);
-}
 
 /* Settings Modal Adjustments */
 .modal-content label,
-.modal-content .theme-selection span {
+.modal-content span {
     margin-top: 20px;
     font-size: 15px;
 }
@@ -535,139 +357,139 @@ body.light-mode .theme-selection span {
 
 .modal-content input,
 .modal-content select,
-.modal-content .theme-option {
+.modal-content {
     width: 100%;
 }
 
 /* Light Mode Modal Title Color */
-body.light-mode .modal-content h2 {
+body .modal-content h2 {
     color: #000000;
 }
 
 /* Light Mode Styles */
-body.light-mode {
+body {
     background-color: #F5F5F5;
     color: #000000;
 }
 
-.light-mode .sidebar {
+ .sidebar {
     background: #FFFFFF;
     color: #000000;
 }
 
-.light-mode .new-chat {
+ .new-chat {
     border: 1px solid rgba(0, 0, 0, 0.2);
     color: #000000;
 }
 
-.light-mode .new-chat:hover {
+ .new-chat:hover {
     background: rgba(0, 0, 0, 0.1);
 }
 
-.light-mode .chat-list-container {
+ .chat-list-container {
     background: #FFFFFF;
 }
 
-.light-mode #chat-list li {
+ #chat-list li {
     background: #FFFFFF;
     color: #000000;
 }
 
-.light-mode #chat-list li:hover,
-.light-mode #chat-list li.active {
+ #chat-list li:hover,
+ #chat-list li.active {
     background: rgba(0, 0, 0, 0.1);
 }
 
-.light-mode .delete-chat-btn {
+ .delete-chat-btn {
     color: rgba(0, 0, 0, 0.5);
 }
 
-.light-mode .delete-chat-btn:hover {
+ .delete-chat-btn:hover {
     color: #FF3B30;
 }
 
-.light-mode .nav-footer {
+ .nav-footer {
     border-top: 1px solid rgba(0, 0, 0, 0.1);
 }
 
-.light-mode .settings-button {
+ .settings-button {
     color: rgba(0, 0, 0, 0.8);
 }
 
-.light-mode .settings-button:hover {
+ .settings-button:hover {
     background: rgba(0, 0, 0, 0.1);
 }
 
-.light-mode .main-chat {
+ .main-chat {
     background: #F5F5F5;
 }
 
-.light-mode .messages {
+ .messages {
     background: #F5F5F5;
 }
 
-.light-mode .message.user {
+ .message.user {
     background: #E5E5EA;
 }
 
-.light-mode .message.assistant {
+ .message.assistant {
     background: #FFFFFF;
 }
 
-.light-mode .message .text {
+ .message .text {
     color: #000000;
 }
 
-.light-mode .input-area {
+ .input-area {
     background: #F5F5F5;
     border-top: 1px solid rgba(0, 0, 0, 0.1);
 }
 
-.light-mode .input-container {
+ .input-container {
     background: #FFFFFF;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-.light-mode #user-input {
+ #user-input {
     color: #000000;
 }
 
-.light-mode .send-button {
+ .send-button {
     color: #000000;
 }
 
-.light-mode .send-button:hover {
+ .send-button:hover {
     background: rgba(0, 0, 0, 0.1);
 }
 
-.light-mode .modal-content {
+ .modal-content {
     background: #FFFFFF;
     color: #000000;
 }
 
-.light-mode .modal-content h2 {
+ .modal-content h2 {
     color: #000000;
 }
 
-.light-mode .modal-content label {
+ .modal-content label {
     color: rgba(0, 0, 0, 0.8);
 }
 
-.light-mode .modal-content input {
+ .modal-content input {
     background: #E5E5EA;
     border: 1px solid rgba(0, 0, 0, 0.1);
     color: #000000;
 }
 
-.light-mode #save-settings-btn {
+ #save-settings-btn {
     background: #007AFF;
 }
 
-.light-mode #save-settings-btn:hover {
+ #save-settings-btn:hover {
     background: #005BB5;
 }
 
 /* Light Mode Chat Name Color */
-body.light-mode .chat-name {
+body .chat-name {
     color: #000000;
 }
