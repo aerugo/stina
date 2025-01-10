@@ -263,6 +263,81 @@ body {
     background: #0D8C6F;
 }
 
+/* Theme Selection Styles */
+.theme-selection {
+    margin: 20px 0;
+}
+
+.theme-selection span {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 16px;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.theme-option {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    cursor: pointer;
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.theme-option input[type="radio"] {
+    margin-right: 10px;
+    accent-color: #10A37F;
+    transform: scale(1.2);
+}
+
+.theme-option:hover {
+    color: #FFFFFF;
+}
+
+.theme-option input[type="radio"]:focus {
+    outline: 2px solid #10A37F;
+}
+
+/* Light Mode Theme Selection Styles */
+body.light-mode .theme-option input[type="radio"] {
+    accent-color: #007AFF;
+}
+
+body.light-mode .theme-option {
+    color: rgba(0, 0, 0, 0.7);
+}
+
+body.light-mode .theme-option:hover {
+    color: #000000;
+}
+
+body.light-mode .theme-selection span {
+    color: rgba(0, 0, 0, 0.8);
+}
+
+/* Settings Modal Adjustments */
+.modal-content label,
+.modal-content .theme-selection span {
+    margin-top: 20px;
+    font-size: 15px;
+}
+
+.modal-content input,
+.modal-content select {
+    margin-top: 5px;
+}
+
+.modal-content input,
+.modal-content select,
+.modal-content .theme-option {
+    width: 100%;
+}
+
+/* Light Mode Modal Title Color */
+body.light-mode .modal-content h2 {
+    color: #000000;
+}
+
 /* Light Mode Styles */
 body.light-mode {
     background-color: #F5F5F5;
