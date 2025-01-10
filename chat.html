@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>ChatGPT-Style Interface</title>
+    <link rel="stylesheet" href="src/interface.css" />
+</head>
+<body>
+    <div class="chat-layout">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <div class="nav-header">
+                <button id="new-chat-btn" class="new-chat">New chat</button>
+            </div>
+            <div class="chat-list-container">
+                <ul id="chat-list"></ul>
+            </div>
+            <div class="nav-footer">
+                <button id="settings-btn" class="settings-button">Settings</button>
+            </div>
+        </nav>
+
+        <!-- Main Chat Area -->
+        <main class="main-chat">
+            <div id="chat-history" class="messages"></div>
+            <div class="input-area">
+                <div class="input-container">
+                    <textarea 
+                        id="user-input" 
+                        placeholder="Send a message..."
+                        rows="1"
+                    ></textarea>
+                    <button id="send-btn" class="send-button">
+                        <svg width="24" height="24" viewBox="0 0 24 24">
+                            <path fill="currentColor" d="M2,21L23,12L2,3V10L17,12L2,14V21Z" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settings-modal" class="modal">
+        <div class="modal-content">
+            <span id="close-settings" class="close">&times;</span>
+            <h2>Settings</h2>
+            <label for="endpoint">Endpoint URL:</label>
+            <input type="text" id="endpoint" placeholder="https://YOUR_RESOURCE_NAME.openai.azure.com" />
+            <label for="deployment">Deployment Name:</label>
+            <input type="text" id="deployment" placeholder="YOUR_DEPLOYMENT_NAME" />
+            <label for="api-key">API Key:</label>
+            <input type="password" id="api-key" placeholder="YOUR_API_KEY" />
+            <button id="save-settings-btn">Save</button>
+        </div>
+    </div>
+
+    <script src="src/logic.js"></script>
+    <script src="src/rendering.js"></script>
+    <script src="src/input.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            LogicModule.initialize();
+            const state = LogicModule.getCurrentState();
+            RenderingModule.renderChatList(state.chats, state.currentChatId);
+            RenderingModule.renderConversation(state.conversation);
+            InputModule.setupEventListeners();
+        });
+    </script>
+</body>
+</html>
