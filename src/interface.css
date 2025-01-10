@@ -502,3 +502,53 @@ body {
 body .chat-name {
     color: #000000;
 }
+
+/* Styling for rendered markdown content */
+.message.assistant .text h1,
+.message.assistant .text h2,
+.message.assistant .text h3,
+.message.assistant .text h4,
+.message.assistant .text h5,
+.message.assistant .text h6 {
+    color: #FFFFFF;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+.message.assistant .text p {
+    margin-bottom: 15px;
+}
+
+.message.assistant .text a {
+    color: #1E90FF;
+    text-decoration: underline;
+}
+
+.message.assistant .text code {
+    background-color: #2D2D2D;
+    padding: 2px 4px;
+    border-radius: 4px;
+    font-family: monospace;
+    color: #FFFFFF;
+}
+
+.message.assistant .text pre {
+    background-color: #2D2D2D;
+    padding: 10px;
+    border-radius: 8px;
+    overflow: auto;
+    color: #FFFFFF;
+}
+
+.message.assistant .text ul,
+.message.assistant .text ol {
+    margin-left: 20px;
+    margin-bottom: 15px;
+}
+
+.message.assistant .text blockquote {
+    border-left: 4px solid #CCCCCC;
+    padding-left: 15px;
+    color: #AAAAAA;
+    margin-bottom: 15px;
+}

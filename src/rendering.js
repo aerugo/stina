@@ -11,7 +11,16 @@ const RenderingModule = (function() {
             messageElem.classList.add('message', message.role);
             const textElem = document.createElement('div');
             textElem.classList.add('text');
-            textElem.innerText = message.content;
+            
+            if (message.role === 'assistant') {
+                // Parse markdown content and sanitize it
+                let htmlContent = marked.parse(message.content);
+                htmlContent = DOMPurify.sanitize(htmlContent);
+                textElem.innerHTML = htmlContent;
+            } else {
+                // For user messages, display plain text
+                textElem.innerText = message.content;
+            }
             messageElem.appendChild(textElem);
             chatHistory.appendChild(messageElem);
         });
