@@ -2,7 +2,7 @@
 body {
     margin: 0;
     padding: 0;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
     color: #343541;
     background: #343541;
 }
@@ -193,7 +193,7 @@ body {
     background: rgba(255,255,255,0.1);
 }
 
-/* Modal Styles */
+/* Modal Container */
 .modal {
     display: none;
     position: fixed;
@@ -206,61 +206,169 @@ body {
 }
 
 .modal-content {
-    background: #2A2B32;
-    color: #FFFFFF;
+    background: #FFFFFF;
+    color: #000000;
     width: 90%;
-    max-width: 500px;
-    margin: 50px auto;
-    padding: 20px;
-    border-radius: 10px;
+    max-width: 400px;
+    margin: 100px auto;
+    padding: 0;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
     position: relative;
 }
 
+/* Modal Header */
+.modal-content h2 {
+    margin: 0;
+    padding: 20px;
+    background: #F2F2F7;
+    border-bottom: 1px solid #E5E5EA;
+    font-size: 18px;
+    font-weight: 600;
+    color: #1C1C1E;
+}
+
+/* Close Button */
 .close {
     position: absolute;
+    top: 15px;
     right: 15px;
-    top: 10px;
-    color: rgba(255,255,255,0.5);
     font-size: 24px;
+    color: #1C1C1E;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.close:hover {
+    color: #007AFF;
+}
+
+/* Modal Body */
+.modal-body {
+    padding: 20px;
+}
+
+.input-group {
+    margin-bottom: 20px;
+}
+
+.input-group label,
+.input-group span {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 14px;
+    color: #3A3A3C;
+}
+
+.input-group input[type="text"],
+.input-group input[type="password"] {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #CED0D4;
+    border-radius: 8px;
+    font-size: 16px;
+    color: #1C1C1E;
+    background: #FFFFFF;
+    transition: border-color 0.2s;
+}
+
+.input-group input[type="text"]:focus,
+.input-group input[type="password"]:focus {
+    border-color: #007AFF;
+    outline: none;
+}
+
+/* Radio Buttons */
+.radio-group {
+    display: flex;
+    gap: 20px;
+}
+
+.theme-option {
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+    color: #1C1C1E;
     cursor: pointer;
 }
 
-.modal-content h2 {
-    margin-top: 0;
-    color: #FFFFFF;
+.theme-option input[type="radio"] {
+    margin-right: 8px;
+    accent-color: #007AFF;
+    width: 18px;
+    height: 18px;
 }
 
-.modal-content label {
-    display: block;
-    margin: 15px 0 5px;
-    color: rgba(255,255,255,0.8);
-}
-
-.modal-content input {
-    width: 100%;
-    padding: 8px;
-    background: #40414F;
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 5px;
-    color: #FFFFFF;
-    font-size: 14px;
-    box-sizing: border-box;
-}
-
+/* Save Button */
 #save-settings-btn {
     width: 100%;
-    padding: 10px;
-    margin-top: 20px;
-    background: #10A37F;
-    color: white;
+    padding: 15px;
+    background: #007AFF;
+    color: #FFFFFF;
     border: none;
-    border-radius: 5px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
     cursor: pointer;
-    font-size: 14px;
+    transition: background-color 0.2s;
 }
 
 #save-settings-btn:hover {
-    background: #0D8C6F;
+    background-color: #005BBB;
+}
+
+/* Dark Mode Adjustments */
+body.dark-mode .modal-content {
+    background: #1C1C1E;
+    color: #FFFFFF;
+}
+
+body.dark-mode .modal-content h2 {
+    background: #2C2C2E;
+    border-bottom: 1px solid #3A3A3C;
+    color: #FFFFFF;
+}
+
+body.dark-mode .close {
+    color: #FFFFFF;
+}
+
+body.dark-mode .close:hover {
+    color: #0A84FF;
+}
+
+body.dark-mode .input-group label,
+body.dark-mode .input-group span {
+    color: #FFFFFF;
+}
+
+body.dark-mode .input-group input[type="text"],
+body.dark-mode .input-group input[type="password"] {
+    background: #2C2C2E;
+    border: 1px solid #48484A;
+    color: #FFFFFF;
+}
+
+body.dark-mode .input-group input[type="text"]:focus,
+body.dark-mode .input-group input[type="password"]:focus {
+    border-color: #0A84FF;
+}
+
+body.dark-mode .theme-option {
+    color: #FFFFFF;
+}
+
+body.dark-mode .theme-option input[type="radio"] {
+    accent-color: #0A84FF;
+}
+
+body.dark-mode #save-settings-btn {
+    background: #0A84FF;
+}
+
+body.dark-mode #save-settings-btn:hover {
+    background: #0060DF;
 }
 
 /* Theme Selection Styles */

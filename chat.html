@@ -45,24 +45,34 @@
         <div class="modal-content">
             <span id="close-settings" class="close">&times;</span>
             <h2>Settings</h2>
-            <label for="endpoint">Endpoint URL:</label>
-            <input type="text" id="endpoint" placeholder="https://YOUR_RESOURCE_NAME.openai.azure.com" />
-            <label for="deployment">Deployment Name:</label>
-            <input type="text" id="deployment" placeholder="YOUR_DEPLOYMENT_NAME" />
-            <label for="api-key">API Key:</label>
-            <input type="password" id="api-key" placeholder="YOUR_API_KEY" />
-            <div class="theme-selection">
-                <span>Theme:</span>
-                <label class="theme-option">
-                    <input type="radio" name="theme" value="light-mode" />
-                    Light Mode
-                </label>
-                <label class="theme-option">
-                    <input type="radio" name="theme" value="dark-mode" />
-                    Dark Mode
-                </label>
+            <div class="modal-body">
+                <div class="input-group">
+                    <label for="endpoint">Endpoint URL</label>
+                    <input type="text" id="endpoint" placeholder="https://YOUR_RESOURCE_NAME.openai.azure.com" />
+                </div>
+                <div class="input-group">
+                    <label for="deployment">Deployment Name</label>
+                    <input type="text" id="deployment" placeholder="YOUR_DEPLOYMENT_NAME" />
+                </div>
+                <div class="input-group">
+                    <label for="api-key">API Key</label>
+                    <input type="password" id="api-key" placeholder="YOUR_API_KEY" />
+                </div>
+                <div class="input-group">
+                    <span>Theme</span>
+                    <div class="radio-group">
+                        <label class="theme-option">
+                            <input type="radio" name="theme" value="light-mode" />
+                            Light Mode
+                        </label>
+                        <label class="theme-option">
+                            <input type="radio" name="theme" value="dark-mode" />
+                            Dark Mode
+                        </label>
+                    </div>
+                </div>
+                <button id="save-settings-btn">Save</button>
             </div>
-            <button id="save-settings-btn">Save</button>
         </div>
     </div>
 
