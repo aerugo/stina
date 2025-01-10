@@ -48,7 +48,8 @@
     <script src="input.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const state = LogicModule.initialize();
+            LogicModule.initialize();
+            const state = LogicModule.getCurrentState();
             RenderingModule.renderChatList(state.chats, state.currentChatId);
             RenderingModule.renderConversation(state.conversation);
             InputModule.setupEventListeners();

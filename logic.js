@@ -39,6 +39,7 @@ const LogicModule = (function() {
             conversation = chat.conversation;
             saveCurrentChatId();
             return {
+                chats,
                 conversation,
                 currentChatId,
                 success: true
