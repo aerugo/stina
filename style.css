@@ -1,0 +1,236 @@
+/* General Styles */  
+body {  
+    font-family: Arial, sans-serif;  
+    background-color: #f2f2f2;  
+    margin: 0;  
+    padding: 0;  
+}  
+  
+/* Main Container */  
+.main-container {  
+    display: flex;  
+    height: 100vh;  
+    overflow: hidden;  
+}  
+  
+/* Sidebar Styles */  
+.sidebar {  
+    width: 200px;  
+    background-color: #fff;  
+    border-right: 1px solid #ccc;  
+    box-sizing: border-box;  
+    padding: 15px;  
+    display: flex;  
+    flex-direction: column;  
+}  
+  
+.sidebar h2 {  
+    margin-top: 0;  
+}  
+  
+/* Chat list item */  
+#chat-list li {  
+    display: flex;  
+    align-items: center;  
+    padding: 5px 10px;  
+    border-bottom: 1px solid #eee;  
+}  
+  
+#chat-list li.active {  
+    background-color: #e5ddd5;  
+}  
+  
+#chat-list li:hover {  
+    background-color: #f5f5f5;  
+}  
+  
+.chat-name {  
+    flex: 1;  
+    cursor: pointer;  
+}  
+  
+.delete-chat-btn {  
+    background: none;  
+    border: none;  
+    color: #999;  
+    font-size: 18px;  
+    cursor: pointer;  
+    padding: 0 5px;  
+}  
+  
+.delete-chat-btn:hover {  
+    color: #f00;  
+}  
+  
+#new-chat-btn {  
+    background-color: #4CAF50;  
+    color: #fff;  
+    border: none;  
+    padding: 10px;  
+    cursor: pointer;  
+    margin-top: 10px;  
+    width: 100%;  
+    font-size: 16px;  
+}  
+  
+#new-chat-btn:hover {  
+    background-color: #45a049;  
+}  
+  
+/* Chat Container Styles */  
+.chat-container {  
+    flex: 1;  
+    display: flex;  
+    flex-direction: column;  
+    background-color: #fff;  
+    overflow: hidden;  
+}  
+  
+.chat-header {  
+    background-color: #4CAF50;  
+    color: #fff;  
+    padding: 15px;  
+    position: relative;  
+}  
+  
+.chat-header h2 {  
+    margin: 0;  
+}  
+  
+/* Settings Button Style */  
+#settings-btn {  
+    position: absolute;  
+    right: 15px;  
+    top: 15px;  
+    background-color: #fff;  
+    color: #4CAF50;  
+    border: none;  
+    padding: 5px 10px;  
+    cursor: pointer;  
+}  
+  
+/* Chat History */  
+.chat-history {  
+    flex: 1;  
+    padding: 15px;  
+    background-color: #e5ddd5;  
+    overflow-y: auto;  
+    box-sizing: border-box;  
+}  
+  
+.message {  
+    margin-bottom: 15px;  
+    display: flex;  
+    flex-direction: column;  
+}  
+  
+.message.user .text {  
+    background-color: #dcf8c6;  
+    align-self: flex-end;  
+}  
+  
+.message.assistant .text {  
+    background-color: #fff;  
+    align-self: flex-start;  
+}  
+  
+.message .text {  
+    max-width: 80%;  
+    padding: 10px;  
+    border-radius: 5px;  
+    word-wrap: break-word;  
+}  
+  
+/* Chat Input */  
+.chat-input-container {  
+    display: flex;  
+    padding: 15px;  
+    border-top: 1px solid #ccc;  
+}  
+  
+#user-input {  
+    flex: 1;  
+    resize: none;  
+    height: 50px;  
+    padding: 10px;  
+    font-size: 16px;  
+}  
+  
+#send-btn {  
+    background-color: #4CAF50;  
+    color: #fff;  
+    border: none;  
+    padding: 0 15px;  
+    cursor: pointer;  
+    font-size: 16px;  
+}  
+  
+/* Settings Modal Styles */  
+.modal {  
+    display: none; /* Hidden by default */  
+    position: fixed; /* Stay in place */  
+    z-index: 1; /* Sit on top */  
+    left: 0;  
+    top: 0;  
+    width: 100%; /* Full width */  
+    height: 100%; /* Full height */  
+    overflow: auto; /* Enable scrolling if needed */  
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */  
+}  
+  
+.modal-content {  
+    background-color: #fefefe;  
+    margin: 5% auto; /* 5% from the top and centered */  
+    padding: 20px;  
+    border: 1px solid #888;  
+    width: 80%; /* Could be more or less, depending on screen size */  
+    max-width: 500px;  
+    position: relative;  
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);  
+}  
+  
+.close {  
+    color: #aaa;  
+    position: absolute;  
+    right: 15px;  
+    top: 10px;  
+    font-size: 28px;  
+    font-weight: bold;  
+    cursor: pointer;  
+}  
+  
+.close:hover,  
+.close:focus {  
+    color: black;  
+    text-decoration: none;  
+}  
+  
+/* Modal Form Elements */  
+#settings-modal label {  
+    display: block;  
+    margin-top: 15px;  
+    font-weight: bold;  
+}  
+  
+#settings-modal input {  
+    width: 100%;  
+    padding: 8px;  
+    margin-top: 5px;  
+    box-sizing: border-box;  
+    font-size: 16px;  
+}  
+  
+#save-settings-btn {  
+    margin-top: 20px;  
+    width: 100%;  
+    padding: 10px;  
+    background-color: #4CAF50;  
+    border: none;  
+    color: #fff;  
+    cursor: pointer;  
+    font-size: 16px;  
+}  
+  
+#save-settings-btn:hover {  
+    background-color: #45a049;  
+}  
