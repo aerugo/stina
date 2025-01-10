@@ -1,18 +1,3 @@
-// Frontend JavaScript Code  
-  
-// DOM Elements  
-const chatHistory = document.getElementById('chat-history');  
-const userInput = document.getElementById('user-input');  
-const sendBtn = document.getElementById('send-btn');  
-const newChatBtn = document.getElementById('new-chat-btn');  
-const settingsBtn = document.getElementById('settings-btn');  
-const settingsModal = document.getElementById('settings-modal');  
-const closeSettings = document.getElementById('close-settings');  
-const saveSettingsBtn = document.getElementById('save-settings-btn');  
-const endpointInput = document.getElementById('endpoint');  
-const deploymentInput = document.getElementById('deployment');  
-const apiKeyInput = document.getElementById('api-key');  
-const chatList = document.getElementById('chat-list');  
   
 // Global Variables  
 let chats = JSON.parse(localStorage.getItem('chats')) || [];  
