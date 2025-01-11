@@ -553,7 +553,7 @@ var InputModule = (function () {
   }
 
   function openSettingsModal() {
-    const config = LogicModule.getConfig();
+    const config = ConfigModule.getConfig();
     document.getElementById("endpoint").value = config.endpoint;
     document.getElementById("api-key").value = config.apiKey;
     document.getElementById("title-deployment").value =
