@@ -805,7 +805,6 @@ body.light-mode .loading-spinner {
     right: 15px;
     display: flex;
     align-items: center;
-    justify-content: space-between;
 }
 
 .action-container > * {
