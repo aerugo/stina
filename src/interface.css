@@ -633,6 +633,25 @@ body .chat-name {
     transition: background-color 0.2s;
 }
 
+/* Input Field inside Modal */
+#custom-modal input[type="text"] {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #E5E5EA;
+    border-radius: 8px;
+    font-size: 15px;
+    color: #1C1C1E;
+    background: #FFFFFF;
+    margin-top: 10px;
+    box-sizing: border-box;
+}
+
+#custom-modal input[type="text"]:focus {
+    border-color: #007AFF;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.2);
+}
+
 .modal-footer button:hover {
     background-color: #005bbb;
 }

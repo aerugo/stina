@@ -173,20 +173,24 @@ const InputModule = (function() {
         // Handle creation of new instruction
         instructionsSelect.addEventListener('change', function() {
             if (this.value === 'custom') {
-                const customInstruction = prompt('Enter your custom instruction:');
-                if (customInstruction) {
-                    const customLabel = prompt('Enter a label for your custom instruction:') || 'Custom Instruction';
-                    const newInstruction = { label: customLabel, content: customInstruction };
-                    instructions.push(newInstruction);
-                    const newOption = document.createElement('option');
-                    newOption.value = instructions.length - 1;
-                    newOption.textContent = customLabel;
-                    instructionsSelect.insertBefore(newOption, customOption);
-                    instructionsSelect.value = instructions.length - 1;
-                } else {
-                    // Revert to default if no input
-                    instructionsSelect.value = 0;
-                }
+                // Show custom modal to get the instruction content
+                showInputModal('Custom Instruction', 'Enter your custom instruction:', '', function(customInstruction) {
+                    if (customInstruction) {
+                        // Show another modal to get the label
+                        showInputModal('Custom Instruction Label', 'Enter a label for your custom instruction:', 'Custom Instruction', function(customLabel) {
+                            const newInstruction = { label: customLabel || 'Custom Instruction', content: customInstruction };
+                            instructions.push(newInstruction);
+                            const newOption = document.createElement('option');
+                            newOption.value = instructions.length - 1;
+                            newOption.textContent = newInstruction.label;
+                            instructionsSelect.insertBefore(newOption, customOption);
+                            instructionsSelect.value = instructions.length - 1;
+                        });
+                    } else {
+                        // Revert to default if no input
+                        instructionsSelect.value = 0;
+                    }
+                });
             }
         });
 
@@ -306,6 +310,61 @@ const InputModule = (function() {
         applyTheme(theme);
         showCustomAlert('Settings saved successfully.');
         closeSettingsModal();
+    }
+
+    function showInputModal(title, message, defaultValue, callback) {
+        const modal = document.getElementById('custom-modal');
+        const titleElem = document.getElementById('custom-modal-title');
+        const bodyElem = document.getElementById('custom-modal-body');
+        const footerElem = document.getElementById('custom-modal-footer');
+
+        titleElem.textContent = title;
+
+        bodyElem.innerHTML = `
+            <p>${message}</p>
+            <input type="text" id="modal-input" style="width: 100%; padding: 10px; margin-top: 10px;" value="${defaultValue}">
+        `;
+
+        footerElem.innerHTML = '';
+
+        const cancelButton = document.createElement('button');
+        cancelButton.textContent = 'Cancel';
+        cancelButton.addEventListener('click', () => {
+            modal.style.display = 'none';
+            if (callback) callback(null);
+        });
+
+        const okButton = document.createElement('button');
+        okButton.textContent = 'OK';
+        okButton.addEventListener('click', () => {
+            const inputValue = document.getElementById('modal-input').value;
+            modal.style.display = 'none';
+            if (callback) callback(inputValue.trim() !== '' ? inputValue : null);
+        });
+
+        footerElem.appendChild(cancelButton);
+        footerElem.appendChild(okButton);
+
+        modal.style.display = 'block';
+
+        // Set focus to the input field
+        const inputField = document.getElementById('modal-input');
+        inputField.focus();
+
+        // Handle Enter key to submit
+        inputField.addEventListener('keydown', function(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                okButton.click();
+            }
+        });
+
+        // Close modal when clicking the close button
+        const closeButton = document.getElementById('custom-modal-close');
+        closeButton.onclick = () => {
+            modal.style.display = 'none';
+            if (callback) callback(null);
+        };
     }
 
     return {
