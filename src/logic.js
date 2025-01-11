@@ -27,9 +27,6 @@ var LogicModule = (function () {
   }
 
 
-  function getCurrentChat() {
-    return chats.find((c) => c.id === currentChatId);
-  }
 
   async function generateChatTitle(userMessage) {
     const prompt = `Provide a short (maximum 5 words) and descriptive chat title based on the following message:\n"${userMessage}"`;
@@ -105,7 +102,6 @@ var LogicModule = (function () {
   }
 
   return {
-    getCurrentChat,
     generateChatTitle,
     updateChatTitle,
     fetchAzureOpenAIChatCompletion,
