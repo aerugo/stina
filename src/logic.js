@@ -12,7 +12,12 @@ const LogicModule = (function () {
   let endpoint = StorageModule.loadData("endpoint") || "";
   let apiKey = StorageModule.loadData("apiKey") || "";
   let theme = StorageModule.loadData("theme") || "light-mode";
-  let selectedModelKey = StorageModule.loadData("selectedModelKey") || "gpt-4o-3";
+  let selectedModelKey = StorageModule.loadData("selectedModelKey") || "gpt-4o";
+  
+  // Validate selectedModelKey
+  if (!models[selectedModelKey]) {
+      selectedModelKey = 'gpt-4o';
+  }
   let titleDeployment = StorageModule.loadData("titleDeployment") || "";
   let apiVersion = "2024-12-01-preview";
 

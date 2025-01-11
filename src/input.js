@@ -111,7 +111,12 @@ const InputModule = (function() {
         }
     }
 
-    let selectedModelKey = LogicModule.getConfig().selectedModelKey || 'gpt-4o-3';
+    let selectedModelKey = LogicModule.getConfig().selectedModelKey || 'gpt-4o';
+    
+    // Validate selectedModelKey
+    if (!models[selectedModelKey]) {
+        selectedModelKey = 'gpt-4o';
+    }
 
     function setupEventListeners() {
         const userInput = document.getElementById('user-input');
@@ -238,6 +243,14 @@ const InputModule = (function() {
         function updateInstructionsVisibility() {
             const selectedModelParams = models[selectedModelKey];
             const instructionsGroup = document.getElementById('instructions-group');
+            
+            // Add this check
+            if (!selectedModelParams) {
+                // Handle the case where the selected model key is invalid
+                instructionsGroup.style.display = 'none';
+                return;
+            }
+            
             if (selectedModelParams.system) {
                 instructionsGroup.style.display = 'flex';
             } else {
