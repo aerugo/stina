@@ -393,11 +393,41 @@ const InputModule = (function() {
                 }
             }
 
+            // Include system message if applicable
+            const selectedModelParams = models[selectedModelKey];
+            let instructionLabel = '';
+            if (selectedModelParams.system) {
+                let systemContent = '';
+
+                // Use selectedInstructionId
+                const customInstruction = customInstructions.find(instr => instr.id === selectedInstructionId);
+                if (customInstruction) {
+                    systemContent = customInstruction.content;
+                    instructionLabel = customInstruction.label;
+                } else {
+                    // Check default instructions
+                    const defaultInstruction = instructions.find(instr => instr.id === selectedInstructionId);
+                    if (defaultInstruction) {
+                        systemContent = defaultInstruction.content;
+                        instructionLabel = defaultInstruction.label;
+                    }
+                }
+
+                if (systemContent) {
+                    // Prepend system message
+                    conversationToSend = [{ role: 'system', content: systemContent }, ...conversationToSend];
+                }
+            }
+
             const assistantMessage = await LogicModule.fetchAzureOpenAIChatCompletion(
                 conversationToSend
             );
             // Add the model key to the assistantMessage
             assistantMessage.model = selectedModelKey;
+            // Include instructionLabel if applicable
+            if (instructionLabel) {
+                assistantMessage.instructionLabel = instructionLabel;
+            }
             // Replace the loading message with the actual assistant message
             currentState.conversation[loadingMessageIndex] = assistantMessage;
             RenderingModule.renderConversation(currentState.conversation);

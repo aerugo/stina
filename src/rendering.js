@@ -36,7 +36,12 @@ const RenderingModule = (function() {
                 // Create model label element
                 const modelLabel = document.createElement('span');
                 modelLabel.classList.add('model-label');
-                modelLabel.textContent = models[message.model]?.label || message.model || 'Unknown Model';
+                // Determine the model label text
+                let modelLabelText = models[message.model]?.label || message.model || 'Unknown Model';
+                if (models[message.model]?.system && message.instructionLabel) {
+                    modelLabelText += ' with ' + message.instructionLabel;
+                }
+                modelLabel.textContent = modelLabelText;
                 copyButton.innerHTML = `
                     <svg width="16" height="16" viewBox="0 0 24 24">
                         <path fill="currentColor" d="M19,21H5C3.9,21 3,20.1 3,19V7H5V19H19V21ZM21,5H8C6.9,5 6,5.9 6,7V17C6,18.1 6.9,19 8,19H21C22.1,19 23,18.1 23,17V7C23,5.9 22.1,5 21,5M21,17H8V7H21V17Z" />
