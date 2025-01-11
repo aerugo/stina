@@ -93,16 +93,22 @@ var ChatModule = (function() {
         if (chats.length === 0) {
             // No chats exist, create a new one
             return createNewChat();
-        } else if (currentChatId) {
-            // Try to load the chat with currentChatId
-            const result = loadChat(currentChatId);
-            if (result.success) {
-                return result;
-            } else {
-                // Chat not found, create a new chat
-                return createNewChat();
-            }
         } else {
+            if (currentChatId) {
+                // Try to load the chat with currentChatId
+                const result = loadChat(currentChatId);
+                if (result.success) {
+                    return result;
+                }
+            }
+
+            // Check for an existing empty "New chat"
+            const emptyNewChat = chats.find(chat => chat.name === 'New chat' && chat.conversation.length === 0);
+            if (emptyNewChat) {
+                // Load the existing empty "New chat"
+                return loadChat(emptyNewChat.id);
+            }
+
             // Try to load the first chat in the list
             const result = loadChat(chats[0].id);
             if (result.success) {
