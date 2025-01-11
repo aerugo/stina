@@ -684,7 +684,14 @@ body.light-mode .modal-footer button:hover {
     padding-left: 0;
 }
 
-/* Ensure list markers are displayed */
+/* Base styles for lists in assistant messages */
+.message.assistant .text ul,
+.message.assistant .text ol {
+    margin-left: 1.5em;
+    margin-bottom: 15px;
+}
+
+/* First-level lists */
 .message.assistant .text ul {
     list-style-type: disc;
 }
@@ -693,15 +700,56 @@ body.light-mode .modal-footer button:hover {
     list-style-type: decimal;
 }
 
-/* Ensure nested lists display properly */
-.message.assistant .text ul ul,
+/* Second-level lists nested inside unordered lists */
+.message.assistant .text ul ul {
+    list-style-type: circle;
+}
+
+.message.assistant .text ul ol {
+    list-style-type: lower-alpha;
+}
+
+/* Second-level lists nested inside ordered lists */
 .message.assistant .text ol ul {
     list-style-type: circle;
 }
 
+.message.assistant .text ol ol {
+    list-style-type: lower-alpha;
+}
+
+/* Third-level lists */
 .message.assistant .text ul ul ul,
-.message.assistant .text ol ul ul {
+.message.assistant .text ol ul ul,
+.message.assistant .text ul ol ul,
+.message.assistant .text ol ol ul {
     list-style-type: square;
+}
+
+.message.assistant .text ul ul ol,
+.message.assistant .text ol ul ol,
+.message.assistant .text ul ol ol,
+.message.assistant .text ol ol ol {
+    list-style-type: lower-roman;
+}
+
+/* Indentation for nested lists */
+.message.assistant .text ul ul,
+.message.assistant .text ol ul,
+.message.assistant .text ul ol,
+.message.assistant .text ol ol {
+    margin-left: 1.5em;
+}
+
+.message.assistant .text ul ul ul,
+.message.assistant .text ol ul ul,
+.message.assistant .text ul ol ul,
+.message.assistant .text ol ol ul,
+.message.assistant .text ul ul ol,
+.message.assistant .text ol ul ol,
+.message.assistant .text ul ol ol,
+.message.assistant .text ol ol ol {
+    margin-left: 1.5em;
 }
 
 .message.assistant .text blockquote {
