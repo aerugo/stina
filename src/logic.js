@@ -26,23 +26,6 @@ var LogicModule = (function () {
     }
   }
 
-  function deleteChat(chatId) {
-    chats = chats.filter((chat) => chat.id !== chatId);
-    if (currentChatId === chatId) {
-      if (chats.length > 0) {
-        return loadChat(chats[0].id);
-      } else {
-        return createNewChat();
-      }
-    }
-    saveChats();
-    return {
-      chats,
-      currentChatId,
-      conversation,
-    };
-  }
-
 
   function getCurrentChat() {
     return chats.find((c) => c.id === currentChatId);
@@ -122,7 +105,6 @@ var LogicModule = (function () {
   }
 
   return {
-    deleteChat,
     getCurrentChat,
     generateChatTitle,
     updateChatTitle,
