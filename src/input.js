@@ -221,6 +221,14 @@ const InputModule = (function() {
         LogicModule.saveConversation();
         userInput.value = '';
 
+        // Add a placeholder assistant message with a loading indicator
+        const loadingMessage = { role: 'assistant', content: '', isLoading: true };
+        currentState.conversation.push(loadingMessage);
+        RenderingModule.renderConversation(currentState.conversation);
+
+        // Store the index of the loading message to replace it later
+        const loadingMessageIndex = currentState.conversation.length - 1;
+
         try {
             let conversationToSend = [...currentState.conversation];
 
