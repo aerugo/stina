@@ -679,8 +679,29 @@ body.light-mode .modal-footer button:hover {
 
 .message.assistant .text ul,
 .message.assistant .text ol {
-    margin-left: 20px;
+    margin-left: 40px;
     margin-bottom: 15px;
+    padding-left: 0;
+}
+
+/* Ensure list markers are displayed */
+.message.assistant .text ul {
+    list-style-type: disc;
+}
+
+.message.assistant .text ol {
+    list-style-type: decimal;
+}
+
+/* Ensure nested lists display properly */
+.message.assistant .text ul ul,
+.message.assistant .text ol ul {
+    list-style-type: circle;
+}
+
+.message.assistant .text ul ul ul,
+.message.assistant .text ol ul ul {
+    list-style-type: square;
 }
 
 .message.assistant .text blockquote {
