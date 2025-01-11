@@ -418,18 +418,16 @@ var InputModule = (function () {
       const selectedModelKey = config.selectedModelKey || "gpt-4o";
       const selectedModelParams = models[selectedModelKey];
       console.log("Selected Model:", selectedModelKey, selectedModelParams);
-      
-      let conversationToSend = [...currentState.conversation];
-
-      // Get latest instruction ID and custom instructions
-      const selectedInstructionId = localStorage.getItem("selectedInstructionId") || instructions[0].id;
-      const customInstructions = JSON.parse(localStorage.getItem("customInstructions")) || [];
-      console.log("Selected Instruction ID:", selectedInstructionId);
 
       // Initialize variables
       let systemContent = "";
       let instructionLabel = "";
       let conversationToSend = [...currentState.conversation];
+      
+      // Get latest instruction ID and custom instructions
+      const selectedInstructionId = localStorage.getItem("selectedInstructionId") || instructions[0].id;
+      const customInstructions = JSON.parse(localStorage.getItem("customInstructions")) || [];
+      console.log("Selected Instruction ID:", selectedInstructionId);
 
       // Include system message if applicable
       if (selectedModelParams && selectedModelParams.system) {
