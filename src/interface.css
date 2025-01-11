@@ -170,9 +170,6 @@ body {
 
 /* Style for the copy button */
 .copy-button {
-    position: absolute;
-    bottom: 10px;
-    left: 10px;
     background: none;
     border: none;
     color: #AAA;
@@ -183,6 +180,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+    margin-right: 10px;
 }
 
 .copy-button svg {
@@ -802,16 +800,18 @@ body.light-mode .loading-spinner {
 .action-container {
     position: absolute;
     bottom: 10px;
-    left: 10px;
+    right: 10px;
     display: flex;
     align-items: center;
+    justify-content: flex-end;
 }
 
 /* Model Label Style */
 .model-label {
     font-size: 12px;
     color: #AAA;
-    margin-right: 10px;
+    margin-left: 10px;
+    margin-right: 0;
 }
 
 /* Adjustments for light mode */

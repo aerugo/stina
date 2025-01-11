@@ -58,9 +58,9 @@ const RenderingModule = (function() {
                         });
                 });
 
-                // Append model label and copy button to the action container
-                actionContainer.appendChild(modelLabel);
+                // Append copy button and model label to the action container
                 actionContainer.appendChild(copyButton);
+                actionContainer.appendChild(modelLabel);
 
                 // Append the action container to the message element
                 messageElem.appendChild(actionContainer);
