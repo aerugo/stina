@@ -28,15 +28,39 @@ const ControllerModule = (function () {
       currentState.conversation
     );
 
+    // Retrieve selected model parameters
+    const selectedModelKey = config.selectedModelKey || "gpt-4o";
+    const selectedModelParams = models[selectedModelKey];
+    const deploymentName = selectedModelParams.deployment;
+
+    // Start with a copy of the conversation WITHOUT the loading message
+    let conversationToSend = [...currentState.conversation];
+    let instructionLabel = "";
+
+    // Handle system message if the model supports it
+    if (selectedModelParams && selectedModelParams.system) {
+      // Get latest instruction ID and custom instructions
+      const selectedInstructionId = localStorage.getItem("selectedInstructionId") || instructions[0].id;
+      const customInstructions = JSON.parse(localStorage.getItem("customInstructions")) || [];
+
+      // Find selected instruction
+      let instruction = customInstructions.find(instr => instr.id === selectedInstructionId) ||
+                       instructions.find(instr => instr.id === selectedInstructionId);
+
+      if (!instruction) {
+        instruction = instructions[0]; // Fallback to default instruction
+      }
+
+      instructionLabel = instruction.label;
+      // Prepend system message to conversationToSend
+      conversationToSend.unshift({ role: "system", content: instruction.content });
+    }
+
     const loadingMessage = { role: "assistant", content: "", isLoading: true };
     currentState.conversation.push(loadingMessage);
     RenderingModule.renderConversation(currentState.conversation);
 
     try {
-      // Retrieve selected model parameters
-      const selectedModelParams = models[config.selectedModelKey];
-      const deploymentName = selectedModelParams.deployment;
-
       // Prepare model options
       const modelOptions = {
         max_tokens: selectedModelParams.max_tokens,
@@ -49,14 +73,15 @@ const ControllerModule = (function () {
 
       // Call the API with the correct deployment name and options
       const response = await ApiModule.fetchChatCompletion(
-        currentState.conversation,
+        conversationToSend,
         deploymentName,
         modelOptions
       );
 
       currentState.conversation[currentState.conversation.length - 1] = {
         ...response,
-        model: config.selectedModelKey,
+        model: selectedModelKey,
+        instructionLabel: instructionLabel
       };
 
       RenderingModule.renderConversation(currentState.conversation);
