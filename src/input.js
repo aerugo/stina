@@ -56,42 +56,6 @@ var InputModule = (function () {
   }
 
 
-  function handleChatListClick(e) {
-    const chatName = e.target.closest(".chat-name");
-    const deleteBtn = e.target.closest(".delete-chat-btn");
-    const chatItem = e.target.closest("li");
-
-    if (!chatItem) return;
-
-    const chatId = chatItem.dataset.chatId;
-
-    if (chatName) {
-      const result = ChatModule.loadChat(chatId);
-      if (result.success) {
-        RenderingModule.renderChatList(
-          ChatModule.getCurrentState().chats,
-          result.currentChatId
-        );
-        RenderingModule.renderConversation(result.conversation);
-      } else {
-        showCustomAlert("Chat not found.");
-      }
-    } else if (deleteBtn) {
-      const chat = ChatModule.getCurrentState().chats.find(
-        (c) => c.id === chatId
-      );
-      showCustomConfirm(
-        `Are you sure you want to delete "${chat.name}"? This action cannot be undone.`,
-        function (confirmDelete) {
-          if (confirmDelete) {
-            const state = ChatModule.deleteChat(chatId);
-            RenderingModule.renderChatList(state.chats, state.currentChatId);
-            RenderingModule.renderConversation(state.conversation);
-          }
-        }
-      );
-    }
-  }
 
   function handleWindowClick(event) {
     if (event.target === document.getElementById("settings-modal")) {
@@ -110,7 +74,6 @@ var InputModule = (function () {
     const settingsBtn = document.getElementById("settings-btn");
     const closeSettings = document.getElementById("close-settings");
     const saveSettingsBtn = document.getElementById("save-settings-btn");
-    const chatList = document.getElementById("chat-list");
 
     sendBtn.addEventListener("click", handleSendButtonClick);
     userInput.addEventListener("keydown", handleUserInputKeyDown);
@@ -118,7 +81,6 @@ var InputModule = (function () {
     settingsBtn.addEventListener("click", openSettingsModal);
     closeSettings.addEventListener("click", closeSettingsModal);
     saveSettingsBtn.addEventListener("click", saveSettings);
-    chatList.addEventListener("click", handleChatListClick);
     window.addEventListener("click", handleWindowClick);
 
     // Populate the model selector
