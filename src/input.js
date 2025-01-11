@@ -56,7 +56,7 @@ var InputModule = (function () {
   }
 
   function handleNewChatClick() {
-    const state = LogicModule.createNewChat();
+    const state = ChatModule.createNewChat();
     RenderingModule.renderChatList(state.chats, state.currentChatId);
     RenderingModule.renderConversation(state.conversation);
   }

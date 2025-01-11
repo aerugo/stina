@@ -8,24 +8,6 @@ var LogicModule = (function () {
   let currentChatId = StorageModule.loadData("currentChatId");
   let conversation = [];
 
-  function createNewChat() {
-    const chatId = Date.now().toString();
-    const chat = {
-      id: chatId,
-      name: "New chat",
-      conversation: [],
-    };
-    chats.push(chat);
-    currentChatId = chatId;
-    conversation = chat.conversation;
-    saveChats();
-    saveCurrentChatId();
-    return {
-      chats,
-      currentChatId,
-      conversation,
-    };
-  }
 
   function loadChat(chatId) {
     currentChatId = chatId;
