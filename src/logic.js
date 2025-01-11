@@ -14,7 +14,7 @@ const LogicModule = (function () {
   let apiKey = localStorage.getItem("apiKey") || "";
   let theme = localStorage.getItem("theme") || "light-mode";
   let titleDeployment = localStorage.getItem("titleDeployment") || "";
-  let apiVersion = "2024-05-01-preview";
+  let apiVersion = "2024-12-01-preview";
 
   function createNewChat() {
     const chatId = Date.now().toString();
