@@ -10,7 +10,7 @@ var EventModule = (function() {
         const settingsBtn = document.getElementById('settings-btn');
         const closeSettings = document.getElementById('close-settings');
         const saveSettingsBtn = document.getElementById('save-settings-btn');
-        const chatList = document.getElementById('chat-list');
+        const chatListContainer = document.querySelector('.chat-list-container');
 
         newChatBtn.addEventListener('click', function() {
             const state = ChatModule.createNewChat();
@@ -23,7 +23,7 @@ var EventModule = (function() {
         settingsBtn.addEventListener('click', openSettingsModal);
         closeSettings.addEventListener('click', closeSettingsModal);
         saveSettingsBtn.addEventListener('click', saveSettings);
-        chatList.addEventListener('click', handleChatListClick);
+        chatListContainer.addEventListener('click', handleChatListClick);
         window.addEventListener('click', handleWindowClick);
 
         // Initialize theme on page load
@@ -55,7 +55,6 @@ var EventModule = (function() {
 
 
     function handleChatListClick(e) {
-        const chatName = e.target.closest('.chat-name');
         const deleteBtn = e.target.closest('.delete-chat-btn');
         const chatItem = e.target.closest('li');
 
@@ -63,18 +62,7 @@ var EventModule = (function() {
 
         const chatId = chatItem.dataset.chatId;
 
-        if (chatName) {
-            const result = ChatModule.loadChat(chatId);
-            if (result.success) {
-                RenderingModule.renderChatList(
-                    ChatModule.getCurrentState().chats,
-                    result.currentChatId
-                );
-                RenderingModule.renderConversation(result.conversation);
-            } else {
-                InputModule.showCustomAlert('Chat not found.');
-            }
-        } else if (deleteBtn) {
+        if (deleteBtn) {
             const chat = ChatModule.getCurrentState().chats.find(c => c.id === chatId);
             InputModule.showCustomConfirm(
                 `Are you sure you want to delete "${chat.name}"? This action cannot be undone.`,
@@ -86,6 +74,17 @@ var EventModule = (function() {
                     }
                 }
             );
+        } else {
+            const result = ChatModule.loadChat(chatId);
+            if (result.success) {
+                RenderingModule.renderChatList(
+                    ChatModule.getCurrentState().chats,
+                    result.currentChatId
+                );
+                RenderingModule.renderConversation(result.conversation);
+            } else {
+                InputModule.showCustomAlert('Chat not found.');
+            }
         }
     }
 
