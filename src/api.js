@@ -22,6 +22,21 @@ var ApiModule = (function() {
             Object.entries(options).filter(([_, value]) => value !== undefined)
         );
 
+        // Prepare the request body
+        const body = {
+            messages: messages.map(message => ({
+                role: message.role,
+                content: message.content
+            })),
+            ...validOptions
+        };
+
+        // Log the API request details
+        console.log("Submitting API Request:", {
+            url,
+            body: JSON.stringify(body, null, 2)
+        });
+
         const response = await fetch(url, {
             method: 'POST',
             headers: {
