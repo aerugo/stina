@@ -240,7 +240,7 @@ var InputModule = (function () {
     // Update selected model when changed
     modelSelect.addEventListener("change", function () {
       const newModelKey = this.value;
-      LogicModule.updateSelectedModel(newModelKey);
+      ConfigModule.updateConfig({ selectedModelKey: newModelKey });
       console.log("Model changed to:", newModelKey);
       console.log("Model config:", models[newModelKey]);
       updateInstructionsVisibility();

@@ -22,8 +22,5 @@ var LogicModule = (function () {
 
 
   return {
-    updateSelectedModel: function (newModelKey) {
-      ConfigModule.updateConfig({ selectedModelKey: newModelKey });
-    },
   };
 })();
