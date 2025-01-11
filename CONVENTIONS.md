@@ -1,6 +1,8 @@
-Application should be completely client side with no requirement of a server. It should be possible to run the application in a browser by opening the HTML file from the file system. 
+Application should be completely client side with no requirement of a server. 
+It should be possible to run the application in a browser by opening the HTML file from the file system. 
+Do NOT use ES6 imports/exports as they require a server to run and result in CORS issues when run from the file system.
 
-The application should be written in JavaScript and use the HTML5 canvas element for rendering.
+The application should be written in JavaScrip, HTML, and CSS.
 
 The application should be written in a modular way, with separate modules for the game logic, rendering, and user input. The modules should be written in separate files and loaded using the HTML script tag.
 
