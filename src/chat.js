@@ -155,5 +155,6 @@ var ChatModule = (function() {
         getCurrentChat,
         updateChatTitle,
         getCurrentState,
+        saveChats,
     };
 })();
