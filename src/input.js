@@ -424,24 +424,15 @@ var InputModule = (function () {
     LogicModule.saveConversation();
     userInput.value = "";
 
-    // Add a placeholder assistant message with a loading indicator
-    const loadingMessage = { role: "assistant", content: "", isLoading: true };
-    currentState.conversation.push(loadingMessage);
-    RenderingModule.renderConversation(currentState.conversation);
+    // Get the selected model parameters
+    const selectedModelKey = config.selectedModelKey || "gpt-4o";
+    const selectedModelParams = models[selectedModelKey];
+    console.log("Selected Model:", selectedModelKey, selectedModelParams);
 
-    // Store the index of the loading message to replace it later
-    const loadingMessageIndex = currentState.conversation.length - 1;
-
-    try {
-      // First prepare the conversation to send, before adding loading message
-      const selectedModelKey = config.selectedModelKey || "gpt-4o";
-      const selectedModelParams = models[selectedModelKey];
-      console.log("Selected Model:", selectedModelKey, selectedModelParams);
-
-      // Start with current conversation
-      let conversationToSend = [...currentState.conversation];
-      let instruction = null;
-      let instructionLabel = "";
+    // Start with a copy of the conversation WITHOUT the loading message
+    let conversationToSend = [...currentState.conversation];
+    let instruction = null;
+    let instructionLabel = "";
 
       // Add system message if model supports it
       if (selectedModelParams && selectedModelParams.system) {
@@ -464,14 +455,14 @@ var InputModule = (function () {
         console.log("Using instruction:", instruction.label);
         instructionLabel = instruction.label;
 
-        // Prepend system message to conversation
+        // Prepend system message to conversationToSend
         conversationToSend.unshift({ role: "system", content: instruction.content });
         console.log("Added system message:", instruction.content);
       } else {
         console.log("Model does not support system messages");
       }
 
-      // Now add the loading message for display only
+      // Add the loading message to the conversation for rendering only
       const loadingMessage = { role: "assistant", content: "", isLoading: true };
       currentState.conversation.push(loadingMessage);
       RenderingModule.renderConversation(currentState.conversation);
