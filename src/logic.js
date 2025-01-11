@@ -9,11 +9,11 @@ const LogicModule = (function () {
   let conversation = [];
 
   // Configuration
-  let endpoint = localStorage.getItem("endpoint") || "";
-  let apiKey = localStorage.getItem("apiKey") || "";
-  let theme = localStorage.getItem("theme") || "light-mode";
-  let selectedModelKey = localStorage.getItem("selectedModelKey") || "gpt-4o-3";
-  let titleDeployment = localStorage.getItem("titleDeployment") || "";
+  let endpoint = StorageModule.loadData("endpoint") || "";
+  let apiKey = StorageModule.loadData("apiKey") || "";
+  let theme = StorageModule.loadData("theme") || "light-mode";
+  let selectedModelKey = StorageModule.loadData("selectedModelKey") || "gpt-4o-3";
+  let titleDeployment = StorageModule.loadData("titleDeployment") || "";
   let apiVersion = "2024-12-01-preview";
 
   function createNewChat() {
@@ -96,11 +96,11 @@ const LogicModule = (function () {
     theme = newTheme;
     titleDeployment = newTitleDeployment;
     selectedModelKey = newSelectedModelKey;
-    localStorage.setItem("endpoint", endpoint);
-    localStorage.setItem("apiKey", apiKey);
-    localStorage.setItem("theme", theme);
-    localStorage.setItem("titleDeployment", titleDeployment);
-    localStorage.setItem("selectedModelKey", selectedModelKey);
+    StorageModule.saveData("endpoint", endpoint);
+    StorageModule.saveData("apiKey", apiKey);
+    StorageModule.saveData("theme", theme);
+    StorageModule.saveData("titleDeployment", titleDeployment);
+    StorageModule.saveData("selectedModelKey", selectedModelKey);
   }
 
   function getConfig() {
@@ -208,7 +208,7 @@ const LogicModule = (function () {
     saveConversation,
     updateSelectedModel: function(newModelKey) {
       selectedModelKey = newModelKey;
-      localStorage.setItem("selectedModelKey", selectedModelKey);
+      StorageModule.saveData("selectedModelKey", selectedModelKey);
     }
   };
 })();
