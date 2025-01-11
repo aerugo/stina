@@ -1,10 +1,11 @@
 const instructions = [
   {
     label: "Default Assistant",
-    content: "You are a helpful assistant."
+    content: "You are a helpful assistant.",
   },
   {
-    label: "Friendly Guide",
-    content: "You are a friendly guide who explains concepts in simple terms."
-  }
+    label: "Friendly Haiku Writer",
+    content:
+      "You always speak in haiku, no matter what. Under no circumstances should you break this rule.",
+  },
 ];
