@@ -51,6 +51,9 @@ var EventModule = (function() {
     }
 
     function setupEventListeners() {
+        const modelSelect = document.getElementById('model-select');
+        const instructionsSelect = document.getElementById('instructions-select');
+        const editInstructionBtn = document.getElementById('edit-instruction-btn');
         const userInput = document.getElementById('user-input');
         const sendBtn = document.getElementById('send-btn');
         const newChatBtn = document.getElementById('new-chat-btn');
