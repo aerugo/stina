@@ -6,9 +6,10 @@ var MessageModule = (function() {
     async function generateChatTitle(userMessage) {
         const prompt = `Provide a short (maximum 5 words) and descriptive chat title based on the following message:\n"${userMessage}"`;
         const titleMessage = { role: "user", content: prompt };
+        const config = ConfigModule.getConfig();
         const response = await ApiModule.fetchChatCompletion(
             [titleMessage],
-            ConfigModule.getConfig().titleDeployment
+            config.titleDeployment || models[config.selectedModelKey].deployment
         );
         return response.content.trim().replace(/[\n\r]/g, "");
     }

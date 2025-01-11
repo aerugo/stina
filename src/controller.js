@@ -30,9 +30,25 @@ const ControllerModule = (function() {
         RenderingModule.renderConversation(currentState.conversation);
 
         try {
+            // Retrieve selected model parameters
+            const selectedModelParams = models[config.selectedModelKey];
+            const deploymentName = selectedModelParams.deployment;
+
+            // Prepare model options
+            const modelOptions = {
+                max_tokens: selectedModelParams.maxTokens,
+                temperature: selectedModelParams.temperature,
+                top_p: selectedModelParams.top_p,
+                frequency_penalty: selectedModelParams.frequency_penalty,
+                presence_penalty: selectedModelParams.presence_penalty,
+                stop: selectedModelParams.stop
+            };
+
+            // Call the API with the correct deployment name and options
             const response = await ApiModule.fetchChatCompletion(
                 currentState.conversation,
-                config.selectedModelKey
+                deploymentName,
+                modelOptions
             );
             
             currentState.conversation[currentState.conversation.length - 1] = {

@@ -17,6 +17,11 @@ var ApiModule = (function() {
         const config = ConfigModule.getConfig();
         const url = `${config.endpoint}/openai/deployments/${deploymentName}/chat/completions?api-version=${API_VERSION}`;
 
+        // Filter out undefined options
+        const validOptions = Object.fromEntries(
+            Object.entries(options).filter(([_, value]) => value !== undefined)
+        );
+
         const response = await fetch(url, {
             method: 'POST',
             headers: {
@@ -28,7 +33,7 @@ var ApiModule = (function() {
                     role: message.role,
                     content: message.content
                 })),
-                ...options
+                ...validOptions
             })
         });
 
