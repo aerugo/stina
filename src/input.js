@@ -589,6 +589,9 @@ var InputModule = (function() {
     }
 
     return {
-        setupEventListeners
+        setupEventListeners,
+        showCustomAlert,
+        showCustomConfirm,
+        showInputModal
     };
 })();
