@@ -9,21 +9,6 @@ var LogicModule = (function () {
   let conversation = [];
 
 
-  function loadChat(chatId) {
-    currentChatId = chatId;
-    const chat = chats.find((c) => c.id === chatId);
-    if (chat) {
-      conversation = chat.conversation;
-      saveCurrentChatId();
-      return {
-        chats,
-        conversation,
-        currentChatId,
-        success: true,
-      };
-    }
-    return { success: false };
-  }
 
   function saveChats() {
     localStorage.setItem("chats", JSON.stringify(chats));
@@ -137,7 +122,6 @@ var LogicModule = (function () {
   }
 
   return {
-    loadChat,
     deleteChat,
     getCurrentChat,
     generateChatTitle,
