@@ -8,6 +8,7 @@ const ControllerModule = (function() {
         RenderingModule.renderChatList(state.chats, state.currentChatId);
         RenderingModule.renderConversation(state.conversation);
         EventModule.setupEventListeners();
+        InputModule.setupEventListeners();
         ThemeModule.applyTheme(ThemeModule.getCurrentTheme());
     }
 
