@@ -57,6 +57,7 @@ var ApiModule = (function() {
         }
 
         const data = await response.json();
+        console.log("API Response:", data);
         return data.choices[0].message;
     }
 
