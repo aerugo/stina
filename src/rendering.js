@@ -22,6 +22,15 @@ const RenderingModule = (function() {
                 htmlContent = DOMPurify.sanitize(htmlContent);
                 textElem.innerHTML = htmlContent;
 
+                // Create a container for the copy button and model label
+                const actionContainer = document.createElement('div');
+                actionContainer.classList.add('action-container');
+
+                // Create model label element
+                const modelLabel = document.createElement('span');
+                modelLabel.classList.add('model-label');
+                modelLabel.textContent = models[message.model]?.label || message.model || 'Unknown Model';
+
                 // Create copy button with SVG icon
                 const copyButton = document.createElement('button');
                 copyButton.classList.add('copy-button');
@@ -49,8 +58,12 @@ const RenderingModule = (function() {
                         });
                 });
 
-                // Append copy button to the message element
-                messageElem.appendChild(copyButton);
+                // Append model label and copy button to the action container
+                actionContainer.appendChild(modelLabel);
+                actionContainer.appendChild(copyButton);
+
+                // Append the action container to the message element
+                messageElem.appendChild(actionContainer);
             }
         } else {
             // For user messages, display plain text

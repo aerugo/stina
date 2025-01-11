@@ -797,3 +797,24 @@ body.light-mode .loading-spinner {
     border: 4px solid rgba(0, 0, 0, 0.1);
     border-top-color: #000000;
 }
+
+/* Action Container Style */
+.action-container {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    display: flex;
+    align-items: center;
+}
+
+/* Model Label Style */
+.model-label {
+    font-size: 12px;
+    color: #AAA;
+    margin-right: 10px;
+}
+
+/* Adjustments for light mode */
+body.light-mode .model-label {
+    color: #666;
+}

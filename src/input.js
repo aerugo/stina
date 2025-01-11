@@ -256,6 +256,8 @@ const InputModule = (function() {
             const assistantMessage = await LogicModule.fetchAzureOpenAIChatCompletion(
                 conversationToSend
             );
+            // Add the model key to the assistantMessage
+            assistantMessage.model = selectedModelKey;
             // Replace the loading message with the actual assistant message
             currentState.conversation[loadingMessageIndex] = assistantMessage;
             RenderingModule.renderConversation(currentState.conversation);
