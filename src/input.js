@@ -59,6 +59,7 @@ const InputModule = (function() {
                 if (confirmDelete) {
                     const state = LogicModule.deleteChat(chatId);
                     RenderingModule.renderChatList(state.chats, state.currentChatId);
+                    RenderingModule.renderConversation(state.conversation);
                 }
             }
         });

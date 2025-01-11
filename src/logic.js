@@ -76,7 +76,11 @@ const LogicModule = (function () {
       }
     }
     saveChats();
-    return { chats, currentChatId };
+    return {
+        chats,
+        currentChatId,
+        conversation
+    };
   }
 
   function updateConfig(
