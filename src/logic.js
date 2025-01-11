@@ -152,8 +152,16 @@ const LogicModule = (function () {
       content: message.content,
     }));
 
-    const { label, deployment, ...apiParams } = modelParams;
-    const body = { ...apiParams, messages: preparedMessages };
+    const { label, deployment, system, ...apiParams } = modelParams;
+    const body = {
+        max_tokens: modelParams.max_tokens,
+        temperature: modelParams.temperature,
+        top_p: modelParams.top_p,
+        frequency_penalty: modelParams.frequency_penalty,
+        presence_penalty: modelParams.presence_penalty,
+        stop: modelParams.stop,
+        messages: preparedMessages
+    };
 
     const response = await fetch(url, {
       method: "POST",
