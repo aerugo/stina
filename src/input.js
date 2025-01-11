@@ -113,6 +113,10 @@ var InputModule = (function() {
     }
 
     function setupEventListeners() {
+        // Initialize customInstructions and selectedInstructionId
+        let customInstructions = JSON.parse(localStorage.getItem('customInstructions')) || [];
+        let selectedInstructionId = localStorage.getItem('selectedInstructionId') || instructions[0].id;
+
         const userInput = document.getElementById('user-input');
         const sendBtn = document.getElementById('send-btn');
         const newChatBtn = document.getElementById('new-chat-btn');
