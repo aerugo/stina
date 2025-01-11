@@ -3,66 +3,106 @@
  * Handles user input and event listeners
  */
 const InputModule = (function() {
-    function showCustomAlert(message) {
+    function showCustomModal(title, message, buttons, callback) {
         const modal = document.getElementById('custom-modal');
         const titleElem = document.getElementById('custom-modal-title');
         const bodyElem = document.getElementById('custom-modal-body');
         const footerElem = document.getElementById('custom-modal-footer');
 
-        titleElem.textContent = 'Alert';
+        titleElem.textContent = title;
         bodyElem.innerHTML = `<p>${message}</p>`;
 
         footerElem.innerHTML = '';
-        const okButton = document.createElement('button');
-        okButton.textContent = 'OK';
-        okButton.addEventListener('click', () => {
-            modal.style.display = 'none';
+        buttons.forEach(button => {
+            const btn = document.createElement('button');
+            btn.textContent = button.label;
+            btn.addEventListener('click', () => {
+                modal.style.display = 'none';
+                if (callback) callback(button.value);
+            });
+            footerElem.appendChild(btn);
         });
-        footerElem.appendChild(okButton);
 
         modal.style.display = 'block';
 
         const closeButton = document.getElementById('custom-modal-close');
         closeButton.onclick = () => {
             modal.style.display = 'none';
+            if (callback) callback(null);
         };
     }
 
+    function showCustomAlert(message) {
+        showCustomModal('Alert', message, [{ label: 'OK', value: true }]);
+    }
+
     function showCustomConfirm(message, callback) {
-        const modal = document.getElementById('custom-modal');
-        const titleElem = document.getElementById('custom-modal-title');
-        const bodyElem = document.getElementById('custom-modal-body');
-        const footerElem = document.getElementById('custom-modal-footer');
+        const buttons = [
+            { label: 'Cancel', value: false },
+            { label: 'OK', value: true }
+        ];
+        showCustomModal('Confirm', message, buttons, callback);
+    }
 
-        titleElem.textContent = 'Confirm';
-        bodyElem.innerHTML = `<p>${message}</p>`;
+    function handleSendButtonClick() {
+        sendMessage();
+    }
 
-        footerElem.innerHTML = '';
+    function handleUserInputKeyDown(e) {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            sendMessage();
+        }
+    }
 
-        const cancelButton = document.createElement('button');
-        cancelButton.textContent = 'Cancel';
-        cancelButton.addEventListener('click', () => {
-            modal.style.display = 'none';
-            callback(false);
-        });
+    function handleNewChatClick() {
+        const state = LogicModule.createNewChat();
+        RenderingModule.renderChatList(state.chats, state.currentChatId);
+        RenderingModule.renderConversation(state.conversation);
+    }
 
-        const okButton = document.createElement('button');
-        okButton.textContent = 'OK';
-        okButton.addEventListener('click', () => {
-            modal.style.display = 'none';
-            callback(true);
-        });
+    function handleChatListClick(e) {
+        const chatName = e.target.closest('.chat-name');
+        const deleteBtn = e.target.closest('.delete-chat-btn');
+        const chatItem = e.target.closest('li');
 
-        footerElem.appendChild(cancelButton);
-        footerElem.appendChild(okButton);
+        if (!chatItem) return;
 
-        modal.style.display = 'block';
+        const chatId = chatItem.dataset.chatId;
 
-        const closeButton = document.getElementById('custom-modal-close');
-        closeButton.onclick = () => {
-            modal.style.display = 'none';
-            callback(false);
-        };
+        if (chatName) {
+            const result = LogicModule.loadChat(chatId);
+            if (result.success) {
+                RenderingModule.renderChatList(
+                    LogicModule.getCurrentState().chats,
+                    result.currentChatId
+                );
+                RenderingModule.renderConversation(result.conversation);
+            } else {
+                showCustomAlert('Chat not found.');
+            }
+        } else if (deleteBtn) {
+            const chat = LogicModule.getCurrentState().chats.find(c => c.id === chatId);
+            showCustomConfirm(
+                `Are you sure you want to delete "${chat.name}"? This action cannot be undone.`,
+                function(confirmDelete) {
+                    if (confirmDelete) {
+                        const state = LogicModule.deleteChat(chatId);
+                        RenderingModule.renderChatList(state.chats, state.currentChatId);
+                        RenderingModule.renderConversation(state.conversation);
+                    }
+                }
+            );
+        }
+    }
+
+    function handleWindowClick(event) {
+        if (event.target === document.getElementById('settings-modal')) {
+            closeSettingsModal();
+        }
+        if (event.target === document.getElementById('custom-modal')) {
+            document.getElementById('custom-modal').style.display = 'none';
+        }
     }
 
     function setupEventListeners() {
@@ -72,71 +112,16 @@ const InputModule = (function() {
         const settingsBtn = document.getElementById('settings-btn');
         const closeSettings = document.getElementById('close-settings');
         const saveSettingsBtn = document.getElementById('save-settings-btn');
-        const settingsModal = document.getElementById('settings-modal');
         const chatList = document.getElementById('chat-list');
 
-        sendBtn.addEventListener('click', sendMessage);
-        userInput.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                sendMessage();
-            }
-        });
-
-        newChatBtn.addEventListener('click', () => {
-            const state = LogicModule.createNewChat();
-            RenderingModule.renderChatList(state.chats, state.currentChatId);
-            RenderingModule.renderConversation(state.conversation);
-        });
-
+        sendBtn.addEventListener('click', handleSendButtonClick);
+        userInput.addEventListener('keydown', handleUserInputKeyDown);
+        newChatBtn.addEventListener('click', handleNewChatClick);
         settingsBtn.addEventListener('click', openSettingsModal);
         closeSettings.addEventListener('click', closeSettingsModal);
         saveSettingsBtn.addEventListener('click', saveSettings);
-
-        chatList.addEventListener('click', (e) => {
-            const chatName = e.target.closest('.chat-name');
-            const deleteBtn = e.target.closest('.delete-chat-btn');
-            const chatItem = e.target.closest('li');
-
-            if (!chatItem) return;
-
-            const chatId = chatItem.dataset.chatId;
-
-            if (chatName) {
-                const result = LogicModule.loadChat(chatId);
-                if (result.success) {
-                    RenderingModule.renderChatList(
-                        LogicModule.getCurrentState().chats,
-                        result.currentChatId
-                    );
-                    RenderingModule.renderConversation(result.conversation);
-                } else {
-                    showCustomAlert('Chat not found.');
-                }
-            } else if (deleteBtn) {
-                const chat = LogicModule.getCurrentState().chats.find(c => c.id === chatId);
-                showCustomConfirm(
-                    `Are you sure you want to delete "${chat.name}"? This action cannot be undone.`,
-                    function(confirmDelete) {
-                        if (confirmDelete) {
-                            const state = LogicModule.deleteChat(chatId);
-                            RenderingModule.renderChatList(state.chats, state.currentChatId);
-                            RenderingModule.renderConversation(state.conversation);
-                        }
-                    }
-                );
-            }
-        });
-
-        window.addEventListener('click', (event) => {
-            if (event.target === settingsModal) {
-                closeSettingsModal();
-            }
-            const customModal = document.getElementById('custom-modal');
-            if (event.target === customModal) {
-                customModal.style.display = 'none';
-            }
-        });
+        chatList.addEventListener('click', handleChatListClick);
+        window.addEventListener('click', handleWindowClick);
 
         // Initialize theme on page load
         const storedTheme = LogicModule.getConfig().theme || 'light-mode';
