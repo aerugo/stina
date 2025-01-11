@@ -25,15 +25,16 @@ const RenderingModule = (function() {
                 // Create a container for the copy button and model label
                 const actionContainer = document.createElement('div');
                 actionContainer.classList.add('action-container');
+                actionContainer.style.width = '100%';
+
+                // Create copy button with SVG icon
+                const copyButton = document.createElement('button');
+                copyButton.classList.add('copy-button');
 
                 // Create model label element
                 const modelLabel = document.createElement('span');
                 modelLabel.classList.add('model-label');
                 modelLabel.textContent = models[message.model]?.label || message.model || 'Unknown Model';
-
-                // Create copy button with SVG icon
-                const copyButton = document.createElement('button');
-                copyButton.classList.add('copy-button');
                 copyButton.innerHTML = `
                     <svg width="16" height="16" viewBox="0 0 24 24">
                         <path fill="currentColor" d="M19,21H5C3.9,21 3,20.1 3,19V7H5V19H19V21ZM21,5H8C6.9,5 6,5.9 6,7V17C6,18.1 6.9,19 8,19H21C22.1,19 23,18.1 23,17V7C23,5.9 22.1,5 21,5M21,17H8V7H21V17Z" />
