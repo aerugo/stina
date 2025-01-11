@@ -93,7 +93,6 @@ var LogicModule = (function () {
   }
 
   return {
-    updateChatTitle,
     fetchAzureOpenAIChatCompletion,
     getCurrentState,
     saveConversation,
