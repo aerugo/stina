@@ -177,10 +177,15 @@ var InputModule = (function () {
 
     function populateInstructions() {
       instructionsSelect.innerHTML = "";
+      console.log("Populating Instructions...");
 
       // Fetch customInstructions and selectedInstructionId from localStorage
       const customInstructions = JSON.parse(localStorage.getItem("customInstructions")) || [];
       const selectedInstructionId = localStorage.getItem("selectedInstructionId") || instructions[0].id;
+      
+      console.log("Default Instructions:", instructions);
+      console.log("Custom Instructions:", customInstructions);
+      console.log("Selected Instruction ID:", selectedInstructionId);
 
       // Add default instructions
       instructions.forEach((instruction) => {
@@ -278,6 +283,8 @@ var InputModule = (function () {
     modelSelect.addEventListener("change", function () {
       const newModelKey = this.value;
       LogicModule.updateSelectedModel(newModelKey);
+      console.log("Model changed to:", newModelKey);
+      console.log("Model config:", models[newModelKey]);
       updateInstructionsVisibility();
     });
 
@@ -410,35 +417,41 @@ var InputModule = (function () {
       // Get current model configuration
       const selectedModelKey = config.selectedModelKey || "gpt-4o";
       const selectedModelParams = models[selectedModelKey];
+      console.log("Selected Model:", selectedModelKey, selectedModelParams);
       
       let conversationToSend = [...currentState.conversation];
 
       // Get latest instruction ID and custom instructions
       const selectedInstructionId = localStorage.getItem("selectedInstructionId") || instructions[0].id;
       const customInstructions = JSON.parse(localStorage.getItem("customInstructions")) || [];
+      console.log("Selected Instruction ID:", selectedInstructionId);
+
+      // Initialize systemContent and instructionLabel
+      let systemContent = "";
+      let instructionLabel = "";
 
       // Include system message if applicable
       if (selectedModelParams.system) {
-        const instructionsSelect = document.getElementById(
-          "instructions-select"
-        );
-        let systemContent = "";
+        console.log("Model supports system messages");
+        
+        // Retrieve instruction
+        let instruction = customInstructions.find(instr => instr.id === selectedInstructionId) ||
+                         instructions.find(instr => instr.id === selectedInstructionId);
 
-        // Check custom instructions first
-        const customInstruction = customInstructions.find(
-          (instr) => instr.id === selectedInstructionId
-        );
-        if (customInstruction) {
-          systemContent = customInstruction.content;
+        if (instruction) {
+          systemContent = instruction.content;
+          instructionLabel = instruction.label;
+          console.log("Found instruction:", instruction.label);
         } else {
-          // Check default instructions
-          const defaultInstruction = instructions.find(
-            (instr) => instr.id === selectedInstructionId
-          );
-          if (defaultInstruction) {
-            systemContent = defaultInstruction.content;
-          }
+          console.warn("Instruction not found for ID:", selectedInstructionId);
+          // Fallback to default instruction
+          instruction = instructions[0];
+          systemContent = instruction.content;
+          instructionLabel = instruction.label;
+          console.log("Using fallback instruction:", instruction.label);
         }
+
+        console.log("System Content:", systemContent);
 
         if (systemContent) {
           // Prepend system message
@@ -447,7 +460,11 @@ var InputModule = (function () {
             ...conversationToSend,
           ];
         }
+      } else {
+        console.log("Model does not support system messages");
       }
+
+      console.log("Final conversation to send:", conversationToSend);
 
       // Use the existing selectedModelParams and update instruction info
       let instructionLabel = "";
