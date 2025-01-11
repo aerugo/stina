@@ -248,7 +248,8 @@ const InputModule = (function() {
             const assistantMessage = await LogicModule.fetchAzureOpenAIChatCompletion(
                 conversationToSend
             );
-            currentState.conversation.push(assistantMessage);
+            // Replace the loading message with the actual assistant message
+            currentState.conversation[loadingMessageIndex] = assistantMessage;
             RenderingModule.renderConversation(currentState.conversation);
             LogicModule.saveConversation();
 
@@ -261,6 +262,9 @@ const InputModule = (function() {
                 RenderingModule.renderChatList(LogicModule.getCurrentState().chats, currentState.currentChatId);
             }
         } catch (error) {
+            // Remove the loading message
+            currentState.conversation.splice(loadingMessageIndex, 1);
+            RenderingModule.renderConversation(currentState.conversation);
             console.error('Error:', error);
             showCustomAlert('An error occurred while communicating with the Azure OpenAI API. Check the console for details.');
         }

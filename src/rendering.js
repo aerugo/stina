@@ -13,10 +13,14 @@ const RenderingModule = (function() {
         textElem.classList.add('text');
     
         if (message.role === 'assistant') {
-            // Parse markdown content and sanitize it
-            let htmlContent = marked.parse(message.content);
-            htmlContent = DOMPurify.sanitize(htmlContent);
-            textElem.innerHTML = htmlContent;
+            if (message.isLoading) {
+                // Display loading animation
+                textElem.innerHTML = '<div class="loading-spinner"></div>';
+            } else {
+                // Parse markdown content and sanitize it
+                let htmlContent = marked.parse(message.content);
+                htmlContent = DOMPurify.sanitize(htmlContent);
+                textElem.innerHTML = htmlContent;
 
             // Create copy button with SVG icon
             const copyButton = document.createElement('button');
