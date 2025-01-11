@@ -18,6 +18,7 @@ var EventModule = (function() {
             const state = ChatModule.createNewChat();
             RenderingModule.renderChatList(state.chats, state.currentChatId);
             RenderingModule.renderConversation(state.conversation);
+            updateModelAndInstructionSelectors();
         });
 
         sendBtn.addEventListener('click', handleSendButtonClick);
@@ -41,12 +42,35 @@ var EventModule = (function() {
         modelSelect.addEventListener('change', function() {
             const newModelKey = this.value;
             ConfigModule.updateConfig({ selectedModelKey: newModelKey });
+            // Update the current chat's selected model
+            const currentChat = ChatModule.getCurrentChat();
+            if (currentChat) {
+                currentChat.selectedModelKey = newModelKey;
+                ChatModule.saveChats();
+            }
             updateInstructionsVisibility();
         });
 
         // Setup instructions handling
         const instructionsSelect = document.getElementById('instructions-select');
         const editInstructionBtn = document.getElementById('edit-instruction-btn');
+
+        function updateModelAndInstructionSelectors() {
+            const currentChat = ChatModule.getCurrentChat();
+            const config = ConfigModule.getConfig();
+            const modelSelect = document.getElementById('model-select');
+            const instructionsSelect = document.getElementById('instructions-select');
+
+            if (currentChat) {
+                modelSelect.value = currentChat.selectedModelKey || config.selectedModelKey || 'gpt-4o';
+                instructionsSelect.value = currentChat.selectedInstructionId || config.selectedInstructionId || instructions[0].id;
+            } else {
+                modelSelect.value = config.selectedModelKey || 'gpt-4o';
+                instructionsSelect.value = config.selectedInstructionId || instructions[0].id;
+            }
+            updateInstructionsVisibility();
+            updateEditButtonVisibility();
+        }
 
         function updateInstructionsVisibility() {
             const config = ConfigModule.getConfig();
@@ -158,7 +182,13 @@ var EventModule = (function() {
                     }
                 );
             } else {
-                localStorage.setItem('selectedInstructionId', this.value);
+                ConfigModule.updateConfig({ selectedInstructionId: this.value });
+                // Update the current chat's selected instruction
+                const currentChat = ChatModule.getCurrentChat();
+                if (currentChat) {
+                    currentChat.selectedInstructionId = this.value;
+                    ChatModule.saveChats();
+                }
                 updateEditButtonVisibility();
             }
         });
@@ -219,6 +249,7 @@ var EventModule = (function() {
                     result.currentChatId
                 );
                 RenderingModule.renderConversation(result.conversation);
+                updateModelAndInstructionSelectors();
             } else {
                 ModalModule.showCustomAlert('Chat not found.');
             }

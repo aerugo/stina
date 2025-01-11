@@ -29,8 +29,9 @@ const ControllerModule = (function () {
       currentState.conversation
     );
 
-    // Retrieve selected model parameters
-    const selectedModelKey = config.selectedModelKey || "gpt-4o";
+    // Retrieve selected model parameters from current chat
+    const currentChat = ChatModule.getCurrentChat();
+    const selectedModelKey = currentChat.selectedModelKey || 'gpt-4o';
     const selectedModelParams = ModelsModule.getModel(selectedModelKey);
     const deploymentName = selectedModelParams.deployment;
 
@@ -41,7 +42,7 @@ const ControllerModule = (function () {
     // Handle system message if the model supports it
     if (selectedModelParams && selectedModelParams.system) {
       // Get latest instruction ID and custom instructions
-      const selectedInstructionId = localStorage.getItem("selectedInstructionId") || instructions[0].id;
+      const selectedInstructionId = currentChat.selectedInstructionId || instructions[0].id;
       const customInstructions = JSON.parse(localStorage.getItem("customInstructions")) || [];
 
       // Find selected instruction

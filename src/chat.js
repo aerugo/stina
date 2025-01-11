@@ -9,11 +9,14 @@ var ChatModule = (function() {
     let conversation = [];
 
     function createNewChat() {
+        const config = ConfigModule.getConfig();
         const chatId = Date.now().toString();
         const chat = {
             id: chatId,
             name: "New chat",
             conversation: [],
+            selectedModelKey: config.lastUsedModelKey || 'gpt-4o',
+            selectedInstructionId: config.lastUsedInstructionId || instructions[0].id,
         };
         chats.push(chat);
         currentChatId = chatId;
@@ -32,6 +35,11 @@ var ChatModule = (function() {
         const chat = chats.find((c) => c.id === chatId);
         if (chat) {
             conversation = chat.conversation;
+            // Update selected model and instruction in config
+            ConfigModule.updateConfig({
+                selectedModelKey: chat.selectedModelKey,
+                selectedInstructionId: chat.selectedInstructionId,
+            });
             saveCurrentChatId();
             return {
                 chats,
