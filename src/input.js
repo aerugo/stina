@@ -379,7 +379,10 @@ var InputModule = (function () {
     currentState.conversation.push(newMessage);
 
     RenderingModule.renderConversation(currentState.conversation);
-    LogicModule.saveConversation();
+    MessageModule.saveConversation(
+      currentState.currentChatId,
+      currentState.conversation
+    );
     userInput.value = "";
 
     // Get the selected model parameters
