@@ -164,6 +164,12 @@ var LogicModule = (function () {
       messages: preparedMessages,
     };
 
+    // Log the API request details
+    console.log("Submitting API Request:", {
+      url,
+      body: JSON.stringify(body, null, 2)
+    });
+
     const response = await fetch(url, {
       method: "POST",
       headers: {
