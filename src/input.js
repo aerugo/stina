@@ -260,7 +260,7 @@ var InputModule = (function () {
 
     // Handle visibility of Instructions selector based on selected model
     function updateInstructionsVisibility() {
-      const config = LogicModule.getConfig();
+      const config = ConfigModule.getConfig();
       const currentModelKey = config.selectedModelKey || "gpt-4o";
       const selectedModelParams = models[currentModelKey];
       const instructionsGroup = document.getElementById("instructions-group");
@@ -399,7 +399,7 @@ var InputModule = (function () {
     updateInstructionsVisibility();
 
     // Initialize theme on page load
-    const storedTheme = LogicModule.getConfig().theme || "light-mode";
+    const storedTheme = ConfigModule.getConfig().theme || "light-mode";
     applyTheme(storedTheme);
   }
 
@@ -408,7 +408,7 @@ var InputModule = (function () {
     const messageContent = userInput.value.trim();
     if (messageContent === "") return;
 
-    const config = LogicModule.getConfig();
+    const config = ConfigModule.getConfig();
     if (!config.endpoint || !config.apiKey) {
       showCustomAlert(
         "Please set your configuration in the settings before sending messages."

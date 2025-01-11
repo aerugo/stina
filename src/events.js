@@ -22,7 +22,7 @@ var EventModule = (function() {
         window.addEventListener('click', handleWindowClick);
 
         // Initialize theme on page load
-        const storedTheme = LogicModule.getConfig().theme || 'light-mode';
+        const storedTheme = ConfigModule.getConfig().theme || 'light-mode';
         ThemeModule.applyTheme(storedTheme);
     }
 
