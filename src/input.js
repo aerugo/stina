@@ -107,12 +107,6 @@ var InputModule = (function () {
     }
   }
 
-  let selectedModelKey = LogicModule.getConfig().selectedModelKey || "gpt-4o";
-
-  // Validate selectedModelKey
-  if (!models[selectedModelKey]) {
-    selectedModelKey = "gpt-4o";
-  }
 
   function setupEventListeners() {
     const userInput = document.getElementById("user-input");
@@ -278,8 +272,8 @@ var InputModule = (function () {
 
     // Update selected model when changed
     modelSelect.addEventListener("change", function () {
-      selectedModelKey = this.value;
-      LogicModule.updateSelectedModel(selectedModelKey);
+      const newModelKey = this.value;
+      LogicModule.updateSelectedModel(newModelKey);
       updateInstructionsVisibility();
     });
 
@@ -409,6 +403,10 @@ var InputModule = (function () {
     const loadingMessageIndex = currentState.conversation.length - 1;
 
     try {
+      // Get current model configuration
+      const selectedModelKey = config.selectedModelKey || "gpt-4o";
+      const selectedModelParams = models[selectedModelKey];
+      
       let conversationToSend = [...currentState.conversation];
 
       // Get latest instruction ID and custom instructions
@@ -416,7 +414,6 @@ var InputModule = (function () {
       const customInstructions = JSON.parse(localStorage.getItem("customInstructions")) || [];
 
       // Include system message if applicable
-      const selectedModelParams = models[selectedModelKey];
       if (selectedModelParams.system) {
         const instructionsSelect = document.getElementById(
           "instructions-select"
