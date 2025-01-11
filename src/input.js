@@ -134,14 +134,64 @@ const InputModule = (function() {
             modelSelect.appendChild(option);
         }
 
+        // Populate the instructions selector
+        const instructionsSelect = document.getElementById('instructions-select');
+        instructions.forEach((instruction, index) => {
+            const option = document.createElement('option');
+            option.value = index;
+            option.textContent = instruction.label;
+            instructionsSelect.appendChild(option);
+        });
+
+        // Add an option for creating a new instruction
+        const customOption = document.createElement('option');
+        customOption.value = 'custom';
+        customOption.textContent = 'Create New Instruction...';
+        instructionsSelect.appendChild(customOption);
+
         // Set the selected model based on the config
         modelSelect.value = selectedModelKey;
+
+        // Handle visibility of Instructions selector based on selected model
+        function updateInstructionsVisibility() {
+            const selectedModelParams = models[selectedModelKey];
+            const instructionsGroup = document.getElementById('instructions-group');
+            if (selectedModelParams.system) {
+                instructionsGroup.style.display = 'flex';
+            } else {
+                instructionsGroup.style.display = 'none';
+            }
+        }
 
         // Update selected model when changed
         modelSelect.addEventListener('change', function() {
             selectedModelKey = this.value;
             LogicModule.updateSelectedModel(selectedModelKey);
+            updateInstructionsVisibility();
         });
+
+        // Handle creation of new instruction
+        instructionsSelect.addEventListener('change', function() {
+            if (this.value === 'custom') {
+                const customInstruction = prompt('Enter your custom instruction:');
+                if (customInstruction) {
+                    const customLabel = prompt('Enter a label for your custom instruction:') || 'Custom Instruction';
+                    const newInstruction = { label: customLabel, content: customInstruction };
+                    instructions.push(newInstruction);
+                    const newOption = document.createElement('option');
+                    newOption.value = instructions.length - 1;
+                    newOption.textContent = customLabel;
+                    instructionsSelect.insertBefore(newOption, customOption);
+                    instructionsSelect.value = instructions.length - 1;
+                } else {
+                    // Revert to default if no input
+                    instructionsSelect.value = 0;
+                }
+            }
+        });
+
+        // Initialize instructions visibility
+        updateInstructionsVisibility();
 
         // Initialize theme on page load
         const storedTheme = LogicModule.getConfig().theme || 'light-mode';
@@ -168,8 +218,31 @@ const InputModule = (function() {
         userInput.value = '';
 
         try {
+            let conversationToSend = [...currentState.conversation];
+
+            // Include system message if applicable
+            const selectedModelParams = models[selectedModelKey];
+            if (selectedModelParams.system) {
+                const instructionsSelect = document.getElementById('instructions-select');
+                let systemContent = '';
+
+                if (instructionsSelect.value === 'custom') {
+                    // Should not reach here, but handle just in case
+                    systemContent = '';
+                } else {
+                    const instructionIndex = parseInt(instructionsSelect.value);
+                    const selectedInstruction = instructions[instructionIndex];
+                    systemContent = selectedInstruction.content;
+                }
+
+                if (systemContent) {
+                    // Prepend system message
+                    conversationToSend = [{ role: 'system', content: systemContent }, ...conversationToSend];
+                }
+            }
+
             const assistantMessage = await LogicModule.fetchAzureOpenAIChatCompletion(
-                currentState.conversation
+                conversationToSend
             );
             currentState.conversation.push(assistantMessage);
             RenderingModule.renderConversation(currentState.conversation);

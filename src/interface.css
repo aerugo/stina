@@ -5,8 +5,8 @@
     box-sizing: border-box;
 }
 
-/* Model Selector */
-.model-selector {
+/* Selectors Container */
+.selectors-container {
     display: flex;
     align-items: center;
     padding: 10px;
@@ -14,11 +14,17 @@
     color: #FFFFFF;
 }
 
-.model-selector label {
+.selector-group {
+    display: flex;
+    align-items: center;
+    margin-right: 20px;
+}
+
+.selector-group label {
     margin-right: 10px;
 }
 
-.model-selector select {
+.selector-group select {
     background: #444654;
     color: #FFFFFF;
     border: none;
