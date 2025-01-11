@@ -12,6 +12,8 @@ const RenderingModule = (function() {
         const textElem = document.createElement('div');
         textElem.classList.add('text');
     
+        let actionContainer = null;
+
         if (message.role === 'assistant') {
             if (message.isLoading) {
                 // Display loading animation
@@ -23,7 +25,7 @@ const RenderingModule = (function() {
                 textElem.innerHTML = htmlContent;
 
                 // Create a container for the copy button and model label
-                const actionContainer = document.createElement('div');
+                actionContainer = document.createElement('div');
                 actionContainer.classList.add('action-container');
                 actionContainer.style.width = '100%';
 
@@ -62,15 +64,14 @@ const RenderingModule = (function() {
                 // Append copy button and model label to the action container
                 actionContainer.appendChild(copyButton);
                 actionContainer.appendChild(modelLabel);
-
             }
         } else {
             // For user messages, display plain text
             textElem.innerText = message.content;
         }
+
         messageElem.appendChild(textElem);
-        if (message.role === 'assistant' && !message.isLoading) {
-            // Append the action container after the text element
+        if (actionContainer) {
             messageElem.appendChild(actionContainer);
         }
         return messageElem;
