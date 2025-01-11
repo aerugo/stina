@@ -29,7 +29,7 @@ const ControllerModule = (function () {
 
     // Retrieve selected model parameters
     const selectedModelKey = config.selectedModelKey || "gpt-4o";
-    const selectedModelParams = models[selectedModelKey];
+    const selectedModelParams = ModelsModule.getModel(selectedModelKey);
     const deploymentName = selectedModelParams.deployment;
 
     // Start with a copy of the conversation WITHOUT the loading message

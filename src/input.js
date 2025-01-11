@@ -3,6 +3,7 @@
  * Handles user input processing and modal dialogs
  */
 var InputModule = (function () {
+  const models = ModelsModule.getModels(); // Retrieve models here
   function showCustomModal(title, message, buttons, callback) {
     const modal = document.getElementById("custom-modal");
     const titleElem = document.getElementById("custom-modal-title");

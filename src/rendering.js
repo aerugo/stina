@@ -37,6 +37,7 @@ var RenderingModule = (function() {
                 const modelLabel = document.createElement('span');
                 modelLabel.classList.add('model-label');
                 // Determine the model label text
+                const models = ModelsModule.getModels();
                 let modelLabelText = models[message.model]?.label || message.model || 'Unknown Model';
                 if (models[message.model]?.system && message.instructionLabel) {
                     modelLabelText += ' with ' + message.instructionLabel;
