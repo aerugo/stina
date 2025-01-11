@@ -3,6 +3,9 @@
  * Handles user input and event listeners
  */
 const InputModule = (function() {
+    // Load custom instructions from localStorage at the module level
+    let customInstructions = JSON.parse(localStorage.getItem('customInstructions')) || [];
+
     function showCustomModal(title, message, buttons, callback) {
         const modal = document.getElementById('custom-modal');
         const titleElem = document.getElementById('custom-modal-title');
@@ -134,9 +137,6 @@ const InputModule = (function() {
             modelSelect.appendChild(option);
         }
 
-        // Load custom instructions from localStorage
-        let customInstructions = JSON.parse(localStorage.getItem('customInstructions')) || [];
-
         function saveCustomInstruction(instruction) {
             customInstructions.push(instruction);
             localStorage.setItem('customInstructions', JSON.stringify(customInstructions));
@@ -152,24 +152,31 @@ const InputModule = (function() {
         // Populate the instructions selector
         const instructionsSelect = document.getElementById('instructions-select');
         
-        // Add default instructions
-        instructions.forEach((instruction) => {
-            const option = document.createElement('option');
-            option.value = instruction.id;
-            option.textContent = instruction.label;
-            instructionsSelect.appendChild(option);
-        });
+        function populateInstructions() {
+            instructionsSelect.innerHTML = '';
+            
+            // Add default instructions
+            instructions.forEach((instruction) => {
+                const option = document.createElement('option');
+                option.value = instruction.id;
+                option.textContent = instruction.label;
+                instructionsSelect.appendChild(option);
+            });
 
-        // Add custom instructions
-        customInstructions.forEach((instruction) => {
-            addInstructionOption(instruction);
-        });
+            // Add custom instructions
+            customInstructions.forEach((instruction) => {
+                addInstructionOption(instruction);
+            });
 
-        // Add the option for creating a new instruction
-        const customOption = document.createElement('option');
-        customOption.value = 'custom';
-        customOption.textContent = 'Create New Instruction...';
-        instructionsSelect.appendChild(customOption);
+            // Add the option for creating a new instruction
+            const customOption = document.createElement('option');
+            customOption.value = 'custom';
+            customOption.textContent = 'Create New Instruction...';
+            instructionsSelect.appendChild(customOption);
+        }
+
+        // Initialize instructions
+        populateInstructions();
 
         // Set the selected model based on the config
         modelSelect.value = selectedModelKey;
