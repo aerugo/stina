@@ -13,6 +13,7 @@ const LogicModule = (function () {
   let deployment = localStorage.getItem("deployment") || "";
   let apiKey = localStorage.getItem("apiKey") || "";
   let theme = localStorage.getItem("theme") || "light-mode";
+  let selectedModelKey = localStorage.getItem("selectedModelKey") || "gpt-4o-3";
   let titleDeployment = localStorage.getItem("titleDeployment") || "";
   let apiVersion = "2024-12-01-preview";
 
@@ -89,7 +90,8 @@ const LogicModule = (function () {
     newDeployment,
     newApiKey,
     newTheme,
-    newTitleDeployment
+    newTitleDeployment,
+    newSelectedModelKey
   ) {
     endpoint = newEndpoint;
     deployment = newDeployment;
@@ -101,6 +103,8 @@ const LogicModule = (function () {
     localStorage.setItem("apiKey", apiKey);
     localStorage.setItem("theme", theme);
     localStorage.setItem("titleDeployment", titleDeployment);
+    selectedModelKey = newSelectedModelKey;
+    localStorage.setItem("selectedModelKey", selectedModelKey);
   }
 
   function getConfig() {
@@ -110,6 +114,7 @@ const LogicModule = (function () {
       apiKey,
       theme,
       titleDeployment,
+      selectedModelKey
     };
   }
 
@@ -147,15 +152,12 @@ const LogicModule = (function () {
       content: message.content,
     }));
 
-    const body = {
-      messages: preparedMessages,
-      max_tokens: 800,
-      temperature: 0.7,
-      top_p: 0.95,
-      frequency_penalty: 0,
-      presence_penalty: 0,
-      stop: null,
-    };
+    const modelParams = models[selectedModelKey];
+    if (!modelParams) {
+      throw new Error(`Model ${selectedModelKey} not found.`);
+    }
+
+    const body = { ...modelParams, messages: preparedMessages };
 
     const response = await fetch(url, {
       method: "POST",
@@ -205,5 +207,9 @@ const LogicModule = (function () {
     fetchAzureOpenAIChatCompletion,
     getCurrentState,
     saveConversation,
+    updateSelectedModel: function(newModelKey) {
+      selectedModelKey = newModelKey;
+      localStorage.setItem("selectedModelKey", selectedModelKey);
+    }
   };
 })();

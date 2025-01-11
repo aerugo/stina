@@ -5,6 +5,27 @@
     box-sizing: border-box;
 }
 
+/* Model Selector */
+.model-selector {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    background: #343541;
+    color: #FFFFFF;
+}
+
+.model-selector label {
+    margin-right: 10px;
+}
+
+.model-selector select {
+    background: #444654;
+    color: #FFFFFF;
+    border: none;
+    padding: 5px;
+    border-radius: 5px;
+}
+
 /* Base Layout */
 body {
     margin: 0;

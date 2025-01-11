@@ -105,6 +105,8 @@ const InputModule = (function() {
         }
     }
 
+    let selectedModelKey = LogicModule.getConfig().selectedModelKey || 'gpt-4o-3';
+
     function setupEventListeners() {
         const userInput = document.getElementById('user-input');
         const sendBtn = document.getElementById('send-btn');
@@ -122,6 +124,24 @@ const InputModule = (function() {
         saveSettingsBtn.addEventListener('click', saveSettings);
         chatList.addEventListener('click', handleChatListClick);
         window.addEventListener('click', handleWindowClick);
+
+        // Populate the model selector
+        const modelSelect = document.getElementById('model-select');
+        for (const key in models) {
+            const option = document.createElement('option');
+            option.value = key;
+            option.textContent = key;
+            modelSelect.appendChild(option);
+        }
+
+        // Set the selected model based on the config
+        modelSelect.value = selectedModelKey;
+
+        // Update selected model when changed
+        modelSelect.addEventListener('change', function() {
+            selectedModelKey = this.value;
+            LogicModule.updateSelectedModel(selectedModelKey);
+        });
 
         // Initialize theme on page load
         const storedTheme = LogicModule.getConfig().theme || 'light-mode';
