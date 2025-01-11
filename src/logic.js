@@ -4,8 +4,8 @@
  */
 var LogicModule = (function () {
   // Private variables
-  let chats = JSON.parse(localStorage.getItem("chats")) || [];
-  let currentChatId = localStorage.getItem("currentChatId");
+  let chats = StorageModule.loadData("chats") || [];
+  let currentChatId = StorageModule.loadData("currentChatId");
   let conversation = [];
 
   // Configuration

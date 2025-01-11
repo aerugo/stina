@@ -9,23 +9,31 @@ var StorageModule = (function () {
    * @param {*} value - The data to store (will be JSON-stringified).
    */
   function saveData(key, value) {
-    localStorage.setItem(key, JSON.stringify(value));
+    try {
+      localStorage.setItem(key, JSON.stringify(value));
+    } catch (e) {
+      console.error(`Error saving data for key "${key}":`, e);
+    }
   }
 
   /**
    * Loads data from localStorage by key.
    * @param {string} key - The key of the data to retrieve.
-   * @returns {*} - The parsed data, or null if not found.
+   * @returns {*} - The parsed data, or null if not found or on error.
    */
   function loadData(key) {
-    const data = localStorage.getItem(key);
-    if (!data) return null;
     try {
-      return JSON.parse(data);
+      const data = localStorage.getItem(key);
+      if (!data) return null;
+      try {
+        return JSON.parse(data);
+      } catch (e) {
+        console.error(`Error parsing data for key "${key}":`, e);
+        localStorage.removeItem(key);
+        return null;
+      }
     } catch (e) {
-      console.error(`Error parsing data for key "${key}":`, e);
-      // Remove corrupted data
-      localStorage.removeItem(key);
+      console.error(`Error accessing localStorage for key "${key}":`, e);
       return null;
     }
   }

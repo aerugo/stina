@@ -4,8 +4,8 @@
  */
 var ChatModule = (function() {
     // Private variables
-    let chats = JSON.parse(localStorage.getItem("chats")) || [];
-    let currentChatId = localStorage.getItem("currentChatId");
+    let chats = StorageModule.loadData("chats") || [];
+    let currentChatId = StorageModule.loadData("currentChatId");
     let conversation = [];
 
     function createNewChat() {
@@ -44,11 +44,11 @@ var ChatModule = (function() {
     }
 
     function saveChats() {
-        localStorage.setItem("chats", JSON.stringify(chats));
+        StorageModule.saveData("chats", chats);
     }
 
     function saveCurrentChatId() {
-        localStorage.setItem("currentChatId", currentChatId);
+        StorageModule.saveData("currentChatId", currentChatId);
     }
 
     function deleteChat(chatId) {
