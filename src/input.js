@@ -1,14 +1,8 @@
 /**
  * Input Module
- * Handles user input and event listeners
+ * Handles user input processing and modal dialogs
  */
 const InputModule = (function() {
-    // Load custom instructions from localStorage at the module level
-    let customInstructions = JSON.parse(localStorage.getItem('customInstructions')) || [];
-    
-    // Load the selected instruction ID from localStorage or default to the first instruction
-    let selectedInstructionId = localStorage.getItem('selectedInstructionId') || instructions[0].id;
-
     function showCustomModal(title, message, buttons, callback) {
         const modal = document.getElementById('custom-modal');
         const titleElem = document.getElementById('custom-modal-title');
