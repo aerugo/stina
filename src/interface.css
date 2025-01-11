@@ -677,13 +677,6 @@ body.light-mode .modal-footer button:hover {
     color: #FFFFFF;
 }
 
-.message.assistant .text ul,
-.message.assistant .text ol {
-    margin-left: 40px;
-    margin-bottom: 15px;
-    padding-left: 0;
-}
-
 /* Base styles for lists in assistant messages */
 .message.assistant .text ul,
 .message.assistant .text ol {
