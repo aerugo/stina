@@ -115,12 +115,6 @@ var InputModule = (function () {
   }
 
   function setupEventListeners() {
-    // Initialize customInstructions and selectedInstructionId
-    let customInstructions =
-      JSON.parse(localStorage.getItem("customInstructions")) || [];
-    let selectedInstructionId =
-      localStorage.getItem("selectedInstructionId") || instructions[0].id;
-
     const userInput = document.getElementById("user-input");
     const sendBtn = document.getElementById("send-btn");
     const newChatBtn = document.getElementById("new-chat-btn");
@@ -411,6 +405,10 @@ var InputModule = (function () {
 
     try {
       let conversationToSend = [...currentState.conversation];
+
+      // Get latest instruction ID and custom instructions
+      const selectedInstructionId = localStorage.getItem("selectedInstructionId") || instructions[0].id;
+      const customInstructions = JSON.parse(localStorage.getItem("customInstructions")) || [];
 
       // Include system message if applicable
       const selectedModelParams = models[selectedModelKey];
