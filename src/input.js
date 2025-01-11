@@ -3,6 +3,68 @@
  * Handles user input and event listeners
  */
 const InputModule = (function() {
+    function showCustomAlert(message) {
+        const modal = document.getElementById('custom-modal');
+        const titleElem = document.getElementById('custom-modal-title');
+        const bodyElem = document.getElementById('custom-modal-body');
+        const footerElem = document.getElementById('custom-modal-footer');
+
+        titleElem.textContent = 'Alert';
+        bodyElem.innerHTML = `<p>${message}</p>`;
+
+        footerElem.innerHTML = '';
+        const okButton = document.createElement('button');
+        okButton.textContent = 'OK';
+        okButton.addEventListener('click', () => {
+            modal.style.display = 'none';
+        });
+        footerElem.appendChild(okButton);
+
+        modal.style.display = 'block';
+
+        const closeButton = document.getElementById('custom-modal-close');
+        closeButton.onclick = () => {
+            modal.style.display = 'none';
+        };
+    }
+
+    function showCustomConfirm(message, callback) {
+        const modal = document.getElementById('custom-modal');
+        const titleElem = document.getElementById('custom-modal-title');
+        const bodyElem = document.getElementById('custom-modal-body');
+        const footerElem = document.getElementById('custom-modal-footer');
+
+        titleElem.textContent = 'Confirm';
+        bodyElem.innerHTML = `<p>${message}</p>`;
+
+        footerElem.innerHTML = '';
+
+        const cancelButton = document.createElement('button');
+        cancelButton.textContent = 'Cancel';
+        cancelButton.addEventListener('click', () => {
+            modal.style.display = 'none';
+            callback(false);
+        });
+
+        const okButton = document.createElement('button');
+        okButton.textContent = 'OK';
+        okButton.addEventListener('click', () => {
+            modal.style.display = 'none';
+            callback(true);
+        });
+
+        footerElem.appendChild(cancelButton);
+        footerElem.appendChild(okButton);
+
+        modal.style.display = 'block';
+
+        const closeButton = document.getElementById('custom-modal-close');
+        closeButton.onclick = () => {
+            modal.style.display = 'none';
+            callback(false);
+        };
+    }
+
     function setupEventListeners() {
         const userInput = document.getElementById('user-input');
         const sendBtn = document.getElementById('send-btn');
@@ -49,24 +111,30 @@ const InputModule = (function() {
                     );
                     RenderingModule.renderConversation(result.conversation);
                 } else {
-                    alert('Chat not found.');
+                    showCustomAlert('Chat not found.');
                 }
             } else if (deleteBtn) {
                 const chat = LogicModule.getCurrentState().chats.find(c => c.id === chatId);
-                const confirmDelete = confirm(
-                    `Are you sure you want to delete "${chat.name}"? This action cannot be undone.`
+                showCustomConfirm(
+                    `Are you sure you want to delete "${chat.name}"? This action cannot be undone.`,
+                    function(confirmDelete) {
+                        if (confirmDelete) {
+                            const state = LogicModule.deleteChat(chatId);
+                            RenderingModule.renderChatList(state.chats, state.currentChatId);
+                            RenderingModule.renderConversation(state.conversation);
+                        }
+                    }
                 );
-                if (confirmDelete) {
-                    const state = LogicModule.deleteChat(chatId);
-                    RenderingModule.renderChatList(state.chats, state.currentChatId);
-                    RenderingModule.renderConversation(state.conversation);
-                }
             }
         });
 
         window.addEventListener('click', (event) => {
             if (event.target === settingsModal) {
                 closeSettingsModal();
+            }
+            const customModal = document.getElementById('custom-modal');
+            if (event.target === customModal) {
+                customModal.style.display = 'none';
             }
         });
 
@@ -82,7 +150,7 @@ const InputModule = (function() {
 
         const config = LogicModule.getConfig();
         if (!config.endpoint || !config.deployment || !config.apiKey) {
-            alert('Please set your configuration in the settings before sending messages.');
+            showCustomAlert('Please set your configuration in the settings before sending messages.');
             return;
         }
 
@@ -112,7 +180,7 @@ const InputModule = (function() {
             }
         } catch (error) {
             console.error('Error:', error);
-            alert('An error occurred while communicating with the Azure OpenAI API. Check the console for details.');
+            showCustomAlert('An error occurred while communicating with the Azure OpenAI API. Check the console for details.');
         }
     }
 
@@ -154,13 +222,13 @@ const InputModule = (function() {
         });
 
         if (!endpoint || !deployment || !apiKey) {
-            alert('Please fill in all fields.');
+            showCustomAlert('Please fill in all fields.');
             return;
         }
 
         LogicModule.updateConfig(endpoint, deployment, apiKey, theme, titleDeployment);
         applyTheme(theme);
-        alert('Settings saved successfully.');
+        showCustomAlert('Settings saved successfully.');
         closeSettingsModal();
     }
 

@@ -545,6 +545,80 @@ body .chat-name {
     color: #000000;
 }
 
+/* Custom Modal Styles */
+#custom-modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.5);
+    backdrop-filter: blur(8px);
+}
+
+#custom-modal .modal-content {
+    background-color: #FFFFFF;
+    margin: 80px auto;
+    padding: 0;
+    border: 1px solid #888;
+    width: 90%;
+    max-width: 400px;
+    border-radius: 12px;
+    overflow: hidden;
+    animation: slideIn 0.3s ease;
+}
+
+.modal-footer {
+    padding: 10px 20px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.modal-footer button {
+    margin-left: 10px;
+    padding: 10px 15px;
+    background-color: #007aff;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.modal-footer button:hover {
+    background-color: #005bbb;
+}
+
+/* Modal Footer Buttons */
+.modal-footer button {
+    margin-left: 10px;
+    padding: 10px 20px;
+    background-color: #007aff;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.modal-footer button:hover {
+    background-color: #005bbb;
+}
+
+body.light-mode .modal-footer button {
+    background-color: #007aff;
+    color: #fff;
+}
+
+body.light-mode .modal-footer button:hover {
+    background-color: #005bbb;
+}
+
 /* Styling for rendered markdown content */
 .message.assistant .text h1,
 .message.assistant .text h2,
