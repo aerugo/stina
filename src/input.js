@@ -467,37 +467,6 @@ var InputModule = (function () {
 
       console.log("Final conversation to send:", conversationToSend);
 
-      // Use the existing selectedModelParams and update instruction info
-      if (selectedModelParams && selectedModelParams.system) {
-        let systemContent = "";
-
-        // Use selectedInstructionId
-        const customInstruction = customInstructions.find(
-          (instr) => instr.id === selectedInstructionId
-        );
-        if (customInstruction) {
-          systemContent = customInstruction.content;
-          instructionLabel = customInstruction.label;
-        } else {
-          // Check default instructions
-          const defaultInstruction = instructions.find(
-            (instr) => instr.id === selectedInstructionId
-          );
-          if (defaultInstruction) {
-            systemContent = defaultInstruction.content;
-            instructionLabel = defaultInstruction.label;
-          }
-        }
-
-        if (systemContent) {
-          // Prepend system message
-          conversationToSend = [
-            { role: "system", content: systemContent },
-            ...conversationToSend,
-          ];
-        }
-      }
-
       // Estimate total tokens and truncate conversation if necessary
       const context_length = selectedModelParams.context_length || 4096;
       const maxAllowedTokens = context_length;
