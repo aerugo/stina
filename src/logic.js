@@ -28,15 +28,6 @@ var LogicModule = (function () {
 
 
 
-  async function generateChatTitle(userMessage) {
-    const prompt = `Provide a short (maximum 5 words) and descriptive chat title based on the following message:\n"${userMessage}"`;
-    const titleMessage = { role: "user", content: prompt };
-    const response = await fetchAzureOpenAIChatCompletion(
-      [titleMessage],
-      titleDeployment
-    );
-    return response.content.trim().replace(/[\n\r]/g, "");
-  }
 
   function updateChatTitle(chatId, newTitle) {
     const chat = chats.find((c) => c.id === chatId);
