@@ -426,12 +426,13 @@ var InputModule = (function () {
       const customInstructions = JSON.parse(localStorage.getItem("customInstructions")) || [];
       console.log("Selected Instruction ID:", selectedInstructionId);
 
-      // Initialize systemContent and instructionLabel
+      // Initialize variables
       let systemContent = "";
       let instructionLabel = "";
+      let conversationToSend = [...currentState.conversation];
 
       // Include system message if applicable
-      if (selectedModelParams.system) {
+      if (selectedModelParams && selectedModelParams.system) {
         console.log("Model supports system messages");
         
         // Retrieve instruction
@@ -467,7 +468,6 @@ var InputModule = (function () {
       console.log("Final conversation to send:", conversationToSend);
 
       // Use the existing selectedModelParams and update instruction info
-      let instructionLabel = "";
       if (selectedModelParams && selectedModelParams.system) {
         let systemContent = "";
 
