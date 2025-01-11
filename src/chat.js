@@ -53,13 +53,24 @@ var ChatModule = (function() {
     }
 
     function deleteChat(chatId) {
+        if (chats.length <= 1) {
+            // Prevent deleting the last chat
+            InputModule.showCustomAlert('Cannot delete the last remaining chat.');
+            return {
+                chats,
+                currentChatId,
+                conversation,
+            };
+        }
+
         chats = chats.filter((chat) => chat.id !== chatId);
-        saveChats(); // Move this here to save the updated chats list
+        saveChats(); // Save changes to storage
 
         if (currentChatId === chatId) {
             if (chats.length > 0) {
                 return loadChat(chats[0].id);
             } else {
+                // This condition should not occur as we prevent deleting the last chat
                 return createNewChat();
             }
         }
@@ -104,6 +115,9 @@ var ChatModule = (function() {
                 if (result.success) {
                     return result;
                 }
+            } else {
+                // No empty "New chat" exists, create one
+                return createNewChat();
             }
 
             if (currentChatId) {

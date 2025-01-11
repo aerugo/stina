@@ -55,11 +55,6 @@ var InputModule = (function () {
     }
   }
 
-  function handleNewChatClick() {
-    const state = ChatModule.createNewChat();
-    RenderingModule.renderChatList(state.chats, state.currentChatId);
-    RenderingModule.renderConversation(state.conversation);
-  }
 
   function handleChatListClick(e) {
     const chatName = e.target.closest(".chat-name");
@@ -71,7 +66,7 @@ var InputModule = (function () {
     const chatId = chatItem.dataset.chatId;
 
     if (chatName) {
-      const result = LogicModule.loadChat(chatId);
+      const result = ChatModule.loadChat(chatId);
       if (result.success) {
         RenderingModule.renderChatList(
           LogicModule.getCurrentState().chats,
@@ -82,14 +77,14 @@ var InputModule = (function () {
         showCustomAlert("Chat not found.");
       }
     } else if (deleteBtn) {
-      const chat = LogicModule.getCurrentState().chats.find(
+      const chat = ChatModule.getCurrentState().chats.find(
         (c) => c.id === chatId
       );
       showCustomConfirm(
         `Are you sure you want to delete "${chat.name}"? This action cannot be undone.`,
         function (confirmDelete) {
           if (confirmDelete) {
-            const state = LogicModule.deleteChat(chatId);
+            const state = ChatModule.deleteChat(chatId);
             RenderingModule.renderChatList(state.chats, state.currentChatId);
             RenderingModule.renderConversation(state.conversation);
           }
@@ -119,7 +114,7 @@ var InputModule = (function () {
 
     sendBtn.addEventListener("click", handleSendButtonClick);
     userInput.addEventListener("keydown", handleUserInputKeyDown);
-    newChatBtn.addEventListener("click", handleNewChatClick);
+    // New chat button is handled by EventModule
     settingsBtn.addEventListener("click", openSettingsModal);
     closeSettings.addEventListener("click", closeSettingsModal);
     saveSettingsBtn.addEventListener("click", saveSettings);
