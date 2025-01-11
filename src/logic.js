@@ -29,16 +29,7 @@ var LogicModule = (function () {
 
 
 
-  function getCurrentState() {
-    return {
-      chats,
-      currentChatId,
-      conversation,
-    };
-  }
-
   return {
-    getCurrentState,
     saveConversation,
     updateSelectedModel: function (newModelKey) {
       ConfigModule.updateConfig({ selectedModelKey: newModelKey });

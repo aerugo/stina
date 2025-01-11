@@ -374,7 +374,7 @@ var InputModule = (function () {
       return;
     }
 
-    const currentState = LogicModule.getCurrentState();
+    const currentState = ChatModule.getCurrentState();
     const newMessage = { role: "user", content: messageContent };
     currentState.conversation.push(newMessage);
 
