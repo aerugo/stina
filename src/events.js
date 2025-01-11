@@ -4,54 +4,53 @@
  */
 var EventModule = (function() {
     // Module-level variables
-    let modelSelect;
-    let instructionsSelect; 
-    let editInstructionBtn;
     const models = ModelsModule.getModels();
 
+    function updateModelAndInstructionSelectors() {
+        const modelSelect = document.getElementById('model-select');
+        const instructionsSelect = document.getElementById('instructions-select');
+        
+        const currentChat = ChatModule.getCurrentChat();
+        const config = ConfigModule.getConfig();
+
+        if (currentChat) {
+            modelSelect.value = currentChat.selectedModelKey || config.selectedModelKey || 'gpt-4o';
+            instructionsSelect.value = currentChat.selectedInstructionId || config.selectedInstructionId || instructions[0].id;
+        } else {
+            modelSelect.value = config.selectedModelKey || 'gpt-4o';
+            instructionsSelect.value = config.selectedInstructionId || instructions[0].id;
+        }
+        updateInstructionsVisibility();
+        updateEditButtonVisibility();
+    }
+
+    function updateInstructionsVisibility() {
+        const config = ConfigModule.getConfig();
+        const currentModelKey = config.selectedModelKey || 'gpt-4o';
+        const selectedModelParams = models[currentModelKey];
+        const instructionsGroup = document.getElementById('instructions-group');
+
+        if (!selectedModelParams) {
+            instructionsGroup.style.display = 'none';
+            return;
+        }
+
+        instructionsGroup.style.display = selectedModelParams.system ? 'flex' : 'none';
+    }
+
+    function updateEditButtonVisibility() {
+        const instructionsSelect = document.getElementById('instructions-select');
+        const editInstructionBtn = document.getElementById('edit-instruction-btn');
+        
+        const selectedInstructionId = instructionsSelect.value;
+        const customInstructions = JSON.parse(localStorage.getItem('customInstructions')) || [];
+        const isCustomInstruction = customInstructions.some(
+            (instr) => instr.id === selectedInstructionId
+        );
+        editInstructionBtn.style.display = isCustomInstruction ? 'inline-block' : 'none';
+    }
+
     function setupEventListeners() {
-        // Initialize module-level variables first
-        modelSelect = document.getElementById('model-select');
-        instructionsSelect = document.getElementById('instructions-select');
-        editInstructionBtn = document.getElementById('edit-instruction-btn');
-
-        function updateModelAndInstructionSelectors() {
-            const currentChat = ChatModule.getCurrentChat();
-            const config = ConfigModule.getConfig();
-
-            if (currentChat) {
-                modelSelect.value = currentChat.selectedModelKey || config.selectedModelKey || 'gpt-4o';
-                instructionsSelect.value = currentChat.selectedInstructionId || config.selectedInstructionId || instructions[0].id;
-            } else {
-                modelSelect.value = config.selectedModelKey || 'gpt-4o';
-                instructionsSelect.value = config.selectedInstructionId || instructions[0].id;
-            }
-            updateInstructionsVisibility();
-            updateEditButtonVisibility();
-        }
-
-        function updateInstructionsVisibility() {
-            const config = ConfigModule.getConfig();
-            const currentModelKey = config.selectedModelKey || 'gpt-4o';
-            const selectedModelParams = models[currentModelKey];
-            const instructionsGroup = document.getElementById('instructions-group');
-
-            if (!selectedModelParams) {
-                instructionsGroup.style.display = 'none';
-                return;
-            }
-
-            instructionsGroup.style.display = selectedModelParams.system ? 'flex' : 'none';
-        }
-
-        function updateEditButtonVisibility() {
-            const selectedInstructionId = instructionsSelect.value;
-            const customInstructions = JSON.parse(localStorage.getItem('customInstructions')) || [];
-            const isCustomInstruction = customInstructions.some(
-                (instr) => instr.id === selectedInstructionId
-            );
-            editInstructionBtn.style.display = isCustomInstruction ? 'inline-block' : 'none';
-        }
         const userInput = document.getElementById('user-input');
         const sendBtn = document.getElementById('send-btn');
         const newChatBtn = document.getElementById('new-chat-btn');
