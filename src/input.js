@@ -460,7 +460,7 @@ var InputModule = (function () {
       }
 
       try {
-        const assistantMessage = await LogicModule.fetchAzureOpenAIChatCompletion(
+        const assistantMessage = await ApiModule.fetchChatCompletion(
           conversationToSend,
           selectedModelParams.deployment,
           {
