@@ -11,7 +11,9 @@ var EventModule = (function() {
         const closeSettings = document.getElementById('close-settings');
         const saveSettingsBtn = document.getElementById('save-settings-btn');
         const chatListContainer = document.querySelector('.chat-list-container');
+        const models = ModelsModule.getModels();
 
+        // Setup basic event listeners
         newChatBtn.addEventListener('click', function() {
             const state = ChatModule.createNewChat();
             RenderingModule.renderChatList(state.chats, state.currentChatId);
@@ -26,7 +28,123 @@ var EventModule = (function() {
         chatListContainer.addEventListener('click', handleChatListClick);
         window.addEventListener('click', handleWindowClick);
 
-        // Initialize theme on page load
+        // Populate model selector
+        const modelSelect = document.getElementById('model-select');
+        for (const key in models) {
+            const option = document.createElement('option');
+            option.value = key;
+            option.textContent = models[key].label;
+            modelSelect.appendChild(option);
+        }
+
+        // Setup model selection change handler
+        modelSelect.addEventListener('change', function() {
+            const newModelKey = this.value;
+            ConfigModule.updateConfig({ selectedModelKey: newModelKey });
+            updateInstructionsVisibility();
+        });
+
+        // Setup instructions handling
+        const instructionsSelect = document.getElementById('instructions-select');
+        const editInstructionBtn = document.getElementById('edit-instruction-btn');
+
+        function updateInstructionsVisibility() {
+            const config = ConfigModule.getConfig();
+            const currentModelKey = config.selectedModelKey || 'gpt-4o';
+            const selectedModelParams = models[currentModelKey];
+            const instructionsGroup = document.getElementById('instructions-group');
+
+            if (!selectedModelParams) {
+                instructionsGroup.style.display = 'none';
+                return;
+            }
+
+            instructionsGroup.style.display = selectedModelParams.system ? 'flex' : 'none';
+        }
+
+        function updateEditButtonVisibility() {
+            const selectedInstructionId = instructionsSelect.value;
+            const customInstructions = JSON.parse(localStorage.getItem('customInstructions')) || [];
+            const isCustomInstruction = customInstructions.some(
+                (instr) => instr.id === selectedInstructionId
+            );
+            editInstructionBtn.style.display = isCustomInstruction ? 'inline-block' : 'none';
+        }
+
+        function addInstructionOption(instruction) {
+            const option = document.createElement('option');
+            option.value = instruction.id;
+            option.textContent = instruction.label;
+            instructionsSelect.insertBefore(option, instructionsSelect.lastChild);
+        }
+
+        function saveCustomInstruction(instruction) {
+            const customInstructions = JSON.parse(localStorage.getItem('customInstructions')) || [];
+            customInstructions.push(instruction);
+            localStorage.setItem('customInstructions', JSON.stringify(customInstructions));
+        }
+
+        function populateInstructions() {
+            instructionsSelect.innerHTML = '';
+            const customInstructions = JSON.parse(localStorage.getItem('customInstructions')) || [];
+            const selectedInstructionId = localStorage.getItem('selectedInstructionId') || instructions[0].id;
+
+            instructions.forEach((instruction) => {
+                const option = document.createElement('option');
+                option.value = instruction.id;
+                option.textContent = instruction.label;
+                instructionsSelect.appendChild(option);
+            });
+
+            customInstructions.forEach((instruction) => {
+                addInstructionOption(instruction);
+            });
+
+            const customOption = document.createElement('option');
+            customOption.value = 'custom';
+            customOption.textContent = 'Create New Instruction...';
+            instructionsSelect.appendChild(customOption);
+
+            instructionsSelect.value = selectedInstructionId;
+            updateEditButtonVisibility();
+        }
+
+        // Initialize instructions
+        populateInstructions();
+        updateInstructionsVisibility();
+
+        // Setup instruction selection change handler
+        instructionsSelect.addEventListener('change', function() {
+            if (this.value === 'custom') {
+                InputModule.showCustomModal(
+                    'Create Custom Instruction',
+                    'Enter instruction details:',
+                    '',
+                    function(result) {
+                        if (result) {
+                            const newInstruction = {
+                                id: 'custom_' + Date.now(),
+                                label: result,
+                                content: result
+                            };
+                            saveCustomInstruction(newInstruction);
+                            addInstructionOption(newInstruction);
+                            instructionsSelect.value = newInstruction.id;
+                            localStorage.setItem('selectedInstructionId', newInstruction.id);
+                            updateEditButtonVisibility();
+                        } else {
+                            instructionsSelect.value = localStorage.getItem('selectedInstructionId');
+                            updateEditButtonVisibility();
+                        }
+                    }
+                );
+            } else {
+                localStorage.setItem('selectedInstructionId', this.value);
+                updateEditButtonVisibility();
+            }
+        });
+
+        // Initialize theme
         const storedTheme = ConfigModule.getConfig().theme || 'light-mode';
         ThemeModule.applyTheme(storedTheme);
     }
