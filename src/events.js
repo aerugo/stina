@@ -113,11 +113,27 @@ var EventModule = (function() {
         populateInstructions();
         updateInstructionsVisibility();
 
+        // Setup edit instruction button handler
+        editInstructionBtn.addEventListener('click', function() {
+            const selectedInstructionId = instructionsSelect.value;
+            const customInstructions = JSON.parse(localStorage.getItem('customInstructions')) || [];
+            let instruction = customInstructions.find(instr => instr.id === selectedInstructionId);
+
+            if (instruction) {
+                ModalModule.showInputModal('Edit Custom Instruction', 'Edit instruction content:', instruction.content, function(result) {
+                    if (result) {
+                        instruction.content = result;
+                        localStorage.setItem('customInstructions', JSON.stringify(customInstructions));
+                    }
+                });
+            }
+        });
+
         // Setup instruction selection change handler
         instructionsSelect.addEventListener('change', function() {
             if (this.value === 'custom') {
                 ModalModule.showInputModal(
-                    'Create Custom Instruction',
+                    'Create Custom Instruction', 
                     'Enter instruction details:',
                     '',
                     function(result) {
