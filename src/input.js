@@ -418,6 +418,37 @@ const InputModule = (function() {
                 }
             }
 
+            // Estimate total tokens and truncate conversation if necessary
+            const maxTokens = selectedModelParams.maxTokens || 4096;
+            const maxAllowedTokens = maxTokens;
+
+            // Function to estimate tokens
+            function estimateTokens(text) {
+                // Simple approximation: 1 token is approximately 4 characters
+                return Math.ceil(text.length / 4);
+            }
+
+            // Estimate tokens for each message
+            let totalTokens = 0;
+            let truncatedConversation = [];
+            for (let i = conversationToSend.length - 1; i >= 0; i--) {
+                const message = conversationToSend[i];
+                const messageTokens = estimateTokens(message.content) + 10; // Add buffer for role and formatting
+                if (totalTokens + messageTokens > maxAllowedTokens) {
+                    break;
+                }
+                totalTokens += messageTokens;
+                truncatedConversation.unshift(message);
+            }
+
+            // Warn the user if messages were removed
+            if (truncatedConversation.length < conversationToSend.length) {
+                console.warn('Context is too long. Older messages have been truncated.');
+                showCustomAlert('The conversation is too long. Older messages have been truncated.');
+            }
+
+            conversationToSend = truncatedConversation;
+
             const assistantMessage = await LogicModule.fetchAzureOpenAIChatCompletion(
                 conversationToSend
             );

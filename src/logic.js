@@ -152,14 +152,9 @@ const LogicModule = (function () {
       content: message.content,
     }));
 
-    const { label, deployment, system, ...apiParams } = modelParams;
+    const { label, deployment, system, maxTokens, ...apiParams } = modelParams;
     const body = {
-        max_tokens: modelParams.max_tokens,
-        temperature: modelParams.temperature,
-        top_p: modelParams.top_p,
-        frequency_penalty: modelParams.frequency_penalty,
-        presence_penalty: modelParams.presence_penalty,
-        stop: modelParams.stop,
+        ...apiParams,
         messages: preparedMessages
     };
 
