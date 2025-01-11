@@ -63,14 +63,16 @@ const RenderingModule = (function() {
                 actionContainer.appendChild(copyButton);
                 actionContainer.appendChild(modelLabel);
 
-                // Append the action container to the message element
-                messageElem.appendChild(actionContainer);
             }
         } else {
             // For user messages, display plain text
             textElem.innerText = message.content;
         }
         messageElem.appendChild(textElem);
+        if (message.role === 'assistant' && !message.isLoading) {
+            // Append the action container after the text element
+            messageElem.appendChild(actionContainer);
+        }
         return messageElem;
     }
 

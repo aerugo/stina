@@ -163,7 +163,7 @@ body {
 .message {
     max-width: 800px;
     margin: 0 auto 20px auto;
-    padding: 20px 15px;
+    padding: 20px 15px 50px 15px;
     line-height: 1.6;
     position: relative;
 }
@@ -799,7 +799,10 @@ body.light-mode .loading-spinner {
 
 /* Action Container Style */
 .action-container {
-    margin-top: 10px;
+    position: absolute;
+    bottom: 10px;
+    left: 15px;
+    right: 15px;
     display: flex;
     align-items: center;
     justify-content: space-between;
