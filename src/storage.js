@@ -19,7 +19,15 @@ const StorageModule = (function () {
    */
   function loadData(key) {
     const data = localStorage.getItem(key);
-    return data ? JSON.parse(data) : null;
+    if (!data) return null;
+    try {
+      return JSON.parse(data);
+    } catch (e) {
+      console.error(`Error parsing data for key "${key}":`, e);
+      // Remove corrupted data
+      localStorage.removeItem(key);
+      return null;
+    }
   }
 
   return {
