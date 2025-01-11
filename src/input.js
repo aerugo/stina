@@ -69,7 +69,7 @@ var InputModule = (function () {
       const result = ChatModule.loadChat(chatId);
       if (result.success) {
         RenderingModule.renderChatList(
-          LogicModule.getCurrentState().chats,
+          ChatModule.getCurrentState().chats,
           result.currentChatId
         );
         RenderingModule.renderConversation(result.conversation);
