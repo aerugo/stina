@@ -433,27 +433,28 @@ var InputModule = (function () {
     const loadingMessageIndex = currentState.conversation.length - 1;
 
     try {
-      // Get current model configuration
+      // First prepare the conversation to send, before adding loading message
       const selectedModelKey = config.selectedModelKey || "gpt-4o";
       const selectedModelParams = models[selectedModelKey];
       console.log("Selected Model:", selectedModelKey, selectedModelParams);
 
-      // Initialize conversation array without the loading message
-      let conversationToSend = currentState.conversation.slice(0, -1);
+      // Start with current conversation
+      let conversationToSend = [...currentState.conversation];
+      let instruction = null;
       let instructionLabel = "";
 
-      // Get latest instruction ID and custom instructions
-      const selectedInstructionId = localStorage.getItem("selectedInstructionId") || instructions[0].id;
-      const customInstructions = JSON.parse(localStorage.getItem("customInstructions")) || [];
-      console.log("Selected Instruction ID:", selectedInstructionId);
-
-      // Include system message if applicable
+      // Add system message if model supports it
       if (selectedModelParams && selectedModelParams.system) {
         console.log("Model supports system messages");
-          
-        // Retrieve instruction
-        let instruction = customInstructions.find(instr => instr.id === selectedInstructionId) ||
-                         instructions.find(instr => instr.id === selectedInstructionId);
+        
+        // Get latest instruction ID and custom instructions
+        const selectedInstructionId = localStorage.getItem("selectedInstructionId") || instructions[0].id;
+        const customInstructions = JSON.parse(localStorage.getItem("customInstructions")) || [];
+        console.log("Selected Instruction ID:", selectedInstructionId);
+        
+        // Find selected instruction
+        instruction = customInstructions.find(instr => instr.id === selectedInstructionId) ||
+                     instructions.find(instr => instr.id === selectedInstructionId);
 
         if (!instruction) {
           console.warn("Instruction not found for ID:", selectedInstructionId);
@@ -464,15 +465,16 @@ var InputModule = (function () {
         instructionLabel = instruction.label;
 
         // Prepend system message to conversation
-        conversationToSend = [
-          { role: "system", content: instruction.content },
-          ...conversationToSend
-        ];
-          
+        conversationToSend.unshift({ role: "system", content: instruction.content });
         console.log("Added system message:", instruction.content);
       } else {
         console.log("Model does not support system messages");
       }
+
+      // Now add the loading message for display only
+      const loadingMessage = { role: "assistant", content: "", isLoading: true };
+      currentState.conversation.push(loadingMessage);
+      RenderingModule.renderConversation(currentState.conversation);
 
       console.log("Final conversation to send:", conversationToSend);
 
@@ -522,14 +524,16 @@ var InputModule = (function () {
           stop: selectedModelParams.stop
         }
       );
-      // Add the model key to the assistantMessage
-      assistantMessage.model = selectedModelKey;
-      // Include instructionLabel if applicable
-      if (instructionLabel) {
-        assistantMessage.instructionLabel = instructionLabel;
-      }
+
+      // Add metadata to the assistant message
+      const enrichedMessage = {
+        ...assistantMessage,
+        model: selectedModelKey,
+        instructionLabel: instruction ? instruction.label : ""
+      };
+
       // Replace the loading message with the actual assistant message
-      currentState.conversation[loadingMessageIndex] = assistantMessage;
+      currentState.conversation[currentState.conversation.length - 1] = enrichedMessage;
       RenderingModule.renderConversation(currentState.conversation);
       LogicModule.saveConversation();
 
