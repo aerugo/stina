@@ -327,9 +327,5 @@ var InputModule = (function () {
     };
   }
 
-  return {
-    showCustomAlert,
-    showCustomConfirm,
-    showInputModal,
-  };
+  return {};
 })();

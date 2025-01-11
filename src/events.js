@@ -156,7 +156,7 @@ var EventModule = (function() {
 
         const config = ConfigModule.getConfig();
         if (!config.endpoint || !config.apiKey) {
-            InputModule.showCustomAlert('Please set your configuration in the settings before sending messages.');
+            ModalModule.showCustomAlert('Please set your configuration in the settings before sending messages.');
             return;
         }
 
@@ -182,7 +182,7 @@ var EventModule = (function() {
 
         if (deleteBtn) {
             const chat = ChatModule.getCurrentState().chats.find(c => c.id === chatId);
-            InputModule.showCustomConfirm(
+            ModalModule.showCustomConfirm(
                 `Are you sure you want to delete "${chat.name}"? This action cannot be undone.`,
                 function(confirmDelete) {
                     if (confirmDelete) {
@@ -201,7 +201,7 @@ var EventModule = (function() {
                 );
                 RenderingModule.renderConversation(result.conversation);
             } else {
-                InputModule.showCustomAlert('Chat not found.');
+                ModalModule.showCustomAlert('Chat not found.');
             }
         }
     }
@@ -234,7 +234,7 @@ var EventModule = (function() {
         const theme = document.body.classList.contains('light-mode') ? 'light-mode' : 'dark-mode';
 
         if (!endpoint || !apiKey) {
-            InputModule.showCustomAlert('Please fill in all required fields.');
+            ModalModule.showCustomAlert('Please fill in all required fields.');
             return;
         }
 
@@ -245,7 +245,7 @@ var EventModule = (function() {
             titleDeployment
         });
         
-        InputModule.showCustomAlert('Settings saved successfully.');
+        ModalModule.showCustomAlert('Settings saved successfully.');
         closeSettingsModal();
     }
 
