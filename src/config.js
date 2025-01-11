@@ -9,7 +9,13 @@ var ConfigModule = (function() {
      */
     function updateConfig(newConfig) {
         for (let key in newConfig) {
-            StorageModule.saveData(key, newConfig[key]);
+            const value = newConfig[key];
+            if (value !== undefined && value !== null) {
+                StorageModule.saveData(key, value);
+            } else {
+                // Remove the item from storage if value is undefined or null
+                StorageModule.saveData(key, value);
+            }
         }
     }
 

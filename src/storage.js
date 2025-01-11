@@ -9,10 +9,19 @@ var StorageModule = (function () {
    * @param {*} value - The data to store (will be JSON-stringified).
    */
   function saveData(key, value) {
-    try {
-      localStorage.setItem(key, JSON.stringify(value));
-    } catch (e) {
-      console.error(`Error saving data for key "${key}":`, e);
+    if (value === undefined || value === null) {
+      // Remove the item from storage if the value is undefined or null
+      try {
+        localStorage.removeItem(key);
+      } catch (e) {
+        console.error(`Error removing data for key "${key}":`, e);
+      }
+    } else {
+      try {
+        localStorage.setItem(key, JSON.stringify(value));
+      } catch (e) {
+        console.error(`Error saving data for key "${key}":`, e);
+      }
     }
   }
 
@@ -24,7 +33,7 @@ var StorageModule = (function () {
   function loadData(key) {
     try {
       const data = localStorage.getItem(key);
-      if (!data) return null;
+      if (!data || data === 'undefined' || data === 'null') return null;
       try {
         return JSON.parse(data);
       } catch (e) {

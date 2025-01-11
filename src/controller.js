@@ -5,7 +5,17 @@
 const ControllerModule = (function () {
   const models = ModelsModule.getModels(); // Retrieve models
 
+  function cleanUpLocalStorage() {
+    ['selectedModelKey', 'selectedInstructionId'].forEach(key => {
+      const value = localStorage.getItem(key);
+      if (value === 'undefined' || value === undefined || value === null) {
+        localStorage.removeItem(key);
+      }
+    });
+  }
+
   function initializeApp() {
+    cleanUpLocalStorage(); // Clean up invalid localStorage entries
     const state = ChatModule.initialize();
     RenderingModule.renderChatList(state.chats, state.currentChatId);
     RenderingModule.renderConversation(state.conversation);
