@@ -1,12 +1,31 @@
 const models = {
-  "gpt-4o-3": {
-    label: "GPT-4 Optimized",
-    deployment: "gpt-4-deployment",
-    max_tokens: 800,
-    temperature: 0.7,
+  "gpt-4o": {
+    label: "GPT-4o standard",
+    deployment: "gpt-4o-3",
+    max_completion_tokens: 1600,
+    temperature: 0.9,
     top_p: 0.95,
     frequency_penalty: 0,
     presence_penalty: 0,
-    stop: null
-  }
+    stop: null,
+    system: true,
+  },
+  "gpt-4o-lowtemp": {
+    label: "GPT-4o lowtemp",
+    deployment: "gpt-4o-3",
+    max_completion_tokens: 1600,
+    temperature: 0.9,
+    top_p: 0.5,
+    frequency_penalty: 0,
+    presence_penalty: 0,
+    stop: null,
+    system: true,
+  },
+  o1: {
+    label: "O1",
+    deployment: "o1",
+    max_completion_tokens: 1600,
+    stop: null,
+    system: false,
+  },
 };
