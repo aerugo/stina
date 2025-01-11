@@ -184,6 +184,10 @@ var InputModule = (function () {
     function populateInstructions() {
       instructionsSelect.innerHTML = "";
 
+      // Fetch customInstructions and selectedInstructionId from localStorage
+      const customInstructions = JSON.parse(localStorage.getItem("customInstructions")) || [];
+      const selectedInstructionId = localStorage.getItem("selectedInstructionId") || instructions[0].id;
+
       // Add default instructions
       instructions.forEach((instruction) => {
         const option = document.createElement("option");
