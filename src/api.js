@@ -75,9 +75,20 @@ var ApiModule = (function() {
     function parseApiResponse(data) {
         const choice = data.choices[0];
         if (choice.finish_reason === "content_filter") {
+            const filteredCategories = [];
+            const contentFilterResults = choice.content_filter_results;
+
+            // Iterate over each category to find which ones are filtered
+            for (const [category, result] of Object.entries(contentFilterResults)) {
+                if (result.filtered) {
+                    filteredCategories.push(`${category} (severity: ${result.severity})`);
+                }
+            }
+
+            const reasons = filteredCategories.join(', ');
             return {
                 error: true,
-                message: "The assistant's response was filtered due to policy compliance.",
+                message: `The assistant's response was filtered due to policy compliance. Categories filtered: ${reasons}`,
             };
         }
         // Add additional checks for other non-standard responses if necessary
