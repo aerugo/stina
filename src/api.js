@@ -53,12 +53,38 @@ var ApiModule = (function() {
         });
 
         if (!response.ok) {
-            throw new Error(await response.text());
+            let errorMessage = `API Error: ${response.status} ${response.statusText}`;
+            try {
+                const errorData = await response.json();
+                errorMessage += `\n${JSON.stringify(errorData, null, 2)}`;
+            } catch (e) {
+                // Response is not JSON
+                const errorText = await response.text();
+                errorMessage += `\n${errorText}`;
+            }
+            throw new Error(errorMessage);
         }
 
         const data = await response.json();
         console.log("API Response:", data);
-        return data.choices[0].message;
+        
+        const parsedResult = parseApiResponse(data);
+        return parsedResult;
+    }
+
+    function parseApiResponse(data) {
+        const choice = data.choices[0];
+        if (choice.finish_reason === "content_filter") {
+            return {
+                error: true,
+                message: "The assistant's response was filtered due to policy compliance.",
+            };
+        }
+        // Add additional checks for other non-standard responses if necessary
+        return {
+            error: false,
+            message: choice.message,
+        };
     }
 
     return {

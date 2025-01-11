@@ -73,37 +73,47 @@ const ControllerModule = (function () {
       };
 
       // Call the API with the correct deployment name and options
-      const response = await ApiModule.fetchChatCompletion(
+      const apiResponse = await ApiModule.fetchChatCompletion(
         conversationToSend,
         deploymentName,
         modelOptions
       );
 
-      currentState.conversation[currentState.conversation.length - 1] = {
-        ...response,
-        model: selectedModelKey,
-        instructionLabel: instructionLabel
-      };
+      if (apiResponse.error) {
+          // Remove loading message
+          currentState.conversation.pop();
+          RenderingModule.renderConversation(currentState.conversation);
+          // Show an error message to the user
+          ModalModule.showCustomAlert(apiResponse.message);
+      } else {
+          currentState.conversation[currentState.conversation.length - 1] = {
+              ...apiResponse.message,
+              model: selectedModelKey,
+              instructionLabel: instructionLabel
+          };
+          RenderingModule.renderConversation(currentState.conversation);
+          MessageModule.saveConversation(
+              currentState.currentChatId,
+              currentState.conversation
+          );
 
-      RenderingModule.renderConversation(currentState.conversation);
-      MessageModule.saveConversation(
-        currentState.currentChatId,
-        currentState.conversation
-      );
-
-      const chat = ChatModule.getCurrentChat();
-      if (chat.name === "New chat") {
-        const title = await MessageModule.generateChatTitle(messageContent);
-        ChatModule.updateChatTitle(chat.id, title);
-        RenderingModule.renderChatList(
-          ChatModule.getCurrentState().chats,
-          currentState.currentChatId
-        );
+          const chat = ChatModule.getCurrentChat();
+          if (chat.name === "New chat") {
+              const title = await MessageModule.generateChatTitle(messageContent);
+              ChatModule.updateChatTitle(chat.id, title);
+              RenderingModule.renderChatList(
+                  ChatModule.getCurrentState().chats,
+                  currentState.currentChatId
+              );
+          }
       }
     } catch (error) {
-      currentState.conversation.pop(); // Remove loading message
+      // Remove loading message
+      currentState.conversation.pop();
       RenderingModule.renderConversation(currentState.conversation);
-      throw error;
+      // Show error message to the user
+      ModalModule.showCustomAlert(`An error occurred: ${error.message}`);
+      console.error("Error during sendMessage:", error);
     }
   }
 
