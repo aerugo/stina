@@ -502,46 +502,45 @@ var InputModule = (function () {
         );
       }
 
-      conversationToSend = truncatedConversation;
+      try {
+        const assistantMessage = await LogicModule.fetchAzureOpenAIChatCompletion(
+          conversationToSend,
+          selectedModelParams.deployment,
+          {
+            temperature: selectedModelParams.temperature,
+            max_tokens: selectedModelParams.max_tokens,
+            frequency_penalty: selectedModelParams.frequency_penalty,
+            presence_penalty: selectedModelParams.presence_penalty,
+            stop: selectedModelParams.stop
+          }
+        );
 
-      const assistantMessage = await LogicModule.fetchAzureOpenAIChatCompletion(
-        conversationToSend,
-        selectedModelParams.deployment,
-        {
-          temperature: selectedModelParams.temperature,
-          max_tokens: selectedModelParams.max_tokens,
-          frequency_penalty: selectedModelParams.frequency_penalty,
-          presence_penalty: selectedModelParams.presence_penalty,
-          stop: selectedModelParams.stop
+        // Add metadata to the assistant message
+        const enrichedMessage = {
+          ...assistantMessage,
+          model: selectedModelKey,
+          instructionLabel: instruction ? instruction.label : ""
+        };
+
+        // Replace the loading message with the actual assistant message
+        currentState.conversation[currentState.conversation.length - 1] = enrichedMessage;
+        RenderingModule.renderConversation(currentState.conversation);
+        LogicModule.saveConversation();
+
+        // Check if the chat title needs updating
+        const chat = LogicModule.getCurrentChat();
+        if (chat.name === "New chat") {
+          // Generate a title based on the first user message
+          const title = await LogicModule.generateChatTitle(
+            currentState.conversation[0].content
+          );
+          LogicModule.updateChatTitle(chat.id, title);
+          RenderingModule.renderChatList(
+            LogicModule.getCurrentState().chats,
+            currentState.currentChatId
+          );
         }
-      );
-
-      // Add metadata to the assistant message
-      const enrichedMessage = {
-        ...assistantMessage,
-        model: selectedModelKey,
-        instructionLabel: instruction ? instruction.label : ""
-      };
-
-      // Replace the loading message with the actual assistant message
-      currentState.conversation[currentState.conversation.length - 1] = enrichedMessage;
-      RenderingModule.renderConversation(currentState.conversation);
-      LogicModule.saveConversation();
-
-      // Check if the chat title needs updating
-      const chat = LogicModule.getCurrentChat();
-      if (chat.name === "New chat") {
-        // Generate a title based on the first user message
-        const title = await LogicModule.generateChatTitle(
-          currentState.conversation[0].content
-        );
-        LogicModule.updateChatTitle(chat.id, title);
-        RenderingModule.renderChatList(
-          LogicModule.getCurrentState().chats,
-          currentState.currentChatId
-        );
-      }
-    } catch (error) {
+      } catch (error) {
       // Remove the loading message
       currentState.conversation.pop();
       RenderingModule.renderConversation(currentState.conversation);
