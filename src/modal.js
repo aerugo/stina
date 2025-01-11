@@ -99,10 +99,57 @@ var ModalModule = (function () {
         };
     }
 
+    function showEditInstructionModal(title, defaultLabel, defaultContent, callback) {
+        const modal = document.getElementById("custom-modal");
+        const titleElem = document.getElementById("custom-modal-title");
+        const bodyElem = document.getElementById("custom-modal-body");
+        const footerElem = document.getElementById("custom-modal-footer");
+
+        titleElem.textContent = title;
+
+        bodyElem.innerHTML = `
+            <label for="modal-label-input">Instruction Title:</label>
+            <input type="text" id="modal-label-input" style="width: 100%; padding: 10px; margin-bottom: 10px;" value="${defaultLabel}">
+            <label for="modal-content-input">Instruction Content:</label>
+            <textarea id="modal-content-input" style="width: 100%; height: 200px; padding: 10px;">${defaultContent}</textarea>
+        `;
+
+        footerElem.innerHTML = "";
+
+        const cancelButton = document.createElement("button");
+        cancelButton.textContent = "Cancel";
+        cancelButton.addEventListener("click", () => {
+            modal.style.display = "none";
+            if (callback) callback(null);
+        });
+
+        const okButton = document.createElement("button");
+        okButton.textContent = "OK";
+        okButton.addEventListener("click", () => {
+            const inputLabel = document.getElementById("modal-label-input").value;
+            const inputContent = document.getElementById("modal-content-input").value;
+            modal.style.display = "none";
+            if (callback) callback({
+                label: inputLabel.trim() !== "" ? inputLabel : null,
+                content: inputContent.trim() !== "" ? inputContent : null
+            });
+        });
+
+        footerElem.appendChild(cancelButton);
+        footerElem.appendChild(okButton);
+
+        modal.style.display = "block";
+
+        // Set focus to the label input field
+        const labelInput = document.getElementById("modal-label-input");
+        labelInput.focus();
+    }
+
     return {
         showCustomModal,
         showCustomAlert,
         showCustomConfirm,
         showInputModal,
+        showEditInstructionModal,
     };
 })();

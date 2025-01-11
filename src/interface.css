@@ -644,6 +644,34 @@ body.light-mode .selector-group button:hover {
   background: #005BBB;
 }
 
+/* Custom Modal Textarea Styles */
+#custom-modal textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #E5E5EA;
+    border-radius: 8px;
+    font-size: 15px;
+    color: #1C1C1E;
+    background: #FFFFFF;
+    margin-top: 5px;
+    box-sizing: border-box;
+    resize: vertical;
+}
+
+#custom-modal textarea:focus {
+    border-color: #007AFF;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.2);
+}
+
+/* Adjust labels in modals */
+#custom-modal label {
+    display: block;
+    margin-top: 10px;
+    font-size: 14px;
+    color: #3a3a3c;
+}
+
 /* Modal Footer Buttons */
 .modal-footer button {
     margin-left: 10px;

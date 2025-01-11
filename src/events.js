@@ -120,10 +120,13 @@ var EventModule = (function() {
             let instruction = customInstructions.find(instr => instr.id === selectedInstructionId);
 
             if (instruction) {
-                ModalModule.showInputModal('Edit Custom Instruction', 'Edit instruction content:', instruction.content, function(result) {
-                    if (result) {
-                        instruction.content = result;
+                ModalModule.showEditInstructionModal('Edit Custom Instruction', instruction.label, instruction.content, function(result) {
+                    if (result && result.label && result.content) {
+                        instruction.label = result.label;
+                        instruction.content = result.content;
                         localStorage.setItem('customInstructions', JSON.stringify(customInstructions));
+                        // Update the option label in the select dropdown
+                        instructionsSelect.querySelector(`option[value="${selectedInstructionId}"]`).textContent = result.label;
                     }
                 });
             }
@@ -132,16 +135,16 @@ var EventModule = (function() {
         // Setup instruction selection change handler
         instructionsSelect.addEventListener('change', function() {
             if (this.value === 'custom') {
-                ModalModule.showInputModal(
-                    'Create Custom Instruction', 
-                    'Enter instruction details:',
+                ModalModule.showEditInstructionModal(
+                    'Create Custom Instruction',
+                    '',
                     '',
                     function(result) {
-                        if (result) {
+                        if (result && result.label && result.content) {
                             const newInstruction = {
                                 id: 'custom_' + Date.now(),
-                                label: result,
-                                content: result
+                                label: result.label,
+                                content: result.content
                             };
                             saveCustomInstruction(newInstruction);
                             addInstructionOption(newInstruction);
