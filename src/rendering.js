@@ -2,6 +2,9 @@
  * Rendering Module
  * Handles all UI rendering tasks
  */
+// Configure marked parser to enable line breaks globally
+marked.setOptions({ breaks: true });
+
 const RenderingModule = (function() {
     function createMessageElement(message) {
         const messageElem = document.createElement('div');
