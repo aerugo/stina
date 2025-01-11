@@ -619,6 +619,31 @@ body .chat-name {
     background-color: #005bbb;
 }
 
+/* Style for the Edit Instruction Button */
+.selector-group button {
+  background: #007AFF;
+  color: #FFFFFF;
+  border: none;
+  padding: 5px 10px;
+  margin-left: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.selector-group button:hover {
+  background: #005BBB;
+}
+
+/* Adjust for Light Mode if applicable */
+body.light-mode .selector-group button {
+  background: #007AFF;
+  color: #FFFFFF;
+}
+
+body.light-mode .selector-group button:hover {
+  background: #005BBB;
+}
+
 /* Modal Footer Buttons */
 .modal-footer button {
     margin-left: 10px;

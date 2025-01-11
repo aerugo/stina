@@ -152,6 +152,20 @@ const InputModule = (function() {
         // Populate the instructions selector
         const instructionsSelect = document.getElementById('instructions-select');
         
+        function updateEditButtonVisibility() {
+            const selectedInstructionId = instructionsSelect.value;
+            const isCustomInstruction = customInstructions.some(instr => instr.id === selectedInstructionId);
+            editInstructionBtn.style.display = isCustomInstruction ? 'inline-block' : 'none';
+        }
+
+        function updateCustomInstruction(id, updatedInstruction) {
+            const index = customInstructions.findIndex(instr => instr.id === id);
+            if (index !== -1) {
+                customInstructions[index] = { id, ...updatedInstruction };
+                localStorage.setItem('customInstructions', JSON.stringify(customInstructions));
+            }
+        }
+
         function populateInstructions() {
             instructionsSelect.innerHTML = '';
             
@@ -173,7 +187,29 @@ const InputModule = (function() {
             customOption.value = 'custom';
             customOption.textContent = 'Create New Instruction...';
             instructionsSelect.appendChild(customOption);
+
+            // Update the display of the Edit button
+            updateEditButtonVisibility();
         }
+
+        // Get reference to edit button
+        const editInstructionBtn = document.getElementById('edit-instruction-btn');
+        
+        // Add edit button event listener
+        editInstructionBtn.addEventListener('click', function() {
+            const selectedInstructionId = instructionsSelect.value;
+            const instructionToEdit = customInstructions.find(instr => instr.id === selectedInstructionId);
+            if (instructionToEdit) {
+                showInstructionCreationModal((updatedInstruction) => {
+                    if (updatedInstruction) {
+                        updateCustomInstruction(instructionToEdit.id, updatedInstruction);
+                        populateInstructions();
+                        instructionsSelect.value = updatedInstruction.id;
+                        showCustomAlert('Instruction updated successfully.');
+                    }
+                }, instructionToEdit);
+            }
+        });
 
         // Initialize instructions
         populateInstructions();
@@ -207,28 +243,36 @@ const InputModule = (function() {
                         saveCustomInstruction(newInstruction);
                         addInstructionOption(newInstruction);
                         instructionsSelect.value = newInstruction.id;
+                        updateEditButtonVisibility();
                     } else {
                         instructionsSelect.value = instructions[0].id;
+                        updateEditButtonVisibility();
                     }
                 });
+            } else {
+                updateEditButtonVisibility();
             }
         });
 
-        function showInstructionCreationModal(callback) {
+        function showInstructionCreationModal(callback, instruction = null) {
             const modal = document.getElementById('custom-modal');
             const titleElem = document.getElementById('custom-modal-title');
             const bodyElem = document.getElementById('custom-modal-body');
             const footerElem = document.getElementById('custom-modal-footer');
 
-            titleElem.textContent = 'Create Custom Instruction';
+            titleElem.textContent = instruction ? 'Edit Custom Instruction' : 'Create Custom Instruction';
+            
+            const titleValue = instruction ? instruction.label : '';
+            const contentValue = instruction ? instruction.content : '';
+
             bodyElem.innerHTML = `
                 <div class="input-group">
                     <label for="instruction-title">Title:</label>
-                    <input type="text" id="instruction-title" style="width: 100%; padding: 10px; margin-bottom: 10px;" placeholder="Enter instruction title">
+                    <input type="text" id="instruction-title" style="width: 100%; padding: 10px; margin-bottom: 10px;" placeholder="Enter instruction title" value="${titleValue}">
                 </div>
                 <div class="input-group">
                     <label for="instruction-content">Content:</label>
-                    <textarea id="instruction-content" rows="5" style="width: 100%; padding: 10px;" placeholder="Enter instruction content"></textarea>
+                    <textarea id="instruction-content" rows="5" style="width: 100%; padding: 10px;" placeholder="Enter instruction content">${contentValue}</textarea>
                 </div>
             `;
 
@@ -248,7 +292,7 @@ const InputModule = (function() {
                 const content = document.getElementById('instruction-content').value.trim();
                 if (title && content) {
                     const newInstruction = {
-                        id: 'custom_' + Date.now(),
+                        id: instruction ? instruction.id : 'custom_' + Date.now(),
                         label: title,
                         content: content,
                     };
