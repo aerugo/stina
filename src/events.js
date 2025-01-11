@@ -116,7 +116,7 @@ var EventModule = (function() {
         // Setup instruction selection change handler
         instructionsSelect.addEventListener('change', function() {
             if (this.value === 'custom') {
-                InputModule.showCustomModal(
+                ModalModule.showInputModal(
                     'Create Custom Instruction',
                     'Enter instruction details:',
                     '',

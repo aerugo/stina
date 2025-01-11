@@ -55,7 +55,7 @@ var ChatModule = (function() {
     function deleteChat(chatId) {
         if (chats.length <= 1) {
             // Prevent deleting the last chat
-            InputModule.showCustomAlert('Cannot delete the last remaining chat.');
+            ModalModule.showCustomAlert('Cannot delete the last remaining chat.');
             return {
                 chats,
                 currentChatId,
