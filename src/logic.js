@@ -10,7 +10,6 @@ const LogicModule = (function () {
 
   // Configuration
   let endpoint = localStorage.getItem("endpoint") || "";
-  let deployment = localStorage.getItem("deployment") || "";
   let apiKey = localStorage.getItem("apiKey") || "";
   let theme = localStorage.getItem("theme") || "light-mode";
   let selectedModelKey = localStorage.getItem("selectedModelKey") || "gpt-4o-3";
@@ -87,30 +86,26 @@ const LogicModule = (function () {
 
   function updateConfig(
     newEndpoint,
-    newDeployment,
     newApiKey,
     newTheme,
     newTitleDeployment,
     newSelectedModelKey
   ) {
     endpoint = newEndpoint;
-    deployment = newDeployment;
     apiKey = newApiKey;
     theme = newTheme;
     titleDeployment = newTitleDeployment;
+    selectedModelKey = newSelectedModelKey;
     localStorage.setItem("endpoint", endpoint);
-    localStorage.setItem("deployment", deployment);
     localStorage.setItem("apiKey", apiKey);
     localStorage.setItem("theme", theme);
     localStorage.setItem("titleDeployment", titleDeployment);
-    selectedModelKey = newSelectedModelKey;
     localStorage.setItem("selectedModelKey", selectedModelKey);
   }
 
   function getConfig() {
     return {
       endpoint,
-      deployment,
       apiKey,
       theme,
       titleDeployment,
@@ -144,7 +139,12 @@ const LogicModule = (function () {
     messages,
     customDeployment = ""
   ) {
-    const deploymentToUse = customDeployment || deployment;
+    const modelParams = models[selectedModelKey];
+    if (!modelParams) {
+      throw new Error(`Model ${selectedModelKey} not found.`);
+    }
+
+    const deploymentToUse = customDeployment || modelParams.deployment;
     const url = `${endpoint}/openai/deployments/${deploymentToUse}/chat/completions?api-version=${apiVersion}`;
 
     const preparedMessages = messages.map((message) => ({
@@ -152,12 +152,8 @@ const LogicModule = (function () {
       content: message.content,
     }));
 
-    const modelParams = models[selectedModelKey];
-    if (!modelParams) {
-      throw new Error(`Model ${selectedModelKey} not found.`);
-    }
-
-    const body = { ...modelParams, messages: preparedMessages };
+    const { label, deployment, ...apiParams } = modelParams;
+    const body = { ...apiParams, messages: preparedMessages };
 
     const response = await fetch(url, {
       method: "POST",

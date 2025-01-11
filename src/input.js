@@ -130,7 +130,7 @@ const InputModule = (function() {
         for (const key in models) {
             const option = document.createElement('option');
             option.value = key;
-            option.textContent = key;
+            option.textContent = models[key].label;
             modelSelect.appendChild(option);
         }
 
@@ -192,7 +192,6 @@ const InputModule = (function() {
     function openSettingsModal() {
         const config = LogicModule.getConfig();
         document.getElementById('endpoint').value = config.endpoint;
-        document.getElementById('deployment').value = config.deployment;
         document.getElementById('api-key').value = config.apiKey;
         document.getElementById('title-deployment').value = config.titleDeployment || '';
         // Set the theme radio button based on the current theme
@@ -214,7 +213,6 @@ const InputModule = (function() {
 
     function saveSettings() {
         const endpoint = document.getElementById('endpoint').value.trim();
-        const deployment = document.getElementById('deployment').value.trim();
         const apiKey = document.getElementById('api-key').value.trim();
         const titleDeployment = document.getElementById('title-deployment').value.trim();
         // Retrieve the selected theme from the radio buttons
@@ -226,12 +224,12 @@ const InputModule = (function() {
             }
         });
 
-        if (!endpoint || !deployment || !apiKey) {
+        if (!endpoint || !apiKey) {
             showCustomAlert('Please fill in all fields.');
             return;
         }
 
-        LogicModule.updateConfig(endpoint, deployment, apiKey, theme, titleDeployment);
+        LogicModule.updateConfig(endpoint, apiKey, theme, titleDeployment, selectedModelKey);
         applyTheme(theme);
         showCustomAlert('Settings saved successfully.');
         closeSettingsModal();
