@@ -134,16 +134,38 @@ const InputModule = (function() {
             modelSelect.appendChild(option);
         }
 
+        // Load custom instructions from localStorage
+        let customInstructions = JSON.parse(localStorage.getItem('customInstructions')) || [];
+
+        function saveCustomInstruction(instruction) {
+            customInstructions.push(instruction);
+            localStorage.setItem('customInstructions', JSON.stringify(customInstructions));
+        }
+
+        function addInstructionOption(instruction) {
+            const option = document.createElement('option');
+            option.value = instruction.id;
+            option.textContent = instruction.label;
+            instructionsSelect.insertBefore(option, instructionsSelect.lastChild);
+        }
+
         // Populate the instructions selector
         const instructionsSelect = document.getElementById('instructions-select');
-        instructions.forEach((instruction, index) => {
+        
+        // Add default instructions
+        instructions.forEach((instruction) => {
             const option = document.createElement('option');
-            option.value = index;
+            option.value = instruction.id;
             option.textContent = instruction.label;
             instructionsSelect.appendChild(option);
         });
 
-        // Add an option for creating a new instruction
+        // Add custom instructions
+        customInstructions.forEach((instruction) => {
+            addInstructionOption(instruction);
+        });
+
+        // Add the option for creating a new instruction
         const customOption = document.createElement('option');
         customOption.value = 'custom';
         customOption.textContent = 'Create New Instruction...';
@@ -173,26 +195,69 @@ const InputModule = (function() {
         // Handle creation of new instruction
         instructionsSelect.addEventListener('change', function() {
             if (this.value === 'custom') {
-                // Show custom modal to get the instruction content
-                showInputModal('Custom Instruction', 'Enter your custom instruction:', '', function(customInstruction) {
-                    if (customInstruction) {
-                        // Show another modal to get the label
-                        showInputModal('Custom Instruction Label', 'Enter a label for your custom instruction:', 'Custom Instruction', function(customLabel) {
-                            const newInstruction = { label: customLabel || 'Custom Instruction', content: customInstruction };
-                            instructions.push(newInstruction);
-                            const newOption = document.createElement('option');
-                            newOption.value = instructions.length - 1;
-                            newOption.textContent = newInstruction.label;
-                            instructionsSelect.insertBefore(newOption, customOption);
-                            instructionsSelect.value = instructions.length - 1;
-                        });
+                showInstructionCreationModal((newInstruction) => {
+                    if (newInstruction) {
+                        saveCustomInstruction(newInstruction);
+                        addInstructionOption(newInstruction);
+                        instructionsSelect.value = newInstruction.id;
                     } else {
-                        // Revert to default if no input
-                        instructionsSelect.value = 0;
+                        instructionsSelect.value = instructions[0].id;
                     }
                 });
             }
         });
+
+        function showInstructionCreationModal(callback) {
+            const modal = document.getElementById('custom-modal');
+            const titleElem = document.getElementById('custom-modal-title');
+            const bodyElem = document.getElementById('custom-modal-body');
+            const footerElem = document.getElementById('custom-modal-footer');
+
+            titleElem.textContent = 'Create Custom Instruction';
+            bodyElem.innerHTML = `
+                <div class="input-group">
+                    <label for="instruction-title">Title:</label>
+                    <input type="text" id="instruction-title" style="width: 100%; padding: 10px; margin-bottom: 10px;" placeholder="Enter instruction title">
+                </div>
+                <div class="input-group">
+                    <label for="instruction-content">Content:</label>
+                    <textarea id="instruction-content" rows="5" style="width: 100%; padding: 10px;" placeholder="Enter instruction content"></textarea>
+                </div>
+            `;
+
+            footerElem.innerHTML = '';
+
+            const cancelButton = document.createElement('button');
+            cancelButton.textContent = 'Cancel';
+            cancelButton.addEventListener('click', () => {
+                modal.style.display = 'none';
+                if (callback) callback(null);
+            });
+
+            const saveButton = document.createElement('button');
+            saveButton.textContent = 'Save';
+            saveButton.addEventListener('click', () => {
+                const title = document.getElementById('instruction-title').value.trim();
+                const content = document.getElementById('instruction-content').value.trim();
+                if (title && content) {
+                    const newInstruction = {
+                        id: 'custom_' + Date.now(),
+                        label: title,
+                        content: content,
+                    };
+                    modal.style.display = 'none';
+                    if (callback) callback(newInstruction);
+                } else {
+                    showCustomAlert('Please provide both a title and content for the instruction.');
+                }
+            });
+
+            footerElem.appendChild(cancelButton);
+            footerElem.appendChild(saveButton);
+
+            modal.style.display = 'block';
+            document.getElementById('instruction-title').focus();
+        }
 
         // Initialize instructions visibility
         updateInstructionsVisibility();
@@ -237,14 +302,18 @@ const InputModule = (function() {
             if (selectedModelParams.system) {
                 const instructionsSelect = document.getElementById('instructions-select');
                 let systemContent = '';
+                const selectedInstructionId = instructionsSelect.value;
 
-                if (instructionsSelect.value === 'custom') {
-                    // Should not reach here, but handle just in case
-                    systemContent = '';
+                // Check custom instructions first
+                const customInstruction = customInstructions.find(instr => instr.id === selectedInstructionId);
+                if (customInstruction) {
+                    systemContent = customInstruction.content;
                 } else {
-                    const instructionIndex = parseInt(instructionsSelect.value);
-                    const selectedInstruction = instructions[instructionIndex];
-                    systemContent = selectedInstruction.content;
+                    // Check default instructions
+                    const defaultInstruction = instructions.find(instr => instr.id === selectedInstructionId);
+                    if (defaultInstruction) {
+                        systemContent = defaultInstruction.content;
+                    }
                 }
 
                 if (systemContent) {
