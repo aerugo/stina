@@ -14,6 +14,7 @@ const LogicModule = (function () {
   let apiKey = localStorage.getItem("apiKey") || "";
   let theme = localStorage.getItem("theme") || "light-mode";
   let titleDeployment = localStorage.getItem("titleDeployment") || "";
+  let apiVersion = "2024-05-01-preview";
 
   function createNewChat() {
     const chatId = Date.now().toString();
@@ -77,9 +78,9 @@ const LogicModule = (function () {
     }
     saveChats();
     return {
-        chats,
-        currentChatId,
-        conversation
+      chats,
+      currentChatId,
+      conversation,
     };
   }
 
@@ -134,19 +135,29 @@ const LogicModule = (function () {
     }
   }
 
-  async function fetchAzureOpenAIChatCompletion(messages) {
+  async function fetchAzureOpenAIChatCompletion(
+    messages,
+    customDeployment = ""
+  ) {
+    const deploymentToUse = customDeployment || deployment;
+    const url = `${endpoint}/openai/deployments/${deploymentToUse}/chat/completions?api-version=${apiVersion}`;
+
+    const preparedMessages = messages.map((message) => ({
+      role: message.role,
+      content: message.content,
+    }));
+
     const body = {
-      messages,
+      messages: preparedMessages,
       max_tokens: 800,
       temperature: 0.7,
       top_p: 0.95,
       frequency_penalty: 0,
       presence_penalty: 0,
       stop: null,
-      stream: false,
     };
 
-    const response = await fetch(endpoint, {
+    const response = await fetch(url, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
