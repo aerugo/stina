@@ -5,8 +5,13 @@
 const ControllerModule = (function() {
     function initializeApp() {
         const state = ChatModule.initialize();
-        RenderingModule.renderChatList(state.chats, state.currentChatId);
-        RenderingModule.renderConversation(state.conversation);
+        if (state && state.chats && state.currentChatId !== undefined) {
+            RenderingModule.renderChatList(state.chats, state.currentChatId);
+            RenderingModule.renderConversation(state.conversation);
+        } else {
+            // Handle the error or initialize a new chat
+            console.error("Failed to initialize chat state.");
+        }
         EventModule.setupEventListeners();
         InputModule.setupEventListeners();
         ThemeModule.applyTheme(ThemeModule.getCurrentTheme());

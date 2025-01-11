@@ -40,7 +40,8 @@ var ChatModule = (function() {
                 success: true,
             };
         }
-        return { success: false };
+        // If chat not found, create a new chat
+        return createNewChat();
     }
 
     function saveChats() {
@@ -92,9 +93,21 @@ var ChatModule = (function() {
         if (chats.length === 0) {
             return createNewChat();
         } else if (currentChatId) {
-            return loadChat(currentChatId);
+            const result = loadChat(currentChatId);
+            if (result.success) {
+                return result;
+            } else {
+                // If loading current chat fails, create new chat
+                return createNewChat();
+            }
         } else {
-            return loadChat(chats[0].id);
+            const result = loadChat(chats[0].id);
+            if (result.success) {
+                return result;
+            } else {
+                // If loading the first chat fails, create new chat
+                return createNewChat();
+            }
         }
     }
 
