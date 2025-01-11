@@ -9,8 +9,7 @@ const ControllerModule = (function () {
     const state = ChatModule.initialize();
     RenderingModule.renderChatList(state.chats, state.currentChatId);
     RenderingModule.renderConversation(state.conversation);
-    EventModule.setupEventListeners(); // Called once here
-    InputModule.setupEventListeners(); // Add InputModule initialization
+    EventModule.setupEventListeners(); // All event listeners are now initialized here
     ThemeModule.applyTheme(ThemeModule.getCurrentTheme());
   }
 

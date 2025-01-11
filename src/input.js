@@ -620,7 +620,6 @@ var InputModule = (function () {
   }
 
   return {
-    setupEventListeners,
     showCustomAlert,
     showCustomConfirm,
     showInputModal,
