@@ -438,11 +438,10 @@ var InputModule = (function () {
       const selectedModelParams = models[selectedModelKey];
       console.log("Selected Model:", selectedModelKey, selectedModelParams);
 
-      // Initialize variables
-      let systemContent = "";
+      // Initialize conversation array without the loading message
+      let conversationToSend = currentState.conversation.slice(0, -1);
       let instructionLabel = "";
-      let conversationToSend = [...currentState.conversation];
-      
+
       // Get latest instruction ID and custom instructions
       const selectedInstructionId = localStorage.getItem("selectedInstructionId") || instructions[0].id;
       const customInstructions = JSON.parse(localStorage.getItem("customInstructions")) || [];
@@ -451,33 +450,26 @@ var InputModule = (function () {
       // Include system message if applicable
       if (selectedModelParams && selectedModelParams.system) {
         console.log("Model supports system messages");
-        
+          
         // Retrieve instruction
         let instruction = customInstructions.find(instr => instr.id === selectedInstructionId) ||
                          instructions.find(instr => instr.id === selectedInstructionId);
 
-        if (instruction) {
-          systemContent = instruction.content;
-          instructionLabel = instruction.label;
-          console.log("Found instruction:", instruction.label);
-        } else {
+        if (!instruction) {
           console.warn("Instruction not found for ID:", selectedInstructionId);
-          // Fallback to default instruction
-          instruction = instructions[0];
-          systemContent = instruction.content;
-          instructionLabel = instruction.label;
-          console.log("Using fallback instruction:", instruction.label);
+          instruction = instructions[0]; // Fallback to default instruction
         }
 
-        console.log("System Content:", systemContent);
+        console.log("Using instruction:", instruction.label);
+        instructionLabel = instruction.label;
 
-        if (systemContent) {
-          // Prepend system message
-          conversationToSend = [
-            { role: "system", content: systemContent },
-            ...conversationToSend,
-          ];
-        }
+        // Prepend system message to conversation
+        conversationToSend = [
+          { role: "system", content: instruction.content },
+          ...conversationToSend
+        ];
+          
+        console.log("Added system message:", instruction.content);
       } else {
         console.log("Model does not support system messages");
       }
@@ -520,7 +512,15 @@ var InputModule = (function () {
       conversationToSend = truncatedConversation;
 
       const assistantMessage = await LogicModule.fetchAzureOpenAIChatCompletion(
-        conversationToSend
+        conversationToSend,
+        selectedModelParams.deployment,
+        {
+          temperature: selectedModelParams.temperature,
+          max_tokens: selectedModelParams.max_tokens,
+          frequency_penalty: selectedModelParams.frequency_penalty,
+          presence_penalty: selectedModelParams.presence_penalty,
+          stop: selectedModelParams.stop
+        }
       );
       // Add the model key to the assistantMessage
       assistantMessage.model = selectedModelKey;
