@@ -543,7 +543,7 @@ var InputModule = (function () {
       }
     } catch (error) {
       // Remove the loading message
-      currentState.conversation.splice(loadingMessageIndex, 1);
+      currentState.conversation.pop();
       RenderingModule.renderConversation(currentState.conversation);
       console.error("Error:", error);
       showCustomAlert(
