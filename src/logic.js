@@ -137,7 +137,6 @@ var LogicModule = (function () {
   }
 
   return {
-    createNewChat,
     loadChat,
     deleteChat,
     getCurrentChat,
