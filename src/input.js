@@ -253,7 +253,9 @@ var InputModule = (function () {
 
     // Handle visibility of Instructions selector based on selected model
     function updateInstructionsVisibility() {
-      const selectedModelParams = models[selectedModelKey];
+      const config = LogicModule.getConfig();
+      const currentModelKey = config.selectedModelKey || "gpt-4o";
+      const selectedModelParams = models[currentModelKey];
       const instructionsGroup = document.getElementById("instructions-group");
 
       // Add this check
