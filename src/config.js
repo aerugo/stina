@@ -4,29 +4,28 @@
  */
 const ConfigModule = (function() {
     let config = {
-        endpoint: localStorage.getItem('endpoint') || '',
-        apiKey: localStorage.getItem('apiKey') || '',
-        theme: localStorage.getItem('theme') || 'light-mode',
-        selectedModelKey: localStorage.getItem('selectedModelKey') || 'gpt-4o',
-        titleDeployment: localStorage.getItem('titleDeployment') || ''
+        endpoint: StorageModule.loadData('endpoint') || '',
+        apiKey: StorageModule.loadData('apiKey') || '',
+        theme: StorageModule.loadData('theme') || 'light-mode',
+        selectedModelKey: StorageModule.loadData('selectedModelKey') || 'gpt-4o',
+        titleDeployment: StorageModule.loadData('titleDeployment') || ''
     };
 
-    function updateConfig(newEndpoint, newApiKey, newTheme, newTitleDeployment, newSelectedModelKey) {
-        config = {
-            endpoint: newEndpoint,
-            apiKey: newApiKey,
-            theme: newTheme,
-            titleDeployment: newTitleDeployment,
-            selectedModelKey: newSelectedModelKey
-        };
-
-        localStorage.setItem('endpoint', newEndpoint);
-        localStorage.setItem('apiKey', newApiKey);
-        localStorage.setItem('theme', newTheme);
-        localStorage.setItem('titleDeployment', newTitleDeployment);
-        localStorage.setItem('selectedModelKey', newSelectedModelKey);
+    /**
+     * Updates the configuration settings.
+     * @param {Object} newConfig - The new configuration settings.
+     */
+    function updateConfig(newConfig) {
+        Object.assign(config, newConfig);
+        for (let key in newConfig) {
+            StorageModule.saveData(key, newConfig[key]);
+        }
     }
 
+    /**
+     * Retrieves the current configuration.
+     * @returns {Object} The current configuration settings.
+     */
     function getConfig() {
         return { ...config };
     }

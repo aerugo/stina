@@ -9,10 +9,11 @@ const ApiModule = (function() {
      * Fetches a chat completion from the Azure OpenAI API.
      * @param {Array} messages - The conversation messages to send.
      * @param {string} deploymentName - Deployment name to use.
+     * @param {Object} options - Additional API options.
      * @returns {Promise<Object>} - The assistant's response message.
      * @throws Will throw an error if the API call fails.
      */
-    async function fetchChatCompletion(messages, deploymentName) {
+    async function fetchChatCompletion(messages, deploymentName, options = {}) {
         const config = ConfigModule.getConfig();
         const url = `${config.endpoint}/openai/deployments/${deploymentName}/chat/completions?api-version=${API_VERSION}`;
 
@@ -26,7 +27,8 @@ const ApiModule = (function() {
                 messages: messages.map(message => ({
                     role: message.role,
                     content: message.content
-                }))
+                })),
+                ...options
             })
         });
 
