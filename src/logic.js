@@ -18,19 +18,10 @@ var LogicModule = (function () {
     localStorage.setItem("currentChatId", currentChatId);
   }
 
-  function saveConversation() {
-    const chat = chats.find((c) => c.id === currentChatId);
-    if (chat) {
-      chat.conversation = conversation;
-      saveChats();
-    }
-  }
-
 
 
 
   return {
-    saveConversation,
     updateSelectedModel: function (newModelKey) {
       ConfigModule.updateConfig({ selectedModelKey: newModelKey });
     },
