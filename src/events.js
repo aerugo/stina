@@ -31,7 +31,7 @@ var EventModule = (function() {
         const messageContent = userInput.value.trim();
         if (messageContent === '') return;
 
-        const config = LogicModule.getConfig();
+        const config = ConfigModule.getConfig();
         if (!config.endpoint || !config.apiKey) {
             InputModule.showCustomAlert('Please set your configuration in the settings before sending messages.');
             return;

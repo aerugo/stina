@@ -89,31 +89,6 @@ var LogicModule = (function () {
     };
   }
 
-  function updateConfig(
-    newEndpoint,
-    newApiKey,
-    newTheme,
-    newTitleDeployment
-  ) {
-    endpoint = newEndpoint;
-    apiKey = newApiKey;
-    theme = newTheme;
-    titleDeployment = newTitleDeployment;
-    StorageModule.saveData("endpoint", endpoint);
-    StorageModule.saveData("apiKey", apiKey);
-    StorageModule.saveData("theme", theme);
-    StorageModule.saveData("titleDeployment", titleDeployment);
-  }
-
-  function getConfig() {
-    return {
-      endpoint,
-      apiKey,
-      theme,
-      titleDeployment,
-      selectedModelKey,
-    };
-  }
 
   function getCurrentChat() {
     return chats.find((c) => c.id === currentChatId);
@@ -205,8 +180,7 @@ var LogicModule = (function () {
     getCurrentState,
     saveConversation,
     updateSelectedModel: function (newModelKey) {
-      selectedModelKey = newModelKey;
-      StorageModule.saveData("selectedModelKey", selectedModelKey);
+      ConfigModule.updateConfig({ selectedModelKey: newModelKey });
     },
   };
 })();

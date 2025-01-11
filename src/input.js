@@ -254,7 +254,7 @@ var InputModule = (function () {
     populateInstructions();
 
     // Retrieve selectedModelKey from config and set the selected model
-    const config = LogicModule.getConfig();
+    const config = ConfigModule.getConfig();
     const selectedModelKey = config.selectedModelKey || "gpt-4o";
     modelSelect.value = selectedModelKey;
 
@@ -594,12 +594,12 @@ var InputModule = (function () {
       return;
     }
 
-    LogicModule.updateConfig(
+    ConfigModule.updateConfig({
       endpoint,
       apiKey,
       theme,
       titleDeployment
-    );
+    });
     applyTheme(theme);
     showCustomAlert("Settings saved successfully.");
     closeSettingsModal();
