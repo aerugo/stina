@@ -27,10 +27,16 @@
             <label for="model-select">Model:</label>
             <select id="model-select"></select>
           </div>
-          <div class="selector-group" id="instructions-group" style="display: none;">
+          <div
+            class="selector-group"
+            id="instructions-group"
+            style="display: none"
+          >
             <label for="instructions-select">Instructions:</label>
             <select id="instructions-select"></select>
-            <button id="edit-instruction-btn" style="display: none;">Edit</button>
+            <button id="edit-instruction-btn" style="display: none">
+              Edit
+            </button>
           </div>
         </div>
         <div id="chat-history" class="messages"></div>
@@ -79,7 +85,9 @@
             </div>
           </div>
           <div class="input-group">
-            <label for="title-deployment">Title Deployment Name (optional)</label>
+            <label for="title-deployment"
+              >Title Deployment Name (optional)</label
+            >
             <div class="input-wrapper">
               <input
                 type="text"
@@ -112,10 +120,10 @@
     <!-- Include Marked.js and DOMPurify via CDN -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/dompurify@2.4.7/dist/purify.min.js"></script>
-    
+
     <!-- Include Instructions -->
     <script src="src/instructions.js"></script>
-    
+
     <!-- Application Modules -->
     <script src="src/models.js"></script>
     <script src="src/storage.js"></script>
@@ -127,9 +135,8 @@
     <script src="src/rendering.js"></script>
     <script src="src/input.js"></script>
     <script src="src/events.js"></script>
-    <script src="src/events.js"></script>
     <script src="src/controller.js"></script>
-    
+
     <script>
       document.addEventListener("DOMContentLoaded", function () {
         ControllerModule.initializeApp();
