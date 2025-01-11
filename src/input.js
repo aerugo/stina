@@ -302,6 +302,9 @@ var InputModule = (function () {
               selectedInstructionId
             );
             updateEditButtonVisibility();
+            
+            // Log the creation of new instruction
+            console.log("New instruction created:", newInstruction.label);
           } else {
             instructionsSelect.value = selectedInstructionId;
             updateEditButtonVisibility();
@@ -311,6 +314,22 @@ var InputModule = (function () {
         selectedInstructionId = this.value;
         localStorage.setItem("selectedInstructionId", selectedInstructionId);
         updateEditButtonVisibility();
+
+        // Log instruction change details
+        console.log("Instruction changed to ID:", selectedInstructionId);
+        
+        // Get all instructions and find the selected one
+        const customInstructions = JSON.parse(localStorage.getItem("customInstructions")) || [];
+        const allInstructions = [...instructions, ...customInstructions];
+        const selectedInstruction = allInstructions.find(
+            (instr) => instr.id === selectedInstructionId
+        );
+
+        if (selectedInstruction) {
+            console.log("Instruction changed to:", selectedInstruction.label);
+        } else {
+            console.log("Instruction not found for ID:", selectedInstructionId);
+        }
       }
     });
 
