@@ -49,9 +49,37 @@ const ControllerModule = (function() {
                 stop: selectedModelParams.stop
             };
 
-            // Call the API with the correct deployment name and options
+            // Include the conversation history and system message
+            let conversationToSend = [...currentState.conversation];
+
+            if (selectedModelParams.system) {
+                // Retrieve the selected instruction ID and content
+                const selectedInstructionId = localStorage.getItem('selectedInstructionId') || instructions[0].id;
+                let systemContent = '';
+
+                // Get custom instructions from local storage
+                const customInstructions = JSON.parse(localStorage.getItem('customInstructions')) || [];
+                const customInstruction = customInstructions.find(instr => instr.id === selectedInstructionId);
+
+                if (customInstruction) {
+                    systemContent = customInstruction.content;
+                } else {
+                    // Check default instructions
+                    const defaultInstruction = instructions.find(instr => instr.id === selectedInstructionId);
+                    if (defaultInstruction) {
+                        systemContent = defaultInstruction.content;
+                    }
+                }
+
+                if (systemContent) {
+                    // Prepend the system message
+                    conversationToSend = [{ role: 'system', content: systemContent }, ...conversationToSend];
+                }
+            }
+
+            // Call the API with the conversation including history and system message
             const response = await ApiModule.fetchChatCompletion(
-                currentState.conversation,
+                conversationToSend,
                 deploymentName,
                 modelOptions
             );
