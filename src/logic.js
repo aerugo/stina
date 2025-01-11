@@ -93,19 +93,16 @@ var LogicModule = (function () {
     newEndpoint,
     newApiKey,
     newTheme,
-    newTitleDeployment,
-    newSelectedModelKey
+    newTitleDeployment
   ) {
     endpoint = newEndpoint;
     apiKey = newApiKey;
     theme = newTheme;
     titleDeployment = newTitleDeployment;
-    selectedModelKey = newSelectedModelKey;
     StorageModule.saveData("endpoint", endpoint);
     StorageModule.saveData("apiKey", apiKey);
     StorageModule.saveData("theme", theme);
     StorageModule.saveData("titleDeployment", titleDeployment);
-    StorageModule.saveData("selectedModelKey", selectedModelKey);
   }
 
   function getConfig() {

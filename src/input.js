@@ -601,8 +601,7 @@ var InputModule = (function () {
       endpoint,
       apiKey,
       theme,
-      titleDeployment,
-      selectedModelKey
+      titleDeployment
     );
     applyTheme(theme);
     showCustomAlert("Settings saved successfully.");
