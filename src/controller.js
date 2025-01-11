@@ -10,6 +10,7 @@ const ControllerModule = (function () {
     RenderingModule.renderChatList(state.chats, state.currentChatId);
     RenderingModule.renderConversation(state.conversation);
     EventModule.setupEventListeners(); // Called once here
+    InputModule.setupEventListeners(); // Add InputModule initialization
     ThemeModule.applyTheme(ThemeModule.getCurrentTheme());
   }
 
