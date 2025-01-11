@@ -158,8 +158,6 @@ var LogicModule = (function () {
     createNewChat,
     loadChat,
     deleteChat,
-    updateConfig,
-    getConfig,
     getCurrentChat,
     generateChatTitle,
     updateChatTitle,
