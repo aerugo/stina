@@ -6,7 +6,6 @@ var EventModule = (function() {
     function setupEventListeners() {
         const userInput = document.getElementById('user-input');
         const sendBtn = document.getElementById('send-btn');
-        const newChatBtn = document.getElementById('new-chat-btn');
         const settingsBtn = document.getElementById('settings-btn');
         const closeSettings = document.getElementById('close-settings');
         const saveSettingsBtn = document.getElementById('save-settings-btn');
@@ -14,7 +13,6 @@ var EventModule = (function() {
 
         sendBtn.addEventListener('click', handleSendButtonClick);
         userInput.addEventListener('keydown', handleUserInputKeyDown);
-        newChatBtn.addEventListener('click', handleNewChatClick);
         settingsBtn.addEventListener('click', openSettingsModal);
         closeSettings.addEventListener('click', closeSettingsModal);
         saveSettingsBtn.addEventListener('click', saveSettings);
@@ -48,11 +46,6 @@ var EventModule = (function() {
         }
     }
 
-    function handleNewChatClick() {
-        const state = ChatModule.createNewChat();
-        RenderingModule.renderChatList(state.chats, state.currentChatId);
-        RenderingModule.renderConversation(state.conversation);
-    }
 
     function handleChatListClick(e) {
         const chatName = e.target.closest('.chat-name');
