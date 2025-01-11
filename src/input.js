@@ -393,10 +393,9 @@ const InputModule = (function() {
                 }
             }
 
-            // Include system message if applicable
-            const selectedModelParams = models[selectedModelKey];
+            // Use the existing selectedModelParams and update instruction info
             let instructionLabel = '';
-            if (selectedModelParams.system) {
+            if (selectedModelParams && selectedModelParams.system) {
                 let systemContent = '';
 
                 // Use selectedInstructionId
