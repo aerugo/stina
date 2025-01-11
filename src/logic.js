@@ -195,18 +195,7 @@ var LogicModule = (function () {
     };
   }
 
-  function initialize() {
-    if (chats.length === 0) {
-      return createNewChat();
-    } else if (currentChatId) {
-      return loadChat(currentChatId);
-    } else {
-      return loadChat(chats[0].id);
-    }
-  }
-
   return {
-    initialize,
     createNewChat,
     loadChat,
     deleteChat,
