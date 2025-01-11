@@ -1,4 +1,4 @@
-const models = {
+var models = {
   "gpt-4o": {
     label: "GPT-4o standard",
     deployment: "gpt-4o-3",
