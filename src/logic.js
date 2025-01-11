@@ -13,10 +13,10 @@ var LogicModule = (function () {
   let apiKey = StorageModule.loadData("apiKey") || "";
   let theme = StorageModule.loadData("theme") || "light-mode";
   let selectedModelKey = StorageModule.loadData("selectedModelKey") || "gpt-4o";
-  
+
   // Validate selectedModelKey
   if (!models[selectedModelKey]) {
-      selectedModelKey = 'gpt-4o';
+    selectedModelKey = "gpt-4o";
   }
   let titleDeployment = StorageModule.loadData("titleDeployment") || "";
   let apiVersion = "2024-12-01-preview";
@@ -114,7 +114,7 @@ var LogicModule = (function () {
       apiKey,
       theme,
       titleDeployment,
-      selectedModelKey
+      selectedModelKey,
     };
   }
 
@@ -157,10 +157,11 @@ var LogicModule = (function () {
       content: message.content,
     }));
 
-    const { label, deployment, system, maxTokens, ...apiParams } = modelParams;
+    const { label, deployment, system, context_length, ...apiParams } =
+      modelParams;
     const body = {
-        ...apiParams,
-        messages: preparedMessages
+      ...apiParams,
+      messages: preparedMessages,
     };
 
     const response = await fetch(url, {
@@ -211,9 +212,9 @@ var LogicModule = (function () {
     fetchAzureOpenAIChatCompletion,
     getCurrentState,
     saveConversation,
-    updateSelectedModel: function(newModelKey) {
+    updateSelectedModel: function (newModelKey) {
       selectedModelKey = newModelKey;
       StorageModule.saveData("selectedModelKey", selectedModelKey);
-    }
+    },
   };
 })();
