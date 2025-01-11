@@ -6,6 +6,8 @@
 marked.setOptions({ breaks: true });
 
 var RenderingModule = (function() {
+    const models = ModelsModule.getModels(); // Retrieve models
+
     function createMessageElement(message) {
         const messageElem = document.createElement('div');
         messageElem.classList.add('message', message.role);

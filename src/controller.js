@@ -3,6 +3,8 @@
  * Coordinates interactions between modules and manages application flow.
  */
 const ControllerModule = (function () {
+  const models = ModelsModule.getModels(); // Retrieve models
+
   function initializeApp() {
     const state = ChatModule.initialize();
     RenderingModule.renderChatList(state.chats, state.currentChatId);
