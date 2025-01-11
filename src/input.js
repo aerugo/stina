@@ -526,9 +526,7 @@ var InputModule = (function () {
         const chat = LogicModule.getCurrentChat();
         if (chat.name === "New chat") {
           // Generate a title based on the first user message
-          const title = await MessageModule.generateChatTitle(
-            currentState.conversation[0].content
-          );
+          const title = await MessageModule.generateChatTitle(messageContent);
           ChatModule.updateChatTitle(chat.id, title);
           RenderingModule.renderChatList(
             ChatModule.getCurrentState().chats,

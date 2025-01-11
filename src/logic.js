@@ -28,15 +28,6 @@ var LogicModule = (function () {
 
 
 
-
-  function updateChatTitle(chatId, newTitle) {
-    const chat = chats.find((c) => c.id === chatId);
-    if (chat) {
-      chat.name = newTitle || "New chat";
-      saveChats();
-    }
-  }
-
   async function fetchAzureOpenAIChatCompletion(
     messages,
     customDeployment = ""
