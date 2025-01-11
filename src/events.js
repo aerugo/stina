@@ -10,6 +10,11 @@ var EventModule = (function() {
     const models = ModelsModule.getModels();
 
     function setupEventListeners() {
+        // Initialize module-level variables first
+        modelSelect = document.getElementById('model-select');
+        instructionsSelect = document.getElementById('instructions-select');
+        editInstructionBtn = document.getElementById('edit-instruction-btn');
+
         function updateModelAndInstructionSelectors() {
             const currentChat = ChatModule.getCurrentChat();
             const config = ConfigModule.getConfig();
@@ -55,10 +60,6 @@ var EventModule = (function() {
         const saveSettingsBtn = document.getElementById('save-settings-btn');
         const chatListContainer = document.querySelector('.chat-list-container');
 
-        // Initialize module-level variables
-        modelSelect = document.getElementById('model-select');
-        instructionsSelect = document.getElementById('instructions-select');
-        editInstructionBtn = document.getElementById('edit-instruction-btn');
 
         // Setup basic event listeners
         newChatBtn.addEventListener('click', function() {
@@ -98,8 +99,6 @@ var EventModule = (function() {
         });
 
         // Setup instructions handling
-        const instructionsSelect = document.getElementById('instructions-select');
-        const editInstructionBtn = document.getElementById('edit-instruction-btn');
 
 
         function addInstructionOption(instruction) {
