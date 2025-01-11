@@ -2,7 +2,7 @@
  * Event Module
  * Handles event listeners and event-related functions.
  */
-const EventModule = (function() {
+var EventModule = (function() {
     function setupEventListeners() {
         const userInput = document.getElementById('user-input');
         const sendBtn = document.getElementById('send-btn');

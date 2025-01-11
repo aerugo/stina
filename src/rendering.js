@@ -5,7 +5,7 @@
 // Configure marked parser to enable line breaks globally
 marked.setOptions({ breaks: true });
 
-const RenderingModule = (function() {
+var RenderingModule = (function() {
     function createMessageElement(message) {
         const messageElem = document.createElement('div');
         messageElem.classList.add('message', message.role);

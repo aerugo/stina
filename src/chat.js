@@ -2,7 +2,7 @@
  * Chat Module
  * Handles chat management including creation, loading, and deletion of chats.
  */
-const ChatModule = (function() {
+var ChatModule = (function() {
     // Private variables
     let chats = JSON.parse(localStorage.getItem("chats")) || [];
     let currentChatId = localStorage.getItem("currentChatId");

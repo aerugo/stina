@@ -2,7 +2,7 @@
  * Logic Module
  * Handles application logic such as chat and conversation management.
  */
-const LogicModule = (function () {
+var LogicModule = (function () {
   // Private variables
   let chats = JSON.parse(localStorage.getItem("chats")) || [];
   let currentChatId = localStorage.getItem("currentChatId");

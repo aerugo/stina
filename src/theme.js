@@ -2,7 +2,7 @@
  * Theme Module
  * Manages application theme settings and application.
  */
-const ThemeModule = (function() {
+var ThemeModule = (function() {
     function applyTheme(theme) {
         document.body.classList.remove('light-mode', 'dark-mode');
         document.body.classList.add(theme);

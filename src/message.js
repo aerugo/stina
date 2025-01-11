@@ -2,7 +2,7 @@
  * Message Module
  * Handles message creation, processing, and conversation management.
  */
-const MessageModule = (function() {
+var MessageModule = (function() {
     async function generateChatTitle(userMessage) {
         const prompt = `Provide a short (maximum 5 words) and descriptive chat title based on the following message:\n"${userMessage}"`;
         const titleMessage = { role: "user", content: prompt };

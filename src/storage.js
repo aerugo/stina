@@ -2,7 +2,7 @@
  * Storage Module
  * Abstracts localStorage interactions for persistent data.
  */
-const StorageModule = (function () {
+var StorageModule = (function () {
   /**
    * Saves data to localStorage under a specified key.
    * @param {string} key - The key under which to store the data.

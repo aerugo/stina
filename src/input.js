@@ -2,7 +2,7 @@
  * Input Module
  * Handles user input processing and modal dialogs
  */
-const InputModule = (function() {
+var InputModule = (function() {
     function showCustomModal(title, message, buttons, callback) {
         const modal = document.getElementById('custom-modal');
         const titleElem = document.getElementById('custom-modal-title');

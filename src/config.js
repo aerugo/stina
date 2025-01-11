@@ -2,7 +2,7 @@
  * Configuration Module
  * Manages application configuration settings.
  */
-const ConfigModule = (function() {
+var ConfigModule = (function() {
     let config = {
         endpoint: StorageModule.loadData('endpoint') || '',
         apiKey: StorageModule.loadData('apiKey') || '',
