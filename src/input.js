@@ -154,7 +154,7 @@ const InputModule = (function() {
         if (messageContent === '') return;
 
         const config = LogicModule.getConfig();
-        if (!config.endpoint || !config.deployment || !config.apiKey) {
+        if (!config.endpoint || !config.apiKey) {
             showCustomAlert('Please set your configuration in the settings before sending messages.');
             return;
         }
