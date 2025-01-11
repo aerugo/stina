@@ -20,7 +20,13 @@ var MessageModule = (function() {
             [titleMessage],
             titleDeployment
         );
-        return response.content.trim().replace(/[\n\r]/g, "");
+
+        if (response.error) {
+            console.error(`Error generating chat title: ${response.message}`);
+            throw new Error(response.message);
+        } else {
+            return response.message.content.trim().replace(/[\n\r]/g, "");
+        }
     }
 
     function saveConversation(chatId, conversation) {

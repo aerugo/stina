@@ -99,12 +99,21 @@ const ControllerModule = (function () {
 
           const chat = ChatModule.getCurrentChat();
           if (chat.name === "New chat") {
-              const title = await MessageModule.generateChatTitle(messageContent);
-              ChatModule.updateChatTitle(chat.id, title);
-              RenderingModule.renderChatList(
-                  ChatModule.getCurrentState().chats,
-                  currentState.currentChatId
-              );
+              try {
+                  const title = await MessageModule.generateChatTitle(messageContent);
+                  ChatModule.updateChatTitle(chat.id, title);
+                  RenderingModule.renderChatList(
+                      ChatModule.getCurrentState().chats,
+                      currentState.currentChatId
+                  );
+              } catch (error) {
+                  console.error("Error generating chat title:", error);
+                  ChatModule.updateChatTitle(chat.id, "New Chat");
+                  RenderingModule.renderChatList(
+                      ChatModule.getCurrentState().chats,
+                      currentState.currentChatId
+                  );
+              }
           }
       }
     } catch (error) {
