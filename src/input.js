@@ -248,7 +248,9 @@ var InputModule = (function () {
     // Initialize instructions
     populateInstructions();
 
-    // Set the selected model based on the config
+    // Retrieve selectedModelKey from config and set the selected model
+    const config = LogicModule.getConfig();
+    const selectedModelKey = config.selectedModelKey || "gpt-4o";
     modelSelect.value = selectedModelKey;
 
     // Handle visibility of Instructions selector based on selected model
