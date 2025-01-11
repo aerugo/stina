@@ -5,6 +5,9 @@
 const InputModule = (function() {
     // Load custom instructions from localStorage at the module level
     let customInstructions = JSON.parse(localStorage.getItem('customInstructions')) || [];
+    
+    // Load the selected instruction ID from localStorage or default to the first instruction
+    let selectedInstructionId = localStorage.getItem('selectedInstructionId') || instructions[0].id;
 
     function showCustomModal(title, message, buttons, callback) {
         const modal = document.getElementById('custom-modal');
@@ -188,6 +191,18 @@ const InputModule = (function() {
             customOption.textContent = 'Create New Instruction...';
             instructionsSelect.appendChild(customOption);
 
+            // Set the selector to the saved instruction ID
+            instructionsSelect.value = selectedInstructionId;
+
+            // Ensure the selected value is valid
+            const validOption = instructionsSelect.querySelector(`option[value="${selectedInstructionId}"]`);
+            if (!validOption) {
+                // If not valid, default to the first instruction
+                selectedInstructionId = instructions[0].id;
+                instructionsSelect.value = selectedInstructionId;
+                localStorage.setItem('selectedInstructionId', selectedInstructionId);
+            }
+
             // Update the display of the Edit button
             updateEditButtonVisibility();
         }
@@ -205,6 +220,8 @@ const InputModule = (function() {
                         updateCustomInstruction(instructionToEdit.id, updatedInstruction);
                         populateInstructions();
                         instructionsSelect.value = updatedInstruction.id;
+                        selectedInstructionId = updatedInstruction.id;
+                        localStorage.setItem('selectedInstructionId', selectedInstructionId);
                         showCustomAlert('Instruction updated successfully.');
                     }
                 }, instructionToEdit);
@@ -243,13 +260,17 @@ const InputModule = (function() {
                         saveCustomInstruction(newInstruction);
                         addInstructionOption(newInstruction);
                         instructionsSelect.value = newInstruction.id;
+                        selectedInstructionId = newInstruction.id;
+                        localStorage.setItem('selectedInstructionId', selectedInstructionId);
                         updateEditButtonVisibility();
                     } else {
-                        instructionsSelect.value = instructions[0].id;
+                        instructionsSelect.value = selectedInstructionId;
                         updateEditButtonVisibility();
                     }
                 });
             } else {
+                selectedInstructionId = this.value;
+                localStorage.setItem('selectedInstructionId', selectedInstructionId);
                 updateEditButtonVisibility();
             }
         });
@@ -353,7 +374,6 @@ const InputModule = (function() {
             if (selectedModelParams.system) {
                 const instructionsSelect = document.getElementById('instructions-select');
                 let systemContent = '';
-                const selectedInstructionId = instructionsSelect.value;
 
                 // Check custom instructions first
                 const customInstruction = customInstructions.find(instr => instr.id === selectedInstructionId);
