@@ -54,6 +54,8 @@ var ChatModule = (function() {
 
     function deleteChat(chatId) {
         chats = chats.filter((chat) => chat.id !== chatId);
+        saveChats(); // Move this here to save the updated chats list
+
         if (currentChatId === chatId) {
             if (chats.length > 0) {
                 return loadChat(chats[0].id);
@@ -61,7 +63,7 @@ var ChatModule = (function() {
                 return createNewChat();
             }
         }
-        saveChats();
+
         return {
             chats,
             currentChatId,
