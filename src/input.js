@@ -161,6 +161,7 @@ var InputModule = (function () {
 
     function updateEditButtonVisibility() {
       const selectedInstructionId = instructionsSelect.value;
+      const customInstructions = JSON.parse(localStorage.getItem("customInstructions")) || [];
       const isCustomInstruction = customInstructions.some(
         (instr) => instr.id === selectedInstructionId
       );
