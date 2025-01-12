@@ -9,10 +9,12 @@ var RenderingModule = (function() {
     const models = ModelsModule.getModels(); // Retrieve models
 
     function createMessageElement(message) {
-        const messageElem = document.createElement('div');
-        messageElem.classList.add('message', message.role);
-        const textElem = document.createElement('div');
-        textElem.classList.add('text');
+        const messageElem = document.createElement('article');
+        messageElem.classList.add('media', message.role);
+        const mediaContent = document.createElement('div');
+        mediaContent.classList.add('media-content');
+        const contentDiv = document.createElement('div');
+        contentDiv.classList.add('content');
     
         let actionContainer = null;
 

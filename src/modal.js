@@ -5,31 +5,38 @@
 var ModalModule = (function () {
     function showCustomModal(title, message, buttons, callback) {
         const modal = document.getElementById("custom-modal");
-        const titleElem = document.getElementById("custom-modal-title");
-        const bodyElem = document.getElementById("custom-modal-body");
-        const footerElem = document.getElementById("custom-modal-footer");
+        modal.classList.add("is-active");
 
-        titleElem.textContent = title;
-        bodyElem.innerHTML = `<p>${message}</p>`;
+        const modalTitle = modal.querySelector(".modal-card-title");
+        const modalBody = modal.querySelector(".modal-card-body");
+        const modalFooter = modal.querySelector(".modal-card-foot");
 
-        footerElem.innerHTML = "";
+        modalTitle.textContent = title;
+        modalBody.innerHTML = `<p>${message}</p>`;
+
+        modalFooter.innerHTML = "";
         buttons.forEach((button) => {
             const btn = document.createElement("button");
+            btn.classList.add("button");
+            if (button.value === true) btn.classList.add("is-primary");
             btn.textContent = button.label;
             btn.addEventListener("click", () => {
-                modal.style.display = "none";
+                modal.classList.remove("is-active");
                 if (callback) callback(button.value);
             });
-            footerElem.appendChild(btn);
+            modalFooter.appendChild(btn);
         });
 
-        modal.style.display = "block";
+        const modalBackground = modal.querySelector(".modal-background");
+        const closeButton = modal.querySelector(".delete");
 
-        const closeButton = document.getElementById("custom-modal-close");
-        closeButton.onclick = () => {
-            modal.style.display = "none";
+        modalBackground.onclick = closeModal;
+        closeButton.onclick = closeModal;
+
+        function closeModal() {
+            modal.classList.remove("is-active");
             if (callback) callback(null);
-        };
+        }
     }
 
     function showCustomAlert(message) {
