@@ -179,6 +179,24 @@ body {
     color: #6b6b6b;
     text-align: right;
 }
+
+/* Transparent Button Style */
+.button.is-transparent {
+    background: transparent;
+    border: none;
+    color: var(--primary-color);
+    box-shadow: none;
+    margin-left: 0.5rem;
+    padding: 0.3rem 0.5rem;
+}
+
+.button.is-transparent:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.button.is-transparent:active {
+    background-color: rgba(0, 0, 0, 0.1);
+}
 /* Message content alignment */
 .assistant-message .assistant-article {
   max-width: 700px;
