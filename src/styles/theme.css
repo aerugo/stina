@@ -221,19 +221,17 @@ body {
     margin-top: 1rem;
 }
 
-/* Hide footer in older messages by default */
-.assistant-message-container.older-message .message-footer {
-    display: none;
+/* Hide the content of the message footer in older messages */
+.assistant-message-container.older-message .message-footer .copy-button,
+.assistant-message-container.older-message .message-footer .model-instruction-label {
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out;
 }
 
-/* Show footer on hover for older messages */
-.assistant-message-container.older-message:hover .message-footer {
-    display: flex;
-}
-
-/* Ensure footer is always visible in latest message */
-.assistant-message-container:not(.older-message) .message-footer {
-    display: flex;
+/* Show the content on hover */
+.assistant-message-container.older-message:hover .message-footer .copy-button,
+.assistant-message-container.older-message:hover .message-footer .model-instruction-label {
+    opacity: 1;
 }
 
 /* Add hover effect for older messages */
