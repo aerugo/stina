@@ -165,7 +165,7 @@ body {
 }
 
 .copy-button:hover {
-    color: #2751a3;
+    color: var(--primary-hover-color);
 }
 
 .copy-button:focus {
