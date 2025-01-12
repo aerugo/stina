@@ -7,41 +7,71 @@
 .modal-card {
     max-width: 600px;
     margin: 0 auto;
-    animation: slideIn 0.3s ease;
+    animation: fadeInUp 0.3s ease;
     background-color: var(--background-color);
     color: var(--text-color);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    border-radius: var(--border-radius);
+    transition: all 0.3s ease;
 }
 
-@keyframes slideIn {
-    from { opacity: 0; transform: translateY(-20px); }
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
     to { opacity: 1; transform: translateY(0); }
 }
 
 .modal-card-head,
 .modal-card-foot {
+    padding: 1.5rem;
     background-color: var(--button-background-color);
     color: var(--text-color);
     border-bottom: 1px solid var(--border-color);
+    border-top-left-radius: var(--border-radius);
+    border-top-right-radius: var(--border-radius);
 }
 
 .modal-card-title {
     color: var(--text-color);
     font-weight: var(--font-weight-bold);
+    font-size: 1.25rem;
+}
+
+.modal-card-head .delete {
+    background: none;
+    color: var(--text-color);
+    opacity: 0.7;
+    transition: all 0.3s ease;
+}
+
+.modal-card-head .delete:hover {
+    background: none;
+    opacity: 1;
+    color: var(--primary-color);
+}
+
+.modal-card-head .delete:focus {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
 }
 
 .modal-card-body {
-    padding: 20px;
+    padding: 2rem;
     background-color: var(--background-color);
     color: var(--text-color);
+    font-size: 1rem;
+    line-height: 1.6;
+    font-weight: var(--font-weight-normal);
 }
 
 .modal-card-body .field:not(:last-child) {
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
 }
 
 .modal-card-foot {
     justify-content: flex-end;
-    padding: 1rem;
+    padding: 1.5rem;
+    border-bottom-left-radius: var(--border-radius);
+    border-bottom-right-radius: var(--border-radius);
 }
 
 .modal-card-foot .button:not(:last-child) {
@@ -52,16 +82,44 @@
     background-color: var(--button-background-color);
     color: var(--text-color);
     border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: 0.75rem 1.5rem;
+    transition: all 0.3s ease;
+}
+
+.modal-card-foot .button:hover {
+    background-color: var(--active-item-color);
+}
+
+.modal-card-foot .button:focus {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
 }
 
 .modal-card-foot .button.is-primary {
     background-color: var(--primary-color);
     color: var(--active-text-color);
+    border: none;
+}
+
+.modal-card-foot .button.is-primary:hover {
+    background-color: var(--primary-hover-color);
 }
 
 /* Modal Background */
 .modal-background {
-    background-color: var(--overlay-color);
+    background-color: rgba(0, 0, 0, 0.6);
+}
+
+@media screen and (max-width: 768px) {
+    .modal-card {
+        width: 90%;
+        margin: 0 auto;
+    }
+
+    .modal-card-body {
+        padding: 1.5rem;
+    }
 }
 
 .modal-content h2 {
