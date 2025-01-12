@@ -2,12 +2,19 @@
  * interface.css
  * 
  * Main stylesheet for the chat interface application.
- * Organized by component and functionality for maintainability.
+ * Organized into logical sections:
+ * - Theme Variables
+ * - Reset and Base Styles  
+ * - Typography
+ * - Layout Styles
+ * - Component Styles
+ * - Animations
+ * - Responsive Styles
  */
 
 /* ===== Theme Variables ===== */
 :root {
-  /* Default (Dark Mode) Colors */
+  /* Colors - Dark Mode Default */
   --primary-color: #1E90FF;
   --primary-color-hover: #187BE8;
   --primary-color-active: #1569CC;
@@ -31,43 +38,46 @@
   --button-hover-bg: #005bbb;
   --button-text: #FFFFFF;
   
-  /* Spacing and Layout */
-  --spacing-xs: 0.25rem;   /* 4px */
-  --spacing-sm: 0.5rem;    /* 8px */
-  --spacing-md: 1rem;      /* 16px */
-  --spacing-lg: 1.5rem;    /* 24px */
-  --spacing-xl: 2rem;      /* 32px */
+  /* Spacing */
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
   
   /* Border Radius */
-  --radius-sm: 0.25rem;    /* 4px */
-  --radius-md: 0.5rem;     /* 8px */
-  --radius-lg: 1rem;       /* 16px */
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 1rem;
   
   /* Transitions */
   --transition-fast: 0.2s ease;
   --transition-normal: 0.3s ease;
   
-  /* Font Sizes */
-  --font-size-sm: 0.875rem;  /* 14px */
-  --font-size-md: 1rem;      /* 16px */
-  --font-size-lg: 1.125rem;  /* 18px */
+  /* Typography */
+  --font-size-sm: 0.875rem;
+  --font-size-md: 1rem;
+  --font-size-lg: 1.125rem;
+  --line-height-normal: 1.5;
+  --font-family: 'Inter', sans-serif;
 }
 
-/* Light Mode Theme Override */
+/* ===== Light Mode Theme Override ===== */
 body.light-mode {
+  /* Colors */
   --bg-color: #F5F5F5;
   --secondary-bg: #FFFFFF;
   --text-color: #202124;
   --border-color: #E0E0E0;
   --hover-color: #EAF2FB;
   
-  /* Message Colors - Light Mode */
+  /* Message Colors */
   --message-bg-color: #FFFFFF;
   --user-message-bg-color: #E5E5EA;
   --assistant-message-bg-color: #FFFFFF;
   --modal-bg-color: #FFFFFF;
 
-  /* UI Component Colors - Light Mode */
+  /* UI Components */
   --copy-button-color: #666;
   --copy-button-hover-bg: rgba(0, 0, 0, 0.1);
   --copy-button-hover-color: #000;
