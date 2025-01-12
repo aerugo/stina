@@ -10,7 +10,8 @@ var RenderingModule = (function() {
 
     function createMessageElement(message) {
         const messageElem = document.createElement('article');
-        messageElem.classList.add('media', message.role);
+        messageElem.classList.add('media');
+        messageElem.classList.add(message.role === 'assistant' ? 'assistant-message' : 'user-message');
         const mediaContent = document.createElement('div');
         mediaContent.classList.add('media-content');
         const contentDiv = document.createElement('div');
@@ -52,9 +53,7 @@ var RenderingModule = (function() {
                 modelLabel.textContent = modelLabelText;
                 copyButton.innerHTML = `
                     <span class="icon is-small">
-                        <svg width="16" height="16" viewBox="0 0 24 24">
-                            <path fill="currentColor" d="M19,21H5C3.9,21 3,20.1 3,19V7H5V19H19V21ZM21,5H8C6.9,5 6,5.9 6,7V17C6,18.1 6.9,19 8,19H21C22.1,19 23,18.1 23,17V7C23,5.9 22.1,5 21,5M21,17H8V7H21V17Z" />
-                        </svg>
+                        <i class="fas fa-copy"></i>
                     </span>
                     <span>Copy</span>
                 `;
@@ -64,9 +63,7 @@ var RenderingModule = (function() {
                         .then(() => {
                             copyButton.innerHTML = `
                                 <span class="icon is-small">
-                                    <svg width="16" height="16" viewBox="0 0 24 24">
-                                        <path fill="currentColor" d="M9,16.17L4.83,12l-1.42,1.41L9,19 21,7l-1.41-1.41L9,16.17z" />
-                                    </svg>
+                                    <i class="fas fa-check"></i>
                                 </span>
                                 <span>Copied!</span>
                             `;

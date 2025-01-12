@@ -51,8 +51,8 @@
       </aside>
 
       <!-- Main Chat Area -->
-      <main class="section">
-        <div class="container">
+      <main class="column is-10 is-offset-2 section">
+        <div class="container is-fluid">
           <div class="field is-grouped">
             <div class="control">
               <label class="label" for="model-select"></label>
@@ -69,25 +69,20 @@
               </button>
             </div>
           </div>
-          <div id="chat-history" class="content"></div>
-          <div class="field has-addons">
+          <div id="chat-history" class="box content" style="max-height: 60vh; overflow-y: auto;"></div>
+          <div class="field has-addons mt-4">
             <div class="control is-expanded">
               <textarea
                 id="user-input"
                 class="textarea"
-                placeholder="Send a message..."
+                placeholder="Type your message..."
                 rows="1"
               ></textarea>
             </div>
             <div class="control">
               <button id="send-btn" class="button is-primary">
-              <svg width="24" height="24" viewBox="0 0 24 24">
-                <path
-                  fill="currentColor"
-                  d="M2,21L23,12L2,3V10L17,12L2,14V21Z"
-                />
-              </svg>
-            </button>
+                <span class="icon"><i class="fas fa-paper-plane"></i></span>
+              </button>
           </div>
         </div>
       </main>

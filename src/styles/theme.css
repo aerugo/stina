@@ -47,6 +47,31 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* Message Styles */
-.message.is-pulled-right {
-  margin-left: auto;
+.assistant-message .content {
+  background-color: #f5f5f5;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+.user-message .content {
+  background-color: var(--primary-color);
+  color: #fff;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  align-self: flex-end;
+}
+
+.section {
+  padding: 2rem 1.5rem;
+}
+
+.container {
+  margin-top: 1rem;
+}
+
+body {
+  font-size: 16px;
+  line-height: 1.5;
 }

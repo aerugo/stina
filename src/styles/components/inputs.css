@@ -10,6 +10,9 @@
   font-size: var(--font-size-md);
   color: var(--text-color);
   resize: none;
+  min-height: 3rem;
+  max-height: 8rem;
+  overflow-y: auto;
 }
 
 #user-input:focus {
@@ -22,8 +25,15 @@
 #send-btn {
   background-color: var(--primary-color);
   color: #fff;
+  border-radius: 50%;
+  width: 3rem;
+  height: 3rem;
+}
+
+#send-btn .icon {
+  margin: 0;
 }
 
 #send-btn:hover {
-  background-color: #2366d1;
+  background-color: #00b89c;
 }
