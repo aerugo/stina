@@ -458,9 +458,33 @@ body.light-mode .copy-button:hover {
     animation: fadeIn 0.5s forwards;
 }
 
+/* ==========================================================================
+   Animations
+   ========================================================================== */
+
+/* Fade In Animation */
 @keyframes fadeIn {
     to {
         opacity: 1;
+    }
+}
+
+/* Slide In Animation */
+@keyframes slideIn {
+    from { 
+        opacity: 0; 
+        transform: translateY(-20px); 
+    }
+    to { 
+        opacity: 1; 
+        transform: translateY(0); 
+    }
+}
+
+/* Spin Animation */
+@keyframes spin {
+    to { 
+        transform: rotate(360deg); 
     }
 }
 
