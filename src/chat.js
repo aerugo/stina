@@ -24,11 +24,8 @@ var ChatModule = (function() {
         conversation = chat.conversation;
         saveChats();
         saveCurrentChatId();
-        return {
-            chats,
-            currentChatId,
-            conversation,
-        };
+        // Return the current state with chats sorted by lastUpdated
+        return getCurrentState();
     }
 
     function loadChat(chatId) {
