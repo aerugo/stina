@@ -157,10 +157,6 @@ var EventModule = (function () {
     updateEditButtonVisibility();
 
 
-    // Get references to elements
-    const editInstructionBtn = document.getElementById("edit-instruction-btn");
-    const instructionsSelect = document.getElementById("instructions-select");
-
     // Add click event listener to the "Edit" button
     editInstructionBtn.addEventListener("click", function () {
       const selectedInstructionId = instructionsSelect.value;
