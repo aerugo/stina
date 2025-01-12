@@ -187,6 +187,12 @@ a:hover {
 }
 
 /* Switch styles */
+/* ===================
+   Switches
+   =================== */
+
+/* Toggle Switch Container */
+/* Custom switch component for toggles */
 .switch {
     position: relative;
     display: inline-block;
@@ -194,18 +200,20 @@ a:hover {
     height: 20px;
 }
 
+/* Hide default checkbox */
 .switch input {
     opacity: 0;
     width: 0;
     height: 0;
 }
 
+/* Switch Slider */
 .slider {
     position: absolute;
     cursor: pointer;
-    top: 0; left: 0; right: 0; bottom: 0;
+    inset: 0;
     background-color: #ccc;
-    transition: 0.4s;
+    transition: var(--transition-normal);
     border-radius: 34px;
 }
 
@@ -260,6 +268,10 @@ input:checked + .slider:before {
     }
 }
 
+
+/* ==========================================================================
+   Component Styles
+   ========================================================================== */
 
 /* ===== Layout Styles ===== */
 
@@ -385,22 +397,35 @@ input:checked + .slider:before {
     min-height: 0;
 }
 
+/* ===================
+   Messages
+   =================== */
+
+/* Message Container */
+/* Base styles for all message types */
 .message {
+    /* Layout */
+    position: relative;
     max-width: 800px;
     margin: 0 auto 20px auto;
-    padding: 20px;
-    line-height: 1.5;
-    position: relative;
-    border-radius: 8px;
+    padding: var(--spacing-lg);
+    
+    /* Visual */
+    line-height: var(--line-height-normal);
+    border-radius: var(--radius-md);
     border: 1px solid var(--border-color);
 }
 
+/* User Message */
 .message.user {
-    background-color: #E3F2FD;
+    background-color: var(--user-message-bg-color);
+    border-radius: 15px 15px 0 15px;
 }
 
+/* Assistant Message */
 .message.assistant {
-    background-color: #F1F3F4;
+    background-color: var(--assistant-message-bg-color);
+    border-radius: 15px 15px 15px 0;
 }
 
 .message .text {
@@ -526,16 +551,25 @@ body.light-mode .copy-button:hover {
     padding: 5px 15px;
 }
 
+/* ===================
+   Inputs
+   =================== */
+
+/* User Input Field */
+/* Main chat input textarea */
 #user-input {
+    /* Layout */
     width: 100%;
+    padding: 15px;
+    margin-right: 10px;
+    box-sizing: border-box;
+    
+    /* Visual */
     background: transparent;
     border: none;
-    padding: 15px;
     color: var(--text-color);
-    font-size: 16px;
+    font-size: var(--font-size-md);
     resize: none;
-    box-sizing: border-box;
-    margin-right: 10px;
 }
 
 #user-input:focus {
@@ -546,16 +580,25 @@ body.light-mode .copy-button:hover {
     outline: none;
 }
 
+/* ===================
+   Buttons
+   =================== */
+
+/* Send Button */
+/* Circular button used to send messages */
 .send-button {
+    /* Layout */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--button-size);
+    height: var(--button-size);
+    
+    /* Visual */
     background: var(--button-bg);
     color: var(--button-text);
     border: none;
     border-radius: 50%;
-    width: var(--button-size);
-    height: var(--button-size);
-    display: flex;
-    align-items: center;
-    justify-content: center;
     cursor: pointer;
     transition: background-color var(--transition-fast), transform var(--transition-fast);
 }
@@ -570,16 +613,25 @@ body.light-mode .copy-button:hover {
     to { opacity: 1; transform: translateY(0); }
 }
 
+/* ===================
+   Modals
+   =================== */
+
+/* Modal Container */
+/* Base modal window styles */
 .modal-content {
-    background: #FFFFFF;
+    /* Layout */
+    position: relative;
     width: 90%;
     max-width: 400px;
     margin: 80px auto;
-    border-radius: 12px;
+    
+    /* Visual */
+    background: var(--modal-bg-color);
+    border-radius: var(--radius-lg);
     overflow: hidden;
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--shadow-lg);
     animation: slideIn 0.3s ease;
-    position: relative;
 }
 
 /* Modal Header */
