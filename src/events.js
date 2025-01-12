@@ -60,7 +60,7 @@ var EventModule = (function() {
         const settingsBtn = document.getElementById('settings-btn');
         const closeSettings = document.getElementById('close-settings');
         const saveSettingsBtn = document.getElementById('save-settings-btn');
-        const chatListContainer = document.querySelector('.chat-list-container');
+        const chatListContainer = document.getElementById('chat-list');
 
 
         // Setup basic event listeners
