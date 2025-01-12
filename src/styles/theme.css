@@ -3,8 +3,8 @@
   /* Colors */
   --primary-color: #3273dc;
   --primary-text-color: #363636;
-  --background-color: #f5f5f5;
-  --sidebar-background-color: #fff;
+  --background-color: #fff;
+  --sidebar-background-color: #f5f5f5;
   --active-item-color: #e8e8e8;
   --danger-color: #ff3860;
   --text-color: #4a4a4a;
@@ -57,6 +57,7 @@ main .container {
   flex: 1 1 auto;
   overflow-y: auto;
   padding-right: 1rem;
+  box-shadow: none;
 }
 
 .field.has-addons.mt-4 {
