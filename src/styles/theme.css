@@ -15,6 +15,7 @@
 
 html, body {
   height: 100%;
+  margin: 0;
 }
 
 *, *::before, *::after {
@@ -31,14 +32,25 @@ body {
 main.section {
   display: flex;
   flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+main .container {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
 #chat-history {
-  flex-grow: 1;
-  margin-top: 1rem;
+  flex: 1 1 auto;
+  overflow-y: auto;
+  padding-right: 1rem;
 }
 
 .field.has-addons.mt-4 {
+  flex-shrink: 0;
   margin-top: 1rem;
   padding: 1rem 0;
   background-color: #fff;
@@ -46,6 +58,7 @@ main.section {
 }
 
 .field.is-grouped {
+  flex-shrink: 0;
   margin-bottom: 1rem;
 }
 
