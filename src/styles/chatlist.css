@@ -1,30 +1,49 @@
-/* ===== Chat List Styles ===== */
-
-#chat-list li {
-    display: flex;
-    align-items: center;
-    padding: 10px;
-    margin: 2px 0;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background 0.2s;
+/* Sidebar Styles */
+.sidebar {
+  background-color: var(--sidebar-background-color);
+  padding: 1rem;
 }
 
-#chat-list li:hover,
+/* Chat List Styles */
+#chat-list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px;
+  margin: 4px 0;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
 #chat-list li.active {
-    background: var(--active-item-color);
+  background-color: var(--primary-color);
+  color: #fff;
+}
+
+#chat-list li:hover {
+  background-color: var(--active-item-color);
+}
+
+.chat-name {
+  flex-grow: 1;
+  margin-right: 10px;
 }
 
 .delete-chat-btn {
-    color: rgba(0, 0, 0, 0.5);
-    background: none;
-    border: none;
-    font-size: 16px;
-    cursor: pointer;
-    padding: 0 5px;
+  background: none;
+  border: none;
+  color: rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+  font-size: 16px;
+  transition: color 0.2s ease;
 }
 
 .delete-chat-btn:hover {
-    color: var(--danger-color);
+  color: var(--danger-color);
+}
+
+.button {
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 

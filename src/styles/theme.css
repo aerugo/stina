@@ -1,10 +1,44 @@
+/* Theme Variables */
+:root {
+  /* Colors */
+  --primary-color: #3273dc;
+  --primary-text-color: #363636;
+  --background-color: #f5f5f5;
+  --sidebar-background-color: #fff;
+  --active-item-color: #e8e8e8;
+  --danger-color: #ff3860;
+  --text-color: #4a4a4a;
 
-/* ==========================================================================
-   Theme Variables
-   ========================================================================== */
+  /* Font Sizes */
+  --font-size-md: 16px;
+}
 
 body {
-  /* Colors */
-  --active-item-color: #E0E0E0;
-  --danger-color: #FF4444;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  font-family: 'Inter', sans-serif;
+  line-height: 1.6;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--primary-text-color);
+  font-weight: 600;
+}
+
+/* Navbar Styles */
+.navbar {
+  background-color: var(--primary-color);
+}
+
+.navbar-item strong {
+  color: #fff;
+}
+
+.navbar-burger span {
+  background-color: #fff;
+}
+
+/* Message Styles */
+.message.is-pulled-right {
+  margin-left: auto;
 }

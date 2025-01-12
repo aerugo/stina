@@ -1,28 +1,29 @@
-/* ===================
-   Inputs
-   =================== */
-
-/* User Input Field */
-/* Main chat input textarea */
+/* Input Field */
 #user-input {
-    /* Layout */
-    width: 100%;
-    padding: 15px;
-    margin-right: 10px;
-    box-sizing: border-box;
-    
-    /* Visual */
-    background: transparent;
-    border: none;
-    color: var(--text-color);
-    font-size: var(--font-size-md);
-    resize: none;
+  background-color: #fff;
+  border: 1px solid #dbdbdb;
+  border-radius: 4px;
+  padding: 10px;
+  margin-right: 10px;
+  box-sizing: border-box;
+  width: 100%;
+  font-size: var(--font-size-md);
+  color: var(--text-color);
+  resize: none;
 }
 
 #user-input:focus {
-    outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 0.125em rgba(50, 115, 220, 0.25);
+  outline: none;
 }
 
-#user-input:focus {
-    outline: none;
+/* Send Button */
+#send-btn {
+  background-color: var(--primary-color);
+  color: #fff;
+}
+
+#send-btn:hover {
+  background-color: #2366d1;
 }
