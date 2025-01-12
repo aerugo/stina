@@ -309,17 +309,38 @@ body.light-mode .copy-button:hover {
     color: #000;
 }
 
+.message {
+    background-color: #FFFFFF;
+    border-radius: 15px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+    padding: 20px;
+    opacity: 0;
+    animation: fadeIn 0.5s forwards;
+}
+
+@keyframes fadeIn {
+    to {
+        opacity: 1;
+    }
+}
+
 .message.user {
-    background: #343541;
+    background-color: #E8F0FE;
+    align-self: flex-end;
+    border-radius: 15px 15px 0 15px;
 }
 
 .message.assistant {
-    background: #444654;
+    background-color: #FFFFFF;
+    align-self: flex-start;
+    border-radius: 15px 15px 15px 0;
 }
 
 .message .text {
-    color: #FFFFFF;
-    font-size: 15px;
+    color: var(--text-color);
+    font-size: 16px;
+    line-height: 1.6;
 }
 
 /* Input Area */
