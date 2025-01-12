@@ -16,6 +16,7 @@
 html, body {
   height: 100%;
   margin: 0;
+  padding: 0;
 }
 
 *, *::before, *::after {
@@ -34,16 +35,17 @@ main.section {
   flex-direction: column;
   height: 100%;
   overflow: hidden;
+  padding: 0;
+  margin: 0;
 }
 
 main .container.is-max-desktop {
-  max-width: 700px;
   width: 100%;
   flex: 1;
   display: flex;
   flex-direction: column;
   height: 100%;
-  margin: 0 auto;
+  margin: 0;
 }
 
 main .container {
@@ -51,12 +53,18 @@ main .container {
   display: flex;
   flex-direction: column;
   height: 100%;
+  padding: 0;
+  margin: 0;
+  width: 100%;
 }
 
 #chat-history {
   flex: 1 1 auto;
   overflow-y: auto;
-  padding-right: 1rem;
+  overflow-x: hidden;
+  padding: 0;
+  margin: 0;
+  width: 100%;
   box-shadow: none;
 }
 
@@ -273,4 +281,18 @@ body {
     font-size: 0.8rem;
     color: #6b6b6b;
     text-align: right;
+}
+/* Message content alignment */
+.assistant-message .assistant-article {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.user-message {
+  justify-content: center;
+}
+
+.user-message .user-message-content {
+  max-width: 700px;
+  margin-right: 0;
 }
