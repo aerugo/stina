@@ -9,6 +9,25 @@ var ChatModule = (function() {
     let conversation = [];
 
     function createNewChat() {
+        // Check for existing empty "New chat"s
+        const emptyNewChats = chats.filter(
+            (chat) => chat.name === "New chat" && chat.conversation.length === 0
+        );
+        if (emptyNewChats.length > 0) {
+            // Find the most recently updated empty "New chat"
+            const existingEmptyNewChat = emptyNewChats.reduce((latestChat, chat) => {
+                return chat.lastUpdated > latestChat.lastUpdated ? chat : latestChat;
+            }, emptyNewChats[0]);
+
+            // Update 'lastUpdated' to move it to the top
+            existingEmptyNewChat.lastUpdated = Date.now();
+            currentChatId = existingEmptyNewChat.id;
+            conversation = existingEmptyNewChat.conversation;
+            saveChats();
+            saveCurrentChatId();
+            return getCurrentState();
+        }
+
         const config = ConfigModule.getConfig();
         const chatId = Date.now().toString();
         const chat = {
@@ -24,7 +43,6 @@ var ChatModule = (function() {
         conversation = chat.conversation;
         saveChats();
         saveCurrentChatId();
-        // Return the current state with chats sorted by lastUpdated
         return getCurrentState();
     }
 
