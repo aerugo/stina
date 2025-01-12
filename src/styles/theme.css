@@ -22,6 +22,24 @@
   --border-radius: 4px;
   --z-index-modal: 600;
   --font-size-md: 1rem;
+
+  /* Modal Variables */
+  --modal-background-color: #ffffff;
+  --modal-header-footer-background: #f5f5f5;
+  --modal-title-color: #333333;
+  --modal-text-color: #444444;
+  --modal-overlay-color: rgba(0, 0, 0, 0.8);
+
+  /* Button Variables */
+  --button-primary-background: #005fcc;
+  --button-primary-text: #ffffff;
+  --button-primary-hover-background: #004bb5;
+  --button-secondary-background: #f5f5f5;
+  --button-secondary-text: #333333;
+  --button-secondary-hover-background: #e9ecef;
+  --button-tertiary-background: #e9ecef;
+  --button-tertiary-text: #333333;
+  --button-tertiary-hover-background: #d6d8db;
 }
 
 /* Global Button Styles */

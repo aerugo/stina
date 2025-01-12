@@ -8,8 +8,8 @@
     max-width: 600px;
     margin: 0 auto;
     animation: fadeInUp 0.3s ease;
-    background-color: var(--background-color);
-    color: var(--text-color);
+    background-color: var(--modal-background-color);
+    color: var(--modal-text-color);
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
     border-radius: var(--border-radius);
     transition: all 0.3s ease;
@@ -23,8 +23,8 @@
 .modal-card-head,
 .modal-card-foot {
     padding: 1.5rem;
-    background-color: var(--button-background-color);
-    color: var(--text-color);
+    background-color: var(--modal-header-footer-background);
+    color: var(--modal-title-color);
     border-bottom: 1px solid var(--border-color);
     border-top-left-radius: var(--border-radius);
     border-top-right-radius: var(--border-radius);
@@ -79,16 +79,43 @@
 }
 
 .modal-card-foot .button {
-    background-color: var(--button-background-color);
-    color: var(--text-color);
-    border: 1px solid var(--border-color);
     border-radius: var(--border-radius);
     padding: 0.75rem 1.5rem;
-    transition: all 0.3s ease;
+    font-weight: var(--font-weight-normal);
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-.modal-card-foot .button:hover {
-    background-color: var(--active-item-color);
+/* Primary Button */
+.modal-card-foot .button.is-primary {
+    background-color: var(--button-primary-background);
+    color: var(--button-primary-text);
+    border: none;
+}
+
+.modal-card-foot .button.is-primary:hover {
+    background-color: var(--button-primary-hover-background);
+}
+
+/* Secondary Button */
+.modal-card-foot .button.is-secondary {
+    background-color: var(--button-secondary-background);
+    color: var(--button-secondary-text);
+    border: 1px solid var(--border-color);
+}
+
+.modal-card-foot .button.is-secondary:hover {
+    background-color: var(--button-secondary-hover-background);
+}
+
+/* Tertiary Button */
+.modal-card-foot .button.is-tertiary {
+    background-color: var(--button-tertiary-background);
+    color: var(--button-tertiary-text);
+    border: 1px solid var(--border-color);
+}
+
+.modal-card-foot .button.is-tertiary:hover {
+    background-color: var(--button-tertiary-hover-background);
 }
 
 .modal-card-foot .button:focus {
@@ -96,19 +123,9 @@
     outline-offset: 2px;
 }
 
-.modal-card-foot .button.is-primary {
-    background-color: var(--primary-color);
-    color: var(--active-text-color);
-    border: none;
-}
-
-.modal-card-foot .button.is-primary:hover {
-    background-color: var(--primary-hover-color);
-}
-
 /* Modal Background */
 .modal-background {
-    background-color: rgba(0, 0, 0, 0.6);
+    background-color: var(--modal-overlay-color);
 }
 
 @media screen and (max-width: 768px) {
