@@ -29,6 +29,7 @@
   --user-message-bg-color: #E8F0FE;
   --assistant-message-bg-color: #FFFFFF;
   --modal-bg-color: #FFFFFF;
+  --modal-header-bg: #f2f2f7;
   
   /* UI Component Colors */
   --copy-button-color: #AAA;
@@ -37,6 +38,8 @@
   --button-bg: #007aff;
   --button-hover-bg: #005bbb;
   --button-text: #FFFFFF;
+  --input-border: #E5E5EA;
+  --input-focus-color: #007AFF;
   
   /* Spacing */
   --spacing-xs: 0.25rem;
@@ -60,6 +63,17 @@
   --font-size-lg: 1.125rem;
   --line-height-normal: 1.5;
   --font-family: 'Inter', sans-serif;
+  
+  /* Shadows */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 2px 6px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 15px 30px rgba(0, 0, 0, 0.1);
+  
+  /* Z-index */
+  --z-modal: 1000;
+  --z-overlay: 900;
+  --z-dropdown: 800;
+  --z-nav: 700;
 }
 
 /* ===== Light Mode Theme Override ===== */
@@ -76,6 +90,7 @@ body.light-mode {
   --user-message-bg-color: #E5E5EA;
   --assistant-message-bg-color: #FFFFFF;
   --modal-bg-color: #FFFFFF;
+  --modal-header-bg: #f8f8f8;
 
   /* UI Components */
   --copy-button-color: #666;
@@ -84,6 +99,12 @@ body.light-mode {
   --button-bg: #007aff;
   --button-hover-bg: #005bbb;
   --button-text: #FFFFFF;
+  --input-border: #D1D1D6;
+  
+  /* Shadows */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 2px 6px rgba(0, 0, 0, 0.05);
+  --shadow-lg: 0 15px 30px rgba(0, 0, 0, 0.05);
 }
 
 /* ===== Reset and Base Styles ===== */
