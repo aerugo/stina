@@ -150,7 +150,7 @@ var EventModule = (function () {
 
       const customOption = document.createElement("option");
       customOption.value = "custom";
-      customOption.textContent = "Create New Instruction...";
+      customOption.textContent = "Skapa ny instruktion...";
       instructionsSelect.appendChild(customOption);
 
       instructionsSelect.value = selectedInstructionId;
@@ -174,7 +174,7 @@ var EventModule = (function () {
 
       if (instruction) {
         ModalModule.showEditInstructionModal(
-          "Edit Custom Instruction",
+          "Redigera anpassad instruktion",
           instruction.label,
           instruction.content,
           function (result) {
@@ -207,7 +207,7 @@ var EventModule = (function () {
     instructionsSelect.addEventListener("change", function () {
       if (this.value === "custom") {
         ModalModule.showEditInstructionModal(
-          "Create Custom Instruction",
+          "Skapa anpassad instruktion",
           "",
           "",
           function (result) {

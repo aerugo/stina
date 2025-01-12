@@ -149,7 +149,7 @@ var ModalModule = (function () {
                         content: inputContent,
                     });
                 } else {
-                    showCustomAlert("Please fill in all fields.");
+                    showCustomAlert("Vänligen fyll i alla fält.");
                 }
             } else {
                 callback(null);
