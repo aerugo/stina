@@ -133,9 +133,9 @@ var EventModule = (function () {
       const currentChat = ChatModule.getCurrentChat();
       const config = ConfigModule.getConfig();
       const selectedInstructionId =
-          (currentChat && currentChat.selectedInstructionId) ||
-          config.selectedInstructionId ||
-          instructions[0].id;
+        (currentChat && currentChat.selectedInstructionId) ||
+        config.selectedInstructionId ||
+        instructions[0].id;
 
       instructions.forEach((instruction) => {
         const option = document.createElement("option");
@@ -153,7 +153,6 @@ var EventModule = (function () {
       customOption.textContent = "Create New Instruction...";
       instructionsSelect.appendChild(customOption);
 
-
       instructionsSelect.value = selectedInstructionId;
       updateEditButtonVisibility();
     }
@@ -164,12 +163,14 @@ var EventModule = (function () {
     updateModelAndInstructionSelectors();
     updateEditButtonVisibility();
 
-
     // Add click event listener to the "Edit" button
     editInstructionBtn.addEventListener("click", function () {
       const selectedInstructionId = instructionsSelect.value;
-      const customInstructions = JSON.parse(localStorage.getItem("customInstructions")) || [];
-      let instruction = customInstructions.find(instr => instr.id === selectedInstructionId);
+      const customInstructions =
+        JSON.parse(localStorage.getItem("customInstructions")) || [];
+      let instruction = customInstructions.find(
+        (instr) => instr.id === selectedInstructionId
+      );
 
       if (instruction) {
         ModalModule.showEditInstructionModal(
@@ -180,7 +181,10 @@ var EventModule = (function () {
             if (result && result.label && result.content) {
               instruction.label = result.label;
               instruction.content = result.content;
-              localStorage.setItem("customInstructions", JSON.stringify(customInstructions));
+              localStorage.setItem(
+                "customInstructions",
+                JSON.stringify(customInstructions)
+              );
               populateInstructions();
               instructionsSelect.value = instruction.id;
               updateEditButtonVisibility();
@@ -317,7 +321,7 @@ var EventModule = (function () {
             type="text"
             id="endpoint"
             placeholder="https://YOUR_RESOURCE_NAME.openai.azure.com"
-            value="${config.endpoint || ''}"
+            value="${config.endpoint || ""}"
           />
         </div>
       </div>
@@ -329,41 +333,38 @@ var EventModule = (function () {
             type="password" 
             id="api-key" 
             placeholder="YOUR_API_KEY" 
-            value="${config.apiKey || ''}"
-          />
-        </div>
-      </div>
-      <div class="field">
-        <label class="label">Titelns distributionsnamn (valfritt)</label>
-        <div class="control">
-          <input
-            class="input"
-            type="text"
-            id="title-deployment"
-            placeholder="YOUR_TITLE_DEPLOYMENT_NAME"
-            value="${config.titleDeployment || ''}"
+            value="${config.apiKey || ""}"
           />
         </div>
       </div>
     `;
 
     const buttons = [
-      { label: 'Avbryt', value: false },
-      { label: 'Spara ändringar', value: true, class: 'is-success' }
+      { label: "Avbryt", value: false },
+      { label: "Spara ändringar", value: true, class: "is-success" },
     ];
 
-    ModalModule.showCustomModal('Settings', modalContent, buttons, function(result) {
-      if (result) {
-        saveSettings();
+    ModalModule.showCustomModal(
+      "Settings",
+      modalContent,
+      buttons,
+      function (result) {
+        if (result) {
+          saveSettings();
+        }
       }
-    });
+    );
   }
 
   function saveSettings() {
     const endpoint = document.getElementById("endpoint").value.trim();
     const apiKey = document.getElementById("api-key").value.trim();
-    const titleDeployment = document.getElementById("title-deployment").value.trim();
-    const theme = document.body.classList.contains("light-mode") ? "light-mode" : "dark-mode";
+    const titleDeployment = document
+      .getElementById("title-deployment")
+      .value.trim();
+    const theme = document.body.classList.contains("light-mode")
+      ? "light-mode"
+      : "dark-mode";
 
     if (!endpoint || !apiKey) {
       ModalModule.showCustomAlert("Please fill in all required fields.");
