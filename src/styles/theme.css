@@ -56,6 +56,7 @@ main .container.is-fluid {
 }
 
 #chat-history {
+  align-items: center;
   flex: 1 1 auto;
   overflow-y: auto;
   overflow-x: hidden;
@@ -120,10 +121,9 @@ h1, h2, h3, h4, h5, h6 {
   padding: 0.5rem;
 }
 
-/* Assistant Message Styles */
-.assistant-message {
-  width: 100%;
-  margin: 2rem 0;
+.assistant-message, .user-message {
+  margin-right: auto;
+  margin-left: auto;
 }
 
 .assistant-message .assistant-article {
@@ -191,7 +191,7 @@ h1, h2, h3, h4, h5, h6 {
 .user-message {
   display: flex;
   justify-content: center;
-  margin: 1rem 0;
+  margin-bottom: 1rem;
 }
 
 .user-message .user-message-content {
@@ -302,7 +302,12 @@ body {
   margin: 0 auto;
 }
 
+.assistant-message {
+  max-width: 700px;
+}
+
 .user-message {
+  max-width: 700px;
   justify-content: center;
 }
 
