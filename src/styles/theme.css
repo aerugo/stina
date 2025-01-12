@@ -29,3 +29,8 @@ body {
   font-family: 'Inter', sans-serif;
   line-height: 1.6;
 }
+
+.navbar {
+  background-color: transparent !important;
+  box-shadow: none;
+}

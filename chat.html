@@ -15,11 +15,8 @@
   </head>
   <body class="has-navbar-fixed-top">
     <!-- Top Navigation -->
-    <nav class="navbar is-link is-fixed-top" role="navigation" aria-label="main navigation">
+    <nav class="navbar is-fixed-top" role="navigation" aria-label="main navigation">
       <div class="navbar-brand">
-        <a class="navbar-item" href="#">
-          <strong>Chat Interface</strong>
-        </a>
         <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="sidebarMenu">
           <span aria-hidden="true"></span>
           <span aria-hidden="true"></span>
@@ -27,11 +24,18 @@
         </a>
       </div>
       <div class="navbar-menu">
+        <div class="navbar-start">
+          <div class="navbar-item">
+            <a id="new-chat-btn" class="button is-link">
+              <span class="icon"><i class="fas fa-plus"></i></span>
+              <span>New chat</span>
+            </a>
+          </div>
+        </div>
         <div class="navbar-end">
           <div class="navbar-item">
             <button id="settings-btn" class="button is-light">
               <span class="icon"><i class="fas fa-cog"></i></span>
-              <span>Settings</span>
             </button>
           </div>
         </div>
@@ -43,12 +47,6 @@
       <aside class="column is-2 is-hidden-mobile sidebar" id="sidebarMenu" style="height: 100%; overflow-y: auto;">
         <div class="menu-container">
           <ul class="menu-list" id="chat-list"></ul> 
-          <div class="menu-actions">
-            <a id="new-chat-btn" class="button is-fullwidth is-link">
-              <span class="icon"><i class="fas fa-plus"></i></span>
-              <span>New chat</span>
-            </a>
-          </div>
         </div>
       </aside>
 
