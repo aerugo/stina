@@ -113,12 +113,12 @@ const ControllerModule = (function () {
           currentState.currentChatId,
           currentState.conversation
         );
-        
+
         // Update the lastUpdated timestamp
         ChatModule.updateChatLastUpdated(currentState.currentChatId);
 
         const chat = ChatModule.getCurrentChat();
-        if (chat.name === "New chat") {
+        if (chat.name === "Ny chat") {
           try {
             const title = await MessageModule.generateChatTitle(messageContent);
             ChatModule.updateChatTitle(chat.id, title);
@@ -128,7 +128,7 @@ const ControllerModule = (function () {
             );
           } catch (error) {
             console.error("Error generating chat title:", error);
-            ChatModule.updateChatTitle(chat.id, "New Chat");
+            ChatModule.updateChatTitle(chat.id, "Ny chat");
             RenderingModule.renderChatList(
               ChatModule.getCurrentState().chats,
               currentState.currentChatId
