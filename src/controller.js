@@ -6,9 +6,9 @@ const ControllerModule = (function () {
   const models = ModelsModule.getModels(); // Retrieve models
 
   function cleanUpLocalStorage() {
-    ['selectedModelKey', 'selectedInstructionId'].forEach(key => {
+    ["selectedModelKey", "selectedInstructionId"].forEach((key) => {
       const value = localStorage.getItem(key);
-      if (value === 'undefined' || value === undefined || value === null) {
+      if (value === "undefined" || value === undefined || value === null) {
         localStorage.removeItem(key);
       }
     });
@@ -20,7 +20,6 @@ const ControllerModule = (function () {
     RenderingModule.renderChatList(state.chats, state.currentChatId);
     RenderingModule.renderConversation(state.conversation);
     EventModule.setupEventListeners(); // All event listeners are now initialized here
-    ThemeModule.applyTheme(ThemeModule.getCurrentTheme());
   }
 
   async function sendMessage(messageContent) {
@@ -41,7 +40,7 @@ const ControllerModule = (function () {
 
     // Retrieve selected model parameters from current chat
     const currentChat = ChatModule.getCurrentChat();
-    const selectedModelKey = currentChat.selectedModelKey || 'gpt-4o';
+    const selectedModelKey = currentChat.selectedModelKey || "gpt-4o";
     const selectedModelParams = ModelsModule.getModel(selectedModelKey);
     const deploymentName = selectedModelParams.deployment;
 
@@ -52,12 +51,16 @@ const ControllerModule = (function () {
     // Handle system message if the model supports it
     if (selectedModelParams && selectedModelParams.system) {
       // Get latest instruction ID and custom instructions
-      const selectedInstructionId = currentChat.selectedInstructionId || instructions[0].id;
-      const customInstructions = JSON.parse(localStorage.getItem("customInstructions")) || [];
+      const selectedInstructionId =
+        currentChat.selectedInstructionId || instructions[0].id;
+      const customInstructions =
+        JSON.parse(localStorage.getItem("customInstructions")) || [];
 
       // Find selected instruction
-      let instruction = customInstructions.find(instr => instr.id === selectedInstructionId) ||
-                       instructions.find(instr => instr.id === selectedInstructionId);
+      let instruction =
+        customInstructions.find(
+          (instr) => instr.id === selectedInstructionId
+        ) || instructions.find((instr) => instr.id === selectedInstructionId);
 
       if (!instruction) {
         instruction = instructions[0]; // Fallback to default instruction
@@ -65,7 +68,10 @@ const ControllerModule = (function () {
 
       instructionLabel = instruction.label;
       // Prepend system message to conversationToSend
-      conversationToSend.unshift({ role: "system", content: instruction.content });
+      conversationToSend.unshift({
+        role: "system",
+        content: instruction.content,
+      });
     }
 
     const loadingMessage = { role: "assistant", content: "", isLoading: true };
@@ -91,41 +97,41 @@ const ControllerModule = (function () {
       );
 
       if (apiResponse.error) {
-          // Remove loading message
-          currentState.conversation.pop();
-          RenderingModule.renderConversation(currentState.conversation);
-          // Show an error message to the user
-          ModalModule.showCustomAlert(apiResponse.message);
+        // Remove loading message
+        currentState.conversation.pop();
+        RenderingModule.renderConversation(currentState.conversation);
+        // Show an error message to the user
+        ModalModule.showCustomAlert(apiResponse.message);
       } else {
-          currentState.conversation[currentState.conversation.length - 1] = {
-              ...apiResponse.message,
-              model: selectedModelKey,
-              instructionLabel: instructionLabel
-          };
-          RenderingModule.renderConversation(currentState.conversation);
-          MessageModule.saveConversation(
-              currentState.currentChatId,
-              currentState.conversation
-          );
+        currentState.conversation[currentState.conversation.length - 1] = {
+          ...apiResponse.message,
+          model: selectedModelKey,
+          instructionLabel: instructionLabel,
+        };
+        RenderingModule.renderConversation(currentState.conversation);
+        MessageModule.saveConversation(
+          currentState.currentChatId,
+          currentState.conversation
+        );
 
-          const chat = ChatModule.getCurrentChat();
-          if (chat.name === "New chat") {
-              try {
-                  const title = await MessageModule.generateChatTitle(messageContent);
-                  ChatModule.updateChatTitle(chat.id, title);
-                  RenderingModule.renderChatList(
-                      ChatModule.getCurrentState().chats,
-                      currentState.currentChatId
-                  );
-              } catch (error) {
-                  console.error("Error generating chat title:", error);
-                  ChatModule.updateChatTitle(chat.id, "New Chat");
-                  RenderingModule.renderChatList(
-                      ChatModule.getCurrentState().chats,
-                      currentState.currentChatId
-                  );
-              }
+        const chat = ChatModule.getCurrentChat();
+        if (chat.name === "New chat") {
+          try {
+            const title = await MessageModule.generateChatTitle(messageContent);
+            ChatModule.updateChatTitle(chat.id, title);
+            RenderingModule.renderChatList(
+              ChatModule.getCurrentState().chats,
+              currentState.currentChatId
+            );
+          } catch (error) {
+            console.error("Error generating chat title:", error);
+            ChatModule.updateChatTitle(chat.id, "New Chat");
+            RenderingModule.renderChatList(
+              ChatModule.getCurrentState().chats,
+              currentState.currentChatId
+            );
           }
+        }
       }
     } catch (error) {
       // Remove loading message

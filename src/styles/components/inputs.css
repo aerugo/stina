@@ -1,0 +1,28 @@
+/* ===================
+   Inputs
+   =================== */
+
+/* User Input Field */
+/* Main chat input textarea */
+#user-input {
+    /* Layout */
+    width: 100%;
+    padding: 15px;
+    margin-right: 10px;
+    box-sizing: border-box;
+    
+    /* Visual */
+    background: transparent;
+    border: none;
+    color: var(--text-color);
+    font-size: var(--font-size-md);
+    resize: none;
+}
+
+#user-input:focus {
+    outline: none;
+}
+
+#user-input:focus {
+    outline: none;
+}

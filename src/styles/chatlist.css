@@ -1,0 +1,30 @@
+/* ===== Chat List Styles ===== */
+
+#chat-list li {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    margin: 2px 0;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+#chat-list li:hover,
+#chat-list li.active {
+    background: var(--active-item-color);
+}
+
+.delete-chat-btn {
+    color: rgba(0, 0, 0, 0.5);
+    background: none;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    padding: 0 5px;
+}
+
+.delete-chat-btn:hover {
+    color: var(--danger-color);
+}
+

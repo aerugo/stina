@@ -1,0 +1,308 @@
+
+/* ===================
+   Modals
+   =================== */
+
+/* Modal Container */
+/* Base modal window styles */
+.modal-content {
+    /* Layout */
+    position: relative;
+    width: 90%;
+    max-width: 400px;
+    margin: 80px auto;
+    
+    /* Visual */
+    background: var(--modal-bg-color);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-lg);
+    animation: slideIn 0.3s ease;
+}
+
+/* Modal Header */
+.modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    padding: 20px;
+    background: #f2f2f7;
+    border-bottom: 1px solid #e5e5ea;
+}
+
+.modal-header h2 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 600;
+    color: #1c1c1e;
+}
+
+/* Close Button */
+.close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.close svg {
+    width: 20px;
+    height: 20px;
+    fill: #1c1c1e;
+}
+
+.close:hover {
+    transform: rotate(90deg);
+}
+
+/* Modal Body */
+.modal-body {
+    padding: 24px;
+}
+
+.input-group {
+    margin-bottom: 24px;
+}
+
+.input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-icon {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 16px;
+    color: #8E8E93;
+    pointer-events: none;
+}
+
+.input-group label,
+.input-group span {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 14px;
+    color: #3a3a3c;
+}
+
+.input-group input[type="text"],
+.input-group input[type="password"] {
+    width: 100%;
+    padding: 12px 36px 12px 12px;
+    border: 1px solid #E5E5EA;
+    border-radius: 8px;
+    font-size: 15px;
+    color: #1C1C1E;
+    background: #FFFFFF;
+    transition: all 0.2s ease;
+}
+
+.input-group input[type="text"]:focus,
+.input-group input[type="password"]:focus {
+    border-color: #007AFF;
+    box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.2);
+    outline: none;
+}
+
+.input-group input[type="text"]:focus,
+.input-group input[type="password"]:focus {
+    border-color: #007aff;
+    box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.3);
+    outline: none;
+}
+
+
+/* Save Button */
+#save-settings-btn {
+    width: 100%;
+    padding: 15px;
+    background: #007aff;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.2s;
+}
+
+#save-settings-btn:hover {
+    background-color: #005bbb;
+    transform: scale(1.02);
+}
+
+
+/* Settings Modal Adjustments */
+.modal-content label,
+.modal-content span {
+    margin-top: 20px;
+    font-size: 15px;
+}
+
+.modal-content input,
+.modal-content select {
+    margin-top: 5px;
+}
+
+.modal-content input,
+.modal-content select,
+.modal-content {
+    width: 100%;
+}
+
+/* Light Mode Modal Title Color */
+body .modal-content h2 {
+    color: #000000;
+}
+
+
+/* Modal Customizations - working with Bulma's modal system */
+.modal-card {
+    max-width: 400px;
+    margin: 0 auto;
+    animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+#custom-modal .modal-content {
+    background-color: #FFFFFF;
+    margin: 80px auto;
+    padding: 0;
+    border: 1px solid #888;
+    width: 90%;
+    max-width: 400px;
+    border-radius: 12px;
+    overflow: hidden;
+    animation: slideIn 0.3s ease;
+}
+
+.modal-footer {
+    padding: 10px 20px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.modal-footer button {
+    margin-left: 10px;
+    padding: 10px 15px;
+    background-color: #007aff;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.modal-footer button:hover {
+    background-color: #005bbb;
+}
+
+
+/* Custom Modal Textarea Styles */
+#custom-modal textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #E5E5EA;
+    border-radius: 8px;
+    font-size: 15px;
+    color: #1C1C1E;
+    background: #FFFFFF;
+    margin-top: 5px;
+    box-sizing: border-box;
+    resize: vertical;
+}
+
+#custom-modal textarea:focus {
+    border-color: #007AFF;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.2);
+}
+
+/* Adjust labels in modals */
+#custom-modal label {
+    display: block;
+    margin-top: 10px;
+    font-size: 14px;
+    color: #3a3a3c;
+}
+
+/* Modal Footer Buttons */
+.modal-footer button {
+    margin-left: 10px;
+    padding: 10px 20px;
+    background-color: #007aff;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+/* Input Field inside Modal */
+#custom-modal input[type="text"] {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #E5E5EA;
+    border-radius: 8px;
+    font-size: 15px;
+    color: #1C1C1E;
+    background: #FFFFFF;
+    margin-top: 10px;
+    box-sizing: border-box;
+}
+
+#custom-modal input[type="text"]:focus {
+    border-color: #007AFF;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.2);
+}
+
+.modal-footer button:hover {
+    background-color: #005bbb;
+}
+
+body.light-mode .modal-footer button {
+    background-color: #007aff;
+    color: #fff;
+}
+
+body.light-mode .modal-footer button:hover {
+    background-color: #005bbb;
+}
+
+
+
+
+
+ .modal-content {
+    background: #FFFFFF;
+    color: #000000;
+}
+
+ .modal-content h2 {
+    color: #000000;
+}
+
+ .modal-content label {
+    color: rgba(0, 0, 0, 0.8);
+}
+
+ .modal-content input {
+    background: #E5E5EA;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    color: #000000;
+}

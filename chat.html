@@ -6,7 +6,10 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="src/interface.css" />
+    <link rel="stylesheet" href="src/styles/theme.css" />
+    <link rel="stylesheet" href="src/styles/chatlist.css" />
+    <link rel="stylesheet" href="src/styles/components/inputs.css" />
+    <link rel="stylesheet" href="src/styles/components/modals.css" />
   </head>
   <body>
     <!-- Top Navigation -->
@@ -20,14 +23,6 @@
           <span aria-hidden="true"></span>
           <span aria-hidden="true"></span>
         </a>
-      </div>
-      <div class="navbar-end">
-        <div class="navbar-item">
-          <label class="switch">
-            <input type="checkbox" id="theme-toggle">
-            <span class="slider round"></span>
-          </label>
-        </div>
       </div>
     </nav>
 
@@ -172,7 +167,6 @@
     <script src="src/storage.js"></script>
     <script src="src/config.js"></script>
     <script src="src/api.js"></script>
-    <script src="src/theme.js"></script>
     <script src="src/chat.js"></script>
     <script src="src/message.js"></script>
     <script src="src/rendering.js"></script>
