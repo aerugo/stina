@@ -6,7 +6,7 @@ var MessageModule = (function() {
     const models = ModelsModule.getModels(); // Retrieve models
 
     async function generateChatTitle(userMessage) {
-        const prompt = `Provide a short (maximum 5 words) and descriptive chat title based on the following message:\n"${userMessage}"`;
+        const prompt = `Ge en kort (maximalt 5 ord) och beskrivande chattitel baserad på följande meddelande:\n"${userMessage}"`;
         const titleMessage = { role: "user", content: prompt };
         const config = ConfigModule.getConfig();
         // Get the selected model or default to 'gpt-4o'

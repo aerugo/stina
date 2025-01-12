@@ -322,7 +322,7 @@ var EventModule = (function () {
         </div>
       </div>
       <div class="field">
-        <label class="label">API Key</label>
+        <label class="label">API-nyckel</label>
         <div class="control">
           <input 
             class="input" 
@@ -334,7 +334,7 @@ var EventModule = (function () {
         </div>
       </div>
       <div class="field">
-        <label class="label">Title Deployment Name (optional)</label>
+        <label class="label">Titelns distributionsnamn (valfritt)</label>
         <div class="control">
           <input
             class="input"
@@ -348,8 +348,8 @@ var EventModule = (function () {
     `;
 
     const buttons = [
-      { label: 'Cancel', value: false },
-      { label: 'Save Changes', value: true, class: 'is-success' }
+      { label: 'Avbryt', value: false },
+      { label: 'Spara ändringar', value: true, class: 'is-success' }
     ];
 
     ModalModule.showCustomModal('Settings', modalContent, buttons, function(result) {
@@ -377,7 +377,7 @@ var EventModule = (function () {
       titleDeployment,
     });
 
-    ModalModule.showCustomAlert("Settings saved successfully.");
+    ModalModule.showCustomAlert("Inställningarna har sparats.");
   }
 
   return {

@@ -2,14 +2,14 @@ const instructions = [
   {
     id: "default_1",
     order: 1,
-    label: "Default Assistant",
-    content: "You are a helpful assistant.",
+    label: "Standardassistent",
+    content: "Du är en hjälpsam assistent.",
   },
   {
     id: "default_2",
     order: 2,
-    label: "Friendly Haiku Writer",
+    label: "Vänlig Haiku-skrivare",
     content:
-      "You always speak in haiku, no matter what. Under no circumstances should you break this rule.",
+      "Du pratar alltid i haiku, oavsett vad. Under inga omständigheter ska du bryta denna regel.",
   },
 ];

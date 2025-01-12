@@ -50,7 +50,7 @@ var ChatModule = (function() {
         const chatId = Date.now().toString();
         const chat = {
             id: chatId,
-            name: "New chat",
+            name: "Ny chatt",
             conversation: [],
             selectedModelKey: selectedModelKey,
             selectedInstructionId: selectedInstructionId,
@@ -97,7 +97,7 @@ var ChatModule = (function() {
     function deleteChat(chatId) {
         if (chats.length <= 1) {
             // Prevent deleting the last chat
-            ModalModule.showCustomAlert('Cannot delete the last remaining chat.');
+            ModalModule.showCustomAlert('Du kan inte ta bort den sista kvarvarande chatten.');
             return {
                 chats,
                 currentChatId,

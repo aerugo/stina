@@ -41,12 +41,12 @@ var ModalModule = (function () {
     }
 
     function showCustomAlert(message) {
-        showCustomModal("Alert", message, [{ label: "OK", value: true }]);
+        showCustomModal("Varning", message, [{ label: "OK", value: true }]);
     }
 
     function showCustomConfirm(message, callback) {
         const buttons = [
-            { label: "Cancel", value: false },
+            { label: "Avbryt", value: false },
             { label: "OK", value: true },
         ];
         showCustomModal("Confirm", message, buttons, callback);
@@ -68,7 +68,7 @@ var ModalModule = (function () {
         footerElem.innerHTML = "";
 
         const cancelButton = document.createElement("button");
-        cancelButton.textContent = "Cancel";
+        cancelButton.textContent = "Avbryt";
         cancelButton.addEventListener("click", () => {
             modal.style.display = "none";
             if (callback) callback(null);
@@ -116,7 +116,7 @@ var ModalModule = (function () {
                         class="input"
                         type="text"
                         id="modal-label-input"
-                        placeholder="Enter instruction title"
+                        placeholder="Ange instruktionstitel"
                         value="${defaultLabel || ''}"
                     />
                 </div>
@@ -127,7 +127,7 @@ var ModalModule = (function () {
                     <textarea
                         class="textarea"
                         id="modal-content-input"
-                        placeholder="Enter instruction content"
+                        placeholder="Ange instruktionens innehåll"
                         rows="8"
                     >${defaultContent || ''}</textarea>
                 </div>
@@ -135,8 +135,8 @@ var ModalModule = (function () {
         `;
 
         const buttons = [
-            { label: 'Cancel', value: false },
-            { label: 'Save', value: true, class: 'is-success' }
+            { label: 'Avbryt', value: false },
+            { label: 'Spara', value: true, class: 'is-success' }
         ];
 
         showCustomModal(title, modalContent, buttons, function(result) {

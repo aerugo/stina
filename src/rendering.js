@@ -66,13 +66,13 @@ var RenderingModule = (function() {
                 copyButton.classList.add('button', 'is-small', 'copy-button');
                 copyButton.innerHTML = `
                     <span class="icon is-small"><i class="fas fa-copy"></i></span>
-                    <span>Copy</span>
+                    <span>Kopiera</span>
                 `;
 
                 // Add event listener to copy button
                 copyButton.addEventListener('click', () => {
                     navigator.clipboard.writeText(message.content).then(() => {
-                        copyButton.innerHTML = 'Copied!';
+                        copyButton.innerHTML = 'Kopierat!';
                         setTimeout(() => {
                             copyButton.innerHTML = `
                                 <span class="icon is-small"><i class="fas fa-copy"></i></span>

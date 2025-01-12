@@ -141,7 +141,7 @@ const ControllerModule = (function () {
       currentState.conversation.pop();
       RenderingModule.renderConversation(currentState.conversation);
       // Show error message to the user
-      ModalModule.showCustomAlert(`An error occurred: ${error.message}`);
+      ModalModule.showCustomAlert(`Ett fel uppstod: ${error.message}`);
       console.error("Error during sendMessage:", error);
     }
   }
