@@ -128,8 +128,15 @@ var ChatModule = (function() {
     }
 
     function getCurrentState() {
-        // Sort chats by lastUpdated descending
-        chats.sort((a, b) => b.lastUpdated - a.lastUpdated);
+        // Sort chats to ensure empty "New chat" is at top, then by lastUpdated
+        chats.sort((a, b) => {
+            // If 'a' is the empty "New chat", place it at the top
+            if (a.name === 'New chat' && a.conversation.length === 0) return -1;
+            // If 'b' is the empty "New chat", place 'a' after 'b'
+            if (b.name === 'New chat' && b.conversation.length === 0) return 1;
+            // Otherwise, sort by 'lastUpdated' descending
+            return b.lastUpdated - a.lastUpdated;
+        });
         return {
             chats,
             currentChatId,
