@@ -17,6 +17,12 @@
   --border-color: rgba(255, 255, 255, 0.1);
   --hover-color: rgba(255, 255, 255, 0.1);
   
+  /* Message Colors */
+  --message-bg-color: #FFFFFF;
+  --user-message-bg-color: #E8F0FE;
+  --assistant-message-bg-color: #FFFFFF;
+  --modal-bg-color: #FFFFFF;
+  
   /* Spacing and Layout */
   --spacing-xs: 0.25rem;   /* 4px */
   --spacing-sm: 0.5rem;    /* 8px */
@@ -32,6 +38,11 @@
   /* Transitions */
   --transition-fast: 0.2s ease;
   --transition-normal: 0.3s ease;
+  
+  /* Font Sizes */
+  --font-size-sm: 0.875rem;  /* 14px */
+  --font-size-md: 1rem;      /* 16px */
+  --font-size-lg: 1.125rem;  /* 18px */
 }
 
 /* Light Mode Theme Override */
@@ -41,6 +52,12 @@ body.light-mode {
   --text-color: #202124;
   --border-color: #E0E0E0;
   --hover-color: #EAF2FB;
+  
+  /* Message Colors - Light Mode */
+  --message-bg-color: #FFFFFF;
+  --user-message-bg-color: #E5E5EA;
+  --assistant-message-bg-color: #FFFFFF;
+  --modal-bg-color: #FFFFFF;
 }
 
 /* ===== Base Styles ===== */
@@ -68,12 +85,27 @@ body {
   min-height: 100vh;
 }
 
-/* Typography */
+/* ===== Typography ===== */
 h1, h2, h3, h4, h5, h6 {
   font-weight: 600;
   color: var(--text-color);
   line-height: 1.2;
   margin-bottom: var(--spacing-md);
+}
+
+p {
+  margin-bottom: var(--spacing-md);
+  font-size: var(--font-size-md);
+}
+
+a {
+  color: var(--primary-color);
+  text-decoration: underline;
+  transition: color var(--transition-fast);
+}
+
+a:hover {
+  color: var(--primary-color-hover);
 }
 
 /* Focus Styles */
