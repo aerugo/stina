@@ -166,6 +166,7 @@ var ChatModule = (function() {
         deleteChat,
         getCurrentChat,
         updateChatTitle,
+        updateChatLastUpdated,
         getCurrentState,
         saveChats,
     };
