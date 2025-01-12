@@ -32,21 +32,21 @@
     margin-right: 0.5rem;
 }
 
- .modal-content {
-    background: #FFFFFF;
-    color: #000000;
+.modal-content {
+    background: var(--background-color);
+    color: var(--text-color);
 }
 
- .modal-content h2 {
-    color: #000000;
+.modal-content h2 {
+    color: var(--text-color);
 }
 
- .modal-content label {
-    color: rgba(0, 0, 0, 0.8);
+.modal-content label {
+    color: var(--placeholder-color);
 }
 
- .modal-content input {
-    background: #E5E5EA;
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    color: #000000;
+.modal-content input {
+    background: var(--button-background-color);
+    border: 1px solid var(--border-color);
+    color: var(--text-color);
 }
