@@ -2,8 +2,17 @@
  * Rendering Module
  * Handles all UI rendering tasks
  */
-// Configure marked parser to enable line breaks globally
-marked.setOptions({ breaks: true });
+// Configure marked parser to enable line breaks globally and highlight code
+marked.setOptions({
+  breaks: true,
+  highlight: function(code, lang) {
+    if (lang && hljs.getLanguage(lang)) {
+      return hljs.highlight(code, { language: lang }).value;
+    } else {
+      return hljs.highlightAuto(code).value;
+    }
+  }
+});
 
 var RenderingModule = (function() {
     const models = ModelsModule.getModels(); // Retrieve models
