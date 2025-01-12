@@ -9,6 +9,8 @@ var ChatModule = (function() {
     let conversation = [];
 
     function createNewChat() {
+        const models = ModelsModule.getModels();
+        
         // Check for existing empty "New chat"s
         const emptyNewChats = chats.filter(
             (chat) => chat.name === "New chat" && chat.conversation.length === 0
@@ -29,13 +31,29 @@ var ChatModule = (function() {
         }
 
         const config = ConfigModule.getConfig();
+        const selectedModelKey = config.lastUsedModelKey || 'gpt-4o';
+        const selectedModel = models[selectedModelKey];
+
+        let selectedInstructionId;
+        if (selectedModel && selectedModel.system) {
+            // Model supports instructions
+            // Find the instruction with the lowest 'order' property
+            const instructionWithLowestOrder = instructions.reduce((prev, curr) => {
+                return (prev.order < curr.order) ? prev : curr;
+            });
+            selectedInstructionId = instructionWithLowestOrder.id;
+        } else {
+            // Model doesn't support instructions
+            selectedInstructionId = null;
+        }
+
         const chatId = Date.now().toString();
         const chat = {
             id: chatId,
             name: "New chat",
             conversation: [],
-            selectedModelKey: config.lastUsedModelKey || 'gpt-4o',
-            selectedInstructionId: config.lastUsedInstructionId || instructions[0].id,
+            selectedModelKey: selectedModelKey,
+            selectedInstructionId: selectedInstructionId,
             lastUpdated: Date.now(),
         };
         chats.push(chat);
