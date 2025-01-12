@@ -438,13 +438,13 @@ body.light-mode .copy-button:hover {
 }
 
 .message.user {
-    background-color: #E8F0FE;
+    background-color: var(--user-message-bg-color);
     align-self: flex-end;
     border-radius: 15px 15px 0 15px;
 }
 
 .message.assistant {
-    background-color: #FFFFFF;
+    background-color: var(--assistant-message-bg-color);
     align-self: flex-start;
     border-radius: 15px 15px 15px 0;
 }
@@ -506,18 +506,13 @@ body.light-mode .copy-button:hover {
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    transition: background-color 0.3s, transform 0.3s;
+    transition: background-color var(--transition-fast), transform var(--transition-fast);
 }
 
 .send-button:hover {
-    background-color: #1a7ee6;
+    background-color: var(--primary-color-hover);
     transform: scale(1.05);
 }
-
-.send-button:hover {
-    background: rgba(255,255,255,0.1);
-}
-
 
 @keyframes slideIn {
     from { opacity: 0; transform: translateY(-20px); }
