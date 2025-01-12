@@ -89,7 +89,6 @@ var EventModule = (function () {
     sendBtn.addEventListener("click", handleSendButtonClick);
     userInput.addEventListener("keydown", handleUserInputKeyDown);
     settingsBtn.addEventListener("click", openSettingsModal);
-    closeSettings.addEventListener("click", closeSettingsModal);
     saveSettingsBtn.addEventListener("click", saveSettings);
     chatListContainer.addEventListener("click", handleChatListClick);
     window.addEventListener("click", handleWindowClick);
@@ -309,26 +308,62 @@ var EventModule = (function () {
 
   function openSettingsModal() {
     const config = ConfigModule.getConfig();
-    document.getElementById("endpoint").value = config.endpoint;
-    document.getElementById("api-key").value = config.apiKey;
-    document.getElementById("title-deployment").value =
-      config.titleDeployment || "";
-    document.getElementById("settings-modal").style.display = "block";
-  }
+    const modalContent = `
+      <div class="field">
+        <label class="label">Endpoint URL</label>
+        <div class="control">
+          <input
+            class="input"
+            type="text"
+            id="endpoint"
+            placeholder="https://YOUR_RESOURCE_NAME.openai.azure.com"
+            value="${config.endpoint || ''}"
+          />
+        </div>
+      </div>
+      <div class="field">
+        <label class="label">API Key</label>
+        <div class="control">
+          <input 
+            class="input" 
+            type="password" 
+            id="api-key" 
+            placeholder="YOUR_API_KEY" 
+            value="${config.apiKey || ''}"
+          />
+        </div>
+      </div>
+      <div class="field">
+        <label class="label">Title Deployment Name (optional)</label>
+        <div class="control">
+          <input
+            class="input"
+            type="text"
+            id="title-deployment"
+            placeholder="YOUR_TITLE_DEPLOYMENT_NAME"
+            value="${config.titleDeployment || ''}"
+          />
+        </div>
+      </div>
+    `;
 
-  function closeSettingsModal() {
-    document.getElementById("settings-modal").style.display = "none";
+    const buttons = [
+      { label: 'Cancel', value: false },
+      { label: 'Save Changes', value: true, class: 'is-success' }
+    ];
+
+    ModalModule.showCustomModal('Settings', modalContent, buttons, function(result) {
+      if (result) {
+        saveSettings();
+      }
+    });
   }
 
   function saveSettings() {
     const endpoint = document.getElementById("endpoint").value.trim();
     const apiKey = document.getElementById("api-key").value.trim();
-    const titleDeployment = document
-      .getElementById("title-deployment")
-      .value.trim();
-    const theme = document.body.classList.contains("light-mode")
-      ? "light-mode"
-      : "dark-mode";
+    const titleDeployment = document.getElementById("title-deployment").value.trim();
+    const theme = document.body.classList.contains("light-mode") ? "light-mode" : "dark-mode";
 
     if (!endpoint || !apiKey) {
       ModalModule.showCustomAlert("Please fill in all required fields.");
@@ -343,7 +378,6 @@ var EventModule = (function () {
     });
 
     ModalModule.showCustomAlert("Settings saved successfully.");
-    closeSettingsModal();
   }
 
   return {

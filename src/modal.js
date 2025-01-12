@@ -12,13 +12,14 @@ var ModalModule = (function () {
         const modalFooter = modal.querySelector(".modal-card-foot");
 
         modalTitle.textContent = title;
-        modalBody.innerHTML = `<p>${message}</p>`;
+        modalBody.innerHTML = message;
 
         modalFooter.innerHTML = "";
         buttons.forEach((button) => {
             const btn = document.createElement("button");
             btn.classList.add("button");
-            if (button.value === true) btn.classList.add("is-primary");
+            if (button.class) btn.classList.add(button.class);
+            if (button.value === true && !button.class) btn.classList.add("is-primary");
             btn.textContent = button.label;
             btn.addEventListener("click", () => {
                 modal.classList.remove("is-active");
