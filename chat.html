@@ -3,51 +3,55 @@
   <head>
     <meta charset="UTF-8" />
     <title>ChatGPT-Style Interface</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css" />
     <link rel="stylesheet" href="src/interface.css" />
   </head>
   <body>
     <div class="chat-layout">
       <!-- Sidebar -->
-      <nav class="sidebar">
-        <div class="nav-header">
-          <button id="new-chat-btn" class="new-chat">New chat</button>
+      <nav class="menu is-hidden-mobile">
+        <p class="menu-label">Chats</p>
+        <ul class="menu-list" id="chat-list"></ul>
+        <div class="menu-list">
+          <button id="new-chat-btn" class="button is-fullwidth is-link">New chat</button>
         </div>
-        <div class="chat-list-container">
-          <ul id="chat-list"></ul>
-        </div>
-        <div class="nav-footer">
-          <button id="settings-btn" class="settings-button">Settings</button>
+        <div class="menu-list">
+          <button id="settings-btn" class="button is-fullwidth">Settings</button>
         </div>
       </nav>
 
       <!-- Main Chat Area -->
-      <main class="main-chat">
-        <div class="selectors-container">
-          <div class="selector-group">
-            <label for="model-select">Model:</label>
-            <select id="model-select"></select>
+      <main class="section">
+        <div class="container">
+          <div class="field is-grouped">
+            <div class="control">
+              <label class="label" for="model-select">Model:</label>
+              <div class="select">
+                <select id="model-select"></select>
+              </div>
+            </div>
+            <div class="control" id="instructions-group" style="display: none">
+              <label class="label" for="instructions-select">Instructions:</label>
+              <div class="select">
+                <select id="instructions-select"></select>
+              </div>
+              <button id="edit-instruction-btn" class="button is-small" style="display: none">
+                Edit
+              </button>
+            </div>
           </div>
-          <div
-            class="selector-group"
-            id="instructions-group"
-            style="display: none"
-          >
-            <label for="instructions-select">Instructions:</label>
-            <select id="instructions-select"></select>
-            <button id="edit-instruction-btn" style="display: none">
-              Edit
-            </button>
-          </div>
-        </div>
-        <div id="chat-history" class="messages"></div>
-        <div class="input-area">
-          <div class="input-container">
-            <textarea
-              id="user-input"
-              placeholder="Send a message..."
-              rows="1"
-            ></textarea>
-            <button id="send-btn" class="send-button">
+          <div id="chat-history" class="content"></div>
+          <div class="field has-addons">
+            <div class="control is-expanded">
+              <textarea
+                id="user-input"
+                class="textarea"
+                placeholder="Send a message..."
+                rows="1"
+              ></textarea>
+            </div>
+            <div class="control">
+              <button id="send-btn" class="button is-primary">
               <svg width="24" height="24" viewBox="0 0 24 24">
                 <path
                   fill="currentColor"
@@ -62,42 +66,50 @@
 
     <!-- Settings Modal -->
     <div id="settings-modal" class="modal">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h2>Settings</h2>
-          <button id="close-settings" class="close">×</button>
-        </div>
-        <div class="modal-body">
-          <div class="input-group">
-            <label for="endpoint">Endpoint URL</label>
-            <div class="input-wrapper">
+      <div class="modal-background"></div>
+      <div class="modal-card">
+        <header class="modal-card-head">
+          <p class="modal-card-title">Settings</p>
+          <button id="close-settings" class="delete" aria-label="close"></button>
+        </header>
+        <section class="modal-card-body">
+          <div class="field">
+            <label class="label" for="endpoint">Endpoint URL</label>
+            <div class="control">
               <input
+                class="input"
                 type="text"
                 id="endpoint"
                 placeholder="https://YOUR_RESOURCE_NAME.openai.azure.com"
               />
             </div>
           </div>
-          <div class="input-group">
-            <label for="api-key">API Key</label>
-            <div class="input-wrapper">
-              <input type="password" id="api-key" placeholder="YOUR_API_KEY" />
+          <div class="field">
+            <label class="label" for="api-key">API Key</label>
+            <div class="control">
+              <input 
+                class="input" 
+                type="password" 
+                id="api-key" 
+                placeholder="YOUR_API_KEY" 
+              />
             </div>
           </div>
-          <div class="input-group">
-            <label for="title-deployment"
-              >Title Deployment Name (optional)</label
-            >
-            <div class="input-wrapper">
+          <div class="field">
+            <label class="label" for="title-deployment">Title Deployment Name (optional)</label>
+            <div class="control">
               <input
+                class="input"
                 type="text"
                 id="title-deployment"
                 placeholder="YOUR_TITLE_DEPLOYMENT_NAME"
               />
             </div>
           </div>
-          <button id="save-settings-btn">Save Changes</button>
-        </div>
+        </section>
+        <footer class="modal-card-foot">
+          <button id="save-settings-btn" class="button is-success">Save Changes</button>
+        </footer>
       </div>
     </div>
 
