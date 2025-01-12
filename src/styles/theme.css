@@ -212,3 +212,47 @@ body {
   font-size: 16px;
   line-height: 1.5;
 }
+
+/* Message Header Styles */
+.assistant-message .message-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    font-size: 0.9rem;
+    color: #6b6b6b;
+    margin-bottom: 0.5rem;
+}
+
+.message-header .model-label,
+.message-header .instruction-label {
+    margin-right: 0.5rem;
+}
+
+/* Message Footer Styles */
+.assistant-message .message-footer {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 1rem;
+}
+
+.copy-button {
+    background: none;
+    border: none;
+    color: var(--primary-color);
+    cursor: pointer;
+    font-size: 0.9rem;
+    padding: 0;
+}
+
+.copy-button .icon {
+    margin-right: 0.25rem;
+}
+
+.copy-button:hover {
+    color: darken(var(--primary-color), 10%);
+}
+
+.copy-button:focus {
+    outline: none;
+    box-shadow: none;
+}
