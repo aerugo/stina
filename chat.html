@@ -56,59 +56,36 @@
           <!-- Centered Container for Chat Content -->
           <div class="container is-fluid" style="flex: 1; display: flex; flex-direction: column; height: 100%;">
           <div id="chat-history" class="box content" style="overflow-y: auto;"></div>
-          <div class="field has-addons mt-4">
-            <!-- Model Dropdown -->
-            <div class="control">
-              <div class="dropdown" id="model-dropdown">
-                <div class="dropdown-trigger">
-                  <button class="button" aria-haspopup="true" aria-controls="model-menu">
-                    <span id="selected-model-label">Select Model</span>
-                    <span class="icon is-small">
-                      <i class="fas fa-angle-down" aria-hidden="true"></i>
-                    </span>
-                  </button>
+          <!-- Message Input Box -->
+          <div class="message-input-container">
+            <!-- Input Box -->
+            <div
+              id="user-input"
+              class="input-box"
+              contenteditable="true"
+              data-placeholder="Message the AI assistant"
+            ></div>
+
+            <!-- Toolbar Below the Input -->
+            <div class="toolbar">
+              <!-- Left Side of Toolbar -->
+              <div class="left-toolbar">
+                <!-- Model Selection -->
+                <div class="select-container">
+                  <select id="model-select"></select>
                 </div>
-                <div class="dropdown-menu" id="model-menu" role="menu">
-                  <div class="dropdown-content" id="model-options">
-                    <!-- Model options will be dynamically added here -->
-                  </div>
-                </div>
-              </div>
-            </div>
-            <!-- Instruction Dropdown -->
-            <div class="control" id="instructions-group" style="display: none;">
-              <div class="dropdown" id="instruction-dropdown">
-                <div class="dropdown-trigger">
-                  <button class="button" aria-haspopup="true" aria-controls="instruction-menu">
-                    <span id="selected-instruction-label">Select Instruction</span>
-                    <span class="icon is-small">
-                      <i class="fas fa-angle-down" aria-hidden="true"></i>
-                    </span>
-                  </button>
-                </div>
-                <div class="dropdown-menu" id="instruction-menu" role="menu">
-                  <div class="dropdown-content" id="instruction-options">
-                    <!-- Instruction options will be dynamically added here -->
-                  </div>
+                <!-- Instruction Selector -->
+                <div class="select-container" id="instructions-group" style="display: none;">
+                  <select id="instructions-select"></select>
                 </div>
               </div>
-            </div>
-            <!-- User Input -->
-            <div class="control is-expanded">
-              <textarea
-                id="user-input"
-                class="textarea"
-                placeholder="Type your message..."
-                rows="1"
-              ></textarea>
-            </div>
-            <!-- Send Button -->
-            <div class="control">
-              <button id="send-btn" class="button is-primary">
-                <span class="icon"><i class="fas fa-paper-plane"></i></span>
+              <!-- Right Side of Toolbar -->
+              <!-- Send Button -->
+              <button id="send-btn" class="send-button">
+                <i class="fas fa-paper-plane"></i>
               </button>
+            </div>
           </div>
-        </div>
       </div>
       </main>
     </div>

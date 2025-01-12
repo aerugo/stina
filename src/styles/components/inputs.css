@@ -1,106 +1,134 @@
-/* User Input Field */
-#user-input {
-  border: none;
-  background-color: #f1f3f5;
-  border-radius: 25px;
-  padding: 0.75rem 1rem;
-  font-size: 1rem;
-  color: #333;
-  resize: none;
-  overflow-y: auto;
-  max-height: 150px;
-  flex-grow: 1;
-  transition: background-color 0.2s;
-}
-
-#user-input:focus {
-  outline: none;
-  background-color: #e9ecef;
-}
-
-.field.has-addons {
-  margin-bottom: 1rem;
-  flex-shrink: 0;
-}
-
-.field.has-addons.mt-4 {
-  width: 100%;
+/* Message Input Container */
+.message-input-container {
   max-width: 700px;
-  flex-shrink: 0;
-  margin-top: 1rem;
-  margin-left: auto;
-  margin-right: auto;
-  position: sticky;
-  bottom: 0;
-  background: #fff;
-  z-index: 1;
-  flex-wrap: wrap;
-  align-items: center;
-  padding: 1rem;
-  border-top: 1px solid #dbdbdb;
+  margin: 1rem auto;
+  background-color: #f4f4f4;
+  border-radius: 15px;
+  padding: 1rem 2.5rem 2.5rem 2.5rem;
+  position: relative;
 }
 
-/* Adjust spacing between controls */
-.field.has-addons.mt-4 .control {
-  margin-bottom: 0.5rem;
-  margin-right: 0.5rem;
-}
-
-/* Ensure select elements and buttons have appropriate widths */
-.field.has-addons.mt-4 .control .select,
-.field.has-addons.mt-4 .control button {
+/* Input Box */
+.input-box {
   width: 100%;
-}
-
-/* Responsive adjustments */
-@media screen and (min-width: 768px) {
-  .field.has-addons.mt-4 {
-    flex-wrap: nowrap;
-  }
-
-  .field.has-addons.mt-4 .control {
-    margin-bottom: 0;
-  }
-
-  .field.has-addons.mt-4 .control {
-    flex: none;
-  }
-
-  .field.has-addons.mt-4 .control.is-expanded {
-    flex: 1 1 auto;
-  }
-
-  .field.has-addons.mt-4 .control .select {
-    width: auto;
-    min-width: 150px;
-  }
-
-  .field.has-addons.mt-4 .control button {
-    width: auto;
-  }
-}
-
-#user-input:focus {
-  border-color: var(--primary-color);
-  box-shadow: 0 0 0 0.125em rgba(50, 115, 220, 0.25);
+  min-height: 2.5rem;
+  max-height: 150px;
+  overflow-y: auto;
   outline: none;
+  border: none;
+  background: transparent;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: #333;
+}
+
+/* Placeholder Text */
+.input-box::before {
+  content: attr(data-placeholder);
+  color: #aaa;
+  position: absolute;
+  pointer-events: none;
+}
+
+.input-box:empty::before {
+  display: block;
+}
+
+.input-box:not(:empty)::before {
+  display: none;
+}
+
+/* Toolbar */
+.toolbar {
+  position: absolute;
+  bottom: 0.75rem;
+  left: 2.5rem;
+  right: 2.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Left Side of Toolbar */
+.left-toolbar {
+  display: flex;
+  gap: 0.5rem;
+}
+
+/* Select Containers */
+.select-container {
+  position: relative;
+}
+
+.select-container select {
+  background: transparent;
+  border: none;
+  font-size: 0.9rem;
+  color: #333;
+  padding-right: 1.5rem;
+  appearance: none;
+  cursor: pointer;
+}
+
+/* Custom Dropdown Arrow */
+.select-container::after {
+  content: '';
+  position: absolute;
+  right: 0.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 0;
+  height: 0;
+  pointer-events: none;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 5px solid #333;
 }
 
 /* Send Button */
-#send-btn {
-  background-color: transparent;
+.send-button {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background-color: #000;
+  color: #fff;
   border: none;
-  color: #0d6efd;
-  padding: 0 0.75rem;
-  transition: background-color 0.2s, color 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
 }
 
-#send-btn .icon {
-  font-size: 1.5rem;
-  margin: 0;
+.send-button:hover {
+  opacity: 0.8;
 }
 
-#send-btn:hover {
-  color: #0b5ed7;
-  background-color: transparent;
+.send-button i {
+  font-size: 1rem;
+}
+
+/* Adjustments for Dark Mode */
+body.dark-mode .message-input-container {
+  background-color: #2c2c2c;
+}
+
+body.dark-mode .input-box {
+  color: #fff;
+}
+
+body.dark-mode .input-box::before {
+  color: #bbb;
+}
+
+body.dark-mode .select-container select {
+  color: #fff;
+}
+
+body.dark-mode .select-container::after {
+  border-top-color: #fff;
+}
+
+body.dark-mode .send-button {
+  background-color: #fff;
+  color: #000;
 }

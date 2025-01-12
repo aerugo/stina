@@ -235,7 +235,7 @@ var EventModule = (function () {
 
   function handleSendButtonClick() {
     const userInput = document.getElementById("user-input");
-    const messageContent = userInput.value.trim();
+    const messageContent = userInput.innerText.trim();
     if (messageContent === "") return;
 
     const config = ConfigModule.getConfig();
@@ -247,7 +247,7 @@ var EventModule = (function () {
     }
 
     ControllerModule.sendMessage(messageContent);
-    userInput.value = "";
+    userInput.innerText = "";
   }
 
   function handleUserInputKeyDown(e) {
