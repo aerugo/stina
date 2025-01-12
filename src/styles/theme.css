@@ -46,6 +46,7 @@ main .container.is-max-desktop {
   flex-direction: column;
   height: 100%;
   margin: 0;
+  padding: 0;
 }
 
 main .container {
@@ -295,4 +296,8 @@ body {
 .user-message .user-message-content {
   max-width: 700px;
   margin-right: 0;
+}
+
+.container.is-fluid {
+  padding: 0;
 }
