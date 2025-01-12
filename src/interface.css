@@ -86,9 +86,21 @@
   --z-overlay: 900;
   --z-dropdown: 800;
   --z-nav: 700;
+
+  /* Additional Spacing */
+  --spacing-xxs: 0.125rem;
+  --spacing-xxl: 3rem;
+
+  /* Additional Border Radius */
+  --radius-full: 1.5rem;
+
+  /* Button Size */
+  --button-size: 2.5rem;
 }
 
-/* ===== Light Mode Theme Override ===== */
+/* ==========================================================================
+   Light Mode Theme Variables
+   ========================================================================== */
 body.light-mode {
   /* Colors */
   --bg-color: #F5F5F5;
@@ -112,6 +124,7 @@ body.light-mode {
   --button-hover-bg: #005bbb;
   --button-text: #FFFFFF;
   --input-border: #D1D1D6;
+  --chat-name-color: #000000;
   
   /* Shadows */
   --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
@@ -214,15 +227,28 @@ input:checked + .slider:before {
     transform: translateX(20px);
 }
 
-/* Responsive adjustments */
+/* ==========================================================================
+   Responsive Styles
+   ========================================================================== */
+
 @media (max-width: 768px) {
+    /* Layout Adjustments */
+    .chat-layout {
+        flex-direction: column;
+    }
+
+    .main-chat {
+        margin-left: 0;
+    }
+
+    /* Sidebar Adjustments */
     .sidebar {
         position: fixed;
         width: 250px;
         height: 100%;
         transform: translateX(-260px);
         transition: transform 0.3s ease;
-        z-index: 1000;
+        z-index: var(--z-nav);
     }
 
     .sidebar.is-active {
@@ -231,14 +257,6 @@ input:checked + .slider:before {
 
     .navbar-burger {
         display: block;
-    }
-
-    .chat-layout {
-        flex-direction: column;
-    }
-
-    .main-chat {
-        margin-left: 0;
     }
 }
 
@@ -505,12 +523,12 @@ body.light-mode .copy-button:hover {
 }
 
 .send-button {
-    background: var(--primary-color);
-    color: #FFFFFF;
+    background: var(--button-bg);
+    color: var(--button-text);
     border: none;
     border-radius: 50%;
-    width: 40px;
-    height: 40px;
+    width: var(--button-size);
+    height: var(--button-size);
     display: flex;
     align-items: center;
     justify-content: center;
