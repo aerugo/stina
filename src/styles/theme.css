@@ -13,11 +13,40 @@
   --font-size-md: 16px;
 }
 
+html, body {
+  height: 100%;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
 body {
   background-color: var(--background-color);
   color: var(--text-color);
   font-family: 'Inter', sans-serif;
   line-height: 1.6;
+}
+
+main.section {
+  display: flex;
+  flex-direction: column;
+}
+
+#chat-history {
+  flex-grow: 1;
+  margin-top: 1rem;
+}
+
+.field.has-addons.mt-4 {
+  margin-top: 1rem;
+  padding: 1rem 0;
+  background-color: #fff;
+  border-top: 1px solid #dbdbdb;
+}
+
+.field.is-grouped {
+  margin-bottom: 1rem;
 }
 
 h1, h2, h3, h4, h5, h6 {

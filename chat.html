@@ -11,9 +11,9 @@
     <link rel="stylesheet" href="src/styles/components/inputs.css" />
     <link rel="stylesheet" href="src/styles/components/modals.css" />
   </head>
-  <body>
+  <body class="has-navbar-fixed-top">
     <!-- Top Navigation -->
-    <nav class="navbar is-link" role="navigation" aria-label="main navigation">
+    <nav class="navbar is-link is-fixed-top" role="navigation" aria-label="main navigation">
       <div class="navbar-brand">
         <a class="navbar-item" href="#">
           <strong>Chat Interface</strong>
@@ -36,9 +36,9 @@
       </div>
     </nav>
 
-    <div class="columns is-gapless chat-layout">
+    <div class="columns is-gapless is-mobile" style="height: calc(100vh - 52px);">
       <!-- Sidebar -->
-      <aside class="column is-2 menu sidebar" id="sidebarMenu">
+      <aside class="column is-2 is-hidden-mobile sidebar" id="sidebarMenu" style="height: 100%;">
         <div class="menu-container">
           <ul class="menu-list" id="chat-list"></ul> 
           <div class="menu-actions">
@@ -51,7 +51,7 @@
       </aside>
 
       <!-- Main Chat Area -->
-      <main class="column is-10 is-offset-2 section">
+      <main class="column is-12-mobile is-10-desktop section" style="height: 100%; overflow: hidden;">
         <div class="container is-fluid">
           <div class="field is-grouped">
             <div class="control">
@@ -69,7 +69,7 @@
               </button>
             </div>
           </div>
-          <div id="chat-history" class="box content" style="max-height: 60vh; overflow-y: auto;"></div>
+          <div id="chat-history" class="box content" style="overflow-y: auto;"></div>
           <div class="field has-addons mt-4">
             <div class="control is-expanded">
               <textarea

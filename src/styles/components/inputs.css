@@ -9,10 +9,14 @@
   width: 100%;
   font-size: var(--font-size-md);
   color: var(--text-color);
-  resize: none;
+  resize: vertical;
   min-height: 3rem;
-  max-height: 8rem;
+  max-height: 150px;
   overflow-y: auto;
+}
+
+.field.has-addons {
+  margin-bottom: 1rem;
 }
 
 #user-input:focus {

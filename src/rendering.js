@@ -107,7 +107,10 @@ var RenderingModule = (function() {
             const messageElem = createMessageElement(message);
             chatHistory.appendChild(messageElem);
         });
-        chatHistory.scrollTop = chatHistory.scrollHeight;
+        chatHistory.scrollTo({
+          top: chatHistory.scrollHeight,
+          behavior: 'smooth'
+        });
     }
 
     function renderChatList(chats, currentChatId) {
