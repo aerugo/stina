@@ -55,24 +55,24 @@
         <div class="container is-fluid" style="height: 100%; display: flex; flex-direction: column; align-items: center;">
           <!-- Centered Container for Chat Content -->
           <div class="container is-fluid" style="flex: 1; display: flex; flex-direction: column; height: 100%;">
-          <div class="field is-grouped">
+          <div id="chat-history" class="box content" style="overflow-y: auto;"></div>
+          <div class="field has-addons mt-4">
+            <!-- Model Selector -->
             <div class="control">
-              <label class="label" for="model-select"></label>
               <div class="select">
                 <select id="model-select"></select>
               </div>
             </div>
-            <div class="control" id="instructions-group" style="display: none">
+            <!-- Instruction Selector -->
+            <div class="control" id="instructions-group" style="display: none;">
               <div class="select">
                 <select id="instructions-select"></select>
               </div>
-              <button id="edit-instruction-btn" class="button is-small" style="display: none">
+              <button id="edit-instruction-btn" class="button is-small" style="display: none;">
                 Edit
               </button>
             </div>
-          </div>
-          <div id="chat-history" class="box content" style="overflow-y: auto;"></div>
-          <div class="field has-addons mt-4">
+            <!-- User Input -->
             <div class="control is-expanded">
               <textarea
                 id="user-input"
@@ -81,6 +81,7 @@
                 rows="1"
               ></textarea>
             </div>
+            <!-- Send Button -->
             <div class="control">
               <button id="send-btn" class="button is-primary">
                 <span class="icon"><i class="fas fa-paper-plane"></i></span>
