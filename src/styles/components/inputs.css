@@ -1,18 +1,21 @@
-/* Input Field */
+/* User Input Field */
 #user-input {
-  background-color: #fff;
-  border: 1px solid #dbdbdb;
-  border-radius: 4px;
-  padding: 10px;
-  margin-right: 10px;
-  box-sizing: border-box;
-  width: 100%;
-  font-size: var(--font-size-md);
-  color: var(--text-color);
-  resize: vertical;
-  min-height: 3rem;
-  max-height: 150px;
+  border: none;
+  background-color: #f1f3f5;
+  border-radius: 25px;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  color: #333;
+  resize: none;
   overflow-y: auto;
+  max-height: 150px;
+  flex-grow: 1;
+  transition: background-color 0.2s;
+}
+
+#user-input:focus {
+  outline: none;
+  background-color: #e9ecef;
 }
 
 .field.has-addons {
@@ -85,17 +88,19 @@
 
 /* Send Button */
 #send-btn {
-  background-color: var(--primary-color);
-  color: #fff;
-  border-radius: 50%;
-  width: 3rem;
-  height: 3rem;
+  background-color: transparent;
+  border: none;
+  color: #0d6efd;
+  padding: 0 0.75rem;
+  transition: background-color 0.2s, color 0.2s;
 }
 
 #send-btn .icon {
+  font-size: 1.5rem;
   margin: 0;
 }
 
 #send-btn:hover {
-  background-color: #00b89c;
+  color: #0b5ed7;
+  background-color: transparent;
 }
