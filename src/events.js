@@ -122,8 +122,12 @@ var EventModule = (function () {
       instructionsSelect.innerHTML = "";
       const customInstructions =
         JSON.parse(localStorage.getItem("customInstructions")) || [];
+      const currentChat = ChatModule.getCurrentChat();
+      const config = ConfigModule.getConfig();
       const selectedInstructionId =
-        localStorage.getItem("selectedInstructionId") || instructions[0].id;
+          (currentChat && currentChat.selectedInstructionId) ||
+          config.selectedInstructionId ||
+          instructions[0].id;
 
       instructions.forEach((instruction) => {
         const option = document.createElement("option");
@@ -154,6 +158,7 @@ var EventModule = (function () {
     // Initialize instructions
     populateInstructions();
     updateInstructionsVisibility();
+    updateModelAndInstructionSelectors();
 
 
     // Setup instruction selection change handler
