@@ -79,7 +79,7 @@
   color: #fff;
 }
 
-#chat-list li:hover {
+#chat-list li:not(.active):hover {
   background-color: var(--active-item-color);
 }
 
