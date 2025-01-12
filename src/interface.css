@@ -559,18 +559,16 @@ body .chat-name {
     color: #000000;
 }
 
-/* Custom Modal Styles */
-#custom-modal {
-    display: none;
-    position: fixed;
-    z-index: 1000;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgba(0,0,0,0.5);
-    backdrop-filter: blur(8px);
+/* Modal Customizations - working with Bulma's modal system */
+.modal-card {
+    max-width: 400px;
+    margin: 0 auto;
+    animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 #custom-modal .modal-content {
