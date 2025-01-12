@@ -4,21 +4,50 @@
     <meta charset="UTF-8" />
     <title>ChatGPT-Style Interface</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="src/interface.css" />
   </head>
   <body>
-    <div class="chat-layout">
+    <!-- Top Navigation -->
+    <nav class="navbar is-link" role="navigation" aria-label="main navigation">
+      <div class="navbar-brand">
+        <a class="navbar-item" href="#">
+          <strong>Chat Interface</strong>
+        </a>
+        <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="sidebarMenu">
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+        </a>
+      </div>
+      <div class="navbar-end">
+        <div class="navbar-item">
+          <button id="theme-toggle" class="button is-light" aria-label="Toggle theme">
+            <span class="icon"><i class="fas fa-adjust"></i></span>
+          </button>
+        </div>
+      </div>
+    </nav>
+
+    <div class="columns is-gapless chat-layout">
       <!-- Sidebar -->
-      <nav class="menu is-hidden-mobile">
-        <p class="menu-label">Chats</p>
-        <ul class="menu-list" id="chat-list"></ul>
-        <div class="menu-list">
-          <button id="new-chat-btn" class="button is-fullwidth is-link">New chat</button>
+      <aside class="column is-3 menu sidebar" id="sidebarMenu">
+        <div class="menu-container">
+          <p class="menu-label">Chats</p>
+          <ul class="menu-list" id="chat-list"></ul>
+          <div class="menu-actions">
+            <a id="new-chat-btn" class="button is-fullwidth is-link">
+              <span class="icon"><i class="fas fa-plus"></i></span>
+              <span>New chat</span>
+            </a>
+            <a id="settings-btn" class="button is-fullwidth">
+              <span class="icon"><i class="fas fa-cog"></i></span>
+              <span>Settings</span>
+            </a>
+          </div>
         </div>
-        <div class="menu-list">
-          <button id="settings-btn" class="button is-fullwidth">Settings</button>
-        </div>
-      </nav>
+      </aside>
 
       <!-- Main Chat Area -->
       <main class="section">
