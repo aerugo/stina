@@ -110,7 +110,7 @@ var ModalModule = (function () {
     function showEditInstructionModal(title, defaultLabel, defaultContent, callback) {
         const modalContent = `
             <div class="field">
-                <label class="label">Instruction Title</label>
+                <label class="label">Instruktionstitel</label>
                 <div class="control">
                     <input
                         class="input"
@@ -122,7 +122,7 @@ var ModalModule = (function () {
                 </div>
             </div>
             <div class="field">
-                <label class="label">Instruction Content</label>
+                <label class="label">Instruktionsinnehåll</label>
                 <div class="control">
                     <textarea
                         class="textarea"
