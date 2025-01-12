@@ -1,11 +1,12 @@
 /* Define modern color variables */
 :root {
-  --primary-color: #4A90E2;               /* A modern blue hue */
-  --secondary-color: #F5F7FA;             /* Light gray background */
-  --text-color: #333333;                  /* Dark text color for readability */
+  --primary-color: #1E90FF;               /* Dodger blue */
+  --secondary-color: #F0F2F5;             /* Light gray background */
+  --text-color: #202124;                  /* Dark grey text */
   --background-color: #FFFFFF;            /* White background */
   --border-color: #E0E0E0;                /* Light border color */
   --hover-color: #EAF2FB;                 /* Light blue hover effect */
+  --background-gradient: linear-gradient(180deg, #FFFFFF 0%, #F0F2F5 100%);
 }
 
 /* Switch styles */
@@ -332,21 +333,29 @@ body.light-mode .copy-button:hover {
     max-width: 800px;
     margin: 0 auto;
     position: relative;
-    background: #40414F;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    background: #FFFFFF;
+    border: 1px solid var(--border-color);
+    border-radius: 25px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    display: flex;
+    align-items: center;
+    padding: 5px 15px;
 }
 
 #user-input {
     width: 100%;
     background: transparent;
     border: none;
-    padding: 15px 45px 15px 15px;
-    color: white;
-    font-size: 15px;
+    padding: 15px;
+    color: var(--text-color);
+    font-size: 16px;
     resize: none;
     box-sizing: border-box;
-    border-radius: 10px;
+    margin-right: 10px;
+}
+
+#user-input:focus {
+    outline: none;
 }
 
 #user-input:focus {
@@ -354,16 +363,22 @@ body.light-mode .copy-button:hover {
 }
 
 .send-button {
-    position: absolute;
-    right: 10px;
-    bottom: 8px;
-    background: transparent;
-    border: none;
+    background: var(--primary-color);
     color: #FFFFFF;
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     cursor: pointer;
-    padding: 5px;
-    border-radius: 5px;
-    transition: background 0.2s;
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+.send-button:hover {
+    background-color: #1a7ee6;
+    transform: scale(1.05);
 }
 
 .send-button:hover {
