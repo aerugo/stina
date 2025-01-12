@@ -221,6 +221,31 @@ body {
     margin-top: 1rem;
 }
 
+/* Hide footer in older messages by default */
+.assistant-message-container.older-message .message-footer {
+    display: none;
+}
+
+/* Show footer on hover for older messages */
+.assistant-message-container.older-message:hover .message-footer {
+    display: flex;
+}
+
+/* Ensure footer is always visible in latest message */
+.assistant-message-container:not(.older-message) .message-footer {
+    display: flex;
+}
+
+/* Add hover effect for older messages */
+.assistant-message-container.older-message {
+    transition: background-color 0.2s ease-in-out;
+}
+
+.assistant-message-container.older-message:hover {
+    background-color: #f9f9f9;
+    cursor: pointer;
+}
+
 /* Copy Button Styles */
 .copy-button {
     background: none;

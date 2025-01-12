@@ -27,6 +27,22 @@ var RenderingModule = (function() {
                 const assistantMessageContainer = document.createElement('div');
                 assistantMessageContainer.classList.add('assistant-message-container');
 
+                // Check if this is the latest assistant message
+                const isLatestAssistantMessage = (function() {
+                    const reversedConversation = ChatModule.getCurrentChat().conversation.slice().reverse();
+                    for (const msg of reversedConversation) {
+                        if (msg.role === 'assistant') {
+                            return msg === message;
+                        }
+                    }
+                    return false;
+                })();
+
+                // If it's not the latest message, add a class to indicate it's older
+                if (!isLatestAssistantMessage) {
+                    assistantMessageContainer.classList.add('older-message');
+                }
+
                 // Create content element
                 const articleElem = document.createElement('article');
                 articleElem.classList.add('assistant-article');
