@@ -85,32 +85,6 @@ input:checked + .slider:before {
     box-sizing: border-box;
 }
 
-/* Selectors Container */
-.selectors-container {
-    display: flex;
-    align-items: center;
-    padding: 10px;
-    background: #343541;
-    color: #FFFFFF;
-}
-
-.selector-group {
-    display: flex;
-    align-items: center;
-    margin-right: 20px;
-}
-
-.selector-group label {
-    margin-right: 10px;
-}
-
-.selector-group select {
-    background: #444654;
-    color: #FFFFFF;
-    border: none;
-    padding: 5px;
-    border-radius: 5px;
-}
 
 /* Base Layout */
 body {
@@ -741,30 +715,6 @@ body .chat-name {
     background-color: #005bbb;
 }
 
-/* Style for the Edit Instruction Button */
-.selector-group button {
-  background: #007AFF;
-  color: #FFFFFF;
-  border: none;
-  padding: 5px 10px;
-  margin-left: 10px;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.selector-group button:hover {
-  background: #005BBB;
-}
-
-/* Adjust for Light Mode if applicable */
-body.light-mode .selector-group button {
-  background: #007AFF;
-  color: #FFFFFF;
-}
-
-body.light-mode .selector-group button:hover {
-  background: #005BBB;
-}
 
 /* Custom Modal Textarea Styles */
 #custom-modal textarea {
@@ -972,32 +922,3 @@ body.light-mode .loading-spinner {
     border-top-color: #000000;
 }
 
-/* Action Container Style */
-.action-container {
-    position: absolute;
-    bottom: 10px;
-    left: 15px;
-    right: 15px;
-    display: flex;
-    align-items: center;
-}
-
-.action-container > * {
-    max-width: 50%;
-}
-
-/* Model Label Style */
-.model-label {
-    font-size: 12px;
-    color: #AAA;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 50%;
-    text-align: right;
-}
-
-/* Adjustments for light mode */
-body.light-mode .model-label {
-    color: #666;
-}
