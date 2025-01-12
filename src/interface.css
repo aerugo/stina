@@ -23,6 +23,9 @@
   --text-color: #FFFFFF;
   --border-color: rgba(255, 255, 255, 0.1);
   --hover-color: rgba(255, 255, 255, 0.1);
+  --chat-name-color: #FFFFFF;
+  --input-background: #FFFFFF;
+  --input-border-color: var(--border-color);
   
   /* Message Colors */
   --message-bg-color: #FFFFFF;
@@ -231,14 +234,13 @@ input:checked + .slider:before {
 }
 
 
-h1, h2, h3, h4, h5, h6 {
-    font-weight: 600;
-    color: var(--text-color);
-}
+/* ===== Layout Styles ===== */
 
+/* Main Layout Structure */
 .chat-layout {
     display: flex;
     height: 100vh;
+    flex-direction: row;
 }
 
 /* Sidebar Styles */
