@@ -3,16 +3,25 @@
  * 
  * Main stylesheet for the chat interface application.
  * Organized into logical sections:
+ * 
  * - Theme Variables
- * - Reset and Base Styles  
+ * - Light Mode Theme Variables
+ * - Reset and Base Styles
  * - Typography
  * - Layout Styles
  * - Component Styles
+ *   - Buttons
+ *   - Inputs
+ *   - Messages
+ *   - Modals
+ *   - Switches
  * - Animations
  * - Responsive Styles
  */
 
-/* ===== Theme Variables ===== */
+/* ==========================================================================
+   Theme Variables
+   ========================================================================== */
 :root {
   /* Colors - Dark Mode Default */
   --primary-color: #1E90FF;
