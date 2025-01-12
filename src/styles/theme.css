@@ -99,13 +99,19 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* Assistant Message Styles */
+.assistant-message {
+  width: 100%;
+  margin: 2rem 0;
+}
+
 .assistant-message .assistant-article {
   max-width: 100%;
-  margin: 2rem auto;
   padding: 0;
   font-size: 1rem;
   line-height: 1.6;
   color: var(--text-color);
+  background: none;
+  border: none;
 }
 
 /* Style headings within assistant messages */
@@ -159,20 +165,21 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* User Message Styles */
-.user-message .user-message-content {
-  max-width: 100%;
-  margin: 1rem auto;
-  padding: 0.5rem 1rem;
-  font-size: 1rem;
-  line-height: 1.6;
-  color: var(--text-color);
-  border-left: 4px solid var(--primary-color);
-  background-color: #ffffff;
+.user-message {
+  display: flex;
+  justify-content: flex-end;
+  margin: 1rem 0;
 }
 
-/* Adjust spacing for user messages */
 .user-message .user-message-content {
-  margin-top: 2rem;
+  max-width: 80%;
+  background-color: var(--primary-color);
+  color: #ffffff;
+  padding: 0.75rem 1rem;
+  border-radius: 15px;
+  border-top-right-radius: 0;
+  word-wrap: break-word;
+  margin: 0;
 }
 
 /* Link Styles */
