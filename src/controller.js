@@ -113,6 +113,9 @@ const ControllerModule = (function () {
           currentState.currentChatId,
           currentState.conversation
         );
+        
+        // Update the lastUpdated timestamp
+        ChatModule.updateChatLastUpdated(currentState.currentChatId);
 
         const chat = ChatModule.getCurrentChat();
         if (chat.name === "New chat") {

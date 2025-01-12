@@ -17,6 +17,7 @@ var ChatModule = (function() {
             conversation: [],
             selectedModelKey: config.lastUsedModelKey || 'gpt-4o',
             selectedInstructionId: config.lastUsedInstructionId || instructions[0].id,
+            lastUpdated: Date.now(),
         };
         chats.push(chat);
         currentChatId = chatId;
@@ -98,11 +99,22 @@ var ChatModule = (function() {
         const chat = chats.find((c) => c.id === chatId);
         if (chat) {
             chat.name = newTitle || "New chat";
+            chat.lastUpdated = Date.now();
+            saveChats();
+        }
+    }
+
+    function updateChatLastUpdated(chatId) {
+        const chat = chats.find((c) => c.id === chatId);
+        if (chat) {
+            chat.lastUpdated = Date.now();
             saveChats();
         }
     }
 
     function getCurrentState() {
+        // Sort chats by lastUpdated descending
+        chats.sort((a, b) => b.lastUpdated - a.lastUpdated);
         return {
             chats,
             currentChatId,
