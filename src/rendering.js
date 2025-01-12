@@ -16,31 +16,34 @@ var RenderingModule = (function() {
         const contentDiv = document.createElement('div');
         contentDiv.classList.add('content');
     
-        let actionContainer = null;
-
         if (message.role === 'assistant') {
             if (message.isLoading) {
-                // Display loading animation
-                textElem.innerHTML = '<div class="loading-spinner"></div>';
+                contentDiv.innerHTML = `
+                    <progress class="progress is-small is-primary" max="100">
+                        Loading
+                    </progress>
+                `;
             } else {
-                // Parse markdown content and sanitize it
                 let htmlContent = marked.parse(message.content);
                 htmlContent = DOMPurify.sanitize(htmlContent);
-                textElem.innerHTML = htmlContent;
+                contentDiv.innerHTML = htmlContent;
 
-                // Create a container for the copy button and model label
-                actionContainer = document.createElement('div');
-                actionContainer.classList.add('action-container');
-                actionContainer.style.width = '100%';
+                const levelDiv = document.createElement('nav');
+                levelDiv.classList.add('level', 'is-mobile');
 
-                // Create copy button with SVG icon
+                const leftLevelItem = document.createElement('div');
+                leftLevelItem.classList.add('level-left');
+
+                const rightLevelItem = document.createElement('div');
+                rightLevelItem.classList.add('level-right');
+
+                // Copy button
                 const copyButton = document.createElement('button');
-                copyButton.classList.add('copy-button');
-
-                // Create model label element
+                copyButton.classList.add('button', 'is-small');
+                
+                // Model label
                 const modelLabel = document.createElement('span');
-                modelLabel.classList.add('model-label');
-                // Determine the model label text
+                modelLabel.classList.add('tag', 'is-light');
                 const models = ModelsModule.getModels();
                 let modelLabelText = models[message.model]?.label || message.model || 'Unknown Model';
                 if (models[message.model]?.system && message.instructionLabel) {
@@ -48,21 +51,33 @@ var RenderingModule = (function() {
                 }
                 modelLabel.textContent = modelLabelText;
                 copyButton.innerHTML = `
-                    <svg width="16" height="16" viewBox="0 0 24 24">
-                        <path fill="currentColor" d="M19,21H5C3.9,21 3,20.1 3,19V7H5V19H19V21ZM21,5H8C6.9,5 6,5.9 6,7V17C6,18.1 6.9,19 8,19H21C22.1,19 23,18.1 23,17V7C23,5.9 22.1,5 21,5M21,17H8V7H21V17Z" />
-                    </svg>
+                    <span class="icon is-small">
+                        <svg width="16" height="16" viewBox="0 0 24 24">
+                            <path fill="currentColor" d="M19,21H5C3.9,21 3,20.1 3,19V7H5V19H19V21ZM21,5H8C6.9,5 6,5.9 6,7V17C6,18.1 6.9,19 8,19H21C22.1,19 23,18.1 23,17V7C23,5.9 22.1,5 21,5M21,17H8V7H21V17Z" />
+                        </svg>
+                    </span>
+                    <span>Copy</span>
                 `;
 
-                // Add click event listener to copy the raw markdown content
                 copyButton.addEventListener('click', () => {
                     navigator.clipboard.writeText(message.content)
                         .then(() => {
-                            copyButton.innerHTML = 'Copied!';
+                            copyButton.innerHTML = `
+                                <span class="icon is-small">
+                                    <svg width="16" height="16" viewBox="0 0 24 24">
+                                        <path fill="currentColor" d="M9,16.17L4.83,12l-1.42,1.41L9,19 21,7l-1.41-1.41L9,16.17z" />
+                                    </svg>
+                                </span>
+                                <span>Copied!</span>
+                            `;
                             setTimeout(() => {
                                 copyButton.innerHTML = `
-                                    <svg width="16" height="16" viewBox="0 0 24 24">
-                                        <path fill="currentColor" d="M19,21H5C3.9,21 3,20.1 3,19V7H5V19H19V21ZM21,5H8C6.9,5 6,5.9 6,7V17C6,18.1 6.9,19 8,19H21C22.1,19 23,18.1 23,17V7C23,5.9 22.1,5 21,5M21,17H8V7H21V17Z" />
-                                    </svg>
+                                    <span class="icon is-small">
+                                        <svg width="16" height="16" viewBox="0 0 24 24">
+                                            <path fill="currentColor" d="M19,21H5C3.9,21 3,20.1 3,19V7H5V19H19V21ZM21,5H8C6.9,5 6,5.9 6,7V17C6,18.1 6.9,19 8,19H21C22.1,19 23,18.1 23,17V7C23,5.9 22.1,5 21,5M21,17H8V7H21V17Z" />
+                                        </svg>
+                                    </span>
+                                    <span>Copy</span>
                                 `;
                             }, 2000);
                         })
@@ -71,19 +86,20 @@ var RenderingModule = (function() {
                         });
                 });
 
-                // Append copy button and model label to the action container
-                actionContainer.appendChild(copyButton);
-                actionContainer.appendChild(modelLabel);
+                leftLevelItem.appendChild(copyButton);
+                rightLevelItem.appendChild(modelLabel);
+                levelDiv.appendChild(leftLevelItem);
+                levelDiv.appendChild(rightLevelItem);
+                mediaContent.appendChild(contentDiv);
+                mediaContent.appendChild(levelDiv);
             }
         } else {
             // For user messages, display plain text
-            textElem.innerText = message.content;
+            contentDiv.innerText = message.content;
+            mediaContent.appendChild(contentDiv);
         }
-
-        messageElem.appendChild(textElem);
-        if (actionContainer) {
-            messageElem.appendChild(actionContainer);
-        }
+        
+        messageElem.appendChild(mediaContent);
         return messageElem;
     }
 
