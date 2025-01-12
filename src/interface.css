@@ -1,3 +1,12 @@
+/**
+ * interface.css
+ *
+ * Contains the main styles for the chat interface application.
+ * Styles are grouped into sections for better organization and readability.
+ */
+
+/* ===== Global Variables and Base Styles ===== */
+
 /* Define modern color variables */
 :root {
   --primary-color: #1E90FF;               /* Dodger blue */
@@ -7,6 +16,26 @@
   --border-color: #E0E0E0;                /* Light border color */
   --hover-color: #EAF2FB;                 /* Light blue hover effect */
   --background-gradient: linear-gradient(180deg, #FFFFFF 0%, #F0F2F5 100%);
+}
+
+/* Base styles applied to all elements */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', sans-serif;
+  color: var(--text-color);
+  background: var(--background-color);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 600;
+  color: var(--text-color);
 }
 
 /* Switch styles */
