@@ -51,6 +51,12 @@ var EventModule = (function() {
     }
 
     function setupEventListeners() {
+        // Add mobile menu toggle
+        const navbarBurger = document.querySelector('.navbar-burger');
+        navbarBurger.addEventListener('click', () => {
+            const sidebar = document.getElementById('sidebarMenu');
+            sidebar.classList.toggle('is-active');
+        });
         const modelSelect = document.getElementById('model-select');
         const instructionsSelect = document.getElementById('instructions-select');
         const editInstructionBtn = document.getElementById('edit-instruction-btn');

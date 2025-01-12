@@ -1,3 +1,82 @@
+/* Define modern color variables */
+:root {
+  --primary-color: #4A90E2;               /* A modern blue hue */
+  --secondary-color: #F5F7FA;             /* Light gray background */
+  --text-color: #333333;                  /* Dark text color for readability */
+  --background-color: #FFFFFF;            /* White background */
+  --border-color: #E0E0E0;                /* Light border color */
+  --hover-color: #EAF2FB;                 /* Light blue hover effect */
+}
+
+/* Switch styles */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 40px;
+    height: 20px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: #ccc;
+    transition: 0.4s;
+    border-radius: 34px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 16px; width: 16px;
+    left: 2px; bottom: 2px;
+    background-color: white;
+    transition: 0.4s;
+    border-radius: 50%;
+}
+
+input:checked + .slider {
+    background-color: var(--primary-color);
+}
+
+input:checked + .slider:before {
+    transform: translateX(20px);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .sidebar {
+        position: fixed;
+        width: 250px;
+        height: 100%;
+        transform: translateX(-260px);
+        transition: transform 0.3s ease;
+        z-index: 1000;
+    }
+
+    .sidebar.is-active {
+        transform: translateX(0);
+    }
+
+    .navbar-burger {
+        display: block;
+    }
+
+    .chat-layout {
+        flex-direction: column;
+    }
+
+    .main-chat {
+        margin-left: 0;
+    }
+}
+
 /* Ensure padding and borders are included in the element's dimensions */
 *,
 *::before,
@@ -36,9 +115,14 @@
 body {
     margin: 0;
     padding: 0;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
-    color: #343541;
-    background: #343541;
+    font-family: 'Inter', sans-serif;
+    color: var(--text-color);
+    background: var(--background-color);
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 600;
+    color: var(--text-color);
 }
 
 .chat-layout {
@@ -49,10 +133,11 @@ body {
 /* Sidebar Styles */
 .sidebar {
     width: 260px;
-    background: #202123;
+    background: var(--secondary-color);
     display: flex;
     flex-direction: column;
-    color: #FFFFFF;
+    color: var(--text-color);
+    border-right: 1px solid var(--border-color);
 }
 
 .nav-header {
@@ -163,9 +248,24 @@ body {
 .message {
     max-width: 800px;
     margin: 0 auto 20px auto;
-    padding: 20px 15px 50px 15px;
-    line-height: 1.6;
+    padding: 20px;
+    line-height: 1.5;
     position: relative;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+}
+
+.message.user {
+    background-color: #E3F2FD;
+}
+
+.message.assistant {
+    background-color: #F1F3F4;
+}
+
+.message .text {
+    font-size: 16px;
+    color: var(--text-color);
 }
 
 /* Style for the copy button */
