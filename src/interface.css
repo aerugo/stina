@@ -1,41 +1,85 @@
 /**
  * interface.css
- *
- * Contains the main styles for the chat interface application.
- * Styles are grouped into sections for better organization and readability.
+ * 
+ * Main stylesheet for the chat interface application.
+ * Organized by component and functionality for maintainability.
  */
 
-/* ===== Global Variables and Base Styles ===== */
-
-/* Define modern color variables */
+/* ===== Theme Variables ===== */
 :root {
-  --primary-color: #1E90FF;               /* Dodger blue */
-  --secondary-color: #F0F2F5;             /* Light gray background */
-  --text-color: #202124;                  /* Dark grey text */
-  --background-color: #FFFFFF;            /* White background */
-  --border-color: #E0E0E0;                /* Light border color */
-  --hover-color: #EAF2FB;                 /* Light blue hover effect */
-  --background-gradient: linear-gradient(180deg, #FFFFFF 0%, #F0F2F5 100%);
+  /* Default (Dark Mode) Colors */
+  --primary-color: #1E90FF;
+  --primary-color-hover: #187BE8;
+  --primary-color-active: #1569CC;
+  --bg-color: #343541;
+  --secondary-bg: #2D2D2D;
+  --text-color: #FFFFFF;
+  --border-color: rgba(255, 255, 255, 0.1);
+  --hover-color: rgba(255, 255, 255, 0.1);
+  
+  /* Spacing and Layout */
+  --spacing-xs: 0.25rem;   /* 4px */
+  --spacing-sm: 0.5rem;    /* 8px */
+  --spacing-md: 1rem;      /* 16px */
+  --spacing-lg: 1.5rem;    /* 24px */
+  --spacing-xl: 2rem;      /* 32px */
+  
+  /* Border Radius */
+  --radius-sm: 0.25rem;    /* 4px */
+  --radius-md: 0.5rem;     /* 8px */
+  --radius-lg: 1rem;       /* 16px */
+  
+  /* Transitions */
+  --transition-fast: 0.2s ease;
+  --transition-normal: 0.3s ease;
 }
 
-/* Base styles applied to all elements */
+/* Light Mode Theme Override */
+body.light-mode {
+  --bg-color: #F5F5F5;
+  --secondary-bg: #FFFFFF;
+  --text-color: #202124;
+  --border-color: #E0E0E0;
+  --hover-color: #EAF2FB;
+}
+
+/* ===== Base Styles ===== */
+
+/* Reset Box Model */
 *,
 *::before,
 *::after {
   box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* Document Base */
+html {
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
-  margin: 0;
-  padding: 0;
   font-family: 'Inter', sans-serif;
   color: var(--text-color);
-  background: var(--background-color);
+  background: var(--bg-color);
+  min-height: 100vh;
 }
 
+/* Typography */
 h1, h2, h3, h4, h5, h6 {
   font-weight: 600;
   color: var(--text-color);
+  line-height: 1.2;
+  margin-bottom: var(--spacing-md);
+}
+
+/* Focus Styles */
+:focus-visible {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
 }
 
 /* Switch styles */
