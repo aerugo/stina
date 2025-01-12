@@ -27,32 +27,16 @@ var RenderingModule = (function() {
                 const assistantMessageContainer = document.createElement('div');
                 assistantMessageContainer.classList.add('assistant-message-container');
 
-                // Create header for model and instruction labels
-                const messageHeader = document.createElement('div');
-                messageHeader.classList.add('message-header');
-
-                const modelLabel = document.createElement('span');
-                modelLabel.classList.add('model-label');
-                modelLabel.textContent = `Model: ${message.model || 'N/A'}`;
-
-                const instructionLabel = document.createElement('span');
-                instructionLabel.classList.add('instruction-label');
-                instructionLabel.textContent = `Instruction: ${message.instructionLabel || 'N/A'}`;
-
-                // Append model and instruction labels to header
-                messageHeader.appendChild(modelLabel);
-                messageHeader.appendChild(document.createTextNode(' | '));
-                messageHeader.appendChild(instructionLabel);
-
                 // Create content element
                 const articleElem = document.createElement('article');
                 articleElem.classList.add('assistant-article');
                 articleElem.innerHTML = htmlContent;
 
-                // Create footer with copy button
+                // Create footer for copy button and model/instruction label
                 const messageFooter = document.createElement('div');
                 messageFooter.classList.add('message-footer');
 
+                // Create the copy button
                 const copyButton = document.createElement('button');
                 copyButton.classList.add('button', 'is-small', 'copy-button');
                 copyButton.innerHTML = `
@@ -75,10 +59,22 @@ var RenderingModule = (function() {
                     });
                 });
 
+                // Create the model/instruction label
+                const modelInstructionLabel = document.createElement('span');
+                modelInstructionLabel.classList.add('model-instruction-label');
+
+                // Format the label
+                let labelText = `${message.model || 'N/A'}`;
+                if (message.instructionLabel) {
+                    labelText += ` with ${message.instructionLabel}`;
+                }
+                modelInstructionLabel.textContent = labelText;
+
+                // Append copy button and model/instruction label to the footer
                 messageFooter.appendChild(copyButton);
+                messageFooter.appendChild(modelInstructionLabel);
 
                 // Assemble the assistant message container
-                assistantMessageContainer.appendChild(messageHeader);
                 assistantMessageContainer.appendChild(articleElem);
                 assistantMessageContainer.appendChild(messageFooter);
 

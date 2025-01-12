@@ -213,28 +213,15 @@ body {
   line-height: 1.5;
 }
 
-/* Message Header Styles */
-.assistant-message .message-header {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    font-size: 0.9rem;
-    color: #6b6b6b;
-    margin-bottom: 0.5rem;
-}
-
-.message-header .model-label,
-.message-header .instruction-label {
-    margin-right: 0.5rem;
-}
-
 /* Message Footer Styles */
-.assistant-message .message-footer {
+.message-footer {
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
+    align-items: center;
     margin-top: 1rem;
 }
 
+/* Copy Button Styles */
 .copy-button {
     background: none;
     border: none;
@@ -249,10 +236,17 @@ body {
 }
 
 .copy-button:hover {
-    color: darken(var(--primary-color), 10%);
+    color: #2751a3;
 }
 
 .copy-button:focus {
     outline: none;
     box-shadow: none;
+}
+
+/* Model and Instruction Label Styles */
+.model-instruction-label {
+    font-size: 0.8rem;
+    color: #6b6b6b;
+    text-align: right;
 }
