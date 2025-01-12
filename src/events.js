@@ -74,8 +74,6 @@ var EventModule = (function () {
     const sendBtn = document.getElementById("send-btn");
     const newChatBtn = document.getElementById("new-chat-btn");
     const settingsBtn = document.getElementById("settings-btn");
-    const closeSettings = document.getElementById("close-settings");
-    const saveSettingsBtn = document.getElementById("save-settings-btn");
     const chatListContainer = document.getElementById("chat-list");
 
     // Setup basic event listeners
@@ -89,7 +87,6 @@ var EventModule = (function () {
     sendBtn.addEventListener("click", handleSendButtonClick);
     userInput.addEventListener("keydown", handleUserInputKeyDown);
     settingsBtn.addEventListener("click", openSettingsModal);
-    saveSettingsBtn.addEventListener("click", saveSettings);
     chatListContainer.addEventListener("click", handleChatListClick);
     window.addEventListener("click", handleWindowClick);
 
