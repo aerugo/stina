@@ -298,9 +298,6 @@ var EventModule = (function () {
   }
 
   function handleWindowClick(event) {
-    if (event.target === document.getElementById("settings-modal")) {
-      closeSettingsModal();
-    }
     if (event.target === document.getElementById("custom-modal")) {
       document.getElementById("custom-modal").style.display = "none";
     }
@@ -387,7 +384,6 @@ var EventModule = (function () {
     handleChatListClick,
     handleWindowClick,
     openSettingsModal,
-    closeSettingsModal,
     saveSettings,
   };
 })();
