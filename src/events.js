@@ -5,6 +5,8 @@
 var EventModule = (function () {
   // Module-level variables
   const models = ModelsModule.getModels();
+  let editInstructionBtn;
+  let instructionsSelect;
 
   function updateModelAndInstructionSelectors() {
     const modelSelect = document.getElementById("model-select");
@@ -46,7 +48,12 @@ var EventModule = (function () {
   }
 
   function updateEditButtonVisibility() {
-    // Function kept for compatibility, but no longer needed
+    const selectedValue = instructionsSelect.value;
+    if (selectedValue.startsWith("custom_")) {
+      editInstructionBtn.style.display = "inline-block";
+    } else {
+      editInstructionBtn.style.display = "none";
+    }
   }
 
   function setupEventListeners() {
@@ -57,12 +64,13 @@ var EventModule = (function () {
       sidebar.classList.toggle("is-active");
     });
     const modelSelect = document.getElementById("model-select");
-    const instructionsSelect = document.getElementById("instructions-select");
+    instructionsSelect = document.getElementById("instructions-select");
     const userInput = document.getElementById("user-input");
     const sendBtn = document.getElementById("send-btn");
     const newChatBtn = document.getElementById("new-chat-btn");
     const settingsBtn = document.getElementById("settings-btn");
     const chatListContainer = document.getElementById("chat-list");
+    editInstructionBtn = document.getElementById("edit-instruction-btn");
 
     // Setup basic event listeners
     newChatBtn.addEventListener("click", function () {
