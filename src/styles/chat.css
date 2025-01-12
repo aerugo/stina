@@ -1,0 +1,253 @@
+
+
+main .container {
+  width: 100%;
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+}
+
+main .container.is-fluid {
+  padding: 0;
+  margin: 0;
+  width: 100%;
+}
+
+
+main.section {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  padding: 0;
+  margin: 0;
+}
+
+
+#chat-history {
+  align-items: center;
+  flex: 1 1 auto;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  box-shadow: none;
+}
+
+#chat-history::-webkit-scrollbar {
+  width: 8px;
+}
+
+#chat-history::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+#chat-history::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+#chat-history::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+.assistant-message, .user-message {
+  margin: 1.5rem auto 1.5rem auto;
+}
+
+.assistant-message .assistant-article {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 0;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--text-color);
+  background: none;
+  border: none;
+}
+
+/* Style headings within assistant messages */
+.assistant-message .assistant-article h1,
+.assistant-message .assistant-article h2,
+.assistant-message .assistant-article h3,
+.assistant-message .assistant-article h4,
+.assistant-message .assistant-article h5,
+.assistant-message .assistant-article h6 {
+  font-weight: 600;
+  margin-top: 1.5rem;
+  color: var(--primary-text-color);
+}
+
+/* Style paragraphs */
+.assistant-message .assistant-article p {
+  margin-bottom: 1rem;
+}
+
+/* Style lists */
+.assistant-message .assistant-article ul,
+.assistant-message .assistant-article ol {
+  margin-left: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+/* Style blockquotes */
+.assistant-message .assistant-article blockquote {
+  background-color: #f9f9f9;
+  border-left: 4px solid #ccc;
+  margin: 1rem 0;
+  padding: 1rem;
+  font-style: italic;
+}
+
+/* Style code blocks */
+.assistant-message .assistant-article pre {
+  background-color: #f5f5f5;
+  padding: 1rem;
+  overflow-x: auto;
+  margin-bottom: 1rem;
+}
+
+/* Inline code */
+.assistant-message .assistant-article code {
+  background-color: #f5f5f5;
+  padding: 0.2rem 0.4rem;
+  font-family: monospace;
+  font-size: 0.95em;
+  border-radius: 4px;
+}
+
+/* User Message Styles */
+.user-message {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.user-message .user-message-content {
+  max-width: 700px;
+  background-color: var(--primary-color);
+  color: #ffffff;
+  padding: 0.75rem 1rem;
+  border-radius: 15px;
+  border-top-right-radius: 0;
+  word-wrap: break-word;
+  margin: 0 auto;
+}
+
+/* Link Styles */
+.assistant-message .assistant-article a {
+  color: var(--primary-color);
+  text-decoration: underline;
+}
+
+.assistant-message .assistant-article a:hover {
+  text-decoration: none;
+}
+
+/* Image Styles */
+.assistant-message .assistant-article img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 1rem 0;
+}
+
+.section {
+  padding: 2rem 1.5rem;
+}
+
+.container {
+  margin-top: 1rem;
+}
+
+body {
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+/* Message Footer Styles */
+.message-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1rem;
+}
+
+/* Hide the content of the message footer in older messages */
+.assistant-message-container.older-message .message-footer .copy-button,
+.assistant-message-container.older-message .message-footer .model-instruction-label {
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out;
+}
+
+/* Show the content on hover */
+.assistant-message-container.older-message:hover .message-footer .copy-button,
+.assistant-message-container.older-message:hover .message-footer .model-instruction-label {
+    opacity: 1;
+}
+
+/* Add hover effect for older messages */
+.assistant-message-container.older-message {
+    transition: background-color 0.2s ease-in-out;
+}
+
+.assistant-message-container.older-message:hover {
+    background-color: #f9f9f9;
+    cursor: pointer;
+}
+
+/* Copy Button Styles */
+.copy-button {
+    background: none;
+    border: none;
+    color: var(--primary-color);
+    cursor: pointer;
+    font-size: 0.9rem;
+    padding: 0;
+}
+
+.copy-button .icon {
+    margin-right: 0.25rem;
+}
+
+.copy-button:hover {
+    color: #2751a3;
+}
+
+.copy-button:focus {
+    outline: none;
+    box-shadow: none;
+}
+
+/* Model and Instruction Label Styles */
+.model-instruction-label {
+    font-size: 0.8rem;
+    color: #6b6b6b;
+    text-align: right;
+}
+/* Message content alignment */
+.assistant-message .assistant-article {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.assistant-message {
+  max-width: 700px;
+}
+
+.user-message {
+  max-width: 700px;
+  justify-content: center;
+}
+
+.user-message .user-message-content {
+  max-width: 700px;
+  margin-right: 0;
+}
+
+.container.is-fluid {
+  padding: 0;
+}

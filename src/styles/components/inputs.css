@@ -1,6 +1,6 @@
 /* Message Input Container */
 .message-input-container {
-  max-width: 700px;
+  width: 700px;
   margin: 1rem auto;
   background-color: #f4f4f4;
   border-radius: 15px;
