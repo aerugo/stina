@@ -90,8 +90,8 @@
   width: 2rem;
   height: 2rem;
   border-radius: 50%;
-  background-color: #000;
-  color: #fff;
+  background-color: var(--primary-color);
+  color: var(--active-text-color);
   border: none;
   display: flex;
   align-items: center;
@@ -100,7 +100,7 @@
 }
 
 .send-button:hover {
-  opacity: 0.8;
+  background-color: var(--primary-hover-color);
 }
 
 .send-button i {

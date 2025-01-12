@@ -3,11 +3,13 @@
    Modals
    =================== */
 
-/* Modal Customizations - working with Bulma's modal system */
+/* Modal Customizations */
 .modal-card {
     max-width: 600px;
     margin: 0 auto;
     animation: slideIn 0.3s ease;
+    background-color: var(--background-color);
+    color: var(--text-color);
 }
 
 @keyframes slideIn {
@@ -15,8 +17,22 @@
     to { opacity: 1; transform: translateY(0); }
 }
 
+.modal-card-head,
+.modal-card-foot {
+    background-color: var(--button-background-color);
+    color: var(--text-color);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.modal-card-title {
+    color: var(--text-color);
+    font-weight: var(--font-weight-bold);
+}
+
 .modal-card-body {
     padding: 20px;
+    background-color: var(--background-color);
+    color: var(--text-color);
 }
 
 .modal-card-body .field:not(:last-child) {
@@ -32,9 +48,20 @@
     margin-right: 0.5rem;
 }
 
-.modal-content {
-    background: var(--background-color);
+.modal-card-foot .button {
+    background-color: var(--button-background-color);
     color: var(--text-color);
+    border: 1px solid var(--border-color);
+}
+
+.modal-card-foot .button.is-primary {
+    background-color: var(--primary-color);
+    color: var(--active-text-color);
+}
+
+/* Modal Background */
+.modal-background {
+    background-color: var(--overlay-color);
 }
 
 .modal-content h2 {

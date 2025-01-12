@@ -12,6 +12,7 @@
   --sidebar-background-color: #f8f9fa;
   --active-item-color: #e9ecef;
   --danger-color: #dc3545;
+  --primary-hover-color: #004bb5;
 
   /* Font Weights */
   --font-weight-normal: 400;
@@ -21,6 +22,31 @@
   --border-radius: 4px;
   --z-index-modal: 600;
   --font-size-md: 1rem;
+}
+
+/* Global Button Styles */
+.button {
+  background-color: var(--button-background-color);
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  font-weight: var(--font-weight-normal);
+}
+
+.button:hover {
+  background-color: var(--active-item-color);
+  color: var(--text-color);
+}
+
+.button.is-primary {
+  background-color: var(--primary-color);
+  color: var(--active-text-color);
+  border: none;
+  font-weight: var(--font-weight-bold);
+}
+
+.button.is-primary:hover {
+  background-color: var(--primary-hover-color);
 }
 
 html, body {
