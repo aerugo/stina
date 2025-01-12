@@ -46,18 +46,7 @@ var EventModule = (function () {
   }
 
   function updateEditButtonVisibility() {
-    const instructionsSelect = document.getElementById("instructions-select");
-    const editInstructionBtn = document.getElementById("edit-instruction-btn");
-
-    const selectedInstructionId = instructionsSelect.value;
-    const customInstructions =
-      JSON.parse(localStorage.getItem("customInstructions")) || [];
-    const isCustomInstruction = customInstructions.some(
-      (instr) => instr.id === selectedInstructionId
-    );
-    editInstructionBtn.style.display = isCustomInstruction
-      ? "inline-block"
-      : "none";
+    // Function kept for compatibility, but no longer needed
   }
 
   function setupEventListeners() {
@@ -69,7 +58,6 @@ var EventModule = (function () {
     });
     const modelSelect = document.getElementById("model-select");
     const instructionsSelect = document.getElementById("instructions-select");
-    const editInstructionBtn = document.getElementById("edit-instruction-btn");
     const userInput = document.getElementById("user-input");
     const sendBtn = document.getElementById("send-btn");
     const newChatBtn = document.getElementById("new-chat-btn");
@@ -153,6 +141,12 @@ var EventModule = (function () {
       customOption.textContent = "Create New Instruction...";
       instructionsSelect.appendChild(customOption);
 
+      // Add edit option at the end
+      const editOption = document.createElement("option");
+      editOption.value = "edit_selected";
+      editOption.textContent = "Edit Selected Instruction...";
+      instructionsSelect.appendChild(editOption);
+
       instructionsSelect.value = selectedInstructionId;
       updateEditButtonVisibility();
     }
@@ -161,41 +155,32 @@ var EventModule = (function () {
     populateInstructions();
     updateInstructionsVisibility();
 
-    // Setup edit instruction button handler
-    editInstructionBtn.addEventListener("click", function () {
-      const selectedInstructionId = instructionsSelect.value;
-      const customInstructions =
-        JSON.parse(localStorage.getItem("customInstructions")) || [];
-      let instruction = customInstructions.find(
-        (instr) => instr.id === selectedInstructionId
-      );
-
-      if (instruction) {
-        ModalModule.showEditInstructionModal(
-          "Edit Custom Instruction",
-          instruction.label,
-          instruction.content,
-          function (result) {
-            if (result && result.label && result.content) {
-              instruction.label = result.label;
-              instruction.content = result.content;
-              localStorage.setItem(
-                "customInstructions",
-                JSON.stringify(customInstructions)
-              );
-              // Update the option label in the select dropdown
-              instructionsSelect.querySelector(
-                `option[value="${selectedInstructionId}"]`
-              ).textContent = result.label;
-            }
-          }
-        );
-      }
-    });
 
     // Setup instruction selection change handler
     instructionsSelect.addEventListener("change", function () {
-      if (this.value === "custom") {
+      if (this.value === "edit_selected") {
+        const previousValue = localStorage.getItem("selectedInstructionId");
+        const customInstructions = JSON.parse(localStorage.getItem("customInstructions")) || [];
+        let instruction = customInstructions.find(instr => instr.id === previousValue);
+        
+        if (instruction) {
+          ModalModule.showEditInstructionModal(
+            "Edit Custom Instruction",
+            instruction.label,
+            instruction.content,
+            function (result) {
+              if (result && result.label && result.content) {
+                instruction.label = result.label;
+                instruction.content = result.content;
+                localStorage.setItem("customInstructions", JSON.stringify(customInstructions));
+                populateInstructions();
+                instructionsSelect.value = previousValue;
+              }
+            }
+          );
+        }
+        instructionsSelect.value = previousValue;
+      } else if (this.value === "custom") {
         ModalModule.showEditInstructionModal(
           "Create Custom Instruction",
           "",
