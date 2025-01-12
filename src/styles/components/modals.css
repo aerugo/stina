@@ -15,93 +15,33 @@
     to { opacity: 1; transform: translateY(0); }
 }
 
-#custom-modal .modal-content {
-    background-color: #FFFFFF;
-    margin: 80px auto;
-    padding: 0;
-    border: 1px solid #888;
-    width: 90%;
-    max-width: 400px;
-    border-radius: 12px;
-    overflow: hidden;
+/* Modal Customizations - working with Bulma's modal system */
+.modal-card {
+    max-width: 600px;
+    margin: 0 auto;
     animation: slideIn 0.3s ease;
 }
 
-.modal-footer {
-    padding: 10px 20px;
-    display: flex;
+@keyframes slideIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.modal-card-body {
+    padding: 20px;
+}
+
+.modal-card-body .field:not(:last-child) {
+    margin-bottom: 1rem;
+}
+
+.modal-card-foot {
     justify-content: flex-end;
+    padding: 1rem;
 }
 
-.modal-footer button {
-    margin-left: 10px;
-    padding: 10px 15px;
-    background-color: #007aff;
-    color: #fff;
-    border: none;
-    border-radius: 8px;
-    font-size: 15px;
-    cursor: pointer;
-    transition: background-color 0.2s;
-}
-
-.modal-footer button:hover {
-    background-color: #005bbb;
-}
-
-
-/* Custom Modal Textarea Styles */
-#custom-modal textarea {
-    width: 100%;
-    padding: 12px;
-    border: 1px solid #E5E5EA;
-    border-radius: 8px;
-    font-size: 15px;
-    color: #1C1C1E;
-    background: #FFFFFF;
-    margin-top: 5px;
-    box-sizing: border-box;
-    resize: vertical;
-}
-
-#custom-modal textarea:focus {
-    border-color: #007AFF;
-    outline: none;
-    box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.2);
-}
-
-/* Adjust labels in modals */
-#custom-modal label {
-    display: block;
-    margin-top: 10px;
-    font-size: 14px;
-    color: #3a3a3c;
-}
-
-/* Modal Footer Buttons */
-.modal-footer button {
-    margin-left: 10px;
-    padding: 10px 20px;
-    background-color: #007aff;
-    color: #fff;
-    border: none;
-    border-radius: 8px;
-    font-size: 15px;
-    cursor: pointer;
-    transition: background-color 0.2s;
-}
-
-/* Input Field inside Modal */
-#custom-modal input[type="text"] {
-    width: 100%;
-    padding: 12px;
-    border: 1px solid #E5E5EA;
-    border-radius: 8px;
-    font-size: 15px;
-    color: #1C1C1E;
-    background: #FFFFFF;
-    margin-top: 10px;
-    box-sizing: border-box;
+.modal-card-foot .button:not(:last-child) {
+    margin-right: 0.5rem;
 }
 
  .modal-content {
