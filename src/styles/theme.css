@@ -43,6 +43,19 @@
   --button-tertiary-hover-background: #d6d8db;
 }
 
+/* Override Bulma's .button.is-link styles */
+.button.is-link {
+  background-color: var(--primary-color);
+  color: var(--active-text-color);
+  border: none;
+  font-weight: var(--font-weight-bold);
+}
+
+.button.is-link:hover {
+  background-color: var(--primary-hover-color);
+  color: var(--active-text-color);
+}
+
 /* Global Button Styles */
 .button {
   background-color: var(--button-background-color);
