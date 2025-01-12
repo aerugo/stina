@@ -38,6 +38,14 @@ h1, h2, h3, h4, h5, h6 {
   background-color: #fff;
 }
 
+.navbar-item .button {
+  margin-left: 0.5rem;
+}
+
+.navbar-menu.is-spaced {
+  padding: 0.5rem;
+}
+
 /* Message Styles */
 .message.is-pulled-right {
   margin-left: auto;
