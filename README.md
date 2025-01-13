@@ -1,2 +1,2 @@
 # rbot
-Chatbot using Azure AI Studio
+Chatbot client built with only pure Javascript, HTML and CSS.
