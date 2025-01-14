@@ -148,10 +148,9 @@
       })();
     </script>
 
-    <!-- Merge Instructions -->
+    <!-- Define mergeInstructions function -->
     <script>
-      // Wait until document is ready to ensure all scripts are loaded
-      document.addEventListener('DOMContentLoaded', function() {
+      function mergeInstructions() {
         // Get customInstructions from localStorage
         const customInstructions = JSON.parse(localStorage.getItem("customInstructions")) || [];
 
@@ -168,7 +167,27 @@
 
         // Log merged result
         console.log("After merging - window.instructions:", window.instructions);
-      });
+
+        // Initialize the app after instructions are merged
+        ControllerModule.initializeApp();
+      }
+    </script>
+
+    <!-- Dynamically load instructions.js and call mergeInstructions -->
+    <script>
+      (function() {
+        var script = document.createElement('script');
+        script.src = 'instructions.js';
+        script.onload = function() {
+          console.log('instructions.js has been loaded.');
+          mergeInstructions();
+        };
+        script.onerror = function() {
+          console.warn('instructions.js could not be loaded, continuing without additional instructions.');
+          mergeInstructions();
+        };
+        document.head.appendChild(script);
+      })();
     </script>
 
     <!-- Include Translations -->
@@ -187,10 +206,5 @@
     <script src="src/modal.js"></script>
     <script src="src/controller.js"></script>
 
-    <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        ControllerModule.initializeApp();
-      });
-    </script>
   </body>
 </html>
