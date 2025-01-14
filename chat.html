@@ -137,9 +137,13 @@
 
     <!-- Merge Instructions -->
     <script>
-      window.instructions = (window.defaultInstructions || []).concat(
-        window.additionalInstructions || []
-      );
+      // Get customInstructions from localStorage
+      const customInstructions = JSON.parse(localStorage.getItem("customInstructions")) || [];
+
+      // Combine all instructions
+      window.instructions = (window.defaultInstructions || [])
+        .concat(window.additionalInstructions || [])
+        .concat(customInstructions);
     </script>
 
     <!-- Include Translations -->
