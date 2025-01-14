@@ -70,9 +70,12 @@ var ApiModule = (function() {
                 break;
 
             case 'ollama':
-                url = `${config.endpoint}/api/generate`;
+                // Use default endpoint if not provided
+                const ollamaEndpoint = config.endpoint || 'http://localhost:11434';
+                url = `${ollamaEndpoint}/api/generate`;
                 headers = {
                     'Content-Type': 'application/json'
+                    // No API key needed for Ollama
                 };
                 body = {
                     model: deploymentName,

@@ -392,7 +392,7 @@ var EventModule = (function () {
     ];
 
     ModalModule.showCustomModal(
-      "Settings",
+      TranslationModule.translate('settings'),
       modalContent,
       buttons,
       function (result) {
@@ -401,18 +401,50 @@ var EventModule = (function () {
         }
       }
     );
+
+    // After the modal is displayed, add event listeners to update fields
+    setTimeout(() => {
+      const providerSelect = document.getElementById('provider-select');
+      const apiKeyField = document.getElementById('api-key');
+      const endpointField = document.getElementById('endpoint');
+
+      function updateFields() {
+        if (providerSelect.value === 'ollama') {
+          // Disable API Key field for Ollama
+          apiKeyField.disabled = true;
+          apiKeyField.placeholder = 'Not required for Ollama';
+          apiKeyField.value = ''; // Clear value
+
+          // Set default endpoint placeholder
+          endpointField.placeholder = 'Default: http://localhost:11434';
+        } else {
+          apiKeyField.disabled = false;
+          apiKeyField.placeholder = 'YOUR_API_KEY';
+          endpointField.placeholder = 'https://YOUR_RESOURCE_NAME.openai.azure.com';
+        }
+      }
+
+      providerSelect.addEventListener('change', updateFields);
+      updateFields(); // Initialize fields based on current provider
+    }, 0);
   }
 
   function saveSettings() {
-    const endpoint = document.getElementById("endpoint").value.trim();
-    const apiKey = document.getElementById("api-key").value.trim();
     const selectedProvider = document.getElementById('provider-select').value;
+    let endpoint = document.getElementById("endpoint").value.trim();
+    const apiKey = document.getElementById("api-key").value.trim();
     const selectedLanguage = document.getElementById('language-select').value;
     const theme = document.body.classList.contains("light-mode")
-      ? "light-mode"
+      ? "light-mode" 
       : "dark-mode";
 
-    if (!endpoint || !apiKey) {
+    // For Ollama, set default endpoint if not provided
+    if (selectedProvider === 'ollama' && !endpoint) {
+      endpoint = 'http://localhost:11434';
+    }
+
+    // Adjust validation: Skip API Key (and Endpoint) checks for Ollama  
+    if (selectedProvider !== 'ollama' && (!endpoint || !apiKey)) {
       ModalModule.showCustomAlert(TranslationModule.translate('pleaseFillRequiredFields'));
       return;
     }
