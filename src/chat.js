@@ -154,12 +154,19 @@ var ChatModule = (function () {
   }
 
   function getCurrentState() {
-    // Sort chats to ensure empty new chats are at top, then by lastUpdated
+    // Sort chats to ensure current chat is at top, followed by empty new chats, then by lastUpdated
     chats.sort((a, b) => {
-      // If 'a' is an empty new chat, place it at the top
-      if (a.isNewChat && a.conversation.length === 0) return -1;
-      // If 'b' is an empty new chat, place 'a' after 'b'
-      if (b.isNewChat && b.conversation.length === 0) return 1;
+      // Place the current chat at the top
+      if (a.id === currentChatId) return -1;
+      if (b.id === currentChatId) return 1;
+
+      // If 'a' is an empty new chat, place it before 'b'
+      const aIsEmptyNewChat = a.isNewChat && a.conversation.length === 0;
+      const bIsEmptyNewChat = b.isNewChat && b.conversation.length === 0;
+      if (aIsEmptyNewChat && !bIsEmptyNewChat) return -1;
+      if (!aIsEmptyNewChat && bIsEmptyNewChat) return 1;
+      if (aIsEmptyNewChat && bIsEmptyNewChat) return 0;
+
       // Otherwise, sort by 'lastUpdated' descending
       return b.lastUpdated - a.lastUpdated;
     });
