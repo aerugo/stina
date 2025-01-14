@@ -3,7 +3,7 @@
  * Coordinates interactions between modules and manages application flow.
  */
 const ControllerModule = (function () {
-  const models = window.models; // Use merged models
+  const models = ModelsModule.getModels(); // Retrieve models
 
   function cleanUpLocalStorage() {
     ["selectedModelKey", "selectedInstructionId"].forEach((key) => {
