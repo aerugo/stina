@@ -58,17 +58,21 @@ var ApiModule = (function() {
 
             case 'anthropic':
                 // Use default endpoint if not provided
-                const anthropicEndpoint = config.endpoint || 'https://api.anthropic.com/v1/complete';
+                const anthropicEndpoint = config.endpoint || 'https://api.anthropic.com/v1/messages';
                 url = anthropicEndpoint;
                 headers = {
                     'Content-Type': 'application/json',
-                    'x-api-key': config.apiKey
+                    'x-api-key': config.apiKey,
+                    'anthropic-version': '2023-06-01'
                 };
                 body = {
-                    prompt: messages.map(message => message.content).join('\n'),
                     model: deploymentName,
-                    max_tokens_to_sample: validOptions.max_tokens || 2048,
-                    temperature: validOptions.temperature
+                    max_tokens: validOptions.max_tokens || 1024,
+                    temperature: validOptions.temperature || 0.7,
+                    messages: messages.map(message => ({
+                        role: message.role,
+                        content: message.content,
+                    }))
                 };
                 break;
 
@@ -125,6 +129,24 @@ var ApiModule = (function() {
     }
 
     function parseApiResponse(data) {
+        const config = ConfigModule.getConfig();
+        
+        if (config.provider === 'anthropic') {
+            if (data.error) {
+                return {
+                    error: true,
+                    message: data.error.message || 'Unknown error from Anthropic API'
+                };
+            }
+            return {
+                error: false,
+                message: {
+                    role: 'assistant',
+                    content: data.content[0].text
+                }
+            };
+        }
+
         const choice = data.choices[0];
         if (choice.finish_reason === "content_filter") {
             const filteredCategories = [];

@@ -10,6 +10,15 @@ window.defaultModels = {
     presence_penalty: 0,
     system: true,
   },
+  "anthropic-claude-sonnet": {
+    label: "Anthropic Claude Sonnet",
+    deployment: "claude-3-5-sonnet-20241022",
+    provider: "anthropic",
+    context_length: 100000,
+    max_tokens: 1024,
+    temperature: 0.7,
+    system: false,
+  },
   "openai-gpt-4o": {
     label: "OpenAI GPT-4o",
     deployment: "gpt-4o",
