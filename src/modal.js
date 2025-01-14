@@ -109,27 +109,27 @@ var ModalModule = (function () {
         };
     }
 
-    function showEditInstructionModal(title, defaultLabel, defaultContent, callback) {
+    function showEditInstructionModal(titleKey, defaultLabel, defaultContent, callback) {
         const modalContent = `
             <div class="field">
-                <label class="label">Instruktionstitel</label>
+                <label class="label">${TranslationModule.translate('instructionTitleLabel')}</label>
                 <div class="control">
                     <input
                         class="input"
                         type="text"
                         id="modal-label-input"
-                        placeholder="Ange instruktionstitel"
+                        placeholder="${TranslationModule.translate('enterInstructionTitle')}"
                         value="${defaultLabel || ''}"
                     />
                 </div>
             </div>
             <div class="field">
-                <label class="label">Instruktionsinnehåll</label>
+                <label class="label">${TranslationModule.translate('instructionContentLabel')}</label>
                 <div class="control">
                     <textarea
                         class="textarea"
                         id="modal-content-input"
-                        placeholder="Ange instruktionens innehåll"
+                        placeholder="${TranslationModule.translate('enterInstructionContent')}"
                         rows="8"
                     >${defaultContent || ''}</textarea>
                 </div>
@@ -137,11 +137,11 @@ var ModalModule = (function () {
         `;
 
         const buttons = [
-            { label: 'Avbryt', value: false },
-            { label: 'Spara', value: true, class: 'is-success' }
+            { label: TranslationModule.translate('cancel'), value: false },
+            { label: TranslationModule.translate('save'), value: true, class: 'is-success' }
         ];
 
-        showCustomModal(title, modalContent, buttons, function(result) {
+        showCustomModal(TranslationModule.translate(titleKey), modalContent, buttons, function(result) {
             if (result) {
                 const inputLabel = document.getElementById("modal-label-input").value.trim();
                 const inputContent = document.getElementById("modal-content-input").value.trim();

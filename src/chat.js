@@ -98,7 +98,7 @@ var ChatModule = (function () {
     if (chats.length <= 1) {
       // Prevent deleting the last chat
       ModalModule.showCustomAlert(
-        "Du kan inte ta bort den sista kvarvarande chatten."
+        TranslationModule.translate('cannotDeleteLastChat')
       );
       return {
         chats,
