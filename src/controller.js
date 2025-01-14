@@ -24,7 +24,10 @@ const ControllerModule = (function () {
 
     // Set placeholder for user input
     const userInput = document.getElementById("user-input");
-    userInput.setAttribute('data-placeholder', TranslationModule.translate('writeToAssistantPlaceholder'));
+    userInput.setAttribute(
+      "data-placeholder",
+      TranslationModule.translate("writeToAssistantPlaceholder")
+    );
 
     cleanUpLocalStorage(); // Clean up invalid localStorage entries
     const state = ChatModule.initialize();
@@ -37,11 +40,17 @@ const ControllerModule = (function () {
     const config = ConfigModule.getConfig();
 
     // Adjust validation based on provider
-    if (config.provider === 'ollama') {
+    if (config.provider === "ollama") {
       // No API Key or Endpoint required
-    } else if ((config.provider === 'openai' || config.provider === 'anthropic') && !config.apiKey) {
+    } else if (
+      (config.provider === "openai" || config.provider === "anthropic") &&
+      !config.apiKey
+    ) {
       throw new Error("API Key is not set.");
-    } else if (config.provider === 'azure' && (!config.apiKey || !config.endpoint)) {
+    } else if (
+      config.provider === "azure" &&
+      (!config.apiKey || !config.endpoint)
+    ) {
       throw new Error("API Key or Endpoint is not set.");
     }
 
@@ -125,7 +134,7 @@ const ControllerModule = (function () {
           model: selectedModelKey,
           instructionLabel: instructionLabel,
         };
-      
+
         RenderingModule.renderConversation(currentState.conversation);
         MessageModule.saveConversation(
           currentState.currentChatId,
@@ -141,13 +150,16 @@ const ControllerModule = (function () {
             const title = await MessageModule.generateChatTitle(messageContent);
             ChatModule.updateChatTitle(chat.id, title);
           } catch (error) {
-            console.error("Error generating chat title:", error);
+            console.error(
+              TranslationModule.translate("errorGeneratingTitle"),
+              error
+            );
             ChatModule.updateChatTitle(chat.id, "Ny chat");
           }
           // Set isNewChat to false after title has been updated
           chat.isNewChat = false;
           ChatModule.saveChats();
-          
+
           // Render chat list after updating isNewChat
           RenderingModule.renderChatList(
             ChatModule.getCurrentState().chats,
@@ -160,7 +172,9 @@ const ControllerModule = (function () {
       currentState.conversation.pop();
       RenderingModule.renderConversation(currentState.conversation);
       // Show error message to the user
-      ModalModule.showCustomAlert(`Ett fel uppstod: ${error.message}`);
+      ModalModule.showCustomAlert(
+        `${TranslationModule.translate("errorSendingMessage")} ${error.message}`
+      );
       console.error("Error during sendMessage:", error);
     }
   }
