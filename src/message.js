@@ -3,9 +3,8 @@
  * Handles message creation, processing, and conversation management.
  */
 var MessageModule = (function() {
-    const models = ModelsModule.getModels(); // Retrieve models
-
     async function generateChatTitle(userMessage) {
+        const models = ModelsModule.getModels();
         const prompt = `Ge en kort (maximalt 5 ord) och beskrivande chattitel baserad på följande meddelande:\n"${userMessage}"`;
         const titleMessage = { role: "user", content: prompt };
         const config = ConfigModule.getConfig();

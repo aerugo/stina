@@ -3,12 +3,11 @@
  * Handles event listeners and event-related functions.
  */
 var EventModule = (function () {
-  // Module-level variables
-  const models = ModelsModule.getModels();
   let editInstructionBtn;
   let instructionsSelect;
 
   function updateModelAndInstructionSelectors() {
+    const models = ModelsModule.getModels();
     const modelSelect = document.getElementById("model-select");
     const instructionsSelect = document.getElementById("instructions-select");
 
@@ -32,6 +31,7 @@ var EventModule = (function () {
   }
 
   function updateInstructionsVisibility() {
+    const models = ModelsModule.getModels();
     const config = ConfigModule.getConfig();
     const currentModelKey = config.selectedModelKey || "gpt-4o";
     const selectedModelParams = models[currentModelKey];
