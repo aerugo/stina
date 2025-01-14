@@ -11,3 +11,5 @@ If the application uses any third-party libraries, they should be loaded with CD
 The application should be written in a functional style, with no global variables or side effects. The application should use pure functions and immutable data structures where possible.
 
 The application should be well-documented, with comments explaining the purpose of each function and module.
+
+All code and all comments should be in English. Only localization strings in translations.js should be in other languages.

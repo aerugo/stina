@@ -30,6 +30,7 @@ window.translationsData = {
     deleteConfirmation:
       'Are you sure you want to delete "{chatName}"? This action cannot be undone.',
     cannotDeleteLastChat: "You cannot delete the last remaining chat.",
+    errorSendingMessage: "Error sending message.",
     errorGeneratingTitle: "Error generating chat title:",
     chatNotFound: "Chat not found.",
     pleaseFillAllFields: "Please fill in all fields.",
@@ -73,6 +74,7 @@ window.translationsData = {
     deleteConfirmation:
       'Är du säker på att du vill ta bort "{chatName}"? Denna åtgärd kan inte ångras.',
     cannotDeleteLastChat: "Du kan inte ta bort den sista kvarvarande chatten.",
+    errorSendingMessage: "Fel vid sändning av meddelande.",
     errorGeneratingTitle: "Fel vid generering av chattitel:",
     chatNotFound: "Chatten hittades inte.",
     pleaseFillAllFields: "Vänligen fyll i alla fält.",

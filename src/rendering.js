@@ -27,7 +27,7 @@ var RenderingModule = (function () {
       if (message.isLoading) {
         messageElem.innerHTML = `
                     <progress class="progress is-small is-primary" max="100">
-                        Laddar...
+                        ${TranslationModule.translate("loading")}...
                     </progress>
                 `;
       } else {
@@ -70,7 +70,7 @@ var RenderingModule = (function () {
         copyButton.classList.add("button", "is-small", "copy-button");
         copyButton.innerHTML = `
                     <span class="icon is-small"><i class="fas fa-copy"></i></span>
-                    <span>Kopiera</span>
+                    <span>${TranslationModule.translate("copy")}</span>
                 `;
 
         // Add event listener to copy button
@@ -78,16 +78,18 @@ var RenderingModule = (function () {
           navigator.clipboard
             .writeText(message.content)
             .then(() => {
-              copyButton.innerHTML = "Kopierat!";
+              copyButton.innerHTML = TranslationModule.translate("copied");
               setTimeout(() => {
                 copyButton.innerHTML = `
                                 <span class="icon is-small"><i class="fas fa-copy"></i></span>
-                                <span>Kopiera</span>
+                                <span>${TranslationModule.translate(
+                                  "copy"
+                                )}</span>
                             `;
               }, 2000);
             })
             .catch((err) => {
-              console.error("Kunde inte kopiera: ", err);
+              console.error(TranslationModule.translate("copy_error"), err);
             });
         });
 

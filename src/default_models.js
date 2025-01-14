@@ -35,11 +35,11 @@ window.defaultModels = {
   // Anthropic
 
   "anthropic-claude-3": {
-    label: "Anthropic Claude 3",
-    deployment: "claude-3-opus-20240229",
+    label: "Anthropic Claude 3.5 Sonnet",
+    deployment: "claude-3-5-sonnet-latest",
     provider: "anthropic",
     context_length: 200000,
-    max_tokens: 4096,
+    max_tokens: 8192,
     temperature: 0.7,
     system: true,
   },

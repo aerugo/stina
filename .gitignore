@@ -2,3 +2,6 @@
 .env
 .DS_Store
 config.yaml
+instructions.js
+providers.js
+models.js
