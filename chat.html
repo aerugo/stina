@@ -193,8 +193,47 @@
     <!-- Include Translations -->
     <script src="src/translations.js"></script>
 
+    <!-- Include Default Models -->
+    <script src="src/default_models.js"></script>
+
+    <!-- Function to merge models -->
+    <script>
+      function mergeModels() {
+        const customModels = JSON.parse(localStorage.getItem("customModels")) || {};
+
+        // Combine all models
+        window.models = {
+          ...window.defaultModels,
+          ...window.additionalModels,
+          ...customModels
+        };
+
+        console.log("Efter sammanslagning - window.models:", window.models);
+
+        // Initialize app after models are merged
+        ControllerModule.initializeApp();
+      }
+    </script>
+
+    <!-- Dynamically load models.js and call mergeModels -->
+    <script>
+      (function() {
+        var script = document.createElement('script');
+        script.src = 'models.js';
+        script.onload = function() {
+          console.log('models.js har laddats.');
+          mergeModels();
+        };
+        script.onerror = function() {
+          console.warn('models.js kunde inte laddas, fortsätter utan ytterligare modeller.');
+          window.additionalModels = {};
+          mergeModels();
+        };
+        document.head.appendChild(script);
+      })();
+    </script>
+
     <!-- Application Modules -->
-    <script src="src/models.js"></script>
     <script src="src/storage.js"></script>
     <script src="src/config.js"></script>
     <script src="src/translation.js"></script>

@@ -4,7 +4,7 @@
  */
 var EventModule = (function () {
   // Module-level variables
-  const models = ModelsModule.getModels();
+  const models = window.models;
   let editInstructionBtn;
   let instructionsSelect;
 
