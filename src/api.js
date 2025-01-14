@@ -56,22 +56,6 @@ var ApiModule = (function() {
                 };
                 break;
 
-            case 'azure':
-                // Azure-specific endpoint and parameters
-                url = `${config.endpoint}/openai/deployments/${deploymentName}/chat/completions?api-version=${API_VERSION}`;
-                headers = {
-                    'Content-Type': 'application/json',
-                    'api-key': config.apiKey
-                };
-                body = {
-                    messages: messages.map(message => ({
-                        role: message.role,
-                        content: message.content
-                    })),
-                    ...validOptions
-                };
-                break;
-
             case 'anthropic':
                 // Use default endpoint if not provided
                 const anthropicEndpoint = config.endpoint || 'https://api.anthropic.com/v1/complete';

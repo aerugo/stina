@@ -6,6 +6,51 @@ var EventModule = (function () {
   let editInstructionBtn;
   let instructionsSelect;
 
+  // Function to populate model selector based on provider
+  function populateModelSelector(selectedProvider) {
+    const models = ModelsModule.getModels();
+    const modelSelect = document.getElementById("model-select");
+    const currentChat = ChatModule.getCurrentChat();
+    const config = ConfigModule.getConfig();
+
+    // Clear existing options
+    modelSelect.innerHTML = "";
+
+    // Filter models based on the selected provider
+    const filteredModels = Object.entries(models).filter(
+      ([_, model]) => model.provider === selectedProvider
+    );
+
+    // Check if there are models for the selected provider
+    if (filteredModels.length === 0) {
+      console.warn(`No models available for provider: ${selectedProvider}`);
+      return;
+    }
+
+    // Populate the model selector with filtered models
+    for (const [key, model] of filteredModels) {
+      const option = document.createElement("option");
+      option.value = key;
+      option.textContent = model.label;
+      modelSelect.appendChild(option);
+    }
+
+    // Set the selected model
+    const savedModelKey = currentChat?.selectedModelKey || config.selectedModelKey;
+
+    if (savedModelKey && models[savedModelKey]?.provider === selectedProvider) {
+      modelSelect.value = savedModelKey;
+    } else {
+      // Default to the first model for the selected provider
+      modelSelect.value = filteredModels[0][0];
+      ConfigModule.updateConfig({ selectedModelKey: filteredModels[0][0] });
+      if (currentChat) {
+        currentChat.selectedModelKey = filteredModels[0][0];
+        ChatModule.saveChats();
+      }
+    }
+  }
+
   function updateModelAndInstructionSelectors() {
     const models = ModelsModule.getModels();
     const modelSelect = document.getElementById("model-select");
@@ -73,50 +118,6 @@ var EventModule = (function () {
     const chatListContainer = document.getElementById("chat-list");
     editInstructionBtn = document.getElementById("edit-instruction-btn");
 
-    // Add populateModelSelector function
-    function populateModelSelector(selectedProvider) {
-      const models = ModelsModule.getModels();
-      const modelSelect = document.getElementById("model-select");
-      const currentChat = ChatModule.getCurrentChat();
-      const config = ConfigModule.getConfig();
-
-      // Clear existing options
-      modelSelect.innerHTML = "";
-
-      // Filter models based on the selected provider
-      const filteredModels = Object.entries(models).filter(
-        ([_, model]) => model.provider === selectedProvider
-      );
-
-      // Check if there are models for the selected provider
-      if (filteredModels.length === 0) {
-        console.warn(`No models available for provider: ${selectedProvider}`);
-        return;
-      }
-
-      // Populate the model selector with filtered models
-      for (const [key, model] of filteredModels) {
-        const option = document.createElement("option");
-        option.value = key;
-        option.textContent = model.label;
-        modelSelect.appendChild(option);
-      }
-
-      // Set the selected model
-      const savedModelKey = currentChat?.selectedModelKey || config.selectedModelKey;
-
-      if (savedModelKey && models[savedModelKey]?.provider === selectedProvider) {
-        modelSelect.value = savedModelKey;
-      } else {
-        // Default to the first model for the selected provider
-        modelSelect.value = filteredModels[0][0];
-        ConfigModule.updateConfig({ selectedModelKey: filteredModels[0][0] });
-        if (currentChat) {
-          currentChat.selectedModelKey = filteredModels[0][0];
-          ChatModule.saveChats();
-        }
-      }
-    }
 
     // Setup basic event listeners
     newChatBtn.addEventListener("click", function () {
