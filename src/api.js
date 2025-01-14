@@ -40,14 +40,30 @@ var ApiModule = (function() {
                 break;
 
             case 'openai':
-                // Always use the OpenAI API endpoint
+                // Use default OpenAI API endpoint
                 url = 'https://api.openai.com/v1/chat/completions';
                 headers = {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${config.apiKey}`
                 };
                 body = {
-                    model: deploymentName,
+                    model: deploymentName, // Use the model name as per OpenAI API
+                    messages: messages.map(message => ({
+                        role: message.role,
+                        content: message.content
+                    })),
+                    ...validOptions
+                };
+                break;
+
+            case 'azure':
+                // Azure-specific endpoint and parameters
+                url = `${config.endpoint}/openai/deployments/${deploymentName}/chat/completions?api-version=${API_VERSION}`;
+                headers = {
+                    'Content-Type': 'application/json',
+                    'api-key': config.apiKey
+                };
+                body = {
                     messages: messages.map(message => ({
                         role: message.role,
                         content: message.content

@@ -456,14 +456,9 @@ var EventModule = (function () {
       ? "light-mode" 
       : "dark-mode";
 
-    // For Ollama, set default endpoint if not provided
-    if (selectedProvider === 'ollama' && !endpoint) {
-      endpoint = 'http://localhost:11434';
-    }
-
     // Adjust validation based on provider
     if (selectedProvider === 'ollama') {
-      // No API Key or Endpoint required
+      // No API Key or Endpoint required for Ollama
       endpoint = ''; // Clear endpoint
     } else if ((selectedProvider === 'openai' || selectedProvider === 'anthropic') && !apiKey) {
       ModalModule.showCustomAlert(TranslationModule.translate('pleaseFillRequiredFields'));
@@ -473,9 +468,9 @@ var EventModule = (function () {
       return;
     }
 
-    // Do not save endpoint for OpenAI and Anthropic
-    if (selectedProvider === 'openai' || selectedProvider === 'anthropic') {
-      endpoint = ''; // Clear endpoint
+    // For OpenAI, clear endpoint to use default
+    if (selectedProvider === 'openai') {
+      endpoint = ''; // Clear endpoint to use default OpenAI API endpoint
     }
 
     ConfigModule.updateConfig({

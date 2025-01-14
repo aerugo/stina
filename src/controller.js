@@ -36,17 +36,13 @@ const ControllerModule = (function () {
   async function sendMessage(messageContent) {
     const config = ConfigModule.getConfig();
 
-    if (config.provider === 'ollama' && (!config.endpoint || config.endpoint.trim() === '')) {
-      config.endpoint = 'http://localhost:11434';
-    }
-
     // Adjust validation based on provider
     if (config.provider === 'ollama') {
       // No API Key or Endpoint required
     } else if ((config.provider === 'openai' || config.provider === 'anthropic') && !config.apiKey) {
-      throw new Error("Configuration not set");
+      throw new Error("API Key is not set.");
     } else if (config.provider === 'azure' && (!config.apiKey || !config.endpoint)) {
-      throw new Error("Configuration not set");
+      throw new Error("API Key or Endpoint is not set.");
     }
 
     const currentState = ChatModule.getCurrentState();
