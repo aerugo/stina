@@ -25,9 +25,22 @@ var TranslationModule = (function() {
     return translations[currentLanguage]?.[key] || key;
   }
 
+  function applyTranslations() {
+    document.querySelectorAll('[data-translation-key]').forEach(elem => {
+      const key = elem.getAttribute('data-translation-key');
+      const textElem = elem.querySelector('span:not(.icon)');
+      if (textElem) {
+        textElem.innerText = translate(key);
+      } else {
+        elem.innerText = translate(key);
+      }
+    });
+  }
+
   return {
     initialize,
     setLanguage,
     translate,
+    applyTranslations,
   };
 })();

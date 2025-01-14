@@ -14,7 +14,16 @@ const ControllerModule = (function () {
     });
   }
 
-  function initializeApp() {
+  async function initializeApp() {
+    await ConfigModule.initialize();
+    await TranslationModule.initialize();
+
+    // Set language for TranslationModule
+    TranslationModule.setLanguage(ConfigModule.getConfig().language);
+
+    // Apply translations to UI
+    TranslationModule.applyTranslations();
+
     cleanUpLocalStorage(); // Clean up invalid localStorage entries
     const state = ChatModule.initialize();
     RenderingModule.renderChatList(state.chats, state.currentChatId);

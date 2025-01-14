@@ -13,6 +13,7 @@ en:
   swedish: "Swedish"
   settingsSaved: "Settings have been saved."
   pleaseSetConfiguration: "Please set your configuration in the settings before sending messages."
+  pleaseFillRequiredFields: "Please fill in all required fields."
 
 sv:
   newChat: "Ny chat"
@@ -29,3 +30,4 @@ sv:
   swedish: "Svenska"
   settingsSaved: "Inställningarna har sparats."
   pleaseSetConfiguration: "Vänligen ställ in din konfiguration i inställningarna innan du skickar meddelanden."
+  pleaseFillRequiredFields: "Vänligen fyll i alla obligatoriska fält."

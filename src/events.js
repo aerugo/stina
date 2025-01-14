@@ -337,6 +337,17 @@ var EventModule = (function () {
           />
         </div>
       </div>
+      <div class="field">
+        <label class="label">${TranslationModule.translate('language')}</label>
+        <div class="control">
+          <div class="select">
+            <select id="language-select">
+              <option value="en">${TranslationModule.translate('english')}</option>
+              <option value="sv">${TranslationModule.translate('swedish')}</option>
+            </select>
+          </div>
+        </div>
+      </div>
     `;
 
     const buttons = [
@@ -359,15 +370,13 @@ var EventModule = (function () {
   function saveSettings() {
     const endpoint = document.getElementById("endpoint").value.trim();
     const apiKey = document.getElementById("api-key").value.trim();
-    const titleDeployment = document
-      .getElementById("title-deployment")
-      .value.trim();
+    const selectedLanguage = document.getElementById('language-select').value;
     const theme = document.body.classList.contains("light-mode")
       ? "light-mode"
       : "dark-mode";
 
     if (!endpoint || !apiKey) {
-      ModalModule.showCustomAlert("Please fill in all required fields.");
+      ModalModule.showCustomAlert(TranslationModule.translate('pleaseFillRequiredFields'));
       return;
     }
 
@@ -375,10 +384,13 @@ var EventModule = (function () {
       endpoint,
       apiKey,
       theme,
-      titleDeployment,
+      language: selectedLanguage,
     });
 
-    ModalModule.showCustomAlert("Inställningarna har sparats.");
+    TranslationModule.setLanguage(selectedLanguage);
+    TranslationModule.applyTranslations();
+
+    ModalModule.showCustomAlert(TranslationModule.translate('settingsSaved'));
   }
 
   return {
