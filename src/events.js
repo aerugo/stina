@@ -274,13 +274,26 @@ var EventModule = (function () {
     const config = ConfigModule.getConfig();
     // Adjust validation based on provider
     if (config.provider === 'ollama') {
-      // No API Key or Endpoint required
-    } else if ((config.provider === 'openai' || config.provider === 'anthropic') && !config.apiKey) {
-      ModalModule.showCustomAlert(
-        TranslationModule.translate('pleaseSetConfiguration')
-      );
-      return;
-    } else if (!config.apiKey || !config.endpoint) {
+      // No API Key or Endpoint required for Ollama
+    } else if (config.provider === 'openai' || config.provider === 'anthropic') {
+      // Only API Key is required for OpenAI and Anthropic
+      if (!config.apiKey) {
+        ModalModule.showCustomAlert(
+          TranslationModule.translate('pleaseSetConfiguration')
+        );
+        return;
+      }
+      // Endpoint is not required; proceed without checking it
+    } else if (config.provider === 'azure') {
+      // Both API Key and Endpoint are required for Azure
+      if (!config.apiKey || !config.endpoint) {
+        ModalModule.showCustomAlert(
+          TranslationModule.translate('pleaseSetConfiguration')
+        );
+        return;
+      }
+    } else {
+      // Handle other providers or unknown provider
       ModalModule.showCustomAlert(
         TranslationModule.translate('pleaseSetConfiguration')
       );
