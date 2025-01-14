@@ -361,8 +361,8 @@ var EventModule = (function () {
         <div class="control">
           <div class="select">
             <select id="language-select">
-              <option value="en">${TranslationModule.translate('english')}</option>
-              <option value="sv">${TranslationModule.translate('swedish')}</option>
+              <option value="en"${config.language === 'en' ? ' selected' : ''}>${TranslationModule.translate('english')}</option>
+              <option value="sv"${config.language === 'sv' ? ' selected' : ''}>${TranslationModule.translate('swedish')}</option>
             </select>
           </div>
         </div>
