@@ -272,9 +272,17 @@ var EventModule = (function () {
     if (messageContent === "") return;
 
     const config = ConfigModule.getConfig();
-    if (config.provider !== 'ollama' && (!config.endpoint || !config.apiKey)) {
+    // Adjust validation based on provider
+    if (config.provider === 'ollama') {
+      // No API Key or Endpoint required
+    } else if ((config.provider === 'openai' || config.provider === 'anthropic') && !config.apiKey) {
       ModalModule.showCustomAlert(
-        "Please set your configuration in the settings before sending messages."
+        TranslationModule.translate('pleaseSetConfiguration')
+      );
+      return;
+    } else if (!config.apiKey || !config.endpoint) {
+      ModalModule.showCustomAlert(
+        TranslationModule.translate('pleaseSetConfiguration')
       );
       return;
     }
