@@ -1,4 +1,5 @@
 window.defaultModels = {
+  // Azure OpenAI
   "gpt-4o": {
     label: "GPT-4o standard",
     deployment: "gpt-4o-3",
@@ -10,33 +11,41 @@ window.defaultModels = {
     presence_penalty: 0,
     system: true,
   },
-  "anthropic-claude-sonnet": {
-    label: "Anthropic Claude Sonnet",
-    deployment: "claude-3-sonnet-20240229",
-    provider: "anthropic",
-    context_length: 200000,
-    max_tokens: 4096,
-    temperature: 0.7,
-    system: false, // Anthropic models do not use system prompts
-  },
+
+  // OpenAI
+
   "openai-gpt-4o": {
     label: "OpenAI GPT-4o",
     deployment: "gpt-4o",
     provider: "openai",
     context_length: 100000,
     max_tokens: 8192,
-    temperature: 0.7,
+    temperature: 0.9,
     system: true,
   },
-  "anthropic-claude": {
-    label: "Anthropic Claude",
-    deployment: "claude-v1",
-    provider: "anthropic",
-    context_length: 100000,
-    max_tokens: 4000,
-    temperature: 0.7,
+
+  o1: {
+    label: "O1",
+    deployment: "o1",
+    provider: "azure",
+    context_length: 120000,
     system: false,
   },
+
+  // Anthropic
+
+  "anthropic-claude-sonnet": {
+    label: "Anthropic Claude Sonnet",
+    deployment: "claude-3-5-sonnet-latest",
+    provider: "anthropic",
+    context_length: 200000,
+    max_tokens: 8192,
+    temperature: 0.9,
+    system: false,
+  },
+
+  // Ollama
+
   "ollama-llama2": {
     label: "Llama 2 (Ollama)",
     deployment: "llama2",
@@ -45,12 +54,5 @@ window.defaultModels = {
     max_tokens: 2048,
     temperature: 0.7,
     system: true,
-  },
-  o1: {
-    label: "O1",
-    deployment: "o1",
-    provider: "azure",
-    context_length: 120000,
-    system: false,
   },
 };
