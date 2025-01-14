@@ -57,22 +57,20 @@ var ApiModule = (function() {
                 break;
 
             case 'anthropic':
-                // Use default endpoint if not provided
-                const anthropicEndpoint = config.endpoint || 'https://api.anthropic.com/v1/messages';
-                url = anthropicEndpoint;
+                // Use default endpoint
+                url = 'https://api.anthropic.com/v1/complete';
                 headers = {
                     'Content-Type': 'application/json',
                     'x-api-key': config.apiKey,
-                    'anthropic-version': '2023-06-01'
+                    'anthropic-version': '2023-06-01',
+                    // Add the new header to enable CORS support
+                    'anthropic-dangerous-direct-browser-access': 'true'
                 };
                 body = {
+                    prompt: generateAnthropicPrompt(messages),
                     model: deploymentName,
-                    max_tokens: validOptions.max_tokens || 1024,
-                    temperature: validOptions.temperature || 0.7,
-                    messages: messages.map(message => ({
-                        role: message.role,
-                        content: message.content,
-                    }))
+                    max_tokens_to_sample: validOptions.max_tokens || 1024,
+                    temperature: validOptions.temperature || 0.7
                 };
                 break;
 
@@ -128,6 +126,20 @@ var ApiModule = (function() {
         return parsedResult;
     }
 
+    // Helper function to format messages for Anthropic API
+    function generateAnthropicPrompt(messages) {
+        let prompt = '';
+        messages.forEach(message => {
+            if (message.role === 'user') {
+                prompt += `\n\nHuman: ${message.content}`;
+            } else if (message.role === 'assistant') {
+                prompt += `\n\nAssistant: ${message.content}`;
+            }
+        });
+        prompt += `\n\nAssistant:`;
+        return prompt.trim();
+    }
+
     function parseApiResponse(data) {
         const config = ConfigModule.getConfig();
         
@@ -142,7 +154,7 @@ var ApiModule = (function() {
                 error: false,
                 message: {
                     role: 'assistant',
-                    content: data.content[0].text
+                    content: data.completion.trim()
                 }
             };
         }

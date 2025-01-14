@@ -12,12 +12,12 @@ window.defaultModels = {
   },
   "anthropic-claude-sonnet": {
     label: "Anthropic Claude Sonnet",
-    deployment: "claude-3-5-sonnet-20241022",
+    deployment: "claude-3-sonnet-20240229",
     provider: "anthropic",
-    context_length: 100000,
-    max_tokens: 1024,
+    context_length: 200000,
+    max_tokens: 4096,
     temperature: 0.7,
-    system: false,
+    system: false, // Anthropic models do not use system prompts
   },
   "openai-gpt-4o": {
     label: "OpenAI GPT-4o",
