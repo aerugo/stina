@@ -10,21 +10,12 @@ window.defaultModels = {
     presence_penalty: 0,
     system: true,
   },
-  "openai-gpt-3.5": {
-    label: "OpenAI GPT-3.5 Turbo",
-    deployment: "gpt-3.5-turbo", // Correct OpenAI model name
+  "openai-gpt-4o": {
+    label: "OpenAI GPT-4o",
+    deployment: "gpt-4o",
     provider: "openai",
-    context_length: 4096,
-    max_tokens: 2048,
-    temperature: 0.7,
-    system: true,
-  },
-  "openai-gpt-4": {
-    label: "OpenAI GPT-4",
-    deployment: "gpt-4", // Correct OpenAI model name
-    provider: "openai",
-    context_length: 8192,
-    max_tokens: 4096,
+    context_length: 100000,
+    max_tokens: 8192,
     temperature: 0.7,
     system: true,
   },
