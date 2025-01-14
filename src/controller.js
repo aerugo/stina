@@ -73,6 +73,7 @@ const ControllerModule = (function () {
     // Start with a copy of the conversation WITHOUT the loading message
     let conversationToSend = [...currentState.conversation];
     let instructionLabel = "";
+    let systemMessageContent = ""; // Initialize systemMessageContent
 
     // Handle system message if the model supports it
     if (selectedModelParams && selectedModelParams.system) {
@@ -93,7 +94,6 @@ const ControllerModule = (function () {
       }
 
       instructionLabel = instruction.label;
-      let systemMessageContent = "";
 
       // Handle system message based on provider
       if (selectedModelParams && selectedModelParams.system) {
