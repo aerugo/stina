@@ -409,18 +409,28 @@ var EventModule = (function () {
       const endpointField = document.getElementById('endpoint');
 
       function updateFields() {
+        const endpointFieldContainer = endpointField.closest('.field');
+        
         if (providerSelect.value === 'ollama') {
+          // Hide Endpoint field for Ollama
+          endpointFieldContainer.style.display = 'none';
           // Disable API Key field for Ollama
           apiKeyField.disabled = true;
           apiKeyField.placeholder = 'Not required for Ollama';
           apiKeyField.value = ''; // Clear value
-
-          // Set default endpoint placeholder
-          endpointField.placeholder = 'Default: http://localhost:11434';
-        } else {
+        } else if (providerSelect.value === 'openai' || providerSelect.value === 'anthropic') {
+          // Hide Endpoint field for OpenAI and Anthropic
+          endpointFieldContainer.style.display = 'none';
+          // Enable API Key field
           apiKeyField.disabled = false;
           apiKeyField.placeholder = 'YOUR_API_KEY';
+        } else {
+          // Show Endpoint field for other providers
+          endpointFieldContainer.style.display = 'block';
           endpointField.placeholder = 'https://YOUR_RESOURCE_NAME.openai.azure.com';
+          // Enable API Key field
+          apiKeyField.disabled = false;
+          apiKeyField.placeholder = 'YOUR_API_KEY';
         }
       }
 
@@ -443,8 +453,13 @@ var EventModule = (function () {
       endpoint = 'http://localhost:11434';
     }
 
-    // Adjust validation: Skip API Key (and Endpoint) checks for Ollama  
-    if (selectedProvider !== 'ollama' && (!endpoint || !apiKey)) {
+    // Adjust validation based on provider
+    if (selectedProvider === 'ollama') {
+      // Endpoint and API Key are not required for Ollama
+    } else if ((selectedProvider === 'openai' || selectedProvider === 'anthropic') && !apiKey) {
+      ModalModule.showCustomAlert(TranslationModule.translate('pleaseFillRequiredFields'));
+      return;
+    } else if (!apiKey || !endpoint) {
       ModalModule.showCustomAlert(TranslationModule.translate('pleaseFillRequiredFields'));
       return;
     }

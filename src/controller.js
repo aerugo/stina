@@ -40,8 +40,12 @@ const ControllerModule = (function () {
       config.endpoint = 'http://localhost:11434';
     }
 
-    // Adjust validation: Skip API Key and Endpoint checks for Ollama
-    if (config.provider !== 'ollama' && (!config.endpoint || !config.apiKey)) {
+    // Adjust validation based on provider
+    if (config.provider === 'ollama') {
+      // No API Key or Endpoint required
+    } else if ((config.provider === 'openai' || config.provider === 'anthropic') && !config.apiKey) {
+      throw new Error("Configuration not set");
+    } else if (!config.apiKey || !config.endpoint) {
       throw new Error("Configuration not set");
     }
 

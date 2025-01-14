@@ -40,7 +40,9 @@ var ApiModule = (function() {
                 break;
 
             case 'openai':
-                url = 'https://api.openai.com/v1/chat/completions';
+                // Use default endpoint if not provided
+                const openaiEndpoint = config.endpoint || 'https://api.openai.com/v1/chat/completions';
+                url = openaiEndpoint;
                 headers = {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${config.apiKey}`
@@ -56,7 +58,9 @@ var ApiModule = (function() {
                 break;
 
             case 'anthropic':
-                url = 'https://api.anthropic.com/v1/complete';
+                // Use default endpoint if not provided
+                const anthropicEndpoint = config.endpoint || 'https://api.anthropic.com/v1/complete';
+                url = anthropicEndpoint;
                 headers = {
                     'Content-Type': 'application/json',
                     'x-api-key': config.apiKey
