@@ -57,6 +57,7 @@ var EventModule = (function () {
   }
 
   function setupEventListeners() {
+    const models = ModelsModule.getModels();
     // Add mobile menu toggle
     const navbarBurger = document.querySelector(".navbar-burger");
     navbarBurger.addEventListener("click", () => {
