@@ -208,8 +208,6 @@
           ...customModels
         };
 
-        console.log("Efter sammanslagning - window.models:", window.models);
-
         // Initialize app after models are merged
         ControllerModule.initializeApp();
       }
@@ -221,11 +219,11 @@
         var script = document.createElement('script');
         script.src = 'models.js';
         script.onload = function() {
-          console.log('models.js har laddats.');
+          console.log('models.js loaded.');
           mergeModels();
         };
         script.onerror = function() {
-          console.warn('models.js kunde inte laddas, fortsätter utan ytterligare modeller.');
+          console.warn('models.js not found, continuing without user definied models.');
           window.additionalModels = {};
           mergeModels();
         };
