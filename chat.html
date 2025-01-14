@@ -133,26 +133,42 @@
     <script src="src/default_instructions.js"></script>
 
     <!-- Optionally Include Additional Instructions -->
-    <script src="instructions.js"></script>
+    <script>
+      // Function to dynamically load instructions.js if it exists
+      (function() {
+        var script = document.createElement('script');
+        script.src = 'instructions.js';
+        script.onload = function() {
+          console.log('instructions.js has been loaded.');
+        };
+        script.onerror = function() {
+          console.warn('instructions.js could not be loaded, continuing without additional instructions.');
+        };
+        document.head.appendChild(script);
+      })();
+    </script>
 
     <!-- Merge Instructions -->
     <script>
-      // Get customInstructions from localStorage
-      const customInstructions = JSON.parse(localStorage.getItem("customInstructions")) || [];
+      // Wait until document is ready to ensure all scripts are loaded
+      document.addEventListener('DOMContentLoaded', function() {
+        // Get customInstructions from localStorage
+        const customInstructions = JSON.parse(localStorage.getItem("customInstructions")) || [];
 
-      // Log values for debugging
-      console.log("Before merging:");
-      console.log("defaultInstructions:", window.defaultInstructions);
-      console.log("additionalInstructions:", window.additionalInstructions);
-      console.log("customInstructions:", customInstructions);
+        // Log values for debugging
+        console.log("Before merging:");
+        console.log("defaultInstructions:", window.defaultInstructions);
+        console.log("additionalInstructions:", window.additionalInstructions);
+        console.log("customInstructions:", customInstructions);
 
-      // Combine all instructions
-      window.instructions = (window.defaultInstructions || [])
-        .concat(window.additionalInstructions || [])
-        .concat(customInstructions);
+        // Combine all instructions
+        window.instructions = (window.defaultInstructions || [])
+          .concat(window.additionalInstructions || [])
+          .concat(customInstructions);
 
-      // Log merged result
-      console.log("After merging - window.instructions:", window.instructions);
+        // Log merged result
+        console.log("After merging - window.instructions:", window.instructions);
+      });
     </script>
 
     <!-- Include Translations -->
