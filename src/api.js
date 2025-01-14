@@ -84,7 +84,7 @@ var ApiModule = (function() {
                             role: message.role,
                             content: message.content,
                         })),
-                        max_tokens: validOptions.max_tokens || 1024,
+                        max_tokens_to_sample: validOptions.max_tokens || 1024,
                         temperature: validOptions.temperature || 0.7,
                     };
                     
