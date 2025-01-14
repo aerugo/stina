@@ -121,6 +121,13 @@ const ControllerModule = (function () {
           model: selectedModelKey,
           instructionLabel: instructionLabel,
         };
+      
+        // Unset isNewChat flag since the chat now has messages
+        const currentChat = ChatModule.getCurrentChat();
+        if (currentChat) {
+          currentChat.isNewChat = false;
+          ChatModule.saveChats();
+        }
         RenderingModule.renderConversation(currentState.conversation);
         MessageModule.saveConversation(
           currentState.currentChatId,
@@ -131,7 +138,7 @@ const ControllerModule = (function () {
         ChatModule.updateChatLastUpdated(currentState.currentChatId);
 
         const chat = ChatModule.getCurrentChat();
-        if (chat.name === "Ny chat") {
+        if (chat.isNewChat) {
           try {
             const title = await MessageModule.generateChatTitle(messageContent);
             ChatModule.updateChatTitle(chat.id, title);

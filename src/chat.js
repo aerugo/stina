@@ -11,9 +11,9 @@ var ChatModule = (function () {
   function createNewChat() {
     const models = ModelsModule.getModels();
 
-    // Check for existing empty "New chat"s
+    // Check for existing empty new chats
     const emptyNewChats = chats.filter(
-      (chat) => chat.name === "Ny chat" && chat.conversation.length === 0
+      (chat) => chat.isNewChat && chat.conversation.length === 0
     );
     if (emptyNewChats.length > 0) {
       // Find the most recently updated empty "New chat"
@@ -50,11 +50,12 @@ var ChatModule = (function () {
     const chatId = Date.now().toString();
     const chat = {
       id: chatId,
-      name: "Ny chat",
+      name: TranslationModule.translate('newChat'),
       conversation: [],
       selectedModelKey: selectedModelKey,
       selectedInstructionId: selectedInstructionId,
       lastUpdated: Date.now(),
+      isNewChat: true,
     };
     chats.push(chat);
     currentChatId = chatId;
@@ -133,8 +134,13 @@ var ChatModule = (function () {
   function updateChatTitle(chatId, newTitle) {
     const chat = chats.find((c) => c.id === chatId);
     if (chat) {
-      chat.name = newTitle || "Ny chat";
+      const defaultTitle = TranslationModule.translate('newChat');
+      chat.name = newTitle || defaultTitle;
       chat.lastUpdated = Date.now();
+      // Unset isNewChat flag if the title is different from the default
+      if (chat.name !== defaultTitle) {
+        chat.isNewChat = false;
+      }
       saveChats();
     }
   }
@@ -148,12 +154,12 @@ var ChatModule = (function () {
   }
 
   function getCurrentState() {
-    // Sort chats to ensure empty "New chat" is at top, then by lastUpdated
+    // Sort chats to ensure empty new chats are at top, then by lastUpdated
     chats.sort((a, b) => {
-      // If 'a' is the empty "Ny chat", place it at the top
-      if (a.name === "Ny chat" && a.conversation.length === 0) return -1;
-      // If 'b' is the empty "Ny chat", place 'a' after 'b'
-      if (b.name === "Ny chat" && b.conversation.length === 0) return 1;
+      // If 'a' is an empty new chat, place it at the top
+      if (a.isNewChat && a.conversation.length === 0) return -1;
+      // If 'b' is an empty new chat, place 'a' after 'b'
+      if (b.isNewChat && b.conversation.length === 0) return 1;
       // Otherwise, sort by 'lastUpdated' descending
       return b.lastUpdated - a.lastUpdated;
     });
