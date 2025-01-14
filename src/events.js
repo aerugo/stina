@@ -128,8 +128,6 @@ var EventModule = (function () {
 
     function populateInstructions() {
       instructionsSelect.innerHTML = "";
-      const customInstructions =
-        JSON.parse(localStorage.getItem("customInstructions")) || [];
       const currentChat = ChatModule.getCurrentChat();
       const config = ConfigModule.getConfig();
       const selectedInstructionId =
@@ -137,17 +135,15 @@ var EventModule = (function () {
         config.selectedInstructionId ||
         instructions[0].id;
 
-      instructions.forEach((instruction) => {
+      // Loop through all instructions in window.instructions and add them to select element
+      window.instructions.forEach((instruction) => {
         const option = document.createElement("option");
         option.value = instruction.id;
         option.textContent = instruction.label;
         instructionsSelect.appendChild(option);
       });
 
-      customInstructions.forEach((instruction) => {
-        addInstructionOption(instruction);
-      });
-
+      // Add option for creating new instruction
       const customOption = document.createElement("option");
       customOption.value = "custom";
       customOption.textContent = "Skapa ny instruktion...";
@@ -166,11 +162,11 @@ var EventModule = (function () {
     // Add click event listener to the "Edit" button
     editInstructionBtn.addEventListener("click", function () {
       const selectedInstructionId = instructionsSelect.value;
-      const customInstructions =
-        JSON.parse(localStorage.getItem("customInstructions")) || [];
-      let instruction = customInstructions.find(
+      let customInstructions = JSON.parse(localStorage.getItem("customInstructions")) || [];
+      let instructionIndex = customInstructions.findIndex(
         (instr) => instr.id === selectedInstructionId
       );
+      let instruction = customInstructions[instructionIndex];
 
       if (instruction) {
         ModalModule.showEditInstructionModal(
@@ -181,10 +177,19 @@ var EventModule = (function () {
             if (result && result.label && result.content) {
               instruction.label = result.label;
               instruction.content = result.content;
-              localStorage.setItem(
-                "customInstructions",
-                JSON.stringify(customInstructions)
+              // Update customInstructions in localStorage
+              customInstructions[instructionIndex] = instruction;
+              localStorage.setItem("customInstructions", JSON.stringify(customInstructions));
+
+              // Update window.instructions
+              let instructionIndexInWindow = window.instructions.findIndex(
+                (instr) => instr.id === selectedInstructionId
               );
+              if (instructionIndexInWindow !== -1) {
+                window.instructions[instructionIndexInWindow] = instruction;
+              }
+
+              // Update instructions in select element
               populateInstructions();
               instructionsSelect.value = instruction.id;
               updateEditButtonVisibility();
@@ -217,16 +222,21 @@ var EventModule = (function () {
                 label: result.label,
                 content: result.content,
               };
-              saveCustomInstruction(newInstruction);
-              addInstructionOption(newInstruction);
+
+              // Get existing customInstructions
+              const customInstructions = JSON.parse(localStorage.getItem("customInstructions")) || [];
+              customInstructions.push(newInstruction);
+              localStorage.setItem("customInstructions", JSON.stringify(customInstructions));
+
+              // Update window.instructions
+              window.instructions.push(newInstruction);
+
+              // Update instructions in select element
+              populateInstructions();
               instructionsSelect.value = newInstruction.id;
-              localStorage.setItem("selectedInstructionId", newInstruction.id);
-              updateEditButtonVisibility();
+              ConfigModule.updateConfig({ selectedInstructionId: newInstruction.id });
             } else {
-              instructionsSelect.value = localStorage.getItem(
-                "selectedInstructionId"
-              );
-              updateEditButtonVisibility();
+              instructionsSelect.value = ConfigModule.getConfig().selectedInstructionId;
             }
           }
         );
