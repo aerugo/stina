@@ -16,6 +16,9 @@ var ConfigModule = (function() {
         // Load stored provider or use default
         const storedProvider = StorageModule.loadData('provider');
         config.provider = storedProvider || defaultConfig.provider || 'azure';
+
+        // Initialize provider configurations
+        config.providerConfigs = window.providerConfigs || {};
     }
 
     /**
@@ -39,10 +42,13 @@ var ConfigModule = (function() {
      * @returns {Object} The current configuration settings.
      */
     function getConfig() {
+        const storedProvider = StorageModule.loadData('provider') || config.provider || 'azure';
+        const providerConfig = config.providerConfigs[storedProvider] || {};
+        
         return {
             ...config,
-            endpoint: StorageModule.loadData('endpoint') || '',
-            apiKey: StorageModule.loadData('apiKey') || '',
+            endpoint: providerConfig.endpoint || StorageModule.loadData('endpoint') || '',
+            apiKey: providerConfig.apiKey || StorageModule.loadData('apiKey') || '',
             theme: StorageModule.loadData('theme') || 'light-mode',
             selectedModelKey: StorageModule.loadData('selectedModelKey') || 'gpt-4o',
             selectedInstructionId: StorageModule.loadData('selectedInstructionId') || instructions[0].id,
@@ -50,7 +56,8 @@ var ConfigModule = (function() {
             lastUsedInstructionId: StorageModule.loadData('selectedInstructionId') || instructions[0].id,
             titleDeployment: StorageModule.loadData('titleDeployment') || '',
             language: StorageModule.loadData('language') || config.defaultLanguage || 'en',
-            provider: StorageModule.loadData('provider') || config.provider || 'azure'
+            provider: storedProvider,
+            providerConfigs: config.providerConfigs
         };
     }
 

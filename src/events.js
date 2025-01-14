@@ -473,15 +473,42 @@ var EventModule = (function () {
 
       function updateFields() {
         const endpointFieldContainer = endpointField.closest('.field');
-        
-        if (providerSelect.value === 'ollama') {
+        const selectedProvider = providerSelect.value;
+        const isProviderConfigured = config.providerConfigs.hasOwnProperty(selectedProvider);
+        const providerConfig = config.providerConfigs[selectedProvider] || {};
+
+        if (isProviderConfigured) {
+          // Provider is pre-configured
+          apiKeyField.disabled = true;
+          apiKeyField.value = providerConfig.apiKey || '';
+          apiKeyField.placeholder = 'Pre-configured';
+
+          if (providerConfig.endpoint) {
+            endpointField.disabled = true;
+            endpointField.value = providerConfig.endpoint;
+            endpointField.placeholder = 'Pre-configured';
+            endpointFieldContainer.style.display = 'block';
+          } else {
+            endpointFieldContainer.style.display = 'none';
+          }
+
+          // Add message about pre-configured settings if not already present
+          const existingMessage = document.querySelector('.pre-configured-message');
+          if (!existingMessage) {
+            const messageElem = document.createElement('p');
+            messageElem.className = 'pre-configured-message';
+            messageElem.textContent = 'Some settings are pre-configured and cannot be edited.';
+            messageElem.style.color = '#888';
+            endpointFieldContainer.parentNode.insertBefore(messageElem, endpointFieldContainer);
+          }
+        } else if (selectedProvider === 'ollama') {
           // Hide Endpoint field for Ollama
           endpointFieldContainer.style.display = 'none';
           // Disable API Key field for Ollama
           apiKeyField.disabled = true;
           apiKeyField.placeholder = 'Not required for Ollama';
           apiKeyField.value = ''; // Clear value
-        } else if (providerSelect.value === 'openai' || providerSelect.value === 'anthropic') {
+        } else if (selectedProvider === 'openai' || selectedProvider === 'anthropic') {
           // Hide Endpoint field for OpenAI and Anthropic
           endpointFieldContainer.style.display = 'none';
           // Enable API Key field
@@ -507,6 +534,9 @@ var EventModule = (function () {
 
   function saveSettings() {
     const selectedProvider = document.getElementById('provider-select').value;
+    const config = ConfigModule.getConfig();
+    const isProviderConfigured = config.providerConfigs.hasOwnProperty(selectedProvider);
+    
     let endpoint = document.getElementById("endpoint").value.trim();
     const apiKey = document.getElementById("api-key").value.trim();
     const selectedLanguage = document.getElementById('language-select').value;
@@ -531,9 +561,16 @@ var EventModule = (function () {
       endpoint = ''; // Clear endpoint to use default OpenAI API endpoint
     }
 
+    // Only save endpoint and apiKey if provider is not pre-configured
+    if (!isProviderConfigured) {
+      ConfigModule.updateConfig({
+        endpoint,
+        apiKey,
+      });
+    }
+
+    // Always save these settings
     ConfigModule.updateConfig({
-      endpoint,
-      apiKey,
       theme,
       language: selectedLanguage,
       provider: selectedProvider,
