@@ -122,12 +122,6 @@ const ControllerModule = (function () {
           instructionLabel: instructionLabel,
         };
       
-        // Unset isNewChat flag since the chat now has messages
-        const currentChat = ChatModule.getCurrentChat();
-        if (currentChat) {
-          currentChat.isNewChat = false;
-          ChatModule.saveChats();
-        }
         RenderingModule.renderConversation(currentState.conversation);
         MessageModule.saveConversation(
           currentState.currentChatId,
@@ -142,18 +136,19 @@ const ControllerModule = (function () {
           try {
             const title = await MessageModule.generateChatTitle(messageContent);
             ChatModule.updateChatTitle(chat.id, title);
-            RenderingModule.renderChatList(
-              ChatModule.getCurrentState().chats,
-              currentState.currentChatId
-            );
           } catch (error) {
             console.error("Error generating chat title:", error);
             ChatModule.updateChatTitle(chat.id, "Ny chat");
-            RenderingModule.renderChatList(
-              ChatModule.getCurrentState().chats,
-              currentState.currentChatId
-            );
           }
+          // Set isNewChat to false after title has been updated
+          chat.isNewChat = false;
+          ChatModule.saveChats();
+          
+          // Render chat list after updating isNewChat
+          RenderingModule.renderChatList(
+            ChatModule.getCurrentState().chats,
+            currentState.currentChatId
+          );
         }
       }
     } catch (error) {
