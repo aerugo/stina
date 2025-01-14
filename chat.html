@@ -132,6 +132,16 @@
     <!-- Include Instructions -->
     <script src="src/default_instructions.js"></script>
 
+    <!-- Optionally Include Additional Instructions -->
+    <script src="instructions.js"></script>
+
+    <!-- Merge Instructions -->
+    <script>
+      window.instructions = (window.defaultInstructions || []).concat(
+        window.additionalInstructions || []
+      );
+    </script>
+
     <!-- Include Translations -->
     <script src="src/translations.js"></script>
 
