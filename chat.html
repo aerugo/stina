@@ -26,16 +26,17 @@
       <div class="navbar-menu">
         <div class="navbar-start">
           <div class="navbar-item">
-            <a id="new-chat-btn" class="button is-link">
+            <a id="new-chat-btn" class="button is-link" data-translation-key="newChat">
               <span class="icon"><i class="fas fa-plus"></i></span>
-              <span>Ny chat</span>
+              <span></span>
             </a>
           </div>
         </div>
         <div class="navbar-end">
           <div class="navbar-item">
-            <button id="settings-btn" class="button is-light">
+            <button id="settings-btn" class="button is-light" data-translation-key="settings">
               <span class="icon"><i class="fas fa-cog"></i></span>
+              <span></span>
             </button>
           </div>
         </div>
@@ -130,8 +131,10 @@
 
     <!-- Application Modules -->
     <script src="src/models.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-yaml@4/dist/js-yaml.min.js"></script>
     <script src="src/storage.js"></script>
     <script src="src/config.js"></script>
+    <script src="src/translation.js"></script>
     <script src="src/api.js"></script>
     <script src="src/chat.js"></script>
     <script src="src/message.js"></script>
