@@ -272,7 +272,7 @@ var EventModule = (function () {
     if (messageContent === "") return;
 
     const config = ConfigModule.getConfig();
-    if (!config.endpoint || !config.apiKey) {
+    if (config.provider !== 'ollama' && (!config.endpoint || !config.apiKey)) {
       ModalModule.showCustomAlert(
         "Please set your configuration in the settings before sending messages."
       );
