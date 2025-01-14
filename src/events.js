@@ -210,7 +210,10 @@ var EventModule = (function () {
 
     function updateEditButtonVisibility() {
       const selectedValue = instructionsSelect.value;
-      if (selectedValue.startsWith("custom_")) {
+      const customInstructions = JSON.parse(localStorage.getItem("customInstructions")) || [];
+      const isCustomFromMemory = customInstructions.some(instr => instr.id === selectedValue);
+
+      if (isCustomFromMemory) {
         editInstructionBtn.style.display = "inline-block";
       } else {
         editInstructionBtn.style.display = "none";
