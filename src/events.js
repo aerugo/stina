@@ -463,13 +463,19 @@ var EventModule = (function () {
 
     // Adjust validation based on provider
     if (selectedProvider === 'ollama') {
-      // Endpoint and API Key are not required for Ollama
+      // No API Key or Endpoint required
+      endpoint = ''; // Clear endpoint
     } else if ((selectedProvider === 'openai' || selectedProvider === 'anthropic') && !apiKey) {
       ModalModule.showCustomAlert(TranslationModule.translate('pleaseFillRequiredFields'));
       return;
-    } else if (!apiKey || !endpoint) {
+    } else if (selectedProvider === 'azure' && (!apiKey || !endpoint)) {
       ModalModule.showCustomAlert(TranslationModule.translate('pleaseFillRequiredFields'));
       return;
+    }
+
+    // Do not save endpoint for OpenAI and Anthropic
+    if (selectedProvider === 'openai' || selectedProvider === 'anthropic') {
+      endpoint = ''; // Clear endpoint
     }
 
     ConfigModule.updateConfig({
