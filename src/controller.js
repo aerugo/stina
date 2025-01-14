@@ -24,6 +24,10 @@ const ControllerModule = (function () {
     // Apply translations to UI
     TranslationModule.applyTranslations();
 
+    // Set placeholder for user input
+    const userInput = document.getElementById("user-input");
+    userInput.setAttribute('data-placeholder', TranslationModule.translate('writeToAssistantPlaceholder'));
+
     cleanUpLocalStorage(); // Clean up invalid localStorage entries
     const state = ChatModule.initialize();
     RenderingModule.renderChatList(state.chats, state.currentChatId);

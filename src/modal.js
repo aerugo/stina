@@ -41,15 +41,17 @@ var ModalModule = (function () {
     }
 
     function showCustomAlert(message) {
-        showCustomModal("Varning", message, [{ label: "OK", value: true }]);
+        showCustomModal(TranslationModule.translate('alertTitle'), message, [
+            { label: TranslationModule.translate('ok'), value: true }
+        ]);
     }
 
     function showCustomConfirm(message, callback) {
         const buttons = [
-            { label: "Avbryt", value: false },
-            { label: "OK", value: true },
+            { label: TranslationModule.translate('cancel'), value: false },
+            { label: TranslationModule.translate('ok'), value: true },
         ];
-        showCustomModal("Confirm", message, buttons, callback);
+        showCustomModal(TranslationModule.translate('confirmTitle'), message, buttons, callback);
     }
 
     function showInputModal(title, message, defaultValue, callback) {

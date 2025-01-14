@@ -314,7 +314,7 @@ var EventModule = (function () {
     const config = ConfigModule.getConfig();
     const modalContent = `
       <div class="field">
-        <label class="label">Endpoint URL</label>
+        <label class="label">${TranslationModule.translate('endpointURL')}</label>
         <div class="control">
           <input
             class="input"
@@ -326,7 +326,7 @@ var EventModule = (function () {
         </div>
       </div>
       <div class="field">
-        <label class="label">API-nyckel</label>
+        <label class="label">${TranslationModule.translate('apiKey')}</label>
         <div class="control">
           <input 
             class="input" 
@@ -351,8 +351,8 @@ var EventModule = (function () {
     `;
 
     const buttons = [
-      { label: "Avbryt", value: false },
-      { label: "Spara ändringar", value: true, class: "is-success" },
+      { label: TranslationModule.translate('cancel'), value: false },
+      { label: TranslationModule.translate('saveChanges'), value: true, class: "is-success" },
     ];
 
     ModalModule.showCustomModal(
