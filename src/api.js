@@ -40,9 +40,8 @@ var ApiModule = (function() {
                 break;
 
             case 'openai':
-                // Use default endpoint if not provided
-                const openaiEndpoint = config.endpoint || 'https://api.openai.com/v1/chat/completions';
-                url = openaiEndpoint;
+                // Always use the OpenAI API endpoint
+                url = 'https://api.openai.com/v1/chat/completions';
                 headers = {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${config.apiKey}`

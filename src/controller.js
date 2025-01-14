@@ -45,7 +45,7 @@ const ControllerModule = (function () {
       // No API Key or Endpoint required
     } else if ((config.provider === 'openai' || config.provider === 'anthropic') && !config.apiKey) {
       throw new Error("Configuration not set");
-    } else if (!config.apiKey || !config.endpoint) {
+    } else if (config.provider === 'azure' && (!config.apiKey || !config.endpoint)) {
       throw new Error("Configuration not set");
     }
 
