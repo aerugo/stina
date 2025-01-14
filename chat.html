@@ -126,6 +126,17 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/default.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
 
+    <script>
+      let instructionsLoaded = false;
+      let modelsLoaded = false;
+      
+      function initializeAppIfReady() {
+        if (instructionsLoaded && modelsLoaded) {
+          ControllerModule.initializeApp();
+        }
+      }
+    </script>
+
     <!-- Include Config -->
     <script src="config.js"></script>
 
@@ -167,9 +178,6 @@
 
         // Log merged result
         console.log("After merging - window.instructions:", window.instructions);
-
-        // Initialize the app after instructions are merged
-        ControllerModule.initializeApp();
       }
     </script>
 
@@ -181,10 +189,14 @@
         script.onload = function() {
           console.log('instructions.js has been loaded.');
           mergeInstructions();
+          instructionsLoaded = true;
+          initializeAppIfReady();
         };
         script.onerror = function() {
           console.warn('instructions.js could not be loaded, continuing without additional instructions.');
           mergeInstructions();
+          instructionsLoaded = true;
+          initializeAppIfReady();
         };
         document.head.appendChild(script);
       })();
@@ -208,9 +220,6 @@
           ...window.additionalModels,
           ...customModels
         };
-
-        // Initialize app after models are merged
-        ControllerModule.initializeApp();
       }
     </script>
 
@@ -222,11 +231,15 @@
         script.onload = function() {
           console.log('models.js loaded.');
           mergeModels();
+          modelsLoaded = true;
+          initializeAppIfReady();
         };
         script.onerror = function() {
           console.warn('models.js not found, continuing without user definied models.');
           window.additionalModels = {};
           mergeModels();
+          modelsLoaded = true;
+          initializeAppIfReady();
         };
         document.head.appendChild(script);
       })();
