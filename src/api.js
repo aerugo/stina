@@ -57,21 +57,42 @@ var ApiModule = (function() {
                 break;
 
             case 'anthropic':
-                // Use default endpoint
+                // Use Messages API endpoint
                 url = 'https://api.anthropic.com/v1/complete';
+
+                // If model requires Messages API, use correct endpoint
+                if (deploymentName.startsWith('claude')) {
+                    url = 'https://api.anthropic.com/v1/messages';
+                }
+
                 headers = {
                     'Content-Type': 'application/json',
                     'x-api-key': config.apiKey,
                     'anthropic-version': '2023-06-01',
-                    // Add the new header to enable CORS support
+                    // Add the header to enable CORS
                     'anthropic-dangerous-direct-browser-access': 'true'
                 };
-                body = {
-                    prompt: generateAnthropicPrompt(messages),
-                    model: deploymentName,
-                    max_tokens_to_sample: validOptions.max_tokens || 1024,
-                    temperature: validOptions.temperature || 0.7
-                };
+
+                if (url.endsWith('/v1/messages')) {
+                    // Adapt request body for Messages API
+                    body = {
+                        model: deploymentName,
+                        messages: messages.map(message => ({
+                            role: message.role,
+                            content: message.content,
+                        })),
+                        max_tokens: validOptions.max_tokens || 1024,
+                        temperature: validOptions.temperature || 0.7,
+                    };
+                } else {
+                    // Use old format if needed
+                    body = {
+                        prompt: generateAnthropicPrompt(messages),
+                        model: deploymentName,
+                        max_tokens_to_sample: validOptions.max_tokens || 1024,
+                        temperature: validOptions.temperature || 0.7
+                    };
+                }
                 break;
 
             case 'ollama':
@@ -150,13 +171,31 @@ var ApiModule = (function() {
                     message: data.error.message || 'Unknown error from Anthropic API'
                 };
             }
-            return {
-                error: false,
-                message: {
-                    role: 'assistant',
-                    content: data.completion.trim()
-                }
-            };
+
+            if (data.completion) {
+                // Response from /v1/complete
+                return {
+                    error: false,
+                    message: {
+                        role: 'assistant',
+                        content: data.completion.trim()
+                    }
+                };
+            } else if (data.content) {
+                // Response from /v1/messages
+                return {
+                    error: false,
+                    message: {
+                        role: 'assistant',
+                        content: data.content.trim()
+                    }
+                };
+            } else {
+                return {
+                    error: true,
+                    message: 'Invalid response from Anthropic API'
+                };
+            }
         }
 
         const choice = data.choices[0];

@@ -34,14 +34,14 @@ window.defaultModels = {
 
   // Anthropic
 
-  "anthropic-claude-sonnet": {
-    label: "Anthropic Claude Sonnet",
-    deployment: "claude-3-5-sonnet-latest",
+  "anthropic-claude-3": {
+    label: "Anthropic Claude 3",
+    deployment: "claude-3-opus-20240229",
     provider: "anthropic",
     context_length: 200000,
-    max_tokens: 8192,
-    temperature: 0.9,
-    system: false,
+    max_tokens: 4096,
+    temperature: 0.7,
+    system: true,
   },
 
   // Ollama
