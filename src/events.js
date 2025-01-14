@@ -406,6 +406,7 @@ var EventModule = (function () {
   function saveSettings() {
     const endpoint = document.getElementById("endpoint").value.trim();
     const apiKey = document.getElementById("api-key").value.trim();
+    const selectedProvider = document.getElementById('provider-select').value;
     const selectedLanguage = document.getElementById('language-select').value;
     const theme = document.body.classList.contains("light-mode")
       ? "light-mode"
@@ -421,6 +422,7 @@ var EventModule = (function () {
       apiKey,
       theme,
       language: selectedLanguage,
+      provider: selectedProvider,
     });
 
     TranslationModule.setLanguage(selectedLanguage);

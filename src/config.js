@@ -12,6 +12,10 @@ var ConfigModule = (function() {
         // Load stored language or use default
         const storedLanguage = StorageModule.loadData('language');
         config.language = storedLanguage || defaultConfig.defaultLanguage || 'en';
+
+        // Load stored provider or use default
+        const storedProvider = StorageModule.loadData('provider');
+        config.provider = storedProvider || defaultConfig.provider || 'azure';
     }
 
     /**
