@@ -45,7 +45,8 @@ var ConfigModule = (function() {
             lastUsedModelKey: StorageModule.loadData('selectedModelKey') || 'gpt-4o',
             lastUsedInstructionId: StorageModule.loadData('selectedInstructionId') || instructions[0].id,
             titleDeployment: StorageModule.loadData('titleDeployment') || '',
-            language: StorageModule.loadData('language') || config.defaultLanguage || 'en'
+            language: StorageModule.loadData('language') || config.defaultLanguage || 'en',
+            provider: StorageModule.loadData('provider') || config.provider || 'azure'
         };
     }
 

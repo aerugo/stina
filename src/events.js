@@ -361,6 +361,19 @@ var EventModule = (function () {
         </div>
       </div>
       <div class="field">
+        <label class="label">${TranslationModule.translate('provider')}</label>
+        <div class="control">
+          <div class="select">
+            <select id="provider-select">
+              <option value="azure"${config.provider === 'azure' ? ' selected' : ''}>${TranslationModule.translate('azure')}</option>
+              <option value="openai"${config.provider === 'openai' ? ' selected' : ''}>${TranslationModule.translate('openai')}</option>
+              <option value="anthropic"${config.provider === 'anthropic' ? ' selected' : ''}>${TranslationModule.translate('anthropic')}</option>
+              <option value="ollama"${config.provider === 'ollama' ? ' selected' : ''}>${TranslationModule.translate('ollama')}</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="field">
         <label class="label">${TranslationModule.translate('language')}</label>
         <div class="control">
           <div class="select">

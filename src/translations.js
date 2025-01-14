@@ -36,6 +36,11 @@ window.translationsData = {
     writeToAssistantPlaceholder: "Write to the AI assistant",
     endpointURL: "Endpoint URL",
     apiKey: "API Key",
+    provider: "Provider",
+    azure: "Azure",
+    openai: "OpenAI",
+    anthropic: "Anthropic",
+    ollama: "Ollama",
   },
   sv: {
     loading: "Laddar...",
@@ -74,5 +79,10 @@ window.translationsData = {
     writeToAssistantPlaceholder: "Skriv till AI-assistenten",
     endpointURL: "Endpoint URL",
     apiKey: "API-nyckel",
+    provider: "Leverantör",
+    azure: "Azure",
+    openai: "OpenAI",
+    anthropic: "Anthropic",
+    ollama: "Ollama",
   },
 };

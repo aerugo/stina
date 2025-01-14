@@ -15,41 +15,87 @@ var ApiModule = (function() {
      */
     async function fetchChatCompletion(messages, deploymentName, options = {}) {
         const config = ConfigModule.getConfig();
-        const url = `${config.endpoint}/openai/deployments/${deploymentName}/chat/completions?api-version=${API_VERSION}`;
+        const provider = config.provider || 'azure';
+        let url, headers, body;
 
         // Filter out undefined options
         const validOptions = Object.fromEntries(
             Object.entries(options).filter(([_, value]) => value !== undefined)
         );
 
-        // Prepare the request body
-        const body = {
-            messages: messages.map(message => ({
-                role: message.role,
-                content: message.content
-            })),
-            ...validOptions
-        };
+        switch (provider) {
+            case 'azure':
+                url = `${config.endpoint}/openai/deployments/${deploymentName}/chat/completions?api-version=${API_VERSION}`;
+                headers = {
+                    'Content-Type': 'application/json',
+                    'api-key': config.apiKey
+                };
+                body = {
+                    messages: messages.map(message => ({
+                        role: message.role,
+                        content: message.content
+                    })),
+                    ...validOptions
+                };
+                break;
+
+            case 'openai':
+                url = 'https://api.openai.com/v1/chat/completions';
+                headers = {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${config.apiKey}`
+                };
+                body = {
+                    model: deploymentName,
+                    messages: messages.map(message => ({
+                        role: message.role,
+                        content: message.content
+                    })),
+                    ...validOptions
+                };
+                break;
+
+            case 'anthropic':
+                url = 'https://api.anthropic.com/v1/complete';
+                headers = {
+                    'Content-Type': 'application/json',
+                    'x-api-key': config.apiKey
+                };
+                body = {
+                    prompt: messages.map(message => message.content).join('\n'),
+                    model: deploymentName,
+                    max_tokens_to_sample: validOptions.max_tokens || 2048,
+                    temperature: validOptions.temperature
+                };
+                break;
+
+            case 'ollama':
+                url = `${config.endpoint}/api/generate`;
+                headers = {
+                    'Content-Type': 'application/json'
+                };
+                body = {
+                    model: deploymentName,
+                    prompt: messages.map(message => message.content).join('\n'),
+                    ...validOptions
+                };
+                break;
+
+            default:
+                throw new Error(`Unsupported provider: ${provider}`);
+        }
 
         // Log the API request details
         console.log("Submitting API Request:", {
+            provider,
             url,
             body: JSON.stringify(body, null, 2)
         });
 
         const response = await fetch(url, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'api-key': config.apiKey
-            },
-            body: JSON.stringify({
-                messages: messages.map(message => ({
-                    role: message.role,
-                    content: message.content
-                })),
-                ...validOptions
-            })
+            headers: headers,
+            body: JSON.stringify(body)
         });
 
         if (!response.ok) {
