@@ -3,15 +3,12 @@
  * Handles localization and translations
  */
 var TranslationModule = (function() {
-  let translations = {};
   let currentLanguage = 'en';
 
-  async function initialize() {
-    // Fetch translations.yaml
-    const response = await fetch('src/translations.yaml');
-    const yamlText = await response.text();
-    translations = jsyaml.load(yamlText);
+  // Use translationsData from translations.js
+  const translations = window.translationsData;
 
+  function initialize() {
     // Set the current language from ConfigModule
     const config = ConfigModule.getConfig();
     currentLanguage = config.language || 'en';

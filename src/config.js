@@ -5,18 +5,13 @@
 var ConfigModule = (function() {
     let config = {};
 
-    async function initialize() {
-        // Fetch config.yaml
-        const response = await fetch('config.yaml');
-        const yamlText = await response.text();
-        const yamlConfig = jsyaml.load(yamlText);
+    // Use defaultConfig from config.js
+    const defaultConfig = window.defaultConfig;
 
-        // Set default language
-        config.defaultLanguage = yamlConfig.defaultLanguage || 'en';
-
+    function initialize() {
         // Load stored language or use default
         const storedLanguage = StorageModule.loadData('language');
-        config.language = storedLanguage || config.defaultLanguage;
+        config.language = storedLanguage || defaultConfig.defaultLanguage || 'en';
     }
 
     /**

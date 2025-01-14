@@ -14,9 +14,9 @@ const ControllerModule = (function () {
     });
   }
 
-  async function initializeApp() {
-    await ConfigModule.initialize();
-    await TranslationModule.initialize();
+  function initializeApp() {
+    ConfigModule.initialize();
+    TranslationModule.initialize();
 
     // Set language for TranslationModule
     TranslationModule.setLanguage(ConfigModule.getConfig().language);
