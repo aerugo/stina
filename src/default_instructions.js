@@ -2,7 +2,9 @@ window.defaultInstructions = [
   {
     id: "default_1",
     order: 1,
-    label: "Standardassistent",
+    label: "Standardassistent", 
     content: "Du är en hjälpsam assistent.",
   },
 ];
+
+console.log("default_instructions.js har laddats:", window.defaultInstructions);

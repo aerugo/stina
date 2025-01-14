@@ -140,10 +140,19 @@
       // Get customInstructions from localStorage
       const customInstructions = JSON.parse(localStorage.getItem("customInstructions")) || [];
 
+      // Log values for debugging
+      console.log("Before merging:");
+      console.log("defaultInstructions:", window.defaultInstructions);
+      console.log("additionalInstructions:", window.additionalInstructions);
+      console.log("customInstructions:", customInstructions);
+
       // Combine all instructions
       window.instructions = (window.defaultInstructions || [])
         .concat(window.additionalInstructions || [])
         .concat(customInstructions);
+
+      // Log merged result
+      console.log("After merging - window.instructions:", window.instructions);
     </script>
 
     <!-- Include Translations -->

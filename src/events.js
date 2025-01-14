@@ -133,7 +133,16 @@ var EventModule = (function () {
       const selectedInstructionId =
         (currentChat && currentChat.selectedInstructionId) ||
         config.selectedInstructionId ||
-        instructions[0].id;
+        window.instructions[0]?.id;
+
+      // Debug logging
+      console.log("populateInstructions - window.instructions:", window.instructions);
+
+      // Check if window.instructions exists and has instructions
+      if (!window.instructions || window.instructions.length === 0) {
+        console.error("No instructions available");
+        return;
+      }
 
       // Loop through all instructions in window.instructions and add them to select element
       window.instructions.forEach((instruction) => {
