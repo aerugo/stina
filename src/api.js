@@ -189,16 +189,15 @@ var ApiModule = (function() {
                         content: data.completion.trim()
                     }
                 };
-            } else if (data.messages) {
+            } else if (data.content) {
                 // Response from /v1/messages
-                // Get the latest message from the assistant
-                const assistantMessages = data.messages.filter(msg => msg.role === 'assistant');
-                const assistantMessage = assistantMessages[assistantMessages.length - 1];
+                // Assistant's response is in data.content as an array of text parts
+                const assistantContent = data.content.map(part => part.text).join('').trim();
                 return {
                     error: false,
                     message: {
                         role: 'assistant',
-                        content: assistantMessage.content.trim(),
+                        content: assistantContent,
                     },
                 };
             } else {
