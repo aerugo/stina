@@ -35,7 +35,13 @@ const ControllerModule = (function () {
 
   async function sendMessage(messageContent) {
     const config = ConfigModule.getConfig();
-    if (!config.endpoint || !config.apiKey) {
+
+    if (config.provider === 'ollama' && (!config.endpoint || config.endpoint.trim() === '')) {
+      config.endpoint = 'http://localhost:11434';
+    }
+
+    // Adjust validation: Skip API Key and Endpoint checks for Ollama
+    if (config.provider !== 'ollama' && (!config.endpoint || !config.apiKey)) {
       throw new Error("Configuration not set");
     }
 
