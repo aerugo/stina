@@ -16,5 +16,3 @@ window.defaultModels = {
     system: false,
   },
 };
-
-console.log("default_models.js har laddats:", window.defaultModels);
