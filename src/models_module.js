@@ -11,8 +11,20 @@ var ModelsModule = (function () {
     return window.models[key];
   }
 
+  function getModelsByProvider(provider) {
+    const models = window.models;
+    const filteredModels = {};
+    for (const [key, model] of Object.entries(models)) {
+      if (model.provider === provider) {
+        filteredModels[key] = model;
+      }
+    }
+    return filteredModels;
+  }
+
   return {
     getModels,
     getModel,
+    getModelsByProvider,
   };
 })();

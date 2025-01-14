@@ -73,6 +73,51 @@ var EventModule = (function () {
     const chatListContainer = document.getElementById("chat-list");
     editInstructionBtn = document.getElementById("edit-instruction-btn");
 
+    // Add populateModelSelector function
+    function populateModelSelector(selectedProvider) {
+      const models = ModelsModule.getModels();
+      const modelSelect = document.getElementById("model-select");
+      const currentChat = ChatModule.getCurrentChat();
+      const config = ConfigModule.getConfig();
+
+      // Clear existing options
+      modelSelect.innerHTML = "";
+
+      // Filter models based on the selected provider
+      const filteredModels = Object.entries(models).filter(
+        ([_, model]) => model.provider === selectedProvider
+      );
+
+      // Check if there are models for the selected provider
+      if (filteredModels.length === 0) {
+        console.warn(`No models available for provider: ${selectedProvider}`);
+        return;
+      }
+
+      // Populate the model selector with filtered models
+      for (const [key, model] of filteredModels) {
+        const option = document.createElement("option");
+        option.value = key;
+        option.textContent = model.label;
+        modelSelect.appendChild(option);
+      }
+
+      // Set the selected model
+      const savedModelKey = currentChat?.selectedModelKey || config.selectedModelKey;
+
+      if (savedModelKey && models[savedModelKey]?.provider === selectedProvider) {
+        modelSelect.value = savedModelKey;
+      } else {
+        // Default to the first model for the selected provider
+        modelSelect.value = filteredModels[0][0];
+        ConfigModule.updateConfig({ selectedModelKey: filteredModels[0][0] });
+        if (currentChat) {
+          currentChat.selectedModelKey = filteredModels[0][0];
+          ChatModule.saveChats();
+        }
+      }
+    }
+
     // Setup basic event listeners
     newChatBtn.addEventListener("click", function () {
       const state = ChatModule.createNewChat();
@@ -87,13 +132,9 @@ var EventModule = (function () {
     chatListContainer.addEventListener("click", handleChatListClick);
     window.addEventListener("click", handleWindowClick);
 
-    // Populate model selector
-    for (const key in models) {
-      const option = document.createElement("option");
-      option.value = key;
-      option.textContent = models[key].label;
-      modelSelect.appendChild(option);
-    }
+    // Initialize model selector with current provider's models
+    const config = ConfigModule.getConfig();
+    populateModelSelector(config.provider || 'azure');
 
     // Setup model selection change handler
     modelSelect.addEventListener("change", function () {
@@ -453,6 +494,9 @@ var EventModule = (function () {
           apiKeyField.disabled = false;
           apiKeyField.placeholder = 'YOUR_API_KEY';
         }
+        
+        // Update the model selector with the new provider
+        populateModelSelector(providerSelect.value);
       }
 
       providerSelect.addEventListener('change', updateFields);
@@ -497,6 +541,9 @@ var EventModule = (function () {
     TranslationModule.setLanguage(selectedLanguage);
     TranslationModule.applyTranslations();
 
+    // Update the model selector based on the new provider
+    populateModelSelector(selectedProvider);
+
     ModalModule.showCustomAlert(TranslationModule.translate('settingsSaved'));
   }
 
@@ -508,5 +555,6 @@ var EventModule = (function () {
     handleWindowClick,
     openSettingsModal,
     saveSettings,
+    populateModelSelector,
   };
 })();
