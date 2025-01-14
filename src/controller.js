@@ -93,11 +93,21 @@ const ControllerModule = (function () {
       }
 
       instructionLabel = instruction.label;
-      // Prepend system message to conversationToSend
-      conversationToSend.unshift({
-        role: "system",
-        content: instruction.content,
-      });
+      let systemMessageContent = "";
+
+      // Handle system message based on provider
+      if (selectedModelParams && selectedModelParams.system) {
+        if (config.provider === 'anthropic') {
+          // For Anthropic, store system message separately
+          systemMessageContent = instruction.content;
+        } else {
+          // For other providers, include system message in messages array
+          conversationToSend.unshift({
+            role: "system",
+            content: instruction.content,
+          });
+        }
+      }
     }
 
     const loadingMessage = { role: "assistant", content: "", isLoading: true };
@@ -119,7 +129,8 @@ const ControllerModule = (function () {
       const apiResponse = await ApiModule.fetchChatCompletion(
         conversationToSend,
         deploymentName,
-        modelOptions
+        modelOptions,
+        systemMessageContent
       );
 
       if (apiResponse.error) {

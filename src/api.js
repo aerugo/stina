@@ -13,7 +13,7 @@ var ApiModule = (function() {
      * @returns {Promise<Object>} - The assistant's response message.
      * @throws Will throw an error if the API call fails.
      */
-    async function fetchChatCompletion(messages, deploymentName, options = {}) {
+    async function fetchChatCompletion(messages, deploymentName, options = {}, systemMessageContent = "") {
         const config = ConfigModule.getConfig();
         const provider = config.provider || 'azure';
         let url, headers, body;
@@ -75,15 +75,23 @@ var ApiModule = (function() {
 
                 if (url.endsWith('/v1/messages')) {
                     // Adapt request body for Messages API
+                    // Filter out system messages from messages array
+                    const filteredMessages = messages.filter(msg => msg.role !== 'system');
+                    
                     body = {
                         model: deploymentName,
-                        messages: messages.map(message => ({
+                        messages: filteredMessages.map(message => ({
                             role: message.role,
                             content: message.content,
                         })),
                         max_tokens: validOptions.max_tokens || 1024,
                         temperature: validOptions.temperature || 0.7,
                     };
+                    
+                    // If there's a system message, include it as a top-level parameter
+                    if (systemMessageContent) {
+                        body.system = systemMessageContent;
+                    }
                 } else {
                     // Use old format if needed
                     body = {
@@ -181,14 +189,17 @@ var ApiModule = (function() {
                         content: data.completion.trim()
                     }
                 };
-            } else if (data.content) {
+            } else if (data.messages) {
                 // Response from /v1/messages
+                // Get the latest message from the assistant
+                const assistantMessages = data.messages.filter(msg => msg.role === 'assistant');
+                const assistantMessage = assistantMessages[assistantMessages.length - 1];
                 return {
                     error: false,
                     message: {
                         role: 'assistant',
-                        content: data.content.trim()
-                    }
+                        content: assistantMessage.content.trim(),
+                    },
                 };
             } else {
                 return {
