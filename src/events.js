@@ -7,23 +7,24 @@ var EventModule = (function () {
   let instructionsSelect;
 
   // Function to populate model selector based on provider
-  function populateModelSelector(selectedProvider) {
+  function populateModelSelector() {
     const models = ModelsModule.getModels();
     const modelSelect = document.getElementById("model-select");
     const currentChat = ChatModule.getCurrentChat();
     const config = ConfigModule.getConfig();
+    const enabledProviders = Object.keys(config.providerConfigs || {});
 
     // Clear existing options
     modelSelect.innerHTML = "";
 
-    // Filter models based on the selected provider
+    // Filter models based on enabled providers
     const filteredModels = Object.entries(models).filter(
-      ([_, model]) => model.provider === selectedProvider
+      ([_, model]) => enabledProviders.includes(model.provider)
     );
 
-    // Check if there are models for the selected provider
+    // Check if there are models available
     if (filteredModels.length === 0) {
-      console.warn(`No models available for provider: ${selectedProvider}`);
+      console.warn(`No models available for enabled providers.`);
       return;
     }
 
@@ -39,10 +40,10 @@ var EventModule = (function () {
     const savedModelKey =
       currentChat?.selectedModelKey || config.selectedModelKey;
 
-    if (savedModelKey && models[savedModelKey]?.provider === selectedProvider) {
+    if (savedModelKey && models[savedModelKey]) {
       modelSelect.value = savedModelKey;
     } else {
-      // Default to the first model for the selected provider
+      // Default to the first model
       modelSelect.value = filteredModels[0][0];
       ConfigModule.updateConfig({ selectedModelKey: filteredModels[0][0] });
       if (currentChat) {
@@ -329,34 +330,24 @@ var EventModule = (function () {
     const messageContent = userInput.innerText.trim();
     if (messageContent === "") return;
 
+    const currentChat = ChatModule.getCurrentChat();
+    const selectedModelKey = currentChat.selectedModelKey || "gpt-4o";
+    const selectedModelParams = ModelsModule.getModel(selectedModelKey);
+    const provider = selectedModelParams.provider;
     const config = ConfigModule.getConfig();
-    // Adjust validation based on provider
-    if (config.provider === "ollama") {
-      // No API Key or Endpoint required for Ollama
-    } else if (
-      config.provider === "openai" ||
-      config.provider === "anthropic"
-    ) {
-      // Only API Key is required for OpenAI and Anthropic
-      if (!config.apiKey) {
-        ModalModule.showCustomAlert(
-          TranslationModule.translate("pleaseSetConfiguration")
-        );
-        return;
-      }
-      // Endpoint is not required; proceed without checking it
-    } else if (config.provider === "azure") {
-      // Both API Key and Endpoint are required for Azure
-      if (!config.apiKey || !config.endpoint) {
-        ModalModule.showCustomAlert(
-          TranslationModule.translate("pleaseSetConfiguration")
-        );
-        return;
-      }
-    } else {
-      // Handle other providers or unknown provider
+    const providerConfig = config.providerConfigs[provider] || {};
+
+    // Validate provider configuration
+    if (provider === "ollama") {
+      // No API Key required for Ollama
+    } else if ((provider === "openai" || provider === "anthropic") && !providerConfig.apiKey) {
       ModalModule.showCustomAlert(
-        TranslationModule.translate("pleaseSetConfiguration")
+        TranslationModule.translate("pleaseSetConfiguration") + ` (${provider})`
+      );
+      return;
+    } else if (provider === "azure" && (!providerConfig.apiKey || !providerConfig.endpoint)) {
+      ModalModule.showCustomAlert(
+        TranslationModule.translate("pleaseSetConfiguration") + " (Azure)"
       );
       return;
     }
@@ -442,27 +433,6 @@ var EventModule = (function () {
             placeholder="YOUR_API_KEY" 
             value="${config.apiKey || ""}"
           />
-        </div>
-      </div>
-      <div class="field">
-        <label class="label">${TranslationModule.translate("provider")}</label>
-        <div class="control">
-          <div class="select">
-            <select id="provider-select">
-              <option value="azure"${
-                config.provider === "azure" ? " selected" : ""
-              }>${TranslationModule.translate("azure")}</option>
-              <option value="openai"${
-                config.provider === "openai" ? " selected" : ""
-              }>${TranslationModule.translate("openai")}</option>
-              <option value="anthropic"${
-                config.provider === "anthropic" ? " selected" : ""
-              }>${TranslationModule.translate("anthropic")}</option>
-              <option value="ollama"${
-                config.provider === "ollama" ? " selected" : ""
-              }>${TranslationModule.translate("ollama")}</option>
-            </select>
-          </div>
         </div>
       </div>
       <div class="field">

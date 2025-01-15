@@ -17,10 +17,10 @@ var ApiModule = (function () {
     messages,
     deploymentName,
     options = {},
-    systemMessageContent = ""
+    systemMessageContent = "",
+    provider,
+    providerConfig
   ) {
-    const config = ConfigModule.getConfig();
-    const provider = config.provider || "azure";
     let url, headers, body;
 
     // Filter out undefined options
@@ -30,10 +30,10 @@ var ApiModule = (function () {
 
     switch (provider) {
       case "azure":
-        url = `${config.endpoint}/openai/deployments/${deploymentName}/chat/completions?api-version=${API_VERSION}`;
+        url = `${providerConfig.endpoint}/openai/deployments/${deploymentName}/chat/completions?api-version=${API_VERSION}`;
         headers = {
           "Content-Type": "application/json",
-          "api-key": config.apiKey,
+          "api-key": providerConfig.apiKey,
         };
         body = {
           messages: messages.map((message) => ({
