@@ -113,14 +113,14 @@ var ApiModule = (function () {
       case "ollama":
         // Use default endpoint if not provided
         const ollamaEndpoint = config.endpoint || "http://localhost:11434";
-        url = `${ollamaEndpoint}/api/generate`;
+        url = `${ollamaEndpoint}/api/chat`;
         headers = {
           "Content-Type": "application/json",
           // No API key needed for Ollama
         };
         body = {
           model: deploymentName,
-          prompt: systemMessageContent || '', // Include system message
+          prompt: systemMessageContent || "", // Include system message
           stream: false,
           messages: messages.map((message) => ({
             role: message.role,
@@ -136,8 +136,9 @@ var ApiModule = (function () {
 
     // Log the API request details
     console.log("Submitting API Request:", {
-      provider,
       url,
+      method: "POST",
+      headers: headers,
       body: JSON.stringify(body, null, 2),
     });
 
