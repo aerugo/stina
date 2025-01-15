@@ -108,6 +108,15 @@ const RenderingModule = (function () {
 
         // Append the container to the message element
         messageElem.appendChild(assistantMessageContainer);
+
+        // Determine if this is an older message
+        const conversation = ChatModule.getCurrentChat().conversation;
+        const isOlderMessage = !message.isLoading && message !== conversation[conversation.length - 1];
+
+        // If it's an older message, add a class
+        if (isOlderMessage) {
+          assistantMessageContainer.classList.add("older-message");
+        }
       }
     } else {
       const contentDiv = document.createElement("div");

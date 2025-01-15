@@ -127,18 +127,18 @@ body {
     justify-content: space-between;
     align-items: center;
     margin-top: 1rem;
+    position: relative;
+    padding-bottom: 0.5rem;
 }
 
-/* Hide the content of the message footer in older messages */
-.assistant-message-container.older-message .message-footer .copy-button,
-.assistant-message-container.older-message .message-footer .model-instruction-label {
+/* Hide copy button in older messages */
+.assistant-message-container.older-message .copy-button {
     opacity: 0;
     transition: opacity 0.2s ease-in-out;
 }
 
-/* Show the content on hover */
-.assistant-message-container.older-message:hover .message-footer .copy-button,
-.assistant-message-container.older-message:hover .message-footer .model-instruction-label {
+/* Show copy button on hover */
+.assistant-message-container.older-message:hover .copy-button {
     opacity: 1;
 }
 
@@ -160,6 +160,8 @@ body {
     cursor: pointer;
     font-size: 0.9rem;
     padding: 0;
+    display: flex;
+    align-items: center;
 }
 
 .copy-button .icon {
@@ -177,26 +179,28 @@ body {
 
 /* Model and Instruction Label Styles */
 .model-instruction-label {
-    position: absolute;
-    right: 1rem;
     font-size: 0.8rem;
     color: #6b6b6b;
     background-color: rgba(255, 255, 255, 0.8);
     padding: 0.2rem 0.4rem;
     border-radius: 4px;
-    transition: opacity 0.2s;
-    pointer-events: none;
+    position: static;
 }
 
 /* Bottom right label - always visible */
 .label-bottom-right {
-    bottom: 0.5rem;
+    position: static;
+    bottom: auto;
+    right: auto;
+    margin-left: auto;
     display: block;
 }
 
 /* Top right label - hidden by default */
 .label-top-right {
+    position: absolute;
     top: 0.5rem;
+    right: 1rem;
     opacity: 0;
 }
 
