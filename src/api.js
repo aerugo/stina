@@ -164,14 +164,12 @@ const ApiModule = (function () {
     const data = await response.json();
     console.log("API Response:", data);
 
-    const parsedResult = parseApiResponse(data);
+    const parsedResult = parseApiResponse(data, provider);
     return parsedResult;
   }
 
-  function parseApiResponse(data) {
-    const config = ConfigModule.getConfig();
-
-    if (config.provider === "ollama") {
+  function parseApiResponse(data, provider) {
+    if (provider === "ollama") {
       if (data.error) {
         return {
           error: true,
@@ -201,7 +199,7 @@ const ApiModule = (function () {
       };
     }
 
-    if (config.provider === "anthropic") {
+    if (provider === "anthropic") {
       if (data.error) {
         return {
           error: true,
