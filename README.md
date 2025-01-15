@@ -1,5 +1,7 @@
 # Stina AI Chat Client
 
+<img width="1455" alt="Screenshot 2025-01-15 at 18 12 42" src="https://github.com/user-attachments/assets/382bc604-ac73-46eb-b1e6-fce83db012b5" />
+
 Stina is a lightweight AI chat client specifically designed for environments with strict restrictions. In many government, healthcare, and large corporate settings, stringent IT policies prohibit the use of web servers, installations of new software, or access to online AI chat bots. Despite these limitations, there is often a need for advanced AI assistance within these organizations.
 
 **Stina addresses this need by providing a client-side solution that requires no server, no installations, and no build tools.** Users can interact with powerful language models using their own API keys or a local Ollama instance, all within a secure and compliant environment.
@@ -257,6 +259,8 @@ In environments where the Azure AI Foundry endpoint is shared, but each user mus
 One of the powerful features of Stina is the ability to define and interact with multiple specialized "mini-agents" within a single conversation. By switching between custom instructions and models, you can simulate a collaborative environment with experts in different domains.
 
 #### Step-by-Step Usage Example
+
+<img width="892" alt="Screenshot 2025-01-15 at 18 11 49" src="https://github.com/user-attachments/assets/1fb31c50-266d-4f7a-9948-f8a560c37ca7" />
 
 **Objective**: You are working on drafting a technical policy document and need input from both a technical expert and a legal expert.
 
