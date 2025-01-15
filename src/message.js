@@ -15,9 +15,17 @@ const MessageModule = (function () {
     // Use the titleDeployment from config or default to the selected model's deployment
     const titleDeployment = config.titleDeployment || selectedModel.deployment;
 
+    // Get provider and config
+    const provider = selectedModel.provider;
+    const providerConfig = config.providerConfigs[provider] || {};
+
     const response = await ApiModule.fetchChatCompletion(
       [titleMessage],
-      titleDeployment
+      titleDeployment,
+      {}, // options
+      "", // systemMessageContent
+      provider,
+      providerConfig
     );
 
     if (response.error) {
