@@ -16,6 +16,7 @@ Hosting Stina on platforms like SharePoint enhances accessibility within intrane
 - [Configuration](#configuration)
   - [Using Configuration Files](#using-configuration-files)
   - [In-Memory Configuration](#in-memory-configuration)
+  - [Configuring Azure AI Foundry with User-Provided API Keys](#configuring-azure-ai-foundry-with-user-provided-api-keys)
 - [Usage](#usage)
   - [Running Stina](#running-stina)
   - [Using Features](#using-features)
@@ -155,6 +156,58 @@ If you cannot use configuration files, Stina allows setting configurations in me
 5. **Save Changes**: Click `Save Changes` to apply the configurations.
 
 **Note**: In-memory configurations are stored in the browser's local storage and will persist across sessions on the same machine and browser.
+
+### Configuring Azure AI Foundry with User-Provided API Keys
+
+In environments where the Azure AI Foundry endpoint is shared, but each user must provide their own API key (e.g., to ensure that only cleared users can access the API), you can set up Stina to use a common endpoint while requiring individual users to input their own API keys.
+
+**Steps to Configure:**
+
+1. **Edit `providers.js`**
+
+   - Copy `providers.template.js` to `providers.js` if you haven't already.
+   - Set up the Azure provider with the shared endpoint and leave the `apiKey` field empty or omit it entirely.
+
+   ```javascript
+   window.providerConfigs = {
+     azure: {
+       enabled: true,
+       endpoint: "https://YOUR_RESOURCE_NAME.openai.azure.com",
+       // No apiKey provided here to require users to input their own
+     },
+     openai: {
+       enabled: false,
+     },
+     ollama: {
+       enabled: false,
+     },
+     anthropic: {
+       enabled: false,
+     },
+   };
+   ```
+
+2. **User Instructions**
+
+   - **Open Stina**: Users open `chat.html` in their web browser.
+   - **Access Settings**: Click on the `Settings` button in the top navigation bar.
+   - **Enter API Key**:
+     - Navigate to the `Providers` tab if not already there.
+     - Locate the Azure provider configuration.
+     - Enter their personal Azure AI Foundry API key in the `API Key` field.
+   - **Save Changes**: Click `Save Changes` to store the API key securely in the browser's local storage.
+
+**Benefits of This Configuration**:
+
+- **Security Compliance**: Only authorized users with valid API keys can access the AI services, adhering to organizational security policies.
+- **Centralized Endpoint Management**: The endpoint is pre-configured, reducing setup complexity for individual users.
+- **User Accountability**: Each user is responsible for their own API key, ensuring traceability and accountability.
+
+**Notes**:
+
+- **API Key Security**: Users should keep their API keys confidential and avoid sharing them.
+- **Local Storage**: The API key is stored in the browser's local storage and is not transmitted or shared.
+- **Provider Configuration**: Ensure that other providers are disabled if not in use, to prevent unauthorized access.
 
 ## Usage
 
