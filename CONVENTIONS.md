@@ -1,15 +1,62 @@
-Application should be completely client side with no requirement of a server. 
-It should be possible to run the application in a browser by opening the HTML file from the file system. 
-Do NOT use ES6 imports/exports as they require a server to run and result in CORS issues when run from the file system.
+# Development Conventions
 
-The application should be written in JavaScrip, HTML, and CSS.
+## Core Principles
 
-The application should be written in a modular way, with separate modules for the game logic, rendering, and user input. The modules should be written in separate files and loaded using the HTML script tag.
+1. **Client-Side Only**
+   - Application must run completely client-side with no server requirements
+   - Must be able to run by opening HTML file directly from filesystem
+   - NO ES6 imports/exports (causes CORS issues when run from filesystem)
 
-If the application uses any third-party libraries, they should be loaded with CDN links in the HTML file.
+2. **Technology Stack**
+   - JavaScript, HTML, and CSS only
+   - Third-party libraries loaded via CDN in HTML file
+   - No build tools or transpilation required
 
-The application should be written in a functional style, with no global variables or side effects. The application should use pure functions and immutable data structures where possible.
+3. **Architecture**
+   - Modular design with separate concerns:
+     - Each module in its own file
+     - Loaded via HTML script tags
+     - Clear separation of logic, rendering, and user input
+   - Functional programming style:
+     - Minimize global variables and side effects
+     - Use pure functions where possible
+     - Prefer immutable data structures
 
-The application should be well-documented, with comments explaining the purpose of each function and module.
+4. **Documentation**
+   - All code and comments in English
+   - Clear documentation for all functions and modules
+   - Only translations.js contains non-English strings
 
-All code and all comments should be in English. Only localization strings in translations.js should be in other languages.
+5. **Code Organization**
+   - One module per file
+   - Clear naming conventions
+   - Consistent code formatting
+   - Logical file structure
+
+6. **Error Handling**
+   - Graceful error handling
+   - Clear error messages
+   - Fallback behaviors where appropriate
+
+7. **Browser Compatibility**
+   - Support modern browsers
+   - No reliance on cutting-edge features
+   - Graceful degradation when needed
+
+8. **Security**
+   - No sensitive data in source code
+   - Use template files for configuration
+   - Sanitize user input
+   - Secure API key handling
+
+9. **Performance**
+   - Minimize DOM operations
+   - Efficient data structures
+   - Avoid memory leaks
+   - Clean up event listeners
+
+10. **Testing**
+    - Manual testing process
+    - Test across different browsers
+    - Test with different configurations
+    - Document test cases

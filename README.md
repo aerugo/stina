@@ -1,6 +1,6 @@
 # Stina AI Chat Client
 
-Stina is a lightweight AI chat client designed to run in environments with strict restrictions. It requires no web server, no installations, and no build tools. Simply open the `chat.html` file from your filesystem, and you're ready to interact with powerful language models using your own API keys or an Ollama instance.
+Stina is a lightweight AI chat client designed for environments with strict restrictions. It operates entirely on the client side, requiring **no web server**, **no installations**, and **no build tools**. Simply open the `chat.html` file from your filesystem, and you're ready to interact with powerful language models using your own API keys or an Ollama instance.
 
 ## Table of Contents
 
