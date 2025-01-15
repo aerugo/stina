@@ -12,7 +12,10 @@ var EventModule = (function () {
     const modelSelect = document.getElementById("model-select");
     const currentChat = ChatModule.getCurrentChat();
     const config = ConfigModule.getConfig();
-    const enabledProviders = Object.keys(config.providerConfigs || {});
+    const providerConfigs = config.providerConfigs || {};
+    const enabledProviders = Object.keys(providerConfigs).filter(
+      (provider) => providerConfigs[provider].enabled
+    );
 
     // Clear existing options
     modelSelect.innerHTML = "";
@@ -413,7 +416,10 @@ var EventModule = (function () {
 
   function getProvidersContent() {
     const config = ConfigModule.getConfig();
-    const enabledProviders = Object.keys(config.providerConfigs || {});
+    const providerConfigs = config.providerConfigs || {};
+    const enabledProviders = Object.keys(providerConfigs).filter(
+      (provider) => providerConfigs[provider].enabled
+    );
     let content = '<div style="max-height: 400px; overflow-y: auto;">';
 
     enabledProviders.forEach((provider) => {
@@ -638,11 +644,13 @@ var EventModule = (function () {
 
   function saveSettings() {
     const config = ConfigModule.getConfig();
-    const enabledProviders = Object.keys(config.providerConfigs || {});
-    const providerConfigs = {};
+    const providerConfigs = config.providerConfigs || {};
+    const updatedProviderConfigs = {};
 
     // Collect provider configurations
-    enabledProviders.forEach((provider) => {
+    Object.keys(providerConfigs).forEach((provider) => {
+      const providerConfig = providerConfigs[provider];
+      if (providerConfig.enabled) {
       const apiKeyInput = document.getElementById(`api-key-${provider}`);
       const apiKey = apiKeyInput ? apiKeyInput.value.trim() : '';
 
@@ -652,10 +660,12 @@ var EventModule = (function () {
         endpoint = endpointInput ? endpointInput.value.trim() : '';
       }
 
-      providerConfigs[provider] = {
+      updatedProviderConfigs[provider] = {
+        ...providerConfig,  // Preserve existing properties like 'enabled'
         apiKey,
         endpoint,
       };
+    }
     });
 
     // Collect language setting

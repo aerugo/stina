@@ -8,11 +8,12 @@ window.providerConfigs = {
     enabled: true,
     apiKey: "YOUR_OPENAI_API_KEY",
   },
-  oolama: {
+  ollama: {
     enabled: false,
+    endpoint: "http://localhost:11434"
   },
   anthropic: {
     enabled: false,
-  },
-  // Add other providers as needed
+    apiKey: ""
+  }
 };
