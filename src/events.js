@@ -411,17 +411,17 @@ var EventModule = (function () {
     }
   }
 
-  function openSettingsModal() {
+  function getProvidersContent() {
     const config = ConfigModule.getConfig();
     const enabledProviders = Object.keys(config.providerConfigs || {});
-
-    let modalContent = '';
+    let content = '<div style="max-height: 400px; overflow-y: auto;">';
 
     enabledProviders.forEach((provider) => {
       const providerConfig = config.providerConfigs[provider] || {};
-      modalContent += `
+      content += `
+        <h2 class="title is-4">${provider}</h2>
         <div class="field">
-          <label class="label">${TranslationModule.translate('apiKey')} (${provider})</label>
+          <label class="label">${TranslationModule.translate('apiKey')}</label>
           <div class="control">
             <input
               class="input"
@@ -436,24 +436,33 @@ var EventModule = (function () {
 
       // Include Endpoint field if the provider requires it
       if (provider === 'azure' || provider === 'ollama') {
-        modalContent += `
+        content += `
           <div class="field">
-            <label class="label">${TranslationModule.translate('endpointURL')} (${provider})</label>
+            <label class="label">${TranslationModule.translate('endpointURL')}</label>
             <div class="control">
               <input
                 class="input"
                 type="text"
                 id="endpoint-${provider}"
-                placeholder="${provider === 'azure' ? 'https://YOUR_RESOURCE_NAME.openai.azure.com' : 'http://localhost:11434'}"
+                placeholder="${TranslationModule.translate('enterEndpointURL')}"
                 value="${providerConfig.endpoint || ''}"
               />
             </div>
           </div>
         `;
       }
+
+      content += '<hr />';
     });
 
-    modalContent += `
+    content += '</div>';
+    return content;
+  }
+
+  function getLanguageContent() {
+    const config = ConfigModule.getConfig();
+
+    return `
       <div class="field">
         <label class="label">${TranslationModule.translate("language")}</label>
         <div class="control">
@@ -462,6 +471,29 @@ var EventModule = (function () {
               <option value="en"${config.language === "en" ? " selected" : ""}>${TranslationModule.translate("english")}</option>
               <option value="sv"${config.language === "sv" ? " selected" : ""}>${TranslationModule.translate("swedish")}</option>
             </select>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  function openSettingsModal() {
+    const modalContent = `
+      <div class="columns">
+        <div class="column is-one-quarter">
+          <!-- Left Side Menu -->
+          <aside class="menu">
+            <p class="menu-label">${TranslationModule.translate('settings')}</p>
+            <ul class="menu-list">
+              <li><a id="settings-tab-providers" class="is-active">${TranslationModule.translate('providers')}</a></li>
+              <li><a id="settings-tab-language">${TranslationModule.translate('language')}</a></li>
+            </ul>
+          </aside>
+        </div>
+        <div class="column">
+          <!-- Content Area -->
+          <div id="settings-content">
+            <!-- Content for the selected tab will be injected here -->
           </div>
         </div>
       </div>
@@ -486,6 +518,36 @@ var EventModule = (function () {
         }
       }
     );
+
+    // After the modal is displayed, set up tab navigation
+    setTimeout(() => {
+      const providersTab = document.getElementById('settings-tab-providers');
+      const languageTab = document.getElementById('settings-tab-language');
+      const settingsContent = document.getElementById('settings-content');
+
+      // Function to deactivate all tabs
+      function deactivateAllTabs() {
+        providersTab.classList.remove('is-active');
+        languageTab.classList.remove('is-active');
+      }
+
+      // Event listener for Providers tab
+      providersTab.addEventListener('click', () => {
+        deactivateAllTabs();
+        providersTab.classList.add('is-active');
+        settingsContent.innerHTML = getProvidersContent();
+      });
+
+      // Event listener for Language tab
+      languageTab.addEventListener('click', () => {
+        deactivateAllTabs();
+        languageTab.classList.add('is-active');
+        settingsContent.innerHTML = getLanguageContent();
+      });
+
+      // Initially display Providers content
+      settingsContent.innerHTML = getProvidersContent();
+    }, 0);
 
     // After the modal is displayed, add event listeners to update fields
     setTimeout(() => {
