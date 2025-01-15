@@ -186,9 +186,15 @@ body {
     pointer-events: none;
 }
 
+/* Bottom right label - always visible */
+.label-bottom-right {
+    bottom: 0.5rem;
+    display: block;
+}
+
 /* Top right label - hidden by default */
 .label-top-right {
-    top: 0;
+    top: 0.5rem;
     opacity: 0;
 }
 
@@ -197,28 +203,10 @@ body {
     opacity: 1;
 }
 
-/* Bottom right label */
-.label-bottom-right {
-    bottom: 0.5rem;
-}
-
-/* Hide bottom label by default */
-.label-bottom-right {
-    display: none;
-}
-
-/* Display bottom label for latest message */
-.assistant-message-container.latest-message .label-bottom-right {
-    display: block;
-}
-
-/* Add padding to prevent overlap */
+/* Adjust padding to prevent overlap */
 .assistant-message-container {
     position: relative;
     padding-top: 1.5rem;
-}
-
-.assistant-message-container.latest-message {
     padding-bottom: 1.5rem;
 }
 

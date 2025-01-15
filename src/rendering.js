@@ -39,23 +39,6 @@ const RenderingModule = (function () {
         assistantMessageContainer.classList.add("assistant-message-container");
         assistantMessageContainer.style.position = "relative";
 
-        // Check if this is the latest assistant message
-        const isLatestAssistantMessage = (function () {
-          const reversedConversation = ChatModule.getCurrentChat()
-            .conversation.slice()
-            .reverse();
-          for (const msg of reversedConversation) {
-            if (msg.role === "assistant") {
-              return msg === message;
-            }
-          }
-          return false;
-        })();
-
-        // If it's not the latest message, add a class to indicate it's older
-        if (!isLatestAssistantMessage) {
-          assistantMessageContainer.classList.add("older-message");
-        }
 
         // Create content element
         const articleElem = document.createElement("article");
@@ -111,18 +94,13 @@ const RenderingModule = (function () {
         // Append copy button to the footer
         messageFooter.appendChild(copyButton);
 
-        // Create the bottom right label for the latest message
-        if (isLatestAssistantMessage) {
-          // Add a class to indicate it's the latest message
-          assistantMessageContainer.classList.add("latest-message");
+        // Create the bottom right label (always visible)
+        const modelInstructionLabelBottom = document.createElement("span");
+        modelInstructionLabelBottom.classList.add("model-instruction-label", "label-bottom-right");
+        modelInstructionLabelBottom.textContent = labelText;
 
-          const modelInstructionLabelBottom = document.createElement("span");
-          modelInstructionLabelBottom.classList.add("model-instruction-label", "label-bottom-right");
-          modelInstructionLabelBottom.textContent = labelText;
-
-          // Append the bottom label to the message footer
-          messageFooter.appendChild(modelInstructionLabelBottom);
-        }
+        // Append the bottom label to the message footer
+        messageFooter.appendChild(modelInstructionLabelBottom);
 
         // Assemble the assistant message container
         assistantMessageContainer.appendChild(articleElem);
