@@ -46,6 +46,9 @@ window.translationsData = {
     openai: "OpenAI",
     anthropic: "Anthropic",
     ollama: "Ollama",
+    providers: "Providers",
+    enterApiKey: "Enter API Key",
+    enterEndpointURL: "Enter Endpoint URL",
   },
   sv: {
     loading: "Laddar...",
