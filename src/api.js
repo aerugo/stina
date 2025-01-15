@@ -113,14 +113,19 @@ var ApiModule = (function () {
       case "ollama":
         // Use default endpoint if not provided
         const ollamaEndpoint = config.endpoint || "http://localhost:11434";
-        url = `${ollamaEndpoint}/api/chat`;
+        url = `${ollamaEndpoint}/api/generate`;
         headers = {
           "Content-Type": "application/json",
           // No API key needed for Ollama
         };
         body = {
           model: deploymentName,
-          prompt: messages.map((message) => message.content).join("\n"),
+          prompt: systemMessageContent || '', // Include system message
+          stream: false,
+          messages: messages.map((message) => ({
+            role: message.role,
+            content: message.content,
+          })),
           ...validOptions,
         };
         break;
@@ -172,13 +177,20 @@ var ApiModule = (function () {
           message: data.error.message || "Unknown error from Ollama API",
         };
       }
-      return {
-        error: false,
-        message: {
-          role: "assistant",
-          content: data.response.trim(),
-        },
-      };
+      if (data.message && data.message.content) {
+        return {
+          error: false,
+          message: {
+            role: "assistant",
+            content: data.message.content.trim(),
+          },
+        };
+      } else {
+        return {
+          error: true,
+          message: "Invalid response from Ollama API",
+        };
+      }
     }
 
     if (config.provider === "anthropic") {

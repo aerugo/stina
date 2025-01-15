@@ -555,9 +555,9 @@ var EventModule = (function () {
 
     // Adjust validation based on provider
     if (selectedProvider === 'ollama') {
-      // Ollama requires an endpoint but no API Key
+      // Only validate endpoint for Ollama, API key not required
       if (!endpoint) {
-          ModalModule.showCustomAlert(TranslationModule.translate('pleaseFillRequiredFields'));
+          ModalModule.showCustomAlert(TranslationModule.translate('pleaseSetEndpoint'));
           return;
       }
     } else if ((selectedProvider === 'openai' || selectedProvider === 'anthropic') && !apiKey) {
