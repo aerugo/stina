@@ -148,9 +148,10 @@
     <script>
       let instructionsLoaded = false;
       let modelsLoaded = false;
+      let providersLoaded = false;
       
       function initializeAppIfReady() {
-        if (instructionsLoaded && modelsLoaded) {
+        if (instructionsLoaded && modelsLoaded && providersLoaded) {
           ControllerModule.initializeApp();
         }
       }
@@ -164,9 +165,13 @@
         script.src = 'providers.js';
         script.onload = function() {
           console.log('providers.js has been loaded.');
+          providersLoaded = true;
+          initializeAppIfReady();
         };
         script.onerror = function() {
           console.warn('providers.js could not be loaded, continuing without providers.');
+          providersLoaded = true;
+          initializeAppIfReady();
         };
         document.head.appendChild(script);
       })();
