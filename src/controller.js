@@ -70,6 +70,11 @@ const ControllerModule = (function () {
     const selectedModelParams = ModelsModule.getModel(selectedModelKey);
     const deploymentName = selectedModelParams.deployment;
 
+    // Get the provider and config
+    const provider = selectedModelParams.provider;
+    const config = ConfigModule.getConfig();
+    const providerConfig = config.providerConfigs[provider] || {};
+
     // Start with a copy of the conversation WITHOUT the loading message
     let conversationToSend = [...currentState.conversation];
     let instructionLabel = "";
@@ -130,7 +135,9 @@ const ControllerModule = (function () {
         conversationToSend,
         deploymentName,
         modelOptions,
-        systemMessageContent
+        systemMessageContent,
+        provider,
+        providerConfig
       );
 
       if (apiResponse.error) {
