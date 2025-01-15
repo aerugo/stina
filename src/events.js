@@ -306,6 +306,13 @@ var EventModule = (function () {
               ConfigModule.updateConfig({
                 selectedInstructionId: newInstruction.id,
               });
+
+              // Update the current chat's selected instruction
+              const currentChat = ChatModule.getCurrentChat();
+              if (currentChat) {
+                currentChat.selectedInstructionId = newInstruction.id;
+                ChatModule.saveChats();
+              }
             } else {
               instructionsSelect.value =
                 ConfigModule.getConfig().selectedInstructionId;
