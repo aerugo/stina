@@ -426,6 +426,11 @@ const EventModule = (function () {
 
     enabledProviders.forEach((provider) => {
       const providerConfig = config.providerConfigs[provider] || {};
+      
+      // Determine if fields should be disabled
+      const apiKeyDisabled = providerConfig.apiKey ? 'disabled' : '';
+      const endpointDisabled = providerConfig.endpoint ? 'disabled' : '';
+
       content += `
         <h2 class="title is-4">${provider}</h2>
         <div class="field">
@@ -437,8 +442,10 @@ const EventModule = (function () {
               id="api-key-${provider}"
               placeholder="${TranslationModule.translate("enterApiKey")}"
               value="${providerConfig.apiKey || ""}"
+              ${apiKeyDisabled}
             />
           </div>
+          ${providerConfig.apiKey ? '<p style="color: gray; font-size: 0.9em;">This API Key is pre-configured and cannot be edited.</p>' : ''}
         </div>
       `;
 
@@ -456,8 +463,10 @@ const EventModule = (function () {
                 id="endpoint-${provider}"
                 placeholder="${TranslationModule.translate("enterEndpointURL")}"
                 value="${providerConfig.endpoint || ""}"
+                ${endpointDisabled}
               />
             </div>
+            ${providerConfig.endpoint ? '<p style="color: gray; font-size: 0.9em;">This Endpoint URL is pre-configured and cannot be edited.</p>' : ''}
           </div>
         `;
       }
@@ -672,11 +681,21 @@ const EventModule = (function () {
           endpoint = endpointInput ? endpointInput.value.trim() : "";
         }
 
-        updatedProviderConfigs[provider] = {
+        const updatedProviderConfig = {
           ...providerConfig, // Preserve existing properties like 'enabled'
-          apiKey,
-          endpoint,
         };
+
+        // Only update apiKey if it was not provided via providers.js
+        if (!providerConfig.apiKey) {
+          updatedProviderConfig.apiKey = apiKey;
+        }
+
+        // Only update endpoint if it was not provided via providers.js
+        if ((provider === "azure" || provider === "ollama") && !providerConfig.endpoint) {
+          updatedProviderConfig.endpoint = endpoint;
+        }
+
+        updatedProviderConfigs[provider] = updatedProviderConfig;
       }
     });
 
@@ -692,7 +711,7 @@ const EventModule = (function () {
 
     // Update ConfigModule with new configurations
     ConfigModule.updateConfig({
-      providerConfigs,
+      providerConfigs: updatedProviderConfigs,
       language: selectedLanguage,
       theme,
     });
