@@ -641,12 +641,15 @@ var EventModule = (function () {
     const enabledProviders = Object.keys(config.providerConfigs || {});
     const providerConfigs = {};
 
+    // Collect provider configurations
     enabledProviders.forEach((provider) => {
-      const apiKey = document.getElementById(`api-key-${provider}`).value.trim();
-      let endpoint = '';
+      const apiKeyInput = document.getElementById(`api-key-${provider}`);
+      const apiKey = apiKeyInput ? apiKeyInput.value.trim() : '';
 
+      let endpoint = '';
       if (provider === 'azure' || provider === 'ollama') {
-        endpoint = document.getElementById(`endpoint-${provider}`).value.trim();
+        const endpointInput = document.getElementById(`endpoint-${provider}`);
+        endpoint = endpointInput ? endpointInput.value.trim() : '';
       }
 
       providerConfigs[provider] = {
@@ -655,12 +658,15 @@ var EventModule = (function () {
       };
     });
 
-    const selectedLanguage = document.getElementById("language-select").value;
+    // Collect language setting
+    const languageSelect = document.getElementById("language-select");
+    const selectedLanguage = languageSelect ? languageSelect.value : config.language;
+
     const theme = document.body.classList.contains("light-mode")
       ? "light-mode"
       : "dark-mode";
 
-    // Update ConfigModule with new provider configurations
+    // Update ConfigModule with new configurations
     ConfigModule.updateConfig({
       providerConfigs,
       language: selectedLanguage,
