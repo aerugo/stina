@@ -482,9 +482,9 @@ const EventModule = (function () {
     enabledProviders.forEach((provider) => {
       const providerConfig = config.providerConfigs[provider] || {};
 
-      // Determine if fields should be disabled
-      const apiKeyDisabled = providerConfig.fromProvidersJs ? "disabled" : "";
-      const endpointDisabled = providerConfig.fromProvidersJs ? "disabled" : "";
+      // Determine if fields should be disabled based on per-property flags
+      const apiKeyDisabled = providerConfig.apiKeyFromProvidersJs ? "disabled" : "";
+      const endpointDisabled = providerConfig.endpointFromProvidersJs ? "disabled" : "";
 
       content += `
         <h2 class="title is-4">${provider}</h2>

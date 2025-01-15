@@ -23,19 +23,38 @@ const ConfigModule = (function () {
     if (typeof window.providerConfigs === 'undefined' || Object.keys(window.providerConfigs).length === 0) {
       // providers.js not found or is empty, enable all providers by default
       initialProviderConfigs = {
-        azure: { enabled: true, apiKey: '', endpoint: '', fromProvidersJs: false },
-        openai: { enabled: true, apiKey: '', fromProvidersJs: false },
-        ollama: { enabled: true, endpoint: '', fromProvidersJs: false },
-        anthropic: { enabled: true, apiKey: '', fromProvidersJs: false }
+        azure: { enabled: true, apiKey: '', endpoint: '', apiKeyFromProvidersJs: false, endpointFromProvidersJs: false },
+        openai: { enabled: true, apiKey: '', apiKeyFromProvidersJs: false },
+        ollama: { enabled: true, endpoint: '', endpointFromProvidersJs: false },
+        anthropic: { enabled: true, apiKey: '', apiKeyFromProvidersJs: false }
       };
     } else {
       // Use providerConfigs from providers.js
       initialProviderConfigs = {};
       for (const provider in window.providerConfigs) {
-        initialProviderConfigs[provider] = {
-          ...window.providerConfigs[provider],
-          fromProvidersJs: true, // Mark as originating from providers.js
+        const providerConfig = window.providerConfigs[provider];
+        const initialConfig = {
+          enabled: providerConfig.enabled || false,
         };
+
+        // For each possible property (apiKey, endpoint), set the value and mark if fromProvidersJs
+        if ('apiKey' in providerConfig) {
+          initialConfig.apiKey = providerConfig.apiKey;
+          initialConfig.apiKeyFromProvidersJs = true;
+        } else {
+          initialConfig.apiKey = '';
+          initialConfig.apiKeyFromProvidersJs = false;
+        }
+
+        if ('endpoint' in providerConfig) {
+          initialConfig.endpoint = providerConfig.endpoint;
+          initialConfig.endpointFromProvidersJs = true;
+        } else {
+          initialConfig.endpoint = '';
+          initialConfig.endpointFromProvidersJs = false;
+        }
+
+        initialProviderConfigs[provider] = initialConfig;
       }
     }
 
@@ -48,8 +67,9 @@ const ConfigModule = (function () {
       config.providerConfigs[provider] = {
         ...initialProviderConfigs[provider],
         ...storedProviderConfigs[provider],
-        // Preserve the 'fromProvidersJs' flag from initial configurations
-        fromProvidersJs: initialProviderConfigs[provider].fromProvidersJs || false,
+        // Preserve the per-property fromProvidersJs flags
+        apiKeyFromProvidersJs: initialProviderConfigs[provider].apiKeyFromProvidersJs,
+        endpointFromProvidersJs: initialProviderConfigs[provider].endpointFromProvidersJs,
       };
     }
   }
