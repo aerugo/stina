@@ -173,24 +173,19 @@ var EventModule = (function () {
       instructionsSelect.innerHTML = "";
       const currentChat = ChatModule.getCurrentChat();
       const config = ConfigModule.getConfig();
+
+      // Get custom instructions from localStorage
+      const customInstructions = JSON.parse(localStorage.getItem("customInstructions")) || [];
+
+      // Combine defaultInstructions and customInstructions
+      window.instructions = window.defaultInstructions.concat(customInstructions);
+
       const selectedInstructionId =
         (currentChat && currentChat.selectedInstructionId) ||
         config.selectedInstructionId ||
         window.instructions[0]?.id;
 
-      // Debug logging
-      console.log(
-        "populateInstructions - window.instructions:",
-        window.instructions
-      );
-
-      // Check if window.instructions exists and has instructions
-      if (!window.instructions || window.instructions.length === 0) {
-        console.error("No instructions available");
-        return;
-      }
-
-      // Loop through all instructions in window.instructions and add them to select element
+      // Loop through all instructions in window.instructions
       window.instructions.forEach((instruction) => {
         const option = document.createElement("option");
         option.value = instruction.id;
@@ -296,9 +291,6 @@ var EventModule = (function () {
                 "customInstructions",
                 JSON.stringify(customInstructions)
               );
-
-              // Update window.instructions
-              window.instructions.push(newInstruction);
 
               // Update instructions in select element
               populateInstructions();
