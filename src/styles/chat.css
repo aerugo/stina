@@ -175,9 +175,51 @@ body {
 
 /* Model and Instruction Label Styles */
 .model-instruction-label {
+    position: absolute;
+    right: 1rem;
     font-size: 0.8rem;
     color: #6b6b6b;
-    text-align: right;
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 0.2rem 0.4rem;
+    border-radius: 4px;
+    transition: opacity 0.2s;
+    pointer-events: none;
+}
+
+/* Top right label - hidden by default */
+.label-top-right {
+    top: 0;
+    opacity: 0;
+}
+
+/* Show top label on hover */
+.assistant-message-container:hover .label-top-right {
+    opacity: 1;
+}
+
+/* Bottom right label */
+.label-bottom-right {
+    bottom: 0.5rem;
+}
+
+/* Hide bottom label by default */
+.label-bottom-right {
+    display: none;
+}
+
+/* Display bottom label for latest message */
+.assistant-message-container.latest-message .label-bottom-right {
+    display: block;
+}
+
+/* Add padding to prevent overlap */
+.assistant-message-container {
+    position: relative;
+    padding-top: 1.5rem;
+}
+
+.assistant-message-container.latest-message {
+    padding-bottom: 1.5rem;
 }
 
 /* Transparent Button Style */
