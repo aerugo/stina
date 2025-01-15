@@ -501,7 +501,7 @@ const EventModule = (function () {
             />
           </div>
           ${
-            providerConfig.apiKey
+            providerConfig.apiKeyFromProvidersJs
               ? '<p style="color: gray; font-size: 0.9em;">This API Key is pre-configured and cannot be edited.</p>'
               : ""
           }
@@ -526,7 +526,7 @@ const EventModule = (function () {
               />
             </div>
             ${
-              providerConfig.endpoint
+              providerConfig.endpointFromProvidersJs
                 ? '<p style="color: gray; font-size: 0.9em;">This Endpoint URL is pre-configured and cannot be edited.</p>'
                 : ""
             }
@@ -571,7 +571,7 @@ const EventModule = (function () {
       const providerConfig = providerConfigs[provider];
 
       // Only attach event listeners if the fields are editable
-      if (!providerConfig.apiKey) {
+      if ('apiKey' in providerConfig && !providerConfig.apiKeyFromProvidersJs) {
         const apiKeyInput = document.getElementById(`api-key-${provider}`);
         if (apiKeyInput) {
           apiKeyInput.addEventListener('input', (event) => {
@@ -580,7 +580,7 @@ const EventModule = (function () {
         }
       }
 
-      if ((provider === "azure" || provider === "ollama") && !providerConfig.endpoint) {
+      if ('endpoint' in providerConfig && !providerConfig.endpointFromProvidersJs) {
         const endpointInput = document.getElementById(`endpoint-${provider}`);
         if (endpointInput) {
           endpointInput.addEventListener('input', (event) => {
