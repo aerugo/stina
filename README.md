@@ -399,7 +399,6 @@ Stina is designed with privacy in mind. All chat history and user data are store
 - **No Server Transmission**: Messages are not sent to or stored on any servers beyond what is necessary to communicate with the AI API endpoints you have configured.
 - **Session Persistence**: Your chat history is preserved between sessions on the same machine and browser.
 - **Data Control**: You have full control over your data. Clearing your browser's cache or local storage will permanently delete your chat history.
-- **Privacy Assurance**: Since data is not stored or transmitted elsewhere, this aligns with strict organizational policies on data handling.
 
 **Note**: Be cautious when using shared or public computers. Other users with access to the same machine and browser may be able to view your chat history stored in the local storage.
 
