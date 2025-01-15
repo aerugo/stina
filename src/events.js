@@ -106,6 +106,40 @@ const EventModule = (function () {
     }
   }
 
+  /**
+   * Places the caret at the end of the specified element.
+   * @param {HTMLElement} el - The element to place the caret in.
+   */
+  function placeCaretAtEnd(el) {
+    el.focus();
+    const range = document.createRange();
+    range.selectNodeContents(el);
+    range.collapse(false);
+    const sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(range);
+  }
+
+  /**
+   * Inserts text at the current cursor position in a contenteditable element.
+   * @param {string} text - The text to insert.
+   */
+  function insertTextAtCursor(text) {
+    const sel = window.getSelection();
+    if (!sel.rangeCount) return;
+    const range = sel.getRangeAt(0);
+    range.deleteContents();
+
+    const textNode = document.createTextNode(text);
+    range.insertNode(textNode);
+
+    // Move the caret to the end of the inserted text node
+    range.setStartAfter(textNode);
+    range.collapse(true);
+    sel.removeAllRanges();
+    sel.addRange(range);
+  }
+
   function setupEventListeners() {
     const models = ModelsModule.getModels();
     // Add mobile menu toggle
@@ -118,6 +152,25 @@ const EventModule = (function () {
     instructionsSelect = document.getElementById("instructions-select");
     const userInput = document.getElementById("user-input");
     const sendBtn = document.getElementById("send-btn");
+
+    // Add paste event listener to prevent formatting
+    userInput.addEventListener("paste", function (e) {
+      e.preventDefault();
+      // Get text data from clipboard
+      const text = (e.clipboardData || window.clipboardData).getData("text/plain");
+      // Insert text at the caret position
+      insertTextAtCursor(text);
+    });
+
+    // Add input event listener to remove formatting from keyboard input
+    userInput.addEventListener("input", function (e) {
+      // Remove any HTML tags, leaving only plain text
+      const text = userInput.innerText;
+      userInput.innerHTML = "";
+      userInput.innerText = text;
+      // Place the caret at the end
+      placeCaretAtEnd(userInput);
+    });
     const newChatBtn = document.getElementById("new-chat-btn");
     const settingsBtn = document.getElementById("settings-btn");
     const chatListContainer = document.getElementById("chat-list");
