@@ -339,15 +339,20 @@ var EventModule = (function () {
 
     // Validate provider configuration
     if (provider === "ollama") {
-      // No API Key required for Ollama
-    } else if ((provider === "openai" || provider === "anthropic") && !providerConfig.apiKey) {
+      if (!providerConfig.endpoint) {
+        ModalModule.showCustomAlert(
+          TranslationModule.translate("pleaseSetEndpoint") + ` (${provider})`
+        );
+        return;
+      }
+    } else if (!providerConfig.apiKey) {
       ModalModule.showCustomAlert(
-        TranslationModule.translate("pleaseSetConfiguration") + ` (${provider})`
+        TranslationModule.translate("pleaseSetApiKey") + ` (${provider})`
       );
       return;
-    } else if (provider === "azure" && (!providerConfig.apiKey || !providerConfig.endpoint)) {
+    } else if (provider === "azure" && !providerConfig.endpoint) {
       ModalModule.showCustomAlert(
-        TranslationModule.translate("pleaseSetConfiguration") + " (Azure)"
+        TranslationModule.translate("pleaseSetEndpoint") + " (Azure)"
       );
       return;
     }
@@ -408,44 +413,54 @@ var EventModule = (function () {
 
   function openSettingsModal() {
     const config = ConfigModule.getConfig();
-    const modalContent = `
-      <div class="field">
-        <label class="label">${TranslationModule.translate(
-          "endpointURL"
-        )}</label>
-        <div class="control">
-          <input
-            class="input"
-            type="text"
-            id="endpoint"
-            placeholder="https://YOUR_RESOURCE_NAME.openai.azure.com"
-            value="${config.endpoint || ""}"
-          />
+    const enabledProviders = Object.keys(config.providerConfigs || {});
+
+    let modalContent = '';
+
+    enabledProviders.forEach((provider) => {
+      const providerConfig = config.providerConfigs[provider] || {};
+      modalContent += `
+        <div class="field">
+          <label class="label">${TranslationModule.translate('apiKey')} (${provider})</label>
+          <div class="control">
+            <input
+              class="input"
+              type="password"
+              id="api-key-${provider}"
+              placeholder="${TranslationModule.translate('enterApiKey')}"
+              value="${providerConfig.apiKey || ''}"
+            />
+          </div>
         </div>
-      </div>
-      <div class="field">
-        <label class="label">${TranslationModule.translate("apiKey")}</label>
-        <div class="control">
-          <input 
-            class="input" 
-            type="password" 
-            id="api-key" 
-            placeholder="YOUR_API_KEY" 
-            value="${config.apiKey || ""}"
-          />
-        </div>
-      </div>
+      `;
+
+      // Include Endpoint field if the provider requires it
+      if (provider === 'azure' || provider === 'ollama') {
+        modalContent += `
+          <div class="field">
+            <label class="label">${TranslationModule.translate('endpointURL')} (${provider})</label>
+            <div class="control">
+              <input
+                class="input"
+                type="text"
+                id="endpoint-${provider}"
+                placeholder="${provider === 'azure' ? 'https://YOUR_RESOURCE_NAME.openai.azure.com' : 'http://localhost:11434'}"
+                value="${providerConfig.endpoint || ''}"
+              />
+            </div>
+          </div>
+        `;
+      }
+    });
+
+    modalContent += `
       <div class="field">
         <label class="label">${TranslationModule.translate("language")}</label>
         <div class="control">
           <div class="select">
             <select id="language-select">
-              <option value="en"${
-                config.language === "en" ? " selected" : ""
-              }>${TranslationModule.translate("english")}</option>
-              <option value="sv"${
-                config.language === "sv" ? " selected" : ""
-              }>${TranslationModule.translate("swedish")}</option>
+              <option value="en"${config.language === "en" ? " selected" : ""}>${TranslationModule.translate("english")}</option>
+              <option value="sv"${config.language === "sv" ? " selected" : ""}>${TranslationModule.translate("swedish")}</option>
             </select>
           </div>
         </div>
