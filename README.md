@@ -1,10 +1,10 @@
 # Stina AI Chat Client
 
-Stina is a lightweight AI chat client specifically designed for environments with strict restrictions. In many government, healthcare, and large corporate settings, stringent IT policies prohibit the use of web servers, installations of new software, or access to online AI chat bots. Despite these limitations, there is often a need for advanced AI assistance within these organizations.
+Stina is a lightweight AI chat client specifically designed restricted environments. In many government, healthcare, and large corporate settings, policies prohibit running servers, installing new software, or access to online AI chat bots. Many of these organizations do have access to AI language models through API keys or local instances like Ollama.
 
-**Stina addresses this need by providing a client-side solution that requires no server, no installations, and no build tools.** Users can interact with powerful language models using their own API keys or a local Ollama instance, all within a secure and compliant environment.
+**Stina is a bring-your-own-key AI chatbot that requires that runs in the browser, requires no server, no installations, and no build tools.**  You simply download the files, configure your API keys, and open `chat.html` in your browser.
 
-Hosting Stina on platforms like SharePoint enhances accessibility within intranet systems commonly used in such settings. This makes Stina an invaluable tool for organizations looking to leverage AI capabilities without violating internal policies.
+Stina can be hosted on a local file system, a network drive, or a SharePoint server. It can be customized to use different language models, provide custom instructions, and can support multiple languages.
 
 ## Table of Contents
 
@@ -35,15 +35,13 @@ Stina is an AI chat client built with pure JavaScript, HTML, and CSS. It is desi
 - Usage of online AI chat bots is prohibited.
 - There is access to API keys for language models or an Ollama instance.
 
-Stina operates entirely on the client side without any server dependencies. This makes it ideal for secure or restricted environments where resources are limited or tightly controlled.
-
 ## Features
 
-- **Zero Dependencies**: Run directly from the filesystem without any server or installations.
-- **API Key Support**: Connect to various language models using your own API keys.
+- **No Build Dependencies**: Run directly from the filesystem without any server or installations. Stina currently relies on some libraries over CDNs, but these can be replaced with local copies if needed.
+- **API Key Support**: Connect to various language models using your own API keys. Currently supports Azure AI Foundry, OpenAI, and Anthropic.
 - **Ollama Integration**: Supports local language models via Ollama.
-- **Customization**: Easily modify the code or configurations without build tools.
-- **Multi-language Support**: Includes localization support for multiple languages.
+- **Customization**: Easily modify the code or configurations without build tools. In environments that don't support Node.js and NPM, Stina is ideal.
+- **Multi-language Support**: Includes localization support for multiple languages. Currently, English and Swedish are supported.
 - **SharePoint Compatibility**: Can be served through a SharePoint server by renaming `chat.html` to `chat.aspx`.
 - **User-friendly Interface**: Clean and simple UI for seamless interaction.
 
@@ -66,7 +64,7 @@ Stina operates entirely on the client side without any server dependencies. This
 
 2. **Set Up API Keys**
 
-   Obtain API keys from your language model provider (e.g., OpenAI, Azure). If using Ollama, ensure it's running locally.
+   Obtain API keys from your language model provider (e.g., Azure AI Foundry, OpenAI). If using Ollama, ensure it's running locally.
 
 ## Configuration
 
@@ -114,7 +112,7 @@ Stina can be configured using template files or directly in the browser's local 
      };
      ```
 
-   - **models.js**: Define custom models or override existing ones.
+   - **models.js**: Define custom models or override existing ones. Stina currently only supports setting model configurations through the models file. If you need models with differnt temperature, max tokens, or context length, you can add them here.
 
      ```javascript
      window.additionalModels = {
