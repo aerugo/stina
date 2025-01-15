@@ -2,7 +2,7 @@
  * Modal Module
  * Handles custom modal dialogs
  */
-var ModalModule = (function () {
+const ModalModule = (function () {
   function showCustomModal(title, message, buttons, callback) {
     const modal = document.getElementById("custom-modal");
     modal.classList.add("is-active");

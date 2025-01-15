@@ -2,7 +2,7 @@
  * Message Module
  * Handles message creation, processing, and conversation management.
  */
-var MessageModule = (function () {
+const MessageModule = (function () {
   async function generateChatTitle(userMessage) {
     const models = ModelsModule.getModels();
     const prompt = `${generateTitlePrompt} ${userMessage}`;

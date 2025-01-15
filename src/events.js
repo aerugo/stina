@@ -2,7 +2,7 @@
  * Event Module
  * Handles event listeners and event-related functions.
  */
-var EventModule = (function () {
+const EventModule = (function () {
   let editInstructionBtn;
   let instructionsSelect;
 
@@ -21,8 +21,8 @@ var EventModule = (function () {
     modelSelect.innerHTML = "";
 
     // Filter models based on enabled providers
-    const filteredModels = Object.entries(models).filter(
-      ([_, model]) => enabledProviders.includes(model.provider)
+    const filteredModels = Object.entries(models).filter(([_, model]) =>
+      enabledProviders.includes(model.provider)
     );
 
     // Check if there are models available
@@ -179,10 +179,12 @@ var EventModule = (function () {
       const config = ConfigModule.getConfig();
 
       // Get custom instructions from localStorage
-      const customInstructions = JSON.parse(localStorage.getItem("customInstructions")) || [];
+      const customInstructions =
+        JSON.parse(localStorage.getItem("customInstructions")) || [];
 
       // Combine defaultInstructions and customInstructions
-      window.instructions = window.defaultInstructions.concat(customInstructions);
+      window.instructions =
+        window.defaultInstructions.concat(customInstructions);
 
       const selectedInstructionId =
         (currentChat && currentChat.selectedInstructionId) ||
@@ -427,41 +429,43 @@ var EventModule = (function () {
       content += `
         <h2 class="title is-4">${provider}</h2>
         <div class="field">
-          <label class="label">${TranslationModule.translate('apiKey')}</label>
+          <label class="label">${TranslationModule.translate("apiKey")}</label>
           <div class="control">
             <input
               class="input"
               type="password"
               id="api-key-${provider}"
-              placeholder="${TranslationModule.translate('enterApiKey')}"
-              value="${providerConfig.apiKey || ''}"
+              placeholder="${TranslationModule.translate("enterApiKey")}"
+              value="${providerConfig.apiKey || ""}"
             />
           </div>
         </div>
       `;
 
       // Include Endpoint field if the provider requires it
-      if (provider === 'azure' || provider === 'ollama') {
+      if (provider === "azure" || provider === "ollama") {
         content += `
           <div class="field">
-            <label class="label">${TranslationModule.translate('endpointURL')}</label>
+            <label class="label">${TranslationModule.translate(
+              "endpointURL"
+            )}</label>
             <div class="control">
               <input
                 class="input"
                 type="text"
                 id="endpoint-${provider}"
-                placeholder="${TranslationModule.translate('enterEndpointURL')}"
-                value="${providerConfig.endpoint || ''}"
+                placeholder="${TranslationModule.translate("enterEndpointURL")}"
+                value="${providerConfig.endpoint || ""}"
               />
             </div>
           </div>
         `;
       }
 
-      content += '<hr />';
+      content += "<hr />";
     });
 
-    content += '</div>';
+    content += "</div>";
     return content;
   }
 
@@ -474,8 +478,12 @@ var EventModule = (function () {
         <div class="control">
           <div class="select">
             <select id="language-select">
-              <option value="en"${config.language === "en" ? " selected" : ""}>${TranslationModule.translate("english")}</option>
-              <option value="sv"${config.language === "sv" ? " selected" : ""}>${TranslationModule.translate("swedish")}</option>
+              <option value="en"${
+                config.language === "en" ? " selected" : ""
+              }>${TranslationModule.translate("english")}</option>
+              <option value="sv"${
+                config.language === "sv" ? " selected" : ""
+              }>${TranslationModule.translate("swedish")}</option>
             </select>
           </div>
         </div>
@@ -489,10 +497,14 @@ var EventModule = (function () {
         <div class="column is-one-quarter">
           <!-- Left Side Menu -->
           <aside class="menu">
-            <p class="menu-label">${TranslationModule.translate('settings')}</p>
+            <p class="menu-label">${TranslationModule.translate("settings")}</p>
             <ul class="menu-list">
-              <li><a id="settings-tab-providers" class="is-active">${TranslationModule.translate('providers')}</a></li>
-              <li><a id="settings-tab-language">${TranslationModule.translate('language')}</a></li>
+              <li><a id="settings-tab-providers" class="is-active">${TranslationModule.translate(
+                "providers"
+              )}</a></li>
+              <li><a id="settings-tab-language">${TranslationModule.translate(
+                "language"
+              )}</a></li>
             </ul>
           </aside>
         </div>
@@ -527,27 +539,27 @@ var EventModule = (function () {
 
     // After the modal is displayed, set up tab navigation
     setTimeout(() => {
-      const providersTab = document.getElementById('settings-tab-providers');
-      const languageTab = document.getElementById('settings-tab-language');
-      const settingsContent = document.getElementById('settings-content');
+      const providersTab = document.getElementById("settings-tab-providers");
+      const languageTab = document.getElementById("settings-tab-language");
+      const settingsContent = document.getElementById("settings-content");
 
       // Function to deactivate all tabs
       function deactivateAllTabs() {
-        providersTab.classList.remove('is-active');
-        languageTab.classList.remove('is-active');
+        providersTab.classList.remove("is-active");
+        languageTab.classList.remove("is-active");
       }
 
       // Event listener for Providers tab
-      providersTab.addEventListener('click', () => {
+      providersTab.addEventListener("click", () => {
         deactivateAllTabs();
-        providersTab.classList.add('is-active');
+        providersTab.classList.add("is-active");
         settingsContent.innerHTML = getProvidersContent();
       });
 
       // Event listener for Language tab
-      languageTab.addEventListener('click', () => {
+      languageTab.addEventListener("click", () => {
         deactivateAllTabs();
-        languageTab.classList.add('is-active');
+        languageTab.classList.add("is-active");
         settingsContent.innerHTML = getLanguageContent();
       });
 
@@ -651,26 +663,28 @@ var EventModule = (function () {
     Object.keys(providerConfigs).forEach((provider) => {
       const providerConfig = providerConfigs[provider];
       if (providerConfig.enabled) {
-      const apiKeyInput = document.getElementById(`api-key-${provider}`);
-      const apiKey = apiKeyInput ? apiKeyInput.value.trim() : '';
+        const apiKeyInput = document.getElementById(`api-key-${provider}`);
+        const apiKey = apiKeyInput ? apiKeyInput.value.trim() : "";
 
-      let endpoint = '';
-      if (provider === 'azure' || provider === 'ollama') {
-        const endpointInput = document.getElementById(`endpoint-${provider}`);
-        endpoint = endpointInput ? endpointInput.value.trim() : '';
+        let endpoint = "";
+        if (provider === "azure" || provider === "ollama") {
+          const endpointInput = document.getElementById(`endpoint-${provider}`);
+          endpoint = endpointInput ? endpointInput.value.trim() : "";
+        }
+
+        updatedProviderConfigs[provider] = {
+          ...providerConfig, // Preserve existing properties like 'enabled'
+          apiKey,
+          endpoint,
+        };
       }
-
-      updatedProviderConfigs[provider] = {
-        ...providerConfig,  // Preserve existing properties like 'enabled'
-        apiKey,
-        endpoint,
-      };
-    }
     });
 
     // Collect language setting
     const languageSelect = document.getElementById("language-select");
-    const selectedLanguage = languageSelect ? languageSelect.value : config.language;
+    const selectedLanguage = languageSelect
+      ? languageSelect.value
+      : config.language;
 
     const theme = document.body.classList.contains("light-mode")
       ? "light-mode"

@@ -2,7 +2,7 @@
  * Storage Module
  * Abstracts localStorage interactions for persistent data.
  */
-var StorageModule = (function () {
+const StorageModule = (function () {
   /**
    * Saves data to localStorage under a specified key.
    * @param {string} key - The key under which to store the data.
@@ -33,7 +33,7 @@ var StorageModule = (function () {
   function loadData(key) {
     try {
       const data = localStorage.getItem(key);
-      if (!data || data === 'undefined' || data === 'null') return null;
+      if (!data || data === "undefined" || data === "null") return null;
       try {
         return JSON.parse(data);
       } catch (e) {

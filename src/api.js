@@ -2,7 +2,7 @@
  * API Module
  * Handles all interactions with the Azure OpenAI API.
  */
-var ApiModule = (function () {
+const ApiModule = (function () {
   const API_VERSION = "2024-12-01-preview";
 
   /**

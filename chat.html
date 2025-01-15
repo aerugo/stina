@@ -128,21 +128,25 @@
 
     <!-- Include Config -->
     <script src="config.js"></script>
+    <script src="src/config_module.js"></script>
 
     <!-- Include Translations -->
     <script src="src/translations.js"></script>
     <script src="src/translation.js"></script>
 
+    <!-- Include Default Models -->
+    <script src="src/default_models.js"></script>
+    <script src="src/models_module.js"></script>
+
     <!-- Application Modules -->
     <script src="src/storage.js"></script>
-    <script src="src/config.js"></script>
+    <script src="src/controller.js"></script>
     <script src="src/api.js"></script>
     <script src="src/chat.js"></script>
     <script src="src/message.js"></script>
     <script src="src/rendering.js"></script>
     <script src="src/events.js"></script>
     <script src="src/modal.js"></script>
-    <script src="src/controller.js"></script>
 
     <script>
       let instructionsLoaded = false;
@@ -159,7 +163,7 @@
     <script>
       // Function to dynamically load providers.js if it exists
       (function() {
-        var script = document.createElement('script');
+        const script = document.createElement('script');
         script.src = 'providers.js';
         script.onload = function() {
           console.log('providers.js has been loaded.');
@@ -179,7 +183,7 @@
     <script>
       // Function to dynamically load instructions.js if it exists
       (function() {
-        var script = document.createElement('script');
+        const script = document.createElement('script');
         script.src = 'instructions.js';
         script.onload = function() {
           console.log('instructions.js has been loaded.');
@@ -216,7 +220,7 @@
     <!-- Dynamically load instructions.js and call mergeInstructions -->
     <script>
       (function() {
-        var script = document.createElement('script');
+        const script = document.createElement('script');
         script.src = 'instructions.js';
         script.onload = function() {
           console.log('instructions.js has been loaded.');
@@ -233,10 +237,6 @@
         document.head.appendChild(script);
       })();
     </script>
-
-    <!-- Include Default Models -->
-    <script src="src/default_models.js"></script>
-    <script src="src/models_module.js"></script>
 
     <!-- Function to merge models -->
     <script>
@@ -255,7 +255,7 @@
     <!-- Dynamically load models.js and call mergeModels -->
     <script>
       (function() {
-        var script = document.createElement('script');
+        const script = document.createElement('script');
         script.src = 'models.js';
         script.onload = function() {
           console.log('models.js loaded.');

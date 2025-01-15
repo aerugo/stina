@@ -72,7 +72,6 @@ const ControllerModule = (function () {
 
     // Get the provider and config
     const provider = selectedModelParams.provider;
-    const config = ConfigModule.getConfig();
     const providerConfig = config.providerConfigs[provider] || {};
 
     // Start with a copy of the conversation WITHOUT the loading message

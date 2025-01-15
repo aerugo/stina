@@ -2,7 +2,7 @@
  * Models Module
  * Provides access to available models.
  */
-var ModelsModule = (function () {
+const ModelsModule = (function () {
   function getModels() {
     return window.models;
   }

@@ -14,7 +14,7 @@ marked.setOptions({
   },
 });
 
-var RenderingModule = (function () {
+const RenderingModule = (function () {
   const models = ModelsModule.getModels(); // Retrieve models
 
   function createMessageElement(message) {
