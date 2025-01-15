@@ -202,7 +202,9 @@ const EventModule = (function () {
       // Add option for creating new instruction
       const customOption = document.createElement("option");
       customOption.value = "custom";
-      customOption.textContent = "Skapa ny instruktion...";
+      customOption.textContent = TranslationModule.translate(
+        "createNewInstruction"
+      );
       instructionsSelect.appendChild(customOption);
 
       instructionsSelect.value = selectedInstructionId;
@@ -426,10 +428,16 @@ const EventModule = (function () {
 
     enabledProviders.forEach((provider) => {
       const providerConfig = config.providerConfigs[provider] || {};
-      
+
       // Determine if fields should be disabled
-      const apiKeyDisabled = (providerConfig.apiKey !== undefined && providerConfig.apiKey !== '') ? 'disabled' : '';
-      const endpointDisabled = (providerConfig.endpoint !== undefined && providerConfig.endpoint !== '') ? 'disabled' : '';
+      const apiKeyDisabled =
+        providerConfig.apiKey !== undefined && providerConfig.apiKey !== ""
+          ? "disabled"
+          : "";
+      const endpointDisabled =
+        providerConfig.endpoint !== undefined && providerConfig.endpoint !== ""
+          ? "disabled"
+          : "";
 
       content += `
         <h2 class="title is-4">${provider}</h2>
@@ -445,7 +453,11 @@ const EventModule = (function () {
               ${apiKeyDisabled}
             />
           </div>
-          ${providerConfig.apiKey ? '<p style="color: gray; font-size: 0.9em;">This API Key is pre-configured and cannot be edited.</p>' : ''}
+          ${
+            providerConfig.apiKey
+              ? '<p style="color: gray; font-size: 0.9em;">This API Key is pre-configured and cannot be edited.</p>'
+              : ""
+          }
         </div>
       `;
 
@@ -466,7 +478,11 @@ const EventModule = (function () {
                 ${endpointDisabled}
               />
             </div>
-            ${providerConfig.endpoint ? '<p style="color: gray; font-size: 0.9em;">This Endpoint URL is pre-configured and cannot be edited.</p>' : ''}
+            ${
+              providerConfig.endpoint
+                ? '<p style="color: gray; font-size: 0.9em;">This Endpoint URL is pre-configured and cannot be edited.</p>'
+                : ""
+            }
           </div>
         `;
       }
@@ -691,7 +707,10 @@ const EventModule = (function () {
         }
 
         // Only update endpoint if it was not provided via providers.js
-        if ((provider === "azure" || provider === "ollama") && !providerConfig.endpoint) {
+        if (
+          (provider === "azure" || provider === "ollama") &&
+          !providerConfig.endpoint
+        ) {
           updatedProviderConfig.endpoint = endpoint;
         }
 

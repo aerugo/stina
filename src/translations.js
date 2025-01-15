@@ -18,6 +18,7 @@ window.translationsData = {
     pleaseSetConfiguration:
       "Please set your configuration in the settings before sending messages.",
     pleaseFillRequiredFields: "Please fill in all required fields.",
+    createNewInstruction: "Create New Instruction",
     customInstructionTitle: "Custom Instruction",
     editCustomInstructionTitle: "Edit Custom Instruction",
     createCustomInstructionTitle: "Create Custom Instruction",
@@ -69,6 +70,7 @@ window.translationsData = {
     pleaseSetConfiguration:
       "Vänligen ställ in din konfiguration i inställningarna innan du skickar meddelanden.",
     pleaseFillRequiredFields: "Vänligen fyll i alla obligatoriska fält.",
+    createNewInstruction: "Skapa ny instruktion",
     customInstructionTitle: "Anpassad instruktion",
     editCustomInstructionTitle: "Redigera anpassad instruktion",
     createCustomInstructionTitle: "Skapa anpassad instruktion",
