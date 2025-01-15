@@ -113,7 +113,7 @@ var ApiModule = (function () {
       case "ollama":
         // Use default endpoint if not provided
         const ollamaEndpoint = config.endpoint || "http://localhost:11434";
-        url = `${ollamaEndpoint}/api/generate`;
+        url = `${ollamaEndpoint}/api/chat`;
         headers = {
           "Content-Type": "application/json",
           // No API key needed for Ollama

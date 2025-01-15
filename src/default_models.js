@@ -47,12 +47,10 @@ window.defaultModels = {
   // Ollama
 
   "ollama-llama2": {
-    label: "Llama 2 (Ollama)",
-    deployment: "llama2",
+    label: "Llama 3.2 (Ollama)",
+    deployment: "llama3.2",
     provider: "ollama",
     context_length: 4096,
-    max_tokens: 2048,
-    temperature: 0.7,
     system: true,
   },
 };

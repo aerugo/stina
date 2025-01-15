@@ -2,9 +2,7 @@ window.defaultInstructions = [
   {
     id: "default_1",
     order: 1,
-    label: "Standardassistent", 
-    content: "Du är en hjälpsam assistent.",
+    label: TranslationModule.translate("standardAssistantTitle"),
+    content: TranslationModule.translate("standardAssistantInstruction"),
   },
 ];
-
-console.log("default_instructions.js har laddats:", window.defaultInstructions);

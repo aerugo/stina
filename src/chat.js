@@ -50,7 +50,7 @@ var ChatModule = (function () {
     const chatId = Date.now().toString();
     const chat = {
       id: chatId,
-      name: TranslationModule.translate('newChat'),
+      name: TranslationModule.translate("newChat"),
       conversation: [],
       selectedModelKey: selectedModelKey,
       selectedInstructionId: selectedInstructionId,
@@ -99,7 +99,7 @@ var ChatModule = (function () {
     if (chats.length <= 1) {
       // Prevent deleting the last chat
       ModalModule.showCustomAlert(
-        TranslationModule.translate('cannotDeleteLastChat')
+        TranslationModule.translate("cannotDeleteLastChat")
       );
       return {
         chats,
@@ -134,7 +134,7 @@ var ChatModule = (function () {
   function updateChatTitle(chatId, newTitle) {
     const chat = chats.find((c) => c.id === chatId);
     if (chat) {
-      const defaultTitle = TranslationModule.translate('newChat');
+      const defaultTitle = TranslationModule.translate("newChat");
       chat.name = newTitle || defaultTitle;
       chat.lastUpdated = Date.now();
       // Unset isNewChat flag if the title is different from the default
@@ -184,7 +184,7 @@ var ChatModule = (function () {
     } else {
       // Check for an existing empty "New chat"
       const emptyNewChat = chats.find(
-        (chat) => chat.name === "Ny chat" && chat.conversation.length === 0
+        (chat) => chat.isNewChat && chat.conversation.length === 0
       );
       if (emptyNewChat) {
         // Load the existing empty "New chat"

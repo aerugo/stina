@@ -36,7 +36,8 @@ var EventModule = (function () {
     }
 
     // Set the selected model
-    const savedModelKey = currentChat?.selectedModelKey || config.selectedModelKey;
+    const savedModelKey =
+      currentChat?.selectedModelKey || config.selectedModelKey;
 
     if (savedModelKey && models[savedModelKey]?.provider === selectedProvider) {
       modelSelect.value = savedModelKey;
@@ -118,7 +119,6 @@ var EventModule = (function () {
     const chatListContainer = document.getElementById("chat-list");
     editInstructionBtn = document.getElementById("edit-instruction-btn");
 
-
     // Setup basic event listeners
     newChatBtn.addEventListener("click", function () {
       const state = ChatModule.createNewChat();
@@ -135,7 +135,7 @@ var EventModule = (function () {
 
     // Initialize model selector with current provider's models
     const config = ConfigModule.getConfig();
-    populateModelSelector(config.provider || 'azure');
+    populateModelSelector(config.provider || "azure");
 
     // Setup model selection change handler
     modelSelect.addEventListener("change", function () {
@@ -179,7 +179,10 @@ var EventModule = (function () {
         window.instructions[0]?.id;
 
       // Debug logging
-      console.log("populateInstructions - window.instructions:", window.instructions);
+      console.log(
+        "populateInstructions - window.instructions:",
+        window.instructions
+      );
 
       // Check if window.instructions exists and has instructions
       if (!window.instructions || window.instructions.length === 0) {
@@ -214,7 +217,8 @@ var EventModule = (function () {
     // Add click event listener to the "Edit" button
     editInstructionBtn.addEventListener("click", function () {
       const selectedInstructionId = instructionsSelect.value;
-      let customInstructions = JSON.parse(localStorage.getItem("customInstructions")) || [];
+      let customInstructions =
+        JSON.parse(localStorage.getItem("customInstructions")) || [];
       let instructionIndex = customInstructions.findIndex(
         (instr) => instr.id === selectedInstructionId
       );
@@ -222,7 +226,7 @@ var EventModule = (function () {
 
       if (instruction) {
         ModalModule.showEditInstructionModal(
-          "Redigera anpassad instruktion",
+          TranslationModule.translate("editCustomInstructionTitle"),
           instruction.label,
           instruction.content,
           function (result) {
@@ -231,7 +235,10 @@ var EventModule = (function () {
               instruction.content = result.content;
               // Update customInstructions in localStorage
               customInstructions[instructionIndex] = instruction;
-              localStorage.setItem("customInstructions", JSON.stringify(customInstructions));
+              localStorage.setItem(
+                "customInstructions",
+                JSON.stringify(customInstructions)
+              );
 
               // Update window.instructions
               let instructionIndexInWindow = window.instructions.findIndex(
@@ -253,8 +260,11 @@ var EventModule = (function () {
 
     function updateEditButtonVisibility() {
       const selectedValue = instructionsSelect.value;
-      const customInstructions = JSON.parse(localStorage.getItem("customInstructions")) || [];
-      const isCustomFromMemory = customInstructions.some(instr => instr.id === selectedValue);
+      const customInstructions =
+        JSON.parse(localStorage.getItem("customInstructions")) || [];
+      const isCustomFromMemory = customInstructions.some(
+        (instr) => instr.id === selectedValue
+      );
 
       if (isCustomFromMemory) {
         editInstructionBtn.style.display = "inline-block";
@@ -267,7 +277,7 @@ var EventModule = (function () {
     instructionsSelect.addEventListener("change", function () {
       if (this.value === "custom") {
         ModalModule.showEditInstructionModal(
-          "Skapa anpassad instruktion",
+          TranslationModule.translate("createCustomInstructionTitle"),
           "",
           "",
           function (result) {
@@ -279,9 +289,13 @@ var EventModule = (function () {
               };
 
               // Get existing customInstructions
-              const customInstructions = JSON.parse(localStorage.getItem("customInstructions")) || [];
+              const customInstructions =
+                JSON.parse(localStorage.getItem("customInstructions")) || [];
               customInstructions.push(newInstruction);
-              localStorage.setItem("customInstructions", JSON.stringify(customInstructions));
+              localStorage.setItem(
+                "customInstructions",
+                JSON.stringify(customInstructions)
+              );
 
               // Update window.instructions
               window.instructions.push(newInstruction);
@@ -289,9 +303,12 @@ var EventModule = (function () {
               // Update instructions in select element
               populateInstructions();
               instructionsSelect.value = newInstruction.id;
-              ConfigModule.updateConfig({ selectedInstructionId: newInstruction.id });
+              ConfigModule.updateConfig({
+                selectedInstructionId: newInstruction.id,
+              });
             } else {
-              instructionsSelect.value = ConfigModule.getConfig().selectedInstructionId;
+              instructionsSelect.value =
+                ConfigModule.getConfig().selectedInstructionId;
             }
           }
         );
@@ -315,29 +332,32 @@ var EventModule = (function () {
 
     const config = ConfigModule.getConfig();
     // Adjust validation based on provider
-    if (config.provider === 'ollama') {
+    if (config.provider === "ollama") {
       // No API Key or Endpoint required for Ollama
-    } else if (config.provider === 'openai' || config.provider === 'anthropic') {
+    } else if (
+      config.provider === "openai" ||
+      config.provider === "anthropic"
+    ) {
       // Only API Key is required for OpenAI and Anthropic
       if (!config.apiKey) {
         ModalModule.showCustomAlert(
-          TranslationModule.translate('pleaseSetConfiguration')
+          TranslationModule.translate("pleaseSetConfiguration")
         );
         return;
       }
       // Endpoint is not required; proceed without checking it
-    } else if (config.provider === 'azure') {
+    } else if (config.provider === "azure") {
       // Both API Key and Endpoint are required for Azure
       if (!config.apiKey || !config.endpoint) {
         ModalModule.showCustomAlert(
-          TranslationModule.translate('pleaseSetConfiguration')
+          TranslationModule.translate("pleaseSetConfiguration")
         );
         return;
       }
     } else {
       // Handle other providers or unknown provider
       ModalModule.showCustomAlert(
-        TranslationModule.translate('pleaseSetConfiguration')
+        TranslationModule.translate("pleaseSetConfiguration")
       );
       return;
     }
@@ -400,7 +420,9 @@ var EventModule = (function () {
     const config = ConfigModule.getConfig();
     const modalContent = `
       <div class="field">
-        <label class="label">${TranslationModule.translate('endpointURL')}</label>
+        <label class="label">${TranslationModule.translate(
+          "endpointURL"
+        )}</label>
         <div class="control">
           <input
             class="input"
@@ -412,7 +434,7 @@ var EventModule = (function () {
         </div>
       </div>
       <div class="field">
-        <label class="label">${TranslationModule.translate('apiKey')}</label>
+        <label class="label">${TranslationModule.translate("apiKey")}</label>
         <div class="control">
           <input 
             class="input" 
@@ -424,25 +446,37 @@ var EventModule = (function () {
         </div>
       </div>
       <div class="field">
-        <label class="label">${TranslationModule.translate('provider')}</label>
+        <label class="label">${TranslationModule.translate("provider")}</label>
         <div class="control">
           <div class="select">
             <select id="provider-select">
-              <option value="azure"${config.provider === 'azure' ? ' selected' : ''}>${TranslationModule.translate('azure')}</option>
-              <option value="openai"${config.provider === 'openai' ? ' selected' : ''}>${TranslationModule.translate('openai')}</option>
-              <option value="anthropic"${config.provider === 'anthropic' ? ' selected' : ''}>${TranslationModule.translate('anthropic')}</option>
-              <option value="ollama"${config.provider === 'ollama' ? ' selected' : ''}>${TranslationModule.translate('ollama')}</option>
+              <option value="azure"${
+                config.provider === "azure" ? " selected" : ""
+              }>${TranslationModule.translate("azure")}</option>
+              <option value="openai"${
+                config.provider === "openai" ? " selected" : ""
+              }>${TranslationModule.translate("openai")}</option>
+              <option value="anthropic"${
+                config.provider === "anthropic" ? " selected" : ""
+              }>${TranslationModule.translate("anthropic")}</option>
+              <option value="ollama"${
+                config.provider === "ollama" ? " selected" : ""
+              }>${TranslationModule.translate("ollama")}</option>
             </select>
           </div>
         </div>
       </div>
       <div class="field">
-        <label class="label">${TranslationModule.translate('language')}</label>
+        <label class="label">${TranslationModule.translate("language")}</label>
         <div class="control">
           <div class="select">
             <select id="language-select">
-              <option value="en"${config.language === 'en' ? ' selected' : ''}>${TranslationModule.translate('english')}</option>
-              <option value="sv"${config.language === 'sv' ? ' selected' : ''}>${TranslationModule.translate('swedish')}</option>
+              <option value="en"${
+                config.language === "en" ? " selected" : ""
+              }>${TranslationModule.translate("english")}</option>
+              <option value="sv"${
+                config.language === "sv" ? " selected" : ""
+              }>${TranslationModule.translate("swedish")}</option>
             </select>
           </div>
         </div>
@@ -450,12 +484,16 @@ var EventModule = (function () {
     `;
 
     const buttons = [
-      { label: TranslationModule.translate('cancel'), value: false },
-      { label: TranslationModule.translate('saveChanges'), value: true, class: "is-success" },
+      { label: TranslationModule.translate("cancel"), value: false },
+      {
+        label: TranslationModule.translate("saveChanges"),
+        value: true,
+        class: "is-success",
+      },
     ];
 
     ModalModule.showCustomModal(
-      TranslationModule.translate('settings'),
+      TranslationModule.translate("settings"),
       modalContent,
       buttons,
       function (result) {
@@ -467,110 +505,131 @@ var EventModule = (function () {
 
     // After the modal is displayed, add event listeners to update fields
     setTimeout(() => {
-      const providerSelect = document.getElementById('provider-select');
-      const apiKeyField = document.getElementById('api-key');
-      const endpointField = document.getElementById('endpoint');
+      const providerSelect = document.getElementById("provider-select");
+      const apiKeyField = document.getElementById("api-key");
+      const endpointField = document.getElementById("endpoint");
 
       function updateFields() {
-        const endpointFieldContainer = endpointField.closest('.field');
-        const apiKeyFieldContainer = apiKeyField.closest('.field');
+        const endpointFieldContainer = endpointField.closest(".field");
+        const apiKeyFieldContainer = apiKeyField.closest(".field");
         const selectedProvider = providerSelect.value;
-        const isProviderConfigured = config.providerConfigs.hasOwnProperty(selectedProvider);
+        const isProviderConfigured =
+          config.providerConfigs.hasOwnProperty(selectedProvider);
         const providerConfig = config.providerConfigs[selectedProvider] || {};
 
-        if (selectedProvider === 'ollama') {
+        if (selectedProvider === "ollama") {
           // Show Endpoint field and set placeholder
-          endpointFieldContainer.style.display = 'block';
-          endpointField.placeholder = 'http://localhost:11434';
+          endpointFieldContainer.style.display = "block";
+          endpointField.placeholder = "http://localhost:11434";
           endpointField.disabled = false;
 
           // Hide API Key field for Ollama
-          apiKeyFieldContainer.style.display = 'none';
+          apiKeyFieldContainer.style.display = "none";
         } else if (isProviderConfigured) {
           // Provider is pre-configured
           apiKeyField.disabled = true;
-          apiKeyField.value = providerConfig.apiKey || '';
-          apiKeyField.placeholder = 'Pre-configured';
+          apiKeyField.value = providerConfig.apiKey || "";
+          apiKeyField.placeholder = "Pre-configured";
 
           if (providerConfig.endpoint) {
             endpointField.disabled = true;
             endpointField.value = providerConfig.endpoint;
-            endpointField.placeholder = 'Pre-configured';
-            endpointFieldContainer.style.display = 'block';
+            endpointField.placeholder = "Pre-configured";
+            endpointFieldContainer.style.display = "block";
           } else {
-            endpointFieldContainer.style.display = 'none';
+            endpointFieldContainer.style.display = "none";
           }
 
           // Add message about pre-configured settings if not already present
-          const existingMessage = document.querySelector('.pre-configured-message');
+          const existingMessage = document.querySelector(
+            ".pre-configured-message"
+          );
           if (!existingMessage) {
-            const messageElem = document.createElement('p');
-            messageElem.className = 'pre-configured-message';
-            messageElem.textContent = 'Some settings are pre-configured and cannot be edited.';
-            messageElem.style.color = '#888';
-            endpointFieldContainer.parentNode.insertBefore(messageElem, endpointFieldContainer);
+            const messageElem = document.createElement("p");
+            messageElem.className = "pre-configured-message";
+            messageElem.textContent =
+              "Some settings are pre-configured and cannot be edited.";
+            messageElem.style.color = "#888";
+            endpointFieldContainer.parentNode.insertBefore(
+              messageElem,
+              endpointFieldContainer
+            );
           }
-        } else if (selectedProvider === 'ollama') {
+        } else if (selectedProvider === "ollama") {
           // Hide Endpoint field for Ollama
-          endpointFieldContainer.style.display = 'none';
+          endpointFieldContainer.style.display = "none";
           // Disable API Key field for Ollama
           apiKeyField.disabled = true;
-          apiKeyField.placeholder = 'Not required for Ollama';
-          apiKeyField.value = ''; // Clear value
-        } else if (selectedProvider === 'openai' || selectedProvider === 'anthropic') {
+          apiKeyField.placeholder = "Not required for Ollama";
+          apiKeyField.value = ""; // Clear value
+        } else if (
+          selectedProvider === "openai" ||
+          selectedProvider === "anthropic"
+        ) {
           // Hide Endpoint field for OpenAI and Anthropic
-          endpointFieldContainer.style.display = 'none';
+          endpointFieldContainer.style.display = "none";
           // Enable API Key field
           apiKeyField.disabled = false;
-          apiKeyField.placeholder = 'YOUR_API_KEY';
+          apiKeyField.placeholder = "YOUR_API_KEY";
         } else {
           // Show Endpoint field for other providers
-          endpointFieldContainer.style.display = 'block';
-          endpointField.placeholder = 'https://YOUR_RESOURCE_NAME.openai.azure.com';
+          endpointFieldContainer.style.display = "block";
+          endpointField.placeholder =
+            "https://YOUR_RESOURCE_NAME.openai.azure.com";
           // Enable API Key field
           apiKeyField.disabled = false;
-          apiKeyField.placeholder = 'YOUR_API_KEY';
+          apiKeyField.placeholder = "YOUR_API_KEY";
         }
-        
+
         // Update the model selector with the new provider
         populateModelSelector(providerSelect.value);
       }
 
-      providerSelect.addEventListener('change', updateFields);
+      providerSelect.addEventListener("change", updateFields);
       updateFields(); // Initialize fields based on current provider
     }, 0);
   }
 
   function saveSettings() {
-    const selectedProvider = document.getElementById('provider-select').value;
+    const selectedProvider = document.getElementById("provider-select").value;
     const config = ConfigModule.getConfig();
-    const isProviderConfigured = config.providerConfigs.hasOwnProperty(selectedProvider);
-    
+    const isProviderConfigured =
+      config.providerConfigs.hasOwnProperty(selectedProvider);
+
     let endpoint = document.getElementById("endpoint").value.trim();
     const apiKey = document.getElementById("api-key").value.trim();
-    const selectedLanguage = document.getElementById('language-select').value;
+    const selectedLanguage = document.getElementById("language-select").value;
     const theme = document.body.classList.contains("light-mode")
-      ? "light-mode" 
+      ? "light-mode"
       : "dark-mode";
 
     // Adjust validation based on provider
-    if (selectedProvider === 'ollama') {
+    if (selectedProvider === "ollama") {
       // Only validate endpoint for Ollama, API key not required
       if (!endpoint) {
-          ModalModule.showCustomAlert(TranslationModule.translate('pleaseSetEndpoint'));
-          return;
+        ModalModule.showCustomAlert(
+          TranslationModule.translate("pleaseSetEndpoint")
+        );
+        return;
       }
-    } else if ((selectedProvider === 'openai' || selectedProvider === 'anthropic') && !apiKey) {
-      ModalModule.showCustomAlert(TranslationModule.translate('pleaseFillRequiredFields'));
+    } else if (
+      (selectedProvider === "openai" || selectedProvider === "anthropic") &&
+      !apiKey
+    ) {
+      ModalModule.showCustomAlert(
+        TranslationModule.translate("pleaseFillRequiredFields")
+      );
       return;
-    } else if (selectedProvider === 'azure' && (!apiKey || !endpoint)) {
-      ModalModule.showCustomAlert(TranslationModule.translate('pleaseFillRequiredFields'));
+    } else if (selectedProvider === "azure" && (!apiKey || !endpoint)) {
+      ModalModule.showCustomAlert(
+        TranslationModule.translate("pleaseFillRequiredFields")
+      );
       return;
     }
 
     // For OpenAI, clear endpoint to use default
-    if (selectedProvider === 'openai') {
-      endpoint = ''; // Clear endpoint to use default OpenAI API endpoint
+    if (selectedProvider === "openai") {
+      endpoint = ""; // Clear endpoint to use default OpenAI API endpoint
     }
 
     // Only save endpoint and apiKey if provider is not pre-configured
@@ -594,7 +653,7 @@ var EventModule = (function () {
     // Update the model selector based on the new provider
     populateModelSelector(selectedProvider);
 
-    ModalModule.showCustomAlert(TranslationModule.translate('settingsSaved'));
+    ModalModule.showCustomAlert(TranslationModule.translate("settingsSaved"));
   }
 
   return {

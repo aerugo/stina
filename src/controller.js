@@ -97,7 +97,7 @@ const ControllerModule = (function () {
 
       // Handle system message based on provider
       if (selectedModelParams && selectedModelParams.system) {
-        if (config.provider === 'anthropic') {
+        if (config.provider === "anthropic") {
           // For Anthropic, store system message separately
           systemMessageContent = instruction.content;
         } else {
@@ -165,7 +165,10 @@ const ControllerModule = (function () {
               TranslationModule.translate("errorGeneratingTitle"),
               error
             );
-            ChatModule.updateChatTitle(chat.id, "Ny chat");
+            ChatModule.updateChatTitle(
+              chat.id,
+              TranslationModule.translate("newChat")
+            );
           }
           // Set isNewChat to false after title has been updated
           chat.isNewChat = false;

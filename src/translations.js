@@ -25,6 +25,8 @@ window.translationsData = {
     instructionContentLabel: "Instruction Content",
     enterInstructionTitle: "Enter instruction title",
     enterInstructionContent: "Enter instruction content",
+    standardAssistantTitle: "Standard Assistant",
+    standardAssistantInstruction: "You are a helpful assistant.",
     save: "Save",
     saveChanges: "Save Changes",
     deleteConfirmation:
@@ -35,6 +37,8 @@ window.translationsData = {
     chatNotFound: "Chat not found.",
     pleaseFillAllFields: "Please fill in all fields.",
     writeToAssistantPlaceholder: "Write to the AI assistant",
+    generateTitlePrompt:
+      "Provide a short (max 5 words) and descriptive chat title based on the following message:",
     endpointURL: "Endpoint URL",
     apiKey: "API Key",
     provider: "Provider",
@@ -69,6 +73,8 @@ window.translationsData = {
     instructionContentLabel: "Instruktionsinnehåll",
     enterInstructionTitle: "Ange instruktionstitel",
     enterInstructionContent: "Ange instruktionens innehåll",
+    standardAssistantTitle: "Standardassistent",
+    standardAssistantInstruction: "Du är en hjälpsam assistent.",
     save: "Spara",
     saveChanges: "Spara ändringar",
     deleteConfirmation:
@@ -79,6 +85,8 @@ window.translationsData = {
     chatNotFound: "Chatten hittades inte.",
     pleaseFillAllFields: "Vänligen fyll i alla fält.",
     writeToAssistantPlaceholder: "Skriv till AI-assistenten",
+    generateTitlePrompt:
+      "Ge en kort (maximalt 5 ord) och beskrivande chattitel baserad på följande meddelande:",
     endpointURL: "Endpoint URL",
     apiKey: "API-nyckel",
     provider: "Leverantör",
