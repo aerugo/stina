@@ -113,7 +113,7 @@ var ApiModule = (function () {
       case "ollama":
         // Use default endpoint if not provided
         const ollamaEndpoint = config.endpoint || "http://localhost:11434";
-        url = `${ollamaEndpoint}/api/chat`;
+        url = `${ollamaEndpoint}/api/generate`;
         headers = {
           "Content-Type": "application/json",
           // No API key needed for Ollama
@@ -194,6 +194,13 @@ var ApiModule = (function () {
       }
     }
 
+    if (!data.choices || !data.choices[0]) {
+      return {
+        error: true,
+        message: "Invalid response from the API.",
+      };
+    }
+
     if (config.provider === "anthropic") {
       if (data.error) {
         return {
@@ -270,73 +277,6 @@ var ApiModule = (function () {
     });
     prompt += `\n\nAssistant:`;
     return prompt.trim();
-  }
-
-  function parseApiResponse(data) {
-    const config = ConfigModule.getConfig();
-
-    if (config.provider === "anthropic") {
-      if (data.error) {
-        return {
-          error: true,
-          message: data.error.message || "Unknown error from Anthropic API",
-        };
-      }
-
-      if (data.completion) {
-        // Response from /v1/complete
-        return {
-          error: false,
-          message: {
-            role: "assistant",
-            content: data.completion.trim(),
-          },
-        };
-      } else if (data.content) {
-        // Response from /v1/messages
-        // Assistant's response is in data.content as an array of text parts
-        const assistantContent = data.content
-          .map((part) => part.text)
-          .join("")
-          .trim();
-        return {
-          error: false,
-          message: {
-            role: "assistant",
-            content: assistantContent,
-          },
-        };
-      } else {
-        return {
-          error: true,
-          message: "Invalid response from Anthropic API",
-        };
-      }
-    }
-
-    const choice = data.choices[0];
-    if (choice.finish_reason === "content_filter") {
-      const filteredCategories = [];
-      const contentFilterResults = choice.content_filter_results;
-
-      // Iterate over each category to find which ones are filtered
-      for (const [category, result] of Object.entries(contentFilterResults)) {
-        if (result.filtered) {
-          filteredCategories.push(`${category} (severity: ${result.severity})`);
-        }
-      }
-
-      const reasons = filteredCategories.join(", ");
-      return {
-        error: true,
-        message: `The assistant's response was filtered due to policy compliance. Categories filtered: ${reasons}`,
-      };
-    }
-    // Add additional checks for other non-standard responses if necessary
-    return {
-      error: false,
-      message: choice.message,
-    };
   }
 
   return {
