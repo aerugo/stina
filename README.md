@@ -19,6 +19,7 @@ Hosting Stina on platforms like SharePoint enhances accessibility within intrane
 - [Usage](#usage)
   - [Running Stina](#running-stina)
   - [Using Features](#using-features)
+  - [Example: Collaborating with Mini-Agents](#example-collaborating-with-mini-agents)
 - [Customization](#customization)
   - [Adding Custom Instructions](#adding-custom-instructions)
   - [Adding Custom Models](#adding-custom-models)
@@ -193,6 +194,95 @@ If you cannot use configuration files, Stina allows setting configurations in me
 - **Settings**
 
   - Access settings to configure providers, API keys, endpoints, and language preferences.
+
+### Example: Collaborating with Mini-Agents
+
+One of the powerful features of Stina is the ability to define and interact with multiple specialized "mini-agents" within a single conversation. By switching between custom instructions and models, you can simulate a collaborative environment with experts in different domains.
+
+#### Step-by-Step Usage Example
+
+**Objective**: You are working on drafting a technical policy document and need input from both a technical expert and a legal expert.
+
+1. **Create Custom Instructions**
+
+   - **Technical Expert**
+
+     - Go to the instructions dropdown below the input box.
+     - Select **Create new instruction...**.
+     - In the modal that appears, fill in:
+       - **Title**: `Technical Expert`
+       - **Content**:
+         ```
+         You are a technical expert specializing in network security and infrastructure. Provide detailed technical insights and recommendations.
+         ```
+     - Click **Save**.
+
+   - **Legal Expert**
+
+     - Repeat the above steps to create another instruction:
+       - **Title**: `Legal Expert`
+       - **Content**:
+         ```
+         You are a legal expert with knowledge in corporate law and compliance. Provide legal advice and ensure all recommendations adhere to regulatory standards.
+         ```
+     - Click **Save**.
+
+2. **Start the Conversation**
+
+   - **Select the Technical Expert**
+
+     - In the instructions dropdown, select **Technical Expert**.
+
+   - **Interact with the Technical Expert**
+
+     - Ask your technical questions, for example:
+       ```
+       What are the best practices for securing our network infrastructure against cyber attacks?
+       ```
+     - Receive detailed technical advice from the assistant.
+
+3. **Switch to the Legal Expert**
+
+   - **Change the Instruction**
+
+     - In the instructions dropdown, select **Legal Expert**.
+
+   - **Interact with the Legal Expert**
+
+     - Ask your legal questions, for example:
+       ```
+       Are there any compliance issues we need to be aware of when implementing these security measures?
+       ```
+     - Receive legal guidance from the assistant.
+
+4. **Switch Between Models (Optional)**
+
+   - If you have different models configured that are better suited for technical or legal advice, you can switch between them:
+
+     - Use the model selector to choose the appropriate model at any time.
+
+5. **Continue the Conversation**
+
+   - **Iterate as Needed**
+
+     - Continue switching between the **Technical Expert** and **Legal Expert** as your conversation progresses.
+     - Refine your document based on the insights provided.
+
+6. **Save or Export Your Conversation**
+
+   - **Preserve the Discussion**
+
+     - Your conversation, along with the context of each mini-agent, is saved within the chat session.
+     - You can refer back to previous messages or export the conversation as needed.
+
+**Benefits of This Approach**:
+
+- **Contextual Expertise**: Tailor the assistant's knowledge to specific domains by defining custom instructions.
+- **Dynamic Switching**: Seamlessly switch between different experts without starting new chats.
+- **Efficiency**: Consolidate all relevant discussions into a single conversation for easy reference.
+- **Flexibility**: Adjust instructions and models on the fly to adapt to your evolving needs.
+
+**Note**: The assistant maintains the conversation history, so even when you switch instructions or models, it retains the context from previous messages. This allows for coherent and continuous dialogue across different domains.
 
 ## Customization
 
