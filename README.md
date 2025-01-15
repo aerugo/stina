@@ -4,7 +4,7 @@ Stina is a lightweight AI chat client specifically designed for environments wit
 
 **Stina addresses this need by providing a client-side solution that requires no server, no installations, and no build tools.** Users can interact with powerful language models using their own API keys or a local Ollama instance, all within a secure and compliant environment.
 
-Hosting Stina on platforms like SharePoint enhances accessibility within intranet systems commonly used in such settings. This makes Stina an invaluable tool for organizations looking to leverage AI capabilities without violating internal policies.
+Stina can be hosted on a SharePoint server, run directly from the filesystem, or accessed through a local web server. It supports multiple language models, custom instructions, and dynamic system prompts, making it a versatile tool for a wide range of applications.
 
 ## Table of Contents
 
@@ -423,14 +423,13 @@ If you need to share Stina via SharePoint:
 
 ## Planned Features
 
-We have exciting plans to enhance Stina's capabilities further. Here is a list of features that are on our roadmap:
+Stina is a work in progress, maintained in collaboration with the community. Here are some planned features and enhancements:
 
 - **Export and Import Conversations**: Implement the ability to export and import conversations using YAML files for easy sharing and backup.
 - **File Upload Support**: Enable users to upload files, extract text from PDFs and other documents, and use vision models for image processing.
 - **In-Memory Vector Databases**: Consider integrating in-memory vector databases to allow adding large numbers of files or large documents, enabling in-memory Retrieval-Augmented Generation (RAG) within conversations.
 - **Additional Providers**: Extend support for more AI providers to offer users a wider range of models and services.
 
-We welcome contributions from the community to help bring these features to life.
 
 ## Contributing
 
@@ -460,12 +459,6 @@ Contributions are welcome! We are eager to collaborate with the community to imp
 
    - Provide a clear description of your changes and indicate which planned feature you are contributing to.
 
-We appreciate your efforts and look forward to your contributions!
-
 ## License
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
-
----
-
-I hope this README provides a comprehensive guide to using and customizing Stina. Feel free to reach out if you have any questions or need further assistance.
