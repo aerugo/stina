@@ -92,6 +92,7 @@
   border-radius: 50%;
   background-color: var(--primary-color);
   color: var(--active-text-color);
+  font-size: 1.5rem;
   border: none;
   display: flex;
   align-items: center;
