@@ -569,6 +569,43 @@ const EventModule = (function () {
     `;
   }
 
+  function setupProvidersTabEventListeners() {
+    const config = ConfigModule.getConfig();
+    const providerConfigs = config.providerConfigs || {};
+
+    Object.keys(providerConfigs).forEach((provider) => {
+      const providerConfig = providerConfigs[provider];
+
+      // Only attach event listeners if the fields are editable
+      if (!providerConfig.apiKey) {
+        const apiKeyInput = document.getElementById(`api-key-${provider}`);
+        if (apiKeyInput) {
+          apiKeyInput.addEventListener('input', (event) => {
+            providerConfig.apiKey = event.target.value.trim();
+          });
+        }
+      }
+
+      if ((provider === "azure" || provider === "ollama") && !providerConfig.endpoint) {
+        const endpointInput = document.getElementById(`endpoint-${provider}`);
+        if (endpointInput) {
+          endpointInput.addEventListener('input', (event) => {
+            providerConfig.endpoint = event.target.value.trim();
+          });
+        }
+      }
+    });
+  }
+
+  function setupLanguageTabEventListeners() {
+    const languageSelect = document.getElementById("language-select");
+    if (languageSelect) {
+      languageSelect.addEventListener('change', (event) => {
+        // Handle language change if necessary
+      });
+    }
+  }
+
   function openSettingsModal() {
     const modalContent = `
       <div class="columns">
@@ -632,6 +669,7 @@ const EventModule = (function () {
         deactivateAllTabs();
         providersTab.classList.add("is-active");
         settingsContent.innerHTML = getProvidersContent();
+        setupProvidersTabEventListeners();
       });
 
       // Event listener for Language tab
@@ -639,96 +677,12 @@ const EventModule = (function () {
         deactivateAllTabs();
         languageTab.classList.add("is-active");
         settingsContent.innerHTML = getLanguageContent();
+        setupLanguageTabEventListeners();
       });
 
       // Initially display Providers content
       settingsContent.innerHTML = getProvidersContent();
-    }, 0);
-
-    // After the modal is displayed, add event listeners to update fields
-    setTimeout(() => {
-      const providerSelect = document.getElementById("provider-select");
-      const apiKeyField = document.getElementById("api-key");
-      const endpointField = document.getElementById("endpoint");
-
-      function updateFields() {
-        const endpointFieldContainer = endpointField.closest(".field");
-        const apiKeyFieldContainer = apiKeyField.closest(".field");
-        const selectedProvider = providerSelect.value;
-        const isProviderConfigured =
-          config.providerConfigs.hasOwnProperty(selectedProvider);
-        const providerConfig = config.providerConfigs[selectedProvider] || {};
-
-        if (selectedProvider === "ollama") {
-          // Show Endpoint field and set placeholder
-          endpointFieldContainer.style.display = "block";
-          endpointField.placeholder = "http://localhost:11434";
-          endpointField.disabled = false;
-
-          // Hide API Key field for Ollama
-          apiKeyFieldContainer.style.display = "none";
-        } else if (isProviderConfigured) {
-          // Provider is pre-configured
-          apiKeyField.disabled = true;
-          apiKeyField.value = providerConfig.apiKey || "";
-          apiKeyField.placeholder = "Pre-configured";
-
-          if (providerConfig.endpoint) {
-            endpointField.disabled = true;
-            endpointField.value = providerConfig.endpoint;
-            endpointField.placeholder = "Pre-configured";
-            endpointFieldContainer.style.display = "block";
-          } else {
-            endpointFieldContainer.style.display = "none";
-          }
-
-          // Add message about pre-configured settings if not already present
-          const existingMessage = document.querySelector(
-            ".pre-configured-message"
-          );
-          if (!existingMessage) {
-            const messageElem = document.createElement("p");
-            messageElem.className = "pre-configured-message";
-            messageElem.textContent =
-              "Some settings are pre-configured and cannot be edited.";
-            messageElem.style.color = "#888";
-            endpointFieldContainer.parentNode.insertBefore(
-              messageElem,
-              endpointFieldContainer
-            );
-          }
-        } else if (selectedProvider === "ollama") {
-          // Hide Endpoint field for Ollama
-          endpointFieldContainer.style.display = "none";
-          // Disable API Key field for Ollama
-          apiKeyField.disabled = true;
-          apiKeyField.placeholder = "Not required for Ollama";
-          apiKeyField.value = ""; // Clear value
-        } else if (
-          selectedProvider === "openai" ||
-          selectedProvider === "anthropic"
-        ) {
-          // Hide Endpoint field for OpenAI and Anthropic
-          endpointFieldContainer.style.display = "none";
-          // Enable API Key field
-          apiKeyField.disabled = false;
-          apiKeyField.placeholder = "YOUR_API_KEY";
-        } else {
-          // Show Endpoint field for other providers
-          endpointFieldContainer.style.display = "block";
-          endpointField.placeholder =
-            "https://YOUR_RESOURCE_NAME.openai.azure.com";
-          // Enable API Key field
-          apiKeyField.disabled = false;
-          apiKeyField.placeholder = "YOUR_API_KEY";
-        }
-
-        // Update the model selector with the new provider
-        populateModelSelector(providerSelect.value);
-      }
-
-      providerSelect.addEventListener("change", updateFields);
-      updateFields(); // Initialize fields based on current provider
+      setupProvidersTabEventListeners();
     }, 0);
   }
 
@@ -742,12 +696,12 @@ const EventModule = (function () {
       const providerConfig = providerConfigs[provider];
       if (providerConfig.enabled) {
         const apiKeyInput = document.getElementById(`api-key-${provider}`);
-        const apiKey = apiKeyInput ? apiKeyInput.value.trim() : "";
+        const apiKey = apiKeyInput ? apiKeyInput.value.trim() : providerConfig.apiKey || "";
 
-        let endpoint = "";
+        let endpoint = providerConfig.endpoint || "";
         if (provider === "azure" || provider === "ollama") {
           const endpointInput = document.getElementById(`endpoint-${provider}`);
-          endpoint = endpointInput ? endpointInput.value.trim() : "";
+          endpoint = endpointInput ? endpointInput.value.trim() : endpoint;
         }
 
         const updatedProviderConfig = {
