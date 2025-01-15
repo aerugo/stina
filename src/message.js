@@ -5,7 +5,7 @@
 const MessageModule = (function () {
   async function generateChatTitle(userMessage) {
     const models = ModelsModule.getModels();
-    const prompt = `${generateTitlePrompt} ${userMessage}`;
+    const prompt = `${TranslationModule.translate('generateTitlePrompt')} ${userMessage}`;
     const titleMessage = { role: "user", content: prompt };
     const config = ConfigModule.getConfig();
     // Get the selected model or default to 'gpt-4o'
