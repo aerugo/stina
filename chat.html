@@ -140,8 +140,26 @@
     <!-- Include Config -->
     <script src="config.js"></script>
 
+    <!-- Include Translations -->
+    <script src="src/translations.js"></script>
+    <script src="src/translation.js"></script>
+
     <!-- Include Providers -->
-    <script src="providers.js"></script>
+    <script>
+      // Function to dynamically load providers.js if it exists
+      (function() {
+        var script = document.createElement('script');
+        script.src = 'providers.js';
+        script.onload = function() {
+          console.log('providers.js has been loaded.');
+        };
+        script.onerror = function() {
+          console.warn('providers.js could not be loaded, continuing without providers.');
+        };
+        document.head.appendChild(script);
+      })();
+
+    </script>
 
     <!-- Include Instructions -->
     <script src="src/default_instructions.js"></script>
@@ -205,9 +223,6 @@
       })();
     </script>
 
-    <!-- Include Translations -->
-    <script src="src/translations.js"></script>
-
     <!-- Include Default Models -->
     <script src="src/default_models.js"></script>
     <script src="src/models_module.js"></script>
@@ -251,7 +266,6 @@
     <!-- Application Modules -->
     <script src="src/storage.js"></script>
     <script src="src/config.js"></script>
-    <script src="src/translation.js"></script>
     <script src="src/api.js"></script>
     <script src="src/chat.js"></script>
     <script src="src/message.js"></script>

@@ -1,10 +1,18 @@
 window.providerConfigs = {
   azure: {
-    endpoint: 'https://YOUR_RESOURCE_NAME.openai.azure.com',
-    apiKey: 'YOUR_AZURE_API_KEY',
+    enabled: true,
+    endpoint: "https://YOUR_RESOURCE_NAME.openai.azure.com",
+    apiKey: "YOUR_AZURE_API_KEY",
   },
   openai: {
-    apiKey: 'YOUR_OPENAI_API_KEY',
+    enabled: true,
+    apiKey: "YOUR_OPENAI_API_KEY",
+  },
+  oolama: {
+    enabled: false,
+  },
+  anthropic: {
+    enabled: false,
   },
   // Add other providers as needed
 };
