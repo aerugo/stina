@@ -466,3 +466,16 @@ Contributions are welcome! We are eager to collaborate with the community to imp
 ## License
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+
+## Bundled Libraries and Credits
+
+Stina använder följande öppna källkodsprojekt och bibliotek:
+
+- **Bulma** (MIT-licens): Ett modernt CSS-ramverk baserat på Flexbox.  
+  [https://bulma.io](https://bulma.io)
+- **Marked.js** (MIT-licens): Ett snabbt och lättanvänt Markdown-parseringsbibliotek.  
+  [https://marked.js.org](https://marked.js.org)
+- **DOMPurify** (Apache-2.0-licens): Ett reningsverktyg för HTML som skyddar mot XSS-attacker.  
+  [https://github.com/cure53/DOMPurify](https://github.com/cure53/DOMPurify)
+- **highlight.js** (BSD-3-Clause-licens): Ett bibliotek för syntaxmarkering av kodblock.  
+  [https://highlightjs.org](https://highlightjs.org)
