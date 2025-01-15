@@ -18,17 +18,39 @@ const ConfigModule = (function () {
     config.provider = storedProvider || defaultConfig.provider || "azure";
 
     // Initialize provider configurations
+    let initialProviderConfigs = {};
+
     if (typeof window.providerConfigs === 'undefined' || Object.keys(window.providerConfigs).length === 0) {
       // providers.js not found or is empty, enable all providers by default
-      config.providerConfigs = {
-        azure: { enabled: true, apiKey: '', endpoint: '' },
-        openai: { enabled: true, apiKey: '' },
-        ollama: { enabled: true, endpoint: '' },
-        anthropic: { enabled: true, apiKey: '' }
+      initialProviderConfigs = {
+        azure: { enabled: true, apiKey: '', endpoint: '', fromProvidersJs: false },
+        openai: { enabled: true, apiKey: '', fromProvidersJs: false },
+        ollama: { enabled: true, endpoint: '', fromProvidersJs: false },
+        anthropic: { enabled: true, apiKey: '', fromProvidersJs: false }
       };
     } else {
       // Use providerConfigs from providers.js
-      config.providerConfigs = window.providerConfigs;
+      initialProviderConfigs = {};
+      for (const provider in window.providerConfigs) {
+        initialProviderConfigs[provider] = {
+          ...window.providerConfigs[provider],
+          fromProvidersJs: true, // Mark as originating from providers.js
+        };
+      }
+    }
+
+    // Load stored providerConfigs from local storage and merge
+    const storedProviderConfigs = StorageModule.loadData("providerConfigs") || {};
+
+    // Merge stored configurations over initial configurations
+    config.providerConfigs = {};
+    for (const provider in initialProviderConfigs) {
+      config.providerConfigs[provider] = {
+        ...initialProviderConfigs[provider],
+        ...storedProviderConfigs[provider],
+        // Preserve the 'fromProvidersJs' flag from initial configurations
+        fromProvidersJs: initialProviderConfigs[provider].fromProvidersJs || false,
+      };
     }
   }
 
