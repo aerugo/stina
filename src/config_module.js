@@ -18,7 +18,18 @@ const ConfigModule = (function () {
     config.provider = storedProvider || defaultConfig.provider || "azure";
 
     // Initialize provider configurations
-    config.providerConfigs = window.providerConfigs || {};
+    if (typeof window.providerConfigs === 'undefined' || Object.keys(window.providerConfigs).length === 0) {
+      // providers.js not found or is empty, enable all providers by default
+      config.providerConfigs = {
+        azure: { enabled: true, apiKey: '', endpoint: '' },
+        openai: { enabled: true, apiKey: '' },
+        ollama: { enabled: true, endpoint: '' },
+        anthropic: { enabled: true, apiKey: '' }
+      };
+    } else {
+      // Use providerConfigs from providers.js
+      config.providerConfigs = window.providerConfigs;
+    }
   }
 
   /**

@@ -428,8 +428,8 @@ const EventModule = (function () {
       const providerConfig = config.providerConfigs[provider] || {};
       
       // Determine if fields should be disabled
-      const apiKeyDisabled = providerConfig.apiKey ? 'disabled' : '';
-      const endpointDisabled = providerConfig.endpoint ? 'disabled' : '';
+      const apiKeyDisabled = (providerConfig.apiKey !== undefined && providerConfig.apiKey !== '') ? 'disabled' : '';
+      const endpointDisabled = (providerConfig.endpoint !== undefined && providerConfig.endpoint !== '') ? 'disabled' : '';
 
       content += `
         <h2 class="title is-4">${provider}</h2>
