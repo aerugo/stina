@@ -473,11 +473,20 @@ var EventModule = (function () {
 
       function updateFields() {
         const endpointFieldContainer = endpointField.closest('.field');
+        const apiKeyFieldContainer = apiKeyField.closest('.field');
         const selectedProvider = providerSelect.value;
         const isProviderConfigured = config.providerConfigs.hasOwnProperty(selectedProvider);
         const providerConfig = config.providerConfigs[selectedProvider] || {};
 
-        if (isProviderConfigured) {
+        if (selectedProvider === 'ollama') {
+          // Show Endpoint field and set placeholder
+          endpointFieldContainer.style.display = 'block';
+          endpointField.placeholder = 'http://localhost:11434';
+          endpointField.disabled = false;
+
+          // Hide API Key field for Ollama
+          apiKeyFieldContainer.style.display = 'none';
+        } else if (isProviderConfigured) {
           // Provider is pre-configured
           apiKeyField.disabled = true;
           apiKeyField.value = providerConfig.apiKey || '';
