@@ -575,67 +575,38 @@ var EventModule = (function () {
   }
 
   function saveSettings() {
-    const selectedProvider = document.getElementById("provider-select").value;
     const config = ConfigModule.getConfig();
-    const isProviderConfigured =
-      config.providerConfigs.hasOwnProperty(selectedProvider);
+    const enabledProviders = Object.keys(config.providerConfigs || {});
+    const providerConfigs = {};
 
-    let endpoint = document.getElementById("endpoint").value.trim();
-    const apiKey = document.getElementById("api-key").value.trim();
+    enabledProviders.forEach((provider) => {
+      const apiKey = document.getElementById(`api-key-${provider}`).value.trim();
+      let endpoint = '';
+
+      if (provider === 'azure' || provider === 'ollama') {
+        endpoint = document.getElementById(`endpoint-${provider}`).value.trim();
+      }
+
+      providerConfigs[provider] = {
+        apiKey,
+        endpoint,
+      };
+    });
+
     const selectedLanguage = document.getElementById("language-select").value;
     const theme = document.body.classList.contains("light-mode")
       ? "light-mode"
       : "dark-mode";
 
-    // Adjust validation based on provider
-    if (selectedProvider === "ollama") {
-      // Only validate endpoint for Ollama, API key not required
-      if (!endpoint) {
-        ModalModule.showCustomAlert(
-          TranslationModule.translate("pleaseSetEndpoint")
-        );
-        return;
-      }
-    } else if (
-      (selectedProvider === "openai" || selectedProvider === "anthropic") &&
-      !apiKey
-    ) {
-      ModalModule.showCustomAlert(
-        TranslationModule.translate("pleaseFillRequiredFields")
-      );
-      return;
-    } else if (selectedProvider === "azure" && (!apiKey || !endpoint)) {
-      ModalModule.showCustomAlert(
-        TranslationModule.translate("pleaseFillRequiredFields")
-      );
-      return;
-    }
-
-    // For OpenAI, clear endpoint to use default
-    if (selectedProvider === "openai") {
-      endpoint = ""; // Clear endpoint to use default OpenAI API endpoint
-    }
-
-    // Only save endpoint and apiKey if provider is not pre-configured
-    if (!isProviderConfigured) {
-      ConfigModule.updateConfig({
-        endpoint,
-        apiKey,
-      });
-    }
-
-    // Always save these settings
+    // Update ConfigModule with new provider configurations
     ConfigModule.updateConfig({
-      theme,
+      providerConfigs,
       language: selectedLanguage,
-      provider: selectedProvider,
+      theme,
     });
 
     TranslationModule.setLanguage(selectedLanguage);
     TranslationModule.applyTranslations();
-
-    // Update the model selector based on the new provider
-    populateModelSelector(selectedProvider);
 
     ModalModule.showCustomAlert(TranslationModule.translate("settingsSaved"));
   }
