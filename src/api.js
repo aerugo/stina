@@ -49,7 +49,7 @@ const ApiModule = (function () {
         url = "https://api.openai.com/v1/chat/completions";
         headers = {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${config.apiKey}`,
+          Authorization: `Bearer ${providerConfig.apiKey}`,
         };
         body = {
           model: deploymentName, // Use the model name as per OpenAI API
@@ -72,7 +72,7 @@ const ApiModule = (function () {
 
         headers = {
           "Content-Type": "application/json",
-          "x-api-key": config.apiKey,
+          "x-api-key": providerConfig.apiKey,
           "anthropic-version": "2023-06-01",
           // Add the header to enable CORS
           "anthropic-dangerous-direct-browser-access": "true",
@@ -112,7 +112,7 @@ const ApiModule = (function () {
 
       case "ollama":
         // Use default endpoint if not provided
-        const ollamaEndpoint = config.endpoint || "http://localhost:11434";
+        const ollamaEndpoint = providerConfig.endpoint || "http://localhost:11434";
         url = `${ollamaEndpoint}/api/chat`;
         headers = {
           "Content-Type": "application/json",
