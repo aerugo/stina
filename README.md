@@ -43,7 +43,7 @@ Stina is an AI chat client built with pure JavaScript, HTML, and CSS. It is desi
 
 ## Features
 
-- **No Build Dependencies**: Run directly from the filesystem without any server or installations. Stina currently relies on some libraries over CDNs, but these can be replaced with local copies if needed.
+- **No Build Dependencies**: Run directly from the filesystem without any server or installations or dependencies.
 - **API Key Support**: Connect to various language models using your own API keys. Currently supports Azure AI Foundry, OpenAI, and Anthropic.
 - **Ollama Integration**: Supports local language models via Ollama.
 - **Dynamic System Prompts**: Configure and change system prompts (custom instructions) during conversations, allowing you to switch contexts seamlessly.
