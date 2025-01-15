@@ -26,6 +26,7 @@ Hosting Stina on platforms like SharePoint enhances accessibility within intrane
   - [Adding Custom Models](#adding-custom-models)
 - [Data Privacy](#data-privacy)
 - [Accessing Through SharePoint](#accessing-through-sharepoint)
+- [Planned Features](#planned-features)
 - [Contributing](#contributing)
 - [License](#license)
 
@@ -420,31 +421,46 @@ If you need to share Stina via SharePoint:
 
 **Note**: Ensure that all script files and assets are uploaded and accessible in the same directory structure.
 
+## Planned Features
+
+We have exciting plans to enhance Stina's capabilities further. Here is a list of features that are on our roadmap:
+
+- **Export and Import Conversations**: Implement the ability to export and import conversations using YAML files for easy sharing and backup.
+- **File Upload Support**: Enable users to upload files, extract text from PDFs and other documents, and use vision models for image processing.
+- **In-Memory Vector Databases**: Consider integrating in-memory vector databases to allow adding large numbers of files or large documents, enabling in-memory Retrieval-Augmented Generation (RAG) within conversations.
+- **Additional Providers**: Extend support for more AI providers to offer users a wider range of models and services.
+
+We welcome contributions from the community to help bring these features to life.
+
 ## Contributing
 
-Contributions are welcome! Please follow these steps to contribute:
+Contributions are welcome! We are eager to collaborate with the community to implement new features and improve Stina. If you're interested in working on any of the planned features or have ideas of your own, please follow these steps:
 
 1. **Fork the Repository**
 
 2. **Create a Feature Branch**
 
    ```bash
-   git checkout -b feature/new-feature
+   git checkout -b feature/your-feature-name
    ```
 
 3. **Commit Your Changes**
 
    ```bash
-   git commit -am 'Add new feature'
+   git commit -am 'Add new feature: Your Feature Name'
    ```
 
 4. **Push to the Branch**
 
    ```bash
-   git push origin feature/new-feature
+   git push origin feature/your-feature-name
    ```
 
 5. **Open a Pull Request**
+
+   - Provide a clear description of your changes and indicate which planned feature you are contributing to.
+
+We appreciate your efforts and look forward to your contributions!
 
 ## License
 
