@@ -2,11 +2,11 @@
 
 <img width="1455" alt="Screenshot 2025-01-15 at 18 12 42" src="https://github.com/user-attachments/assets/382bc604-ac73-46eb-b1e6-fce83db012b5" />
 
-Stina is a lightweight AI chat client specifically designed for environments with strict restrictions. In many government, healthcare, and large corporate settings, stringent IT policies prohibit the use of web servers, installations of new software, or access to online AI chat bots. Despite these limitations, there is often a need for advanced AI assistance within these organizations.
+Stina is a lightweight AI chat client specifically designed for environments with strict restrictions. In many government, healthcare, and large corporate settings, stringent IT policies prohibit the use of web servers, installations of new software, or access to online AI chat bots. 
 
-**Stina addresses this need by providing a client-side solution that requires no server, no installations, and no build tools.** Users can interact with powerful language models using their own API keys or a local Ollama instance, all within a secure and compliant environment.
+**Stina is a client-side solution that requires no server, no installations, and no build tools.** Chat with with LLMs with your own API keys or a local Ollama instance after downloading the repo and opening the chat.html file from the file system.
 
-Stina can be hosted on a SharePoint server, run directly from the filesystem, or accessed through a local web server. It supports multiple language models, custom instructions, and dynamic system prompts, making it a versatile tool for a wide range of applications.
+Stina can be hosted on a SharePoint server, run directly from the filesystem, or accessed through a local web server. It supports multiple language models, custom instructions, and dynamic system prompts.
 
 ## Table of Contents
 
