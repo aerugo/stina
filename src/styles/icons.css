@@ -1,7 +1,8 @@
 /* Style for all buttons containing SVG icons */
 .send-button img,
 #edit-instruction-btn img,
-#settings-btn img {
+#settings-btn img,
+.copy-button img {
   width: 1em;
   height: 1em;
   vertical-align: middle;

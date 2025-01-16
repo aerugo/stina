@@ -52,24 +52,27 @@ const RenderingModule = (function () {
         // Create the copy button
         const copyButton = document.createElement("button");
         copyButton.classList.add("button", "is-small", "copy-button");
-        copyButton.innerHTML = `
-                    <span class="icon is-small"><i class="fas fa-copy"></i></span>
+        const originalCopyButtonHTML = `
+                    <span class="icon is-small">
+                        <img src="src/icons/copy.svg" alt="${TranslationModule.translate("copy")}" />
+                    </span>
                     <span>${TranslationModule.translate("copy")}</span>
                 `;
+        copyButton.innerHTML = originalCopyButtonHTML;
 
         // Add event listener to copy button
         copyButton.addEventListener("click", () => {
           navigator.clipboard
             .writeText(message.content)
             .then(() => {
-              copyButton.innerHTML = TranslationModule.translate("copied");
+              copyButton.innerHTML = `
+                    <span class="icon is-small">
+                        <img src="src/icons/copy.svg" alt="${TranslationModule.translate("copied")}" />
+                    </span>
+                    <span>${TranslationModule.translate("copied")}</span>
+                `;
               setTimeout(() => {
-                copyButton.innerHTML = `
-                                <span class="icon is-small"><i class="fas fa-copy"></i></span>
-                                <span>${TranslationModule.translate(
-                                  "copy"
-                                )}</span>
-                            `;
+                copyButton.innerHTML = originalCopyButtonHTML;
               }, 2000);
             })
             .catch((err) => {
