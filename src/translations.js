@@ -95,6 +95,7 @@ window.translationsData = {
     endpointURL: "Endpoint URL",
     apiKey: "API-nyckel",
     provider: "Leverantör",
+    providers: "Leverantörer",
     azure: "Azure",
     openai: "OpenAI",
     anthropic: "Anthropic",
