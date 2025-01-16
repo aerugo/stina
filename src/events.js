@@ -575,6 +575,39 @@ const EventModule = (function () {
     return content;
   }
 
+  function getDataContent() {
+    return `
+      <div class="field">
+        <label class="label">${TranslationModule.translate("clearData")}</label>
+        <div class="control">
+          <button id="clear-data-button" class="button is-danger">
+            ${TranslationModule.translate("clearAllData")}
+          </button>
+        </div>
+        <p class="help">${TranslationModule.translate("clearDataWarning")}</p>
+      </div>
+    `;
+  }
+
+  function setupDataTabEventListeners() {
+    const clearDataButton = document.getElementById("clear-data-button");
+    if (clearDataButton) {
+      clearDataButton.addEventListener("click", () => {
+        ModalModule.showCustomConfirm(
+          TranslationModule.translate("confirmClearData"),
+          function (confirmClear) {
+            if (confirmClear) {
+              // Clear all data from localStorage
+              localStorage.clear();
+              // Reload the page to reset the application state
+              location.reload();
+            }
+          }
+        );
+      });
+    }
+  }
+
   function getLanguageContent() {
     const config = ConfigModule.getConfig();
 
@@ -648,6 +681,9 @@ const EventModule = (function () {
               <li><a id="settings-tab-language">${TranslationModule.translate(
                 "language"
               )}</a></li>
+              <li><a id="settings-tab-data">${TranslationModule.translate(
+                "data"
+              )}</a></li>
             </ul>
           </aside>
         </div>
@@ -684,12 +720,14 @@ const EventModule = (function () {
     setTimeout(() => {
       const providersTab = document.getElementById("settings-tab-providers");
       const languageTab = document.getElementById("settings-tab-language");
+      const dataTab = document.getElementById("settings-tab-data");
       const settingsContent = document.getElementById("settings-content");
 
       // Function to deactivate all tabs
       function deactivateAllTabs() {
         providersTab.classList.remove("is-active");
         languageTab.classList.remove("is-active");
+        dataTab.classList.remove("is-active");
       }
 
       // Event listener for Providers tab
@@ -706,6 +744,14 @@ const EventModule = (function () {
         languageTab.classList.add("is-active");
         settingsContent.innerHTML = getLanguageContent();
         setupLanguageTabEventListeners();
+      });
+
+      // Event listener for Data tab
+      dataTab.addEventListener("click", () => {
+        deactivateAllTabs();
+        dataTab.classList.add("is-active");
+        settingsContent.innerHTML = getDataContent();
+        setupDataTabEventListeners();
       });
 
       // Initially display Providers content

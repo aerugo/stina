@@ -1,5 +1,10 @@
 window.translationsData = {
   en: {
+    data: "Data",
+    clearData: "Clear Data",
+    clearAllData: "Clear All Data", 
+    clearDataWarning: "This will erase all your settings, chats, and custom instructions. This action cannot be undone.",
+    confirmClearData: "Are you sure you want to clear all data? This action cannot be undone.",
     loading: "Loading...",
     newChat: "New Chat",
     settings: "Settings",
@@ -54,6 +59,11 @@ window.translationsData = {
     enterEndpointURL: "Enter Endpoint URL",
   },
   sv: {
+    data: "Data",
+    clearData: "Rensa data",
+    clearAllData: "Rensa all data",
+    clearDataWarning: "Detta kommer att radera alla dina inställningar, chattar och anpassade instruktioner. Denna åtgärd kan inte ångras.",
+    confirmClearData: "Är du säker på att du vill rensa all data? Denna åtgärd kan inte ångras.",
     loading: "Laddar...",
     newChat: "Ny chat",
     settings: "Inställningar",
