@@ -8,6 +8,20 @@
   vertical-align: middle;
 }
 
+/* Increase the size of the edit icon in the edit button by 100% */
+#edit-instruction-btn img {
+  width: 2em;
+  height: 2em;
+}
+
+/* Center the icon within the edit button */
+#edit-instruction-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
 .send-button img {
   color: white;
 }
