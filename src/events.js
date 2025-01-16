@@ -286,30 +286,61 @@ const EventModule = (function () {
           instruction.label,
           instruction.content,
           function (result) {
-            if (result && result.label && result.content) {
-              instruction.label = result.label;
-              instruction.content = result.content;
-              // Update customInstructions in localStorage
-              customInstructions[instructionIndex] = instruction;
-              localStorage.setItem(
-                "customInstructions",
-                JSON.stringify(customInstructions)
-              );
+            if (result) {
+              if (result.action === "delete") {
+                ModalModule.showCustomConfirm(
+                  TranslationModule.translate("confirmDeleteInstruction"),
+                  function (confirmDelete) {
+                    if (confirmDelete) {
+                      // Remove instruction from customInstructions
+                      customInstructions.splice(instructionIndex, 1);
+                      localStorage.setItem(
+                        "customInstructions",
+                        JSON.stringify(customInstructions)
+                      );
 
-              // Update window.instructions
-              let instructionIndexInWindow = window.instructions.findIndex(
-                (instr) => instr.id === selectedInstructionId
-              );
-              if (instructionIndexInWindow !== -1) {
-                window.instructions[instructionIndexInWindow] = instruction;
+                      // Update instructions and repopulate the select element
+                      populateInstructions();
+                      instructionsSelect.value = instructions[0].id;
+                      ConfigModule.updateConfig({ selectedInstructionId: instructions[0].id });
+
+                      // Update the current chat's selected instruction
+                      const currentChat = ChatModule.getCurrentChat();
+                      if (currentChat) {
+                        currentChat.selectedInstructionId = instructions[0].id;
+                        ChatModule.saveChats();
+                      }
+
+                      updateEditButtonVisibility();
+                    }
+                  }
+                );
+              } else {
+                instruction.label = result.label;
+                instruction.content = result.content;
+                // Update customInstructions in localStorage
+                customInstructions[instructionIndex] = instruction;
+                localStorage.setItem(
+                  "customInstructions",
+                  JSON.stringify(customInstructions)
+                );
+
+                // Update window.instructions
+                let instructionIndexInWindow = window.instructions.findIndex(
+                  (instr) => instr.id === selectedInstructionId
+                );
+                if (instructionIndexInWindow !== -1) {
+                  window.instructions[instructionIndexInWindow] = instruction;
+                }
+
+                // Update instructions in select element
+                populateInstructions();
+                instructionsSelect.value = instruction.id;
+                updateEditButtonVisibility();
               }
-
-              // Update instructions in select element
-              populateInstructions();
-              instructionsSelect.value = instruction.id;
-              updateEditButtonVisibility();
             }
-          }
+          },
+          true
         );
       }
     });
