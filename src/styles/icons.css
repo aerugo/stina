@@ -7,3 +7,7 @@
   height: 1em;
   vertical-align: middle;
 }
+
+.send-button img {
+  color: white;
+}
