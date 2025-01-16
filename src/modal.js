@@ -119,7 +119,8 @@ const ModalModule = (function () {
     titleKey,
     defaultLabel,
     defaultContent,
-    callback
+    callback,
+    showDeleteButton = false
   ) {
     const modalContent = `
             <div class="field">
@@ -156,12 +157,21 @@ const ModalModule = (function () {
         `;
 
     const buttons = [
-      { label: TranslationModule.translate("cancel"), value: false },
+      { label: TranslationModule.translate("cancel"), value: "cancel" },
       {
         label: TranslationModule.translate("save"),
-        value: true,
+        value: "save",
         class: "is-success",
       },
+    ];
+
+    if (showDeleteButton) {
+      buttons.unshift({
+        label: TranslationModule.translate("delete"),
+        value: "delete",
+        class: "is-danger",
+      });
+    }
     ];
 
     showCustomModal(
@@ -169,7 +179,7 @@ const ModalModule = (function () {
       modalContent,
       buttons,
       function (result) {
-        if (result) {
+        if (result === "save") {
           const inputLabel = document
             .getElementById("modal-label-input")
             .value.trim();
@@ -186,6 +196,8 @@ const ModalModule = (function () {
               TranslationModule.translate("pleaseFillRequiredFields")
             );
           }
+        } else if (result === "delete") {
+          callback({ action: "delete" });
         } else {
           callback(null);
         }

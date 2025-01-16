@@ -17,6 +17,8 @@ window.translationsData = {
     settingsSaved: "Settings have been saved.",
     pleaseSetConfiguration:
       "Please set your configuration in the settings before sending messages.",
+    delete: "Delete",
+    confirmDeleteInstruction: "Are you sure you want to delete this custom instruction? This action cannot be undone.",
     pleaseFillRequiredFields: "Please fill in all required fields.",
     createNewInstruction: "Create New Instruction",
     customInstructionTitle: "Custom Instruction",
@@ -69,6 +71,8 @@ window.translationsData = {
     settingsSaved: "Inställningarna har sparats.",
     pleaseSetConfiguration:
       "Vänligen ställ in din konfiguration i inställningarna innan du skickar meddelanden.",
+    delete: "Ta bort",
+    confirmDeleteInstruction: "Är du säker på att du vill ta bort denna anpassade instruktion? Denna åtgärd kan inte ångras.",
     pleaseFillRequiredFields: "Vänligen fyll i alla obligatoriska fält.",
     createNewInstruction: "Skapa ny instruktion",
     customInstructionTitle: "Anpassad instruktion",
