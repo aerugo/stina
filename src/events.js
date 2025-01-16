@@ -153,23 +153,10 @@ const EventModule = (function () {
     const userInput = document.getElementById("user-input");
     const sendBtn = document.getElementById("send-btn");
 
-    // Add paste event listener to prevent formatting
-    userInput.addEventListener("paste", function (e) {
-      e.preventDefault();
-      // Get text data from clipboard
-      const text = (e.clipboardData || window.clipboardData).getData("text/plain");
-      // Insert text at the caret position
-      insertTextAtCursor(text);
-    });
-
-    // Add input event listener to remove formatting from keyboard input
-    userInput.addEventListener("input", function (e) {
-      // Remove any HTML tags, leaving only plain text
-      const text = userInput.innerText;
-      userInput.innerHTML = "";
-      userInput.innerText = text;
-      // Place the caret at the end
-      placeCaretAtEnd(userInput);
+    // Add auto-resize functionality for textarea
+    userInput.addEventListener("input", function() {
+      this.style.height = "auto";
+      this.style.height = (this.scrollHeight) + "px";
     });
     const newChatBtn = document.getElementById("new-chat-btn");
     const settingsBtn = document.getElementById("settings-btn");

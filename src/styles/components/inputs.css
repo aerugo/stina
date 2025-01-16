@@ -20,22 +20,12 @@
   font-size: 1rem;
   line-height: 1.5;
   color: #333;
+  resize: none;
+  padding: 0.5rem;
 }
 
-/* Placeholder Text */
-.input-box::before {
-  content: attr(data-placeholder);
+.input-box::placeholder {
   color: #aaa;
-  position: absolute;
-  pointer-events: none;
-}
-
-.input-box:empty::before {
-  display: block;
-}
-
-.input-box:not(:empty)::before {
-  display: none;
 }
 
 /* Toolbar */

@@ -157,7 +157,7 @@ const RenderingModule = (function () {
 
       const chatName = document.createElement("span");
       chatName.classList.add("chat-name");
-      chatName.innerText = chat.name;
+      chatName.textContent = escapeHtml(chat.name);
 
       const deleteBtn = document.createElement("button");
       deleteBtn.classList.add("delete-chat-btn");

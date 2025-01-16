@@ -3,6 +3,19 @@
  * Handles custom modal dialogs
  */
 const ModalModule = (function () {
+  /**
+   * Escapes HTML special characters in a string.
+   * @param {string} string - The string to escape.
+   * @returns {string} - The escaped string.
+   */
+  function escapeHtml(string) {
+    return String(string)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
+  }
   function showCustomModal(title, message, buttons, callback) {
     const modal = document.getElementById("custom-modal");
     modal.classList.add("is-active");
@@ -12,7 +25,15 @@ const ModalModule = (function () {
     const modalFooter = modal.querySelector(".modal-card-foot");
 
     modalTitle.textContent = title;
-    modalBody.innerHTML = message;
+    
+    // Handle message content safely
+    if (typeof message === 'string' && !message.includes('<')) {
+      // Simple text message
+      modalBody.textContent = message;
+    } else {
+      // HTML content that needs sanitization
+      modalBody.innerHTML = DOMPurify.sanitize(message);
+    }
 
     modalFooter.innerHTML = "";
     buttons.forEach((button) => {
@@ -135,7 +156,7 @@ const ModalModule = (function () {
                         placeholder="${TranslationModule.translate(
                           "enterInstructionTitle"
                         )}"
-                        value="${defaultLabel || ""}"
+                        value="${escapeHtml(defaultLabel || "")}"
                     />
                 </div>
             </div>
@@ -151,7 +172,7 @@ const ModalModule = (function () {
                           "enterInstructionContent"
                         )}"
                         rows="8"
-                    >${defaultContent || ""}</textarea>
+                    >${escapeHtml(defaultContent || "")}</textarea>
                 </div>
             </div>
         `;
