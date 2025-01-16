@@ -172,7 +172,6 @@ const ModalModule = (function () {
         class: "is-danger",
       });
     }
-    ];
 
     showCustomModal(
       TranslationModule.translate(titleKey),
