@@ -14,8 +14,22 @@
   height: 2em;
 }
 
+/* Increase the size of the settings icon in the settings button by 100% */
+#settings-btn img {
+  width: 2em;
+  height: 2em;
+}
+
 /* Center the icon within the edit button */
 #edit-instruction-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+/* Center the icon within the settings button */
+#settings-btn {
   display: flex;
   align-items: center;
   justify-content: center;
