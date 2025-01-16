@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="src/styles/components/inputs.css" />
     <link rel="stylesheet" href="src/styles/components/modals.css" />
     <link rel="stylesheet" href="src/styles/markdown.css" />
+    <link rel="stylesheet" href="src/styles/icons.css" />
   </head>
   <body class="has-navbar-fixed-top">
     <!-- Top Navigation -->
@@ -30,9 +31,8 @@
         </div>
         <div class="navbar-end">
           <div class="navbar-item">
-            <button id="settings-btn" class="button is-light" data-translation-key="settings">
-              <span class="icon"></span>
-              <span></span>
+            <button id="settings-btn" class="button is-light" aria-label="Settings">
+              <img src="src/icons/settings.svg" alt="Settings" />
             </button>
           </div>
         </div>
@@ -81,15 +81,16 @@
                     id="edit-instruction-btn" 
                     class="button is-transparent is-small" 
                     style="display: none;"
+                    aria-label="Edit Instruction"
                   >
-                    Redigera
+                    <img src="src/icons/edit.svg" alt="Edit" />
                   </button>
                 </div>
               </div>
               <!-- Right Side of Toolbar -->
               <!-- Send Button -->
-              <button id="send-btn" class="send-button">
-                Send
+              <button id="send-btn" class="send-button" aria-label="Send">
+                <img src="src/icons/send.svg" alt="Send" />
               </button>
             </div>
           </div>
