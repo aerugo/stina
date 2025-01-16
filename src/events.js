@@ -366,6 +366,9 @@ const EventModule = (function () {
                 currentChat.selectedInstructionId = newInstruction.id;
                 ChatModule.saveChats();
               }
+
+              // Update the edit button visibility
+              updateEditButtonVisibility();
             } else {
               instructionsSelect.value =
                 ConfigModule.getConfig().selectedInstructionId;
