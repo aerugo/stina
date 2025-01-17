@@ -6,10 +6,13 @@ const ApiModule = (function () {
   const API_VERSION = "2024-12-01-preview";
 
   /**
-   * Fetches a chat completion from the Azure OpenAI API.
+   * Fetches a chat completion from APIs.
    * @param {Array} messages - The conversation messages to send.
    * @param {string} deploymentName - Deployment name to use.
    * @param {Object} options - Additional API options.
+   * @param {string} systemMessageContent - System message content.
+   * @param {string} provider - The API provider to use.
+   * @param {Object} providerConfig - Provider-specific configuration.
    * @returns {Promise<Object>} - The assistant's response message.
    * @throws Will throw an error if the API call fails.
    */
@@ -112,7 +115,8 @@ const ApiModule = (function () {
 
       case "ollama":
         // Use default endpoint if not provided
-        const ollamaEndpoint = providerConfig.endpoint || "http://localhost:11434";
+        const ollamaEndpoint =
+          providerConfig.endpoint || "http://localhost:11434";
         url = `${ollamaEndpoint}/api/chat`;
         headers = {
           "Content-Type": "application/json",

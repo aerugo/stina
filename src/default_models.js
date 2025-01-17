@@ -12,6 +12,14 @@ window.defaultModels = {
     system: true,
   },
 
+  o1: {
+    label: "O1",
+    deployment: "o1",
+    provider: "azure",
+    context_length: 120000,
+    system: false,
+  },
+
   // OpenAI
 
   "openai-gpt-4o": {
@@ -22,14 +30,6 @@ window.defaultModels = {
     max_tokens: 8192,
     temperature: 0.9,
     system: true,
-  },
-
-  o1: {
-    label: "O1",
-    deployment: "o1",
-    provider: "azure",
-    context_length: 120000,
-    system: false,
   },
 
   // Anthropic
