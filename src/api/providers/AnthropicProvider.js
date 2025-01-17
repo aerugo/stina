@@ -20,7 +20,6 @@ const AnthropicProvider = (function () {
     messages,
     deploymentName,
     options = {},
-    systemMessageContent = "",
     providerConfig
   ) {
     let url = "https://api.anthropic.com/v1/complete";
@@ -51,8 +50,8 @@ const AnthropicProvider = (function () {
         max_tokens: validOptions.max_tokens || 1024,
         temperature: validOptions.temperature || 0.7,
       };
-      if (systemMessageContent) {
-        body.system = systemMessageContent;
+      if (this.systemMessageContent) {
+        body.system = this.systemMessageContent;
       }
     } else {
       body = {
@@ -79,6 +78,8 @@ const AnthropicProvider = (function () {
         role: "assistant",
         content: assistantContent,
       };
+    } else {
+      throw new Error("Invalid response from Anthropic API");
     }
   }
 
