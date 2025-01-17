@@ -18,6 +18,7 @@
      - Loaded via HTML script tags
      - Clear separation of logic, rendering, and user input
    - Functional programming style:
+     - Use composition over inheritance
      - Minimize global variables and side effects
      - Use pure functions where possible
      - Prefer immutable data structures
