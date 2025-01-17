@@ -81,12 +81,17 @@
 
 /* Code blocks */
 .assistant-article pre {
-  background-color: #282c34;
+  background-color: #2d2d2e;
   color: #abb2bf;
   padding: 1em;
   overflow-x: auto;
   border-radius: 5px;
   margin-bottom: 1em;
+}
+
+/* Color img with class copy-code-button white */
+button.copy-code-button img {
+  filter: brightness(0) saturate(100%) invert(1); /* Makes the image white */
 }
 
 .assistant-article pre code {

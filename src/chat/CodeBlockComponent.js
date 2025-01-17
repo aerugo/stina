@@ -3,9 +3,8 @@
  * Handles rendering and highlighting of code blocks.
  */
 const CodeBlockComponent = (function () {
-
   function renderCodeBlock(code, infostring) {
-    const language = (infostring || "").match(/\S*/)[0];
+    let language = (infostring || "").match(/\S*/)[0];
 
     // Ensure code is a string
     if (typeof code !== "string") {
@@ -13,6 +12,22 @@ const CodeBlockComponent = (function () {
         code = code.raw || code.text;
       } else {
         code = String(code);
+      }
+    }
+
+    // If string code string starts with ```, get the first word after ``` if it is followed by a newline and store as lang
+    if (code.startsWith("```")) {
+      const l = code.match(/```(\w+)/);
+      if (l) {
+        code = code.replace(/```(\w+)/, "");
+        // Remove the first line if it is empty
+        code = code.replace(/^\s*\n/, "");
+        // Remove trailing ``` if it exists
+        code = code.replace(/\s*```$/, "");
+        // Remove trailing newline if it exists
+        code = code.replace(/\n$/, "");
+        // Set the language
+        language = l[1];
       }
     }
 
@@ -38,9 +53,13 @@ const CodeBlockComponent = (function () {
     return `
       <div class="code-block-container">
         <button class="copy-code-button" data-code-block-id="${codeBlockId}">
-          <img src="src/icons/copy.svg" alt="${TranslationModule.translate("copy")}" />
+          <img src="src/icons/copy.svg" alt="${TranslationModule.translate(
+            "copy"
+          )}" />
         </button>
-        <pre><code id="${codeBlockId}" class="hljs ${language || ""}">${sanitizedHighlighted}</code></pre>
+        <pre><code id="${codeBlockId}" class="hljs ${
+      language || ""
+    }">${sanitizedHighlighted}</code></pre>
       </div>
     `;
   }
@@ -70,11 +89,11 @@ const CodeBlockComponent = (function () {
   }
 
   function showCopiedLabel(button) {
-    const copiedLabel = document.createElement('div');
-    copiedLabel.classList.add('copied-label');
-    copiedLabel.textContent = TranslationModule.translate('copied');
+    const copiedLabel = document.createElement("div");
+    copiedLabel.classList.add("copied-label");
+    copiedLabel.textContent = TranslationModule.translate("copied");
 
-    const container = button.closest('.code-block-container');
+    const container = button.closest(".code-block-container");
     container.appendChild(copiedLabel);
 
     const buttonRect = button.getBoundingClientRect();
