@@ -2,16 +2,49 @@
  * Rendering Module
  * Handles all UI rendering tasks
  */
-// Configure marked parser to enable line breaks globally and highlight code
+// Create a custom renderer
+const renderer = new marked.Renderer();
+
+renderer.code = function (code, infostring, escaped) {
+  const language = (infostring || '').match(/\S*/)[0];
+
+  // Ensure code is a string
+  code = code || '';
+
+  let highlighted = '';
+  try {
+    if (language && hljs.getLanguage(language)) {
+      highlighted = hljs.highlight(code, { language: language }).value;
+    } else {
+      highlighted = hljs.highlightAuto(code).value;
+    }
+  } catch (error) {
+    console.error('Error highlighting code:', error);
+    highlighted = code; // Fallback to unhighlighted code
+  }
+
+  // Sanitize the highlighted code
+  const sanitizedHighlighted = DOMPurify.sanitize(highlighted);
+
+  // Generate a unique ID for each code block
+  const codeBlockId = 'code-block-' + Math.random().toString(36).substr(2, 9);
+
+  // Return the custom HTML for the code block with a copy button
+  return `
+    <div class="code-block-container">
+      <pre><code id="${codeBlockId}" class="hljs ${language || ''}">${sanitizedHighlighted}</code></pre>
+      <button class="copy-code-button" data-code-block-id="${codeBlockId}">
+        <img src="src/icons/copy.svg" alt="${TranslationModule.translate('copy')}" />
+        <span>${TranslationModule.translate('copy')}</span>
+      </button>
+    </div>
+  `;
+};
+
+// Configure marked parser to enable line breaks globally and use custom renderer
 marked.setOptions({
   breaks: true,
-  highlight: function (code, lang) {
-    if (lang && hljs.getLanguage(lang)) {
-      return hljs.highlight(code, { language: lang }).value;
-    } else {
-      return hljs.highlightAuto(code).value;
-    }
-  },
+  renderer: renderer,
 });
 
 const RenderingModule = (function () {
@@ -43,6 +76,36 @@ const RenderingModule = (function () {
         const articleElem = document.createElement("article");
         articleElem.classList.add("assistant-article");
         articleElem.innerHTML = htmlContent;
+
+        // Add event listener for copy buttons inside code blocks
+        assistantMessageContainer.addEventListener('click', function (event) {
+          const target = event.target;
+          if (target.closest('.copy-code-button')) {
+            const button = target.closest('.copy-code-button');
+            const codeBlockId = button.getAttribute('data-code-block-id');
+            const codeBlock = document.getElementById(codeBlockId);
+
+            if (codeBlock) {
+              // Get the code text without HTML tags
+              const codeText = codeBlock.textContent;
+
+              navigator.clipboard.writeText(codeText).then(() => {
+                button.innerHTML = `
+                  <img src="src/icons/copy.svg" alt="${TranslationModule.translate('copied')}" />
+                  <span>${TranslationModule.translate('copied')}</span>
+                `;
+                setTimeout(() => {
+                  button.innerHTML = `
+                    <img src="src/icons/copy.svg" alt="${TranslationModule.translate('copy')}" />
+                    <span>${TranslationModule.translate('copy')}</span>
+                  `;
+                }, 2000);
+              }).catch((err) => {
+                console.error(TranslationModule.translate('copy_error'), err);
+              });
+            }
+          }
+        });
 
         // Create footer for copy button and model/instruction label
         const messageFooter = document.createElement("div");
