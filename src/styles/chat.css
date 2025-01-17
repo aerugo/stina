@@ -287,6 +287,26 @@ body {
   padding: 1em;
   padding-top: 2em;
   position: relative;
+  background-color: #2d2d2e;
+}
+
+/* Set code text color for better contrast */
+.code-block-container pre code {
+  color: #ffffff;
+}
+
+/* Override syntax colors for better contrast */
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-title {
+  color: #ff79c6;
+}
+
+.hljs-string,
+.hljs-meta,
+.hljs-name,
+.hljs-type {
+  color: #50fa7b;
 }
 
 /* Styles for the copied label */
