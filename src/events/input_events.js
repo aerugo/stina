@@ -63,6 +63,7 @@ const InputEventsModule = (function () {
 
     MessageModule.sendMessage(rawMessageContent);
     userInput.value = "";
+    userInput.style.height = "auto";
   }
 
   function handleUserInputKeyDown(e) {
