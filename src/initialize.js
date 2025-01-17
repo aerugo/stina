@@ -34,6 +34,7 @@ const InitializationModule = (function () {
     RenderingModule.renderChatList(state.chats, state.currentChatId);
     RenderingModule.renderConversation(state.conversation);
     EventModule.setupEventListeners(); // Initialize all event modules
+    ModelSelectionEventsModule.populateModelSelector(); // Populate model selector
     ModelSelectionEventsModule.updateModelAndInstructionSelectors(); // Update selectors after initialization
   }
 

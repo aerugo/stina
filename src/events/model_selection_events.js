@@ -51,7 +51,57 @@ const ModelSelectionEventsModule = (function () {
     });
   }
 
+  function populateModelSelector() {
+    const models = ModelsModule.getModels();
+    const modelSelect = document.getElementById("model-select");
+    const currentChat = ChatModule.getCurrentChat();
+    const config = ConfigModule.getConfig();
+    const providerConfigs = config.providerConfigs || {};
+    const enabledProviders = Object.keys(providerConfigs).filter(
+      (provider) => providerConfigs[provider].enabled
+    );
+
+    // Clear existing options
+    modelSelect.innerHTML = "";
+
+    // Filter models based on enabled providers
+    const filteredModels = Object.entries(models).filter(([_, model]) =>
+      enabledProviders.includes(model.provider)
+    );
+
+    // Check if there are models available
+    if (filteredModels.length === 0) {
+      console.warn(`No models available for enabled providers.`);
+      return;
+    }
+
+    // Populate the model selector with filtered models
+    for (const [key, model] of filteredModels) {
+      const option = document.createElement("option");
+      option.value = key;
+      option.textContent = model.label;
+      modelSelect.appendChild(option);
+    }
+
+    // Set the selected model
+    const savedModelKey =
+      currentChat?.selectedModelKey || config.selectedModelKey;
+
+    if (savedModelKey && models[savedModelKey]) {
+      modelSelect.value = savedModelKey;
+    } else {
+      // Default to the first model
+      modelSelect.value = filteredModels[0][0];
+      ConfigModule.updateConfig({ selectedModelKey: filteredModels[0][0] });
+      if (currentChat) {
+        currentChat.selectedModelKey = filteredModels[0][0];
+        ChatModule.saveChats();
+      }
+    }
+  }
+
   return {
+    populateModelSelector,
     updateModelAndInstructionSelectors,
     updateInstructionsVisibility,
     setupEventListeners,
