@@ -73,8 +73,6 @@ const MessageModule = (function () {
     // Start with a copy of the conversation WITHOUT the loading message
     let conversationToSend = [...currentState.conversation];
     let instructionLabel = "";
-    let systemMessageContent = ""; // Initialize systemMessageContent
-
     // Handle system message if the model supports it
     if (selectedModelParams && selectedModelParams.system) {
       // Get latest instruction ID and custom instructions
@@ -129,7 +127,6 @@ const MessageModule = (function () {
         conversationToSend,
         deploymentName,
         modelOptions,
-        systemMessageContent,
         provider,
         providerConfig
       );

@@ -20,7 +20,6 @@ const ApiModule = (function () {
     messages,
     deploymentName,
     options = {},
-    systemMessageContent = "",
     provider,
     providerConfig
   ) {
@@ -33,7 +32,6 @@ const ApiModule = (function () {
       messages,
       deploymentName,
       options,
-      systemMessageContent,
       providerConfig
     );
   }

@@ -11,6 +11,7 @@ const OllamaProvider = (function () {
   };
 
   OllamaProvider.prototype.prepareMessages = function (messages, instruction) {
+    this.systemMessageContent = instruction ? instruction.content : "";
     return messages;
   };
 
@@ -18,7 +19,6 @@ const OllamaProvider = (function () {
     messages,
     deploymentName,
     options = {},
-    systemMessageContent = "",
     providerConfig
   ) {
     const ollamaEndpoint = providerConfig.endpoint || "http://localhost:11434";
@@ -33,7 +33,7 @@ const OllamaProvider = (function () {
 
     const body = {
       model: deploymentName,
-      prompt: systemMessageContent || "",
+      prompt: this.systemMessageContent || "",
       stream: false,
       messages: messages.map((message) => ({
         role: message.role,
