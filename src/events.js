@@ -1,13 +1,37 @@
 /**
  * Event Module
- * Handles event listeners and event-related functions.
+ * Coordinates event listener modules.
  */
 const EventModule = (function () {
-  let editInstructionBtn;
-  let instructionsSelect;
+  function setupEventListeners() {
+    // Mobile menu toggle
+    const navbarBurger = document.querySelector(".navbar-burger");
+    navbarBurger.addEventListener("click", () => {
+      const sidebar = document.getElementById("sidebarMenu");
+      sidebar.classList.toggle("is-active");
+    });
 
-  // Function to populate model selector based on provider
-  function populateModelSelector() {
+    // New chat button
+    const newChatBtn = document.getElementById("new-chat-btn");
+    newChatBtn.addEventListener("click", function () {
+      const state = ChatModule.createNewChat();
+      RenderingModule.renderChatList(state.chats, state.currentChatId);
+      RenderingModule.renderConversation(state.conversation);
+      ModelSelectionEventsModule.updateModelAndInstructionSelectors();
+    });
+
+    // Initialize event modules
+    InputEventsModule.setupEventListeners();
+    ChatListEventsModule.setupEventListeners();
+    SettingsEventsModule.setupEventListeners();
+    InstructionEventsModule.setupEventListeners();
+    ModelSelectionEventsModule.setupEventListeners();
+  }
+
+  return {
+    setupEventListeners,
+  };
+})();
     const models = ModelsModule.getModels();
     const modelSelect = document.getElementById("model-select");
     const currentChat = ChatModule.getCurrentChat();
