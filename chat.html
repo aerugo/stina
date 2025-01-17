@@ -149,8 +149,8 @@
     <script src="src/api/api.js"></script>
     <script src="src/chat/chat.js"></script>
     <script src="src/chat/message.js"></script>
-    <script src="src/rendering.js"></script>
-    <script src="src/controller.js"></script>
+    <script src="src/chat/rendering.js"></script>
+    <script src="src/initialize.js"></script>
     <script src="src/events.js"></script>
     <script src="src/modal/modal.js"></script>
 
@@ -161,7 +161,7 @@
       
       function initializeAppIfReady() {
         if (instructionsLoaded && modelsLoaded && providersLoaded) {
-          ControllerModule.initializeApp();
+          InitializationModule.initializeApp();
         }
       }
     </script>

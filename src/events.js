@@ -409,7 +409,7 @@ const EventModule = (function () {
       return;
     }
 
-    ControllerModule.sendMessage(messageContent);
+    MessageModule.sendMessage(messageContent);
     userInput.innerText = "";
   }
 
