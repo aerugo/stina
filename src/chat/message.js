@@ -16,22 +16,36 @@ const MessageModule = (function () {
     )} ${userMessage}`;
     const titleMessage = { role: "user", content: prompt };
     const config = ConfigModule.getConfig();
+
     // Get the selected model or default to 'gpt-4o'
     const selectedModelKey = config.selectedModelKey || "gpt-4o";
-    const selectedModel = models[selectedModelKey];
+    let selectedModel = models[selectedModelKey];
+
+    // If selectedModel is undefined, fallback to 'gpt-4o'
+    if (!selectedModel) {
+      console.warn(`Selected model "${selectedModelKey}" not found. Using default model "gpt-4o".`);
+      selectedModel = models["gpt-4o"];
+    }
+
+    if (!selectedModel) {
+      throw new Error("No valid model found for generating title");
+    }
 
     // Use the titleDeployment from config or default to the selected model's deployment
     const titleDeployment = config.titleDeployment || selectedModel.deployment;
 
     // Get provider and config
     const provider = selectedModel.provider;
+    if (!provider) {
+      throw new Error(`Provider is not defined for model "${selectedModelKey}"`);
+    }
+
     const providerConfig = config.providerConfigs[provider] || {};
 
     const response = await ApiModule.fetchChatCompletion(
       [titleMessage],
       titleDeployment,
       {}, // options
-      "", // systemMessageContent
       provider,
       providerConfig
     );
