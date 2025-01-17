@@ -28,30 +28,11 @@ const InputEventsModule = (function () {
     sel.addRange(range);
   }
 
-  /**
-   * Sanitizes user input by escaping special HTML characters.
-   * @param {string} input - The user input to sanitize.
-   * @returns {string} - The sanitized input.
-   */
-  function sanitizeUserInput(input) {
-    return input.replace(/[&<>"']/g, function (char) {
-      const charsToReplace = {
-        "&": "&amp;",
-        "<": "&lt;",
-        ">": "&gt;",
-        '"': "&quot;",
-        "'": "&#039;",
-      };
-      return charsToReplace[char] || char;
-    });
-  }
 
   function handleSendButtonClick() {
     const userInput = document.getElementById("user-input");
     const rawMessageContent = userInput.value.trim();
     if (rawMessageContent === "") return;
-
-    const messageContent = sanitizeUserInput(rawMessageContent);
 
     const currentChat = ChatModule.getCurrentChat();
     const selectedModelKey = currentChat.selectedModelKey || "gpt-4o";
@@ -80,7 +61,7 @@ const InputEventsModule = (function () {
       return;
     }
 
-    MessageModule.sendMessage(messageContent);
+    MessageModule.sendMessage(rawMessageContent);
     userInput.value = "";
   }
 
