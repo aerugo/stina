@@ -97,6 +97,9 @@ const MessageModule = (function () {
       currentState.currentChatId,
       currentState.conversation
     );
+    
+    // Update lastUpdated after adding user message
+    ChatModule.updateChatLastUpdated(currentState.currentChatId);
 
     // Retrieve selected model parameters from current chat
     const currentChat = ChatModule.getCurrentChat();
@@ -188,7 +191,7 @@ const MessageModule = (function () {
         currentState.conversation
       );
 
-      // Update the lastUpdated timestamp
+      // Update lastUpdated after receiving assistant's response
       ChatModule.updateChatLastUpdated(currentState.currentChatId);
 
       const chat = ChatModule.getCurrentChat();

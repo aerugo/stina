@@ -154,12 +154,8 @@ const ChatModule = (function () {
   }
 
   function getCurrentState() {
-    // Sort chats to ensure current chat is at top, followed by empty new chats, then by lastUpdated
+    // Sort chats to ensure empty new chats at the top, then by lastUpdated
     chats.sort((a, b) => {
-      // Place the current chat at the top
-      if (a.id === currentChatId) return -1;
-      if (b.id === currentChatId) return 1;
-
       // If 'a' is an empty new chat, place it before 'b'
       const aIsEmptyNewChat = a.isNewChat && a.conversation.length === 0;
       const bIsEmptyNewChat = b.isNewChat && b.conversation.length === 0;
