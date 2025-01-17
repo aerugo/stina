@@ -12,7 +12,10 @@ const AnthropicProvider = (function () {
     }
   };
 
-  AnthropicProvider.prototype.prepareMessages = function (messages, instruction) {
+  AnthropicProvider.prototype.prepareMessages = function (
+    messages,
+    instruction
+  ) {
     // Store the instruction content in an instance variable
     this.systemMessageContent = instruction ? instruction.content : "";
 
@@ -31,6 +34,8 @@ const AnthropicProvider = (function () {
 
     const headers = {
       "Content-Type": "application/json",
+      "anthropic-dangerous-direct-browser-access": "true",
+      "anthropic-version": "2023-06-01",
       "x-api-key": providerConfig.apiKey,
     };
 
@@ -54,16 +59,16 @@ const AnthropicProvider = (function () {
     if (Array.isArray(data.content)) {
       // Concatenate all text parts from the content array
       const assistantContent = data.content
-        .filter(part => part.type === 'text')
-        .map(part => part.text)
-        .join('');
+        .filter((part) => part.type === "text")
+        .map((part) => part.text)
+        .join("");
 
       return {
-        role: 'assistant',
+        role: "assistant",
         content: assistantContent.trim(),
       };
     } else {
-      throw new Error('Invalid response from Anthropic API');
+      throw new Error("Invalid response from Anthropic API");
     }
   };
 
