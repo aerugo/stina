@@ -51,6 +51,10 @@ const RenderingModule = (function () {
   const models = ModelsModule.getModels(); // Retrieve models
 
   function createMessageElement(message) {
+    if (typeof message.content !== 'string') {
+      console.warn('message.content is not a string:', message.content);
+      message.content = JSON.stringify(message.content);
+    }
     const messageElem = document.createElement("div");
     messageElem.classList.add(
       message.role === "assistant" ? "assistant-message" : "user-message"

@@ -48,7 +48,10 @@ const OpenAIProvider = (function () {
     };
 
     const data = await this.makeApiRequest(url, headers, body);
-    return data.choices[0].message;
+    return {
+      role: data.choices[0].message.role,
+      content: data.choices[0].message.content,
+    };
   };
 
   return OpenAIProvider;

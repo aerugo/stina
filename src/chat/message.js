@@ -172,6 +172,8 @@ const MessageModule = (function () {
       };
 
       // Call the API directly on the provider instance
+      console.log('apiResponse:', apiResponse); // For debugging
+
       const apiResponse = await providerInstance.fetchChatCompletion(
         conversationToSend,
         deploymentName,
@@ -180,7 +182,8 @@ const MessageModule = (function () {
       );
 
       currentState.conversation[currentState.conversation.length - 1] = {
-        ...apiResponse,
+        role: 'assistant',
+        content: typeof apiResponse.content === 'string' ? apiResponse.content : apiResponse.content.text || apiResponse.content.raw || '',
         model: selectedModelKey,
         instructionLabel: instructionLabel,
       };
