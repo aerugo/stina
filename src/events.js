@@ -410,7 +410,7 @@ const EventModule = (function () {
     }
 
     MessageModule.sendMessage(messageContent);
-    userInput.innerText = "";
+    userInput.value = "";
   }
 
   function handleUserInputKeyDown(e) {
