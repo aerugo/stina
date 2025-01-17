@@ -23,7 +23,9 @@ const MessageModule = (function () {
 
     // If selectedModel is undefined, fallback to 'gpt-4o'
     if (!selectedModel) {
-      console.warn(`Selected model "${selectedModelKey}" not found. Using default model "gpt-4o".`);
+      console.warn(
+        `Selected model "${selectedModelKey}" not found. Using default model "gpt-4o".`
+      );
       selectedModel = models["gpt-4o"];
     }
 
@@ -42,15 +44,37 @@ const MessageModule = (function () {
 
     const providerConfig = config.providerConfigs[provider] || {};
 
-    const response = await ApiModule.fetchChatCompletion(
-      [titleMessage],
+    // Initialize provider
+    const ProviderClass = providers[provider];
+    if (!ProviderClass) {
+      throw new Error(`Unsupported provider: ${provider}`);
+    }
+    const providerInstance = new ProviderClass();
+
+    // Validate provider configuration
+    providerInstance.validateConfig(providerConfig);
+
+    // Prepare messages using the provider's method
+    const preparedMessages = providerInstance.prepareMessages([titleMessage]);
+
+    // Prepare model options
+    const modelOptions = {
+      max_tokens: selectedModel.max_tokens || 50,
+      temperature: selectedModel.temperature || 0.7,
+      top_p: selectedModel.top_p !== undefined ? selectedModel.top_p : 0.95,
+      frequency_penalty: selectedModel.frequency_penalty || 0,
+      presence_penalty: selectedModel.presence_penalty || 0,
+    };
+
+    // Call the API using the provider instance
+    const apiResponse = await providerInstance.fetchChatCompletion(
+      preparedMessages,
       titleDeployment,
-      {}, // options
-      provider,
+      modelOptions,
       providerConfig
     );
 
-    return response.content.trim().replace(/[\n\r]/g, "");
+    return apiResponse.content.trim().replace(/[\n\r]/g, "");
   }
 
   function saveConversation(chatId, conversation) {
