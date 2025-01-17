@@ -179,7 +179,6 @@ const ControllerModule = (function () {
             currentState.currentChatId
           );
         }
-      }
     } catch (error) {
       // Remove loading message
       currentState.conversation.pop();
