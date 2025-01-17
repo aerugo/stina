@@ -172,9 +172,6 @@ const MessageModule = (function () {
       };
 
       // Call the API directly on the provider instance
-      console.log('apiResponse:', apiResponse); // For debugging
-
-      // Call the API directly on the provider instance
       console.log('Sending request with:', {
         conversationToSend,
         deploymentName,
@@ -189,6 +186,7 @@ const MessageModule = (function () {
         providerConfig
       );
 
+      // Now log the response after it's been initialized
       console.log('apiResponse:', apiResponse);
       console.log(
         'apiResponse.content:',
