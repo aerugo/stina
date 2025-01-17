@@ -8,8 +8,14 @@ const renderer = new marked.Renderer();
 renderer.code = function (code, infostring, escaped) {
   const language = (infostring || '').match(/\S*/)[0];
 
+  // Log the code and its type for debugging
+  console.log('Code before processing:', code, 'Type:', typeof code);
+
   // Ensure code is a string
-  code = code || '';
+  if (typeof code !== 'string') {
+    console.warn('Expected code to be a string but got:', typeof code);
+    code = String(code);
+  }
 
   let highlighted = '';
   try {

@@ -174,6 +174,14 @@ const MessageModule = (function () {
       // Call the API directly on the provider instance
       console.log('apiResponse:', apiResponse); // For debugging
 
+      // Call the API directly on the provider instance
+      console.log('Sending request with:', {
+        conversationToSend,
+        deploymentName,
+        modelOptions,
+        providerConfig
+      });
+
       const apiResponse = await providerInstance.fetchChatCompletion(
         conversationToSend,
         deploymentName,
@@ -181,9 +189,24 @@ const MessageModule = (function () {
         providerConfig
       );
 
+      console.log('apiResponse:', apiResponse);
+      console.log(
+        'apiResponse.content:',
+        apiResponse.content,
+        'Type:',
+        typeof apiResponse.content
+      );
+
       currentState.conversation[currentState.conversation.length - 1] = {
         role: 'assistant',
-        content: typeof apiResponse.content === 'string' ? apiResponse.content : apiResponse.content.text || apiResponse.content.raw || '',
+        content:
+          typeof apiResponse.content === 'string'
+            ? apiResponse.content
+            : typeof apiResponse.content.text === 'string'
+            ? apiResponse.content.text
+            : typeof apiResponse.content.raw === 'string'
+            ? apiResponse.content.raw
+            : JSON.stringify(apiResponse.content),
         model: selectedModelKey,
         instructionLabel: instructionLabel,
       };
