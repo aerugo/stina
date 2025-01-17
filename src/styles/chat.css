@@ -256,3 +256,35 @@ body {
 .container.is-fluid {
   padding: 0;
 }
+/* Code block container and button styling */
+.code-block-container {
+  position: relative;
+  margin: 1em 0;
+}
+
+.code-block-container .copy-code-button {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
+  z-index: 10;
+}
+
+.code-block-container .copy-code-button img {
+  width: 16px;
+  height: 16px;
+}
+
+.code-block-container .copy-code-button:hover {
+  opacity: 0.8;
+}
+
+.code-block-container pre {
+  margin: 0;
+  padding: 1em;
+  padding-top: 2em;
+  position: relative;
+}

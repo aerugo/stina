@@ -42,15 +42,10 @@ renderer.code = function (code, infostring, escaped) {
   // Return the custom HTML for the code block with a copy button
   return `
     <div class="code-block-container">
-      <pre><code id="${codeBlockId}" class="hljs ${
-    language || ""
-  }">${sanitizedHighlighted}</code></pre>
       <button class="copy-code-button" data-code-block-id="${codeBlockId}">
-        <img src="src/icons/copy.svg" alt="${TranslationModule.translate(
-          "copy"
-        )}" />
-        <span>${TranslationModule.translate("copy")}</span>
+        <img src="src/icons/copy.svg" alt="${TranslationModule.translate('copy')}" />
       </button>
+      <pre><code id="${codeBlockId}" class="hljs ${language || ''}">${sanitizedHighlighted}</code></pre>
     </div>
   `;
 };
