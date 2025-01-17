@@ -43,9 +43,13 @@ renderer.code = function (code, infostring, escaped) {
   return `
     <div class="code-block-container">
       <button class="copy-code-button" data-code-block-id="${codeBlockId}">
-        <img src="src/icons/copy.svg" alt="${TranslationModule.translate('copy')}" />
+        <img src="src/icons/copy.svg" alt="${TranslationModule.translate(
+          "copy"
+        )}" />
       </button>
-      <pre><code id="${codeBlockId}" class="hljs ${language || ''}">${sanitizedHighlighted}</code></pre>
+      <pre><code id="${codeBlockId}" class="hljs ${
+    language || ""
+  }">${sanitizedHighlighted}</code></pre>
     </div>
   `;
 };
