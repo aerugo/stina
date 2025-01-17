@@ -1,7 +1,3 @@
-/**
- * API Module
- * Handles all interactions with the APIs via provider classes.
- */
 const ApiModule = (function () {
   const providers = {
     azure: AzureProvider,
@@ -46,5 +42,3 @@ const ApiModule = (function () {
     fetchChatCompletion,
   };
 })();
-
-export default ApiModule;
