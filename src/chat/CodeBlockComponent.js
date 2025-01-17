@@ -50,8 +50,12 @@ const CodeBlockComponent = (function () {
     const codeBlockId = "code-block-" + Math.random().toString(36).substr(2, 9);
 
     // Return the custom HTML for the code block with a copy button
+    // If language is not specified, set it to 'plaintext'
+    const languageLabel = language || 'plaintext';
+
     return `
       <div class="code-block-container">
+        <div class="language-label">${languageLabel}</div>
         <button class="copy-code-button" data-code-block-id="${codeBlockId}">
           <img src="src/icons/copy.svg" alt="${TranslationModule.translate(
             "copy"

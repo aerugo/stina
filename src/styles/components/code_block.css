@@ -15,6 +15,26 @@
   z-index: 10;
 }
 
+/* Language label styling */
+.code-block-container .language-label {
+  position: absolute;
+  top: 5px;
+  right: 50px;
+  font-size: 0.8em;
+  color: #fff;
+  background-color: rgba(0, 0, 0, 0.7);
+  padding: 2px 5px;
+  border-radius: 3px;
+  opacity: 0;
+  transition: opacity 0.2s;
+  z-index: 10;
+}
+
+/* Show the language label on hover */
+.code-block-container:hover .language-label {
+  opacity: 1;
+}
+
 .code-block-container .copy-code-button img {
   width: 16px;
   height: 16px;
