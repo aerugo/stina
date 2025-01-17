@@ -136,12 +136,11 @@ const MessageModule = (function () {
         stop: selectedModelParams.stop,
       };
 
-      // Call the API with the correct deployment name and options
-      const apiResponse = await ApiModule.fetchChatCompletion(
+      // Call the API directly on the provider instance
+      const apiResponse = await providerInstance.fetchChatCompletion(
         conversationToSend,
         deploymentName,
         modelOptions,
-        provider,
         providerConfig
       );
 
