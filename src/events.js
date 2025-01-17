@@ -131,58 +131,28 @@ const EventModule = (function () {
   }
 
   function setupEventListeners() {
-    const models = ModelsModule.getModels();
-    // Add mobile menu toggle
+    // Mobile menu toggle
     const navbarBurger = document.querySelector(".navbar-burger");
     navbarBurger.addEventListener("click", () => {
       const sidebar = document.getElementById("sidebarMenu");
       sidebar.classList.toggle("is-active");
     });
-    const modelSelect = document.getElementById("model-select");
-    instructionsSelect = document.getElementById("instructions-select");
-    const userInput = document.getElementById("user-input");
-    const sendBtn = document.getElementById("send-btn");
 
-    // Add auto-resize functionality for textarea
-    userInput.addEventListener("input", function () {
-      this.style.height = "auto";
-      this.style.height = this.scrollHeight + "px";
-    });
+    // New chat button
     const newChatBtn = document.getElementById("new-chat-btn");
-    const settingsBtn = document.getElementById("settings-btn");
-    const chatListContainer = document.getElementById("chat-list");
-    editInstructionBtn = document.getElementById("edit-instruction-btn");
-
-    // Setup basic event listeners
     newChatBtn.addEventListener("click", function () {
       const state = ChatModule.createNewChat();
       RenderingModule.renderChatList(state.chats, state.currentChatId);
       RenderingModule.renderConversation(state.conversation);
-      updateModelAndInstructionSelectors();
+      ModelSelectionEventsModule.updateModelAndInstructionSelectors();
     });
 
-    sendBtn.addEventListener("click", handleSendButtonClick);
-    userInput.addEventListener("keydown", handleUserInputKeyDown);
-    settingsBtn.addEventListener("click", openSettingsModal);
-    chatListContainer.addEventListener("click", handleChatListClick);
-    window.addEventListener("click", handleWindowClick);
-
-    // Initialize model selector with current provider's models
-    const config = ConfigModule.getConfig();
-    populateModelSelector(config.provider || "azure");
-
-    // Setup model selection change handler
-    modelSelect.addEventListener("change", function () {
-      const newModelKey = this.value;
-      ConfigModule.updateConfig({ selectedModelKey: newModelKey });
-      // Update the current chat's selected model
-      const currentChat = ChatModule.getCurrentChat();
-      if (currentChat) {
-        currentChat.selectedModelKey = newModelKey;
-        ChatModule.saveChats();
-      }
-      updateInstructionsVisibility();
-    });
+    // Initialize event modules
+    InputEventsModule.setupEventListeners();
+    ChatListEventsModule.setupEventListeners();
+    SettingsEventsModule.setupEventListeners();
+    InstructionEventsModule.setupEventListeners();
+    ModelSelectionEventsModule.setupEventListeners();
 
     // Setup instructions handling
 
