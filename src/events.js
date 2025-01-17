@@ -106,40 +106,6 @@ const EventModule = (function () {
     }
   }
 
-  /**
-   * Places the caret at the end of the specified element.
-   * @param {HTMLElement} el - The element to place the caret in.
-   */
-  function placeCaretAtEnd(el) {
-    el.focus();
-    const range = document.createRange();
-    range.selectNodeContents(el);
-    range.collapse(false);
-    const sel = window.getSelection();
-    sel.removeAllRanges();
-    sel.addRange(range);
-  }
-
-  /**
-   * Inserts text at the current cursor position in a contenteditable element.
-   * @param {string} text - The text to insert.
-   */
-  function insertTextAtCursor(text) {
-    const sel = window.getSelection();
-    if (!sel.rangeCount) return;
-    const range = sel.getRangeAt(0);
-    range.deleteContents();
-
-    const textNode = document.createTextNode(text);
-    range.insertNode(textNode);
-
-    // Move the caret to the end of the inserted text node
-    range.setStartAfter(textNode);
-    range.collapse(true);
-    sel.removeAllRanges();
-    sel.addRange(range);
-  }
-
   function setupEventListeners() {
     const models = ModelsModule.getModels();
     // Add mobile menu toggle
@@ -154,9 +120,9 @@ const EventModule = (function () {
     const sendBtn = document.getElementById("send-btn");
 
     // Add auto-resize functionality for textarea
-    userInput.addEventListener("input", function() {
+    userInput.addEventListener("input", function () {
       this.style.height = "auto";
-      this.style.height = (this.scrollHeight) + "px";
+      this.style.height = this.scrollHeight + "px";
     });
     const newChatBtn = document.getElementById("new-chat-btn");
     const settingsBtn = document.getElementById("settings-btn");
@@ -195,23 +161,6 @@ const EventModule = (function () {
     });
 
     // Setup instructions handling
-
-    function addInstructionOption(instruction) {
-      const option = document.createElement("option");
-      option.value = instruction.id;
-      option.textContent = instruction.label;
-      instructionsSelect.insertBefore(option, instructionsSelect.lastChild);
-    }
-
-    function saveCustomInstruction(instruction) {
-      const customInstructions =
-        JSON.parse(localStorage.getItem("customInstructions")) || [];
-      customInstructions.push(instruction);
-      localStorage.setItem(
-        "customInstructions",
-        JSON.stringify(customInstructions)
-      );
-    }
 
     function populateInstructions() {
       instructionsSelect.innerHTML = "";
@@ -289,7 +238,9 @@ const EventModule = (function () {
                       // Update instructions and repopulate the select element
                       populateInstructions();
                       instructionsSelect.value = instructions[0].id;
-                      ConfigModule.updateConfig({ selectedInstructionId: instructions[0].id });
+                      ConfigModule.updateConfig({
+                        selectedInstructionId: instructions[0].id,
+                      });
 
                       // Update the current chat's selected instruction
                       const currentChat = ChatModule.getCurrentChat();
@@ -414,11 +365,11 @@ const EventModule = (function () {
   function sanitizeUserInput(input) {
     return input.replace(/[&<>"']/g, function (char) {
       const charsToReplace = {
-        '&': '&amp;',
-        '<': '&lt;',
-        '>': '&gt;',
-        '"': '&quot;',
-        "'": '&#039;'
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#039;",
       };
       return charsToReplace[char] || char;
     });
@@ -524,8 +475,12 @@ const EventModule = (function () {
       const providerConfig = config.providerConfigs[provider] || {};
 
       // Determine if fields should be disabled based on per-property flags
-      const apiKeyDisabled = providerConfig.apiKeyFromProvidersJs ? "disabled" : "";
-      const endpointDisabled = providerConfig.endpointFromProvidersJs ? "disabled" : "";
+      const apiKeyDisabled = providerConfig.apiKeyFromProvidersJs
+        ? "disabled"
+        : "";
+      const endpointDisabled = providerConfig.endpointFromProvidersJs
+        ? "disabled"
+        : "";
 
       content += `
         <h2 class="title is-4">${provider}</h2>
@@ -645,19 +600,22 @@ const EventModule = (function () {
       const providerConfig = providerConfigs[provider];
 
       // Only attach event listeners if the fields are editable
-      if ('apiKey' in providerConfig && !providerConfig.apiKeyFromProvidersJs) {
+      if ("apiKey" in providerConfig && !providerConfig.apiKeyFromProvidersJs) {
         const apiKeyInput = document.getElementById(`api-key-${provider}`);
         if (apiKeyInput) {
-          apiKeyInput.addEventListener('input', (event) => {
+          apiKeyInput.addEventListener("input", (event) => {
             providerConfig.apiKey = event.target.value.trim();
           });
         }
       }
 
-      if ('endpoint' in providerConfig && !providerConfig.endpointFromProvidersJs) {
+      if (
+        "endpoint" in providerConfig &&
+        !providerConfig.endpointFromProvidersJs
+      ) {
         const endpointInput = document.getElementById(`endpoint-${provider}`);
         if (endpointInput) {
-          endpointInput.addEventListener('input', (event) => {
+          endpointInput.addEventListener("input", (event) => {
             providerConfig.endpoint = event.target.value.trim();
           });
         }
@@ -668,7 +626,7 @@ const EventModule = (function () {
   function setupLanguageTabEventListeners() {
     const languageSelect = document.getElementById("language-select");
     if (languageSelect) {
-      languageSelect.addEventListener('change', (event) => {
+      languageSelect.addEventListener("change", (event) => {
         // Handle language change if necessary
       });
     }
@@ -777,7 +735,9 @@ const EventModule = (function () {
       const providerConfig = providerConfigs[provider];
       if (providerConfig.enabled) {
         const apiKeyInput = document.getElementById(`api-key-${provider}`);
-        const apiKey = apiKeyInput ? apiKeyInput.value.trim() : providerConfig.apiKey || "";
+        const apiKey = apiKeyInput
+          ? apiKeyInput.value.trim()
+          : providerConfig.apiKey || "";
 
         let endpoint = providerConfig.endpoint || "";
         if (provider === "azure" || provider === "ollama") {
@@ -831,12 +791,5 @@ const EventModule = (function () {
 
   return {
     setupEventListeners,
-    handleSendButtonClick,
-    handleUserInputKeyDown,
-    handleChatListClick,
-    handleWindowClick,
-    openSettingsModal,
-    saveSettings,
-    populateModelSelector,
   };
 })();
