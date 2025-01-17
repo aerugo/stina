@@ -26,7 +26,6 @@ const AzureProvider = (function () {
     messages,
     deploymentName,
     options = {},
-    systemMessageContent = "",
     providerConfig
   ) {
     const API_VERSION = "2024-12-01-preview";
