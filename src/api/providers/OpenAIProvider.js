@@ -26,7 +26,6 @@ const OpenAIProvider = (function () {
     messages,
     deploymentName,
     options = {},
-    systemMessageContent = "",
     providerConfig
   ) {
     const url = "https://api.openai.com/v1/chat/completions";
