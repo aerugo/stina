@@ -3,6 +3,31 @@
  * Handles events related to user input and message sending.
  */
 const InputEventsModule = (function () {
+  function placeCaretAtEnd(el) {
+    el.focus();
+    const range = document.createRange();
+    range.selectNodeContents(el);
+    range.collapse(false);
+    const sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(range);
+  }
+
+  function insertTextAtCursor(text) {
+    const sel = window.getSelection();
+    if (!sel.rangeCount) return;
+    const range = sel.getRangeAt(0);
+    range.deleteContents();
+
+    const textNode = document.createTextNode(text);
+    range.insertNode(textNode);
+
+    range.setStartAfter(textNode);
+    range.collapse(true);
+    sel.removeAllRanges();
+    sel.addRange(range);
+  }
+
   /**
    * Sanitizes user input by escaping special HTML characters.
    * @param {string} input - The user input to sanitize.
