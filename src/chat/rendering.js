@@ -47,28 +47,28 @@ renderer.code = function (code, infostring, escaped) {
           "copy"
         )}" />
       </button>
-
-      function showCopiedLabel(button) {
-        const copiedLabel = document.createElement('div');
-        copiedLabel.classList.add('copied-label');
-        copiedLabel.textContent = TranslationModule.translate('copied');
-
-        const container = button.closest('.code-block-container');
-        container.appendChild(copiedLabel);
-
-        const buttonRect = button.getBoundingClientRect();
-        copiedLabel.style.left = `${button.offsetLeft + button.offsetWidth / 2}px`;
-
-        setTimeout(() => {
-          copiedLabel.remove();
-        }, 2000);
-      }
       <pre><code id="${codeBlockId}" class="hljs ${
     language || ""
   }">${sanitizedHighlighted}</code></pre>
     </div>
   `;
 };
+
+function showCopiedLabel(button) {
+  const copiedLabel = document.createElement('div');
+  copiedLabel.classList.add('copied-label');
+  copiedLabel.textContent = TranslationModule.translate('copied');
+
+  const container = button.closest('.code-block-container');
+  container.appendChild(copiedLabel);
+
+  const buttonRect = button.getBoundingClientRect();
+  copiedLabel.style.left = `${button.offsetLeft + button.offsetWidth / 2}px`;
+
+  setTimeout(() => {
+    copiedLabel.remove();
+  }, 2000);
+}
 
 // Configure marked parser to enable line breaks globally and use custom renderer
 marked.setOptions({
