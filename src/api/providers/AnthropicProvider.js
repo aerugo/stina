@@ -67,23 +67,19 @@ const AnthropicProvider = (function () {
     const data = await this.makeApiRequest(url, headers, modelOptions);
 
     // Handle the response
-    if (data.messages && Array.isArray(data.messages)) {
-      // Find the assistant's reply
-      const assistantMessage = data.messages.find(
-        (msg) => msg.role === "assistant"
-      );
-      if (assistantMessage) {
-        return {
-          role: "assistant",
-          content: assistantMessage.content.trim(),
-        };
-      } else {
-        throw new Error(
-          "Assistant response not found in the Anthropic API response"
-        );
-      }
+    if (Array.isArray(data.content)) {
+      // Concatenate all text parts from the content array
+      const assistantContent = data.content
+        .filter(part => part.type === 'text')
+        .map(part => part.text)
+        .join('');
+
+      return {
+        role: 'assistant',
+        content: assistantContent.trim(),
+      };
     } else {
-      throw new Error("Invalid response from Anthropic API");
+      throw new Error('Invalid response from Anthropic API');
     }
   };
 
