@@ -2,7 +2,7 @@
  * Event Module
  * Coordinates event listener modules.
  */
-const EventModule = function () {
+const EventModule = (function () {
   function setupEventListeners() {
     // Mobile menu toggle
     const navbarBurger = document.querySelector(".navbar-burger");
@@ -31,4 +31,4 @@ const EventModule = function () {
   return {
     setupEventListeners,
   };
-};
+})();
