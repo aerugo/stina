@@ -12,7 +12,10 @@ const AnthropicProvider = (function () {
     }
   };
 
-  AnthropicProvider.prototype.prepareMessages = function (messages, instruction) {
+  AnthropicProvider.prototype.prepareMessages = function (
+    messages,
+    instruction
+  ) {
     // Store the system message content
     this.systemMessageContent = instruction ? instruction.content : "";
     // Return messages with roles 'user' and 'assistant' only
@@ -32,6 +35,8 @@ const AnthropicProvider = (function () {
     // Prepare headers
     const headers = {
       "Content-Type": "application/json",
+      "anthropic-dangerous-direct-browser-access": "true",
+      "anthropic-version": "2023-06-01",
       "x-api-key": providerConfig.apiKey,
     };
 
@@ -73,12 +78,14 @@ const AnthropicProvider = (function () {
           content: assistantMessage.content.trim(),
         };
       } else {
-        throw new Error("Assistant response not found in the Anthropic API response");
+        throw new Error(
+          "Assistant response not found in the Anthropic API response"
+        );
       }
     } else {
       throw new Error("Invalid response from Anthropic API");
     }
-  }
+  };
 
   AnthropicProvider.prototype.generateAnthropicPrompt = function (messages) {
     let prompt = "";
@@ -94,6 +101,6 @@ const AnthropicProvider = (function () {
     });
     prompt += `\n\nAssistant:`;
     return prompt.trim();
-  }
+  };
   return AnthropicProvider;
 })();
