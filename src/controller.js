@@ -139,15 +139,8 @@ const ControllerModule = (function () {
         providerConfig
       );
 
-      if (apiResponse.error) {
-        // Remove loading message
-        currentState.conversation.pop();
-        RenderingModule.renderConversation(currentState.conversation);
-        // Show an error message to the user
-        ModalModule.showCustomAlert(apiResponse.message);
-      } else {
         currentState.conversation[currentState.conversation.length - 1] = {
-          ...apiResponse.message,
+          ...apiResponse,
           model: selectedModelKey,
           instructionLabel: instructionLabel,
         };

@@ -28,12 +28,7 @@ const MessageModule = (function () {
       providerConfig
     );
 
-    if (response.error) {
-      console.error(`Error generating chat title: ${response.message}`);
-      throw new Error(response.message);
-    } else {
-      return response.message.content.trim().replace(/[\n\r]/g, "");
-    }
+    return response.content.trim().replace(/[\n\r]/g, "");
   }
 
   function saveConversation(chatId, conversation) {
