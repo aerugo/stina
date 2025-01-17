@@ -125,20 +125,7 @@ const RenderingModule = (function () {
               navigator.clipboard
                 .writeText(codeText)
                 .then(() => {
-                  button.innerHTML = `
-                  <img src="src/icons/copy.svg" alt="${TranslationModule.translate(
-                    "copied"
-                  )}" />
-                  <span>${TranslationModule.translate("copied")}</span>
-                `;
-                  setTimeout(() => {
-                    button.innerHTML = `
-                    <img src="src/icons/copy.svg" alt="${TranslationModule.translate(
-                      "copy"
-                    )}" />
-                    <span>${TranslationModule.translate("copy")}</span>
-                  `;
-                  }, 2000);
+                  showCopiedLabel(button);
                 })
                 .catch((err) => {
                   console.error(TranslationModule.translate("copy_error"), err);
