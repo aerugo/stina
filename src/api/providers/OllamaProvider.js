@@ -11,7 +11,13 @@ const OllamaProvider = (function () {
   };
 
   OllamaProvider.prototype.prepareMessages = function (messages, instruction) {
-    this.systemMessageContent = instruction ? instruction.content : "";
+    if (instruction) {
+      // Insert the system message at the beginning of the messages array
+      messages.unshift({
+        role: "system",
+        content: instruction.content,
+      });
+    }
     return messages;
   };
 
@@ -33,7 +39,6 @@ const OllamaProvider = (function () {
 
     const body = {
       model: deploymentName,
-      prompt: this.systemMessageContent || "",
       stream: false,
       messages: messages.map((message) => ({
         role: message.role,
