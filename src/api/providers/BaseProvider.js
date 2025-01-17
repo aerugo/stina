@@ -11,6 +11,15 @@ const BaseProvider = (function () {
     throw new Error("fetchChatCompletion method not implemented.");
   };
 
+  BaseProvider.prototype.validateConfig = function (providerConfig) {
+    // Default implementation does nothing
+  };
+
+  BaseProvider.prototype.prepareMessages = function (messages, instruction) {
+    // Default implementation returns messages unmodified
+    return messages;
+  };
+
   BaseProvider.prototype.makeApiRequest = async function (url, headers, body) {
     const response = await fetch(url, {
       method: "POST",

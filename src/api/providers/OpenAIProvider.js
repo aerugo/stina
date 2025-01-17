@@ -6,6 +6,22 @@ const OpenAIProvider = (function () {
   OpenAIProvider.prototype = Object.create(BaseProvider.prototype);
   OpenAIProvider.prototype.constructor = OpenAIProvider;
 
+  OpenAIProvider.prototype.validateConfig = function (providerConfig) {
+    if (!providerConfig.apiKey) {
+      throw new Error("API Key is not set for OpenAI provider.");
+    }
+  };
+
+  OpenAIProvider.prototype.prepareMessages = function (messages, instruction) {
+    if (instruction) {
+      messages.unshift({
+        role: "system",
+        content: instruction.content,
+      });
+    }
+    return messages;
+  };
+
   OpenAIProvider.prototype.fetchChatCompletion = async function (
     messages,
     deploymentName,

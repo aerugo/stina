@@ -3,6 +3,12 @@
  * Handles message creation, processing, and conversation management.
  */
 const MessageModule = (function () {
+  const providers = {
+    azure: AzureProvider,
+    openai: OpenAIProvider,
+    anthropic: AnthropicProvider,
+    ollama: OllamaProvider,
+  };
   async function generateChatTitle(userMessage) {
     const models = ModelsModule.getModels();
     const prompt = `${TranslationModule.translate(
@@ -43,21 +49,6 @@ const MessageModule = (function () {
 
   async function sendMessage(messageContent) {
     const config = ConfigModule.getConfig();
-
-    // Adjust validation based on provider
-    if (config.provider === "ollama") {
-      // No API Key or Endpoint required
-    } else if (
-      (config.provider === "openai" || config.provider === "anthropic") &&
-      !config.apiKey
-    ) {
-      throw new Error("API Key is not set.");
-    } else if (
-      config.provider === "azure" &&
-      (!config.apiKey || !config.endpoint)
-    ) {
-      throw new Error("API Key or Endpoint is not set.");
-    }
 
     const currentState = ChatModule.getCurrentState();
     const newMessage = { role: "user", content: messageContent };
@@ -104,19 +95,18 @@ const MessageModule = (function () {
 
       instructionLabel = instruction.label;
 
-      // Handle system message based on provider
-      if (selectedModelParams && selectedModelParams.system) {
-        if (config.provider === "anthropic") {
-          // For Anthropic, store system message separately
-          systemMessageContent = instruction.content;
-        } else {
-          // For other providers, include system message in messages array
-          conversationToSend.unshift({
-            role: "system",
-            content: instruction.content,
-          });
-        }
+      // Initialize provider
+      const ProviderClass = providers[provider];
+      if (!ProviderClass) {
+        throw new Error(`Unsupported provider: ${provider}`);
       }
+      const providerInstance = new ProviderClass();
+
+      // Validate provider configuration
+      providerInstance.validateConfig(providerConfig);
+
+      // Prepare messages using the provider's method
+      conversationToSend = providerInstance.prepareMessages(conversationToSend, instruction);
     }
 
     const loadingMessage = { role: "assistant", content: "", isLoading: true };

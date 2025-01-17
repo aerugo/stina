@@ -6,6 +6,14 @@ const OllamaProvider = (function () {
   OllamaProvider.prototype = Object.create(BaseProvider.prototype);
   OllamaProvider.prototype.constructor = OllamaProvider;
 
+  OllamaProvider.prototype.validateConfig = function (providerConfig) {
+    // No validation needed for Ollama
+  };
+
+  OllamaProvider.prototype.prepareMessages = function (messages, instruction) {
+    return messages;
+  };
+
   OllamaProvider.prototype.fetchChatCompletion = async function (
     messages,
     deploymentName,

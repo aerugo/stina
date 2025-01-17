@@ -5,6 +5,17 @@ const AnthropicProvider = (function () {
 
   AnthropicProvider.prototype = Object.create(BaseProvider.prototype);
   AnthropicProvider.prototype.constructor = AnthropicProvider;
+
+  AnthropicProvider.prototype.validateConfig = function (providerConfig) {
+    if (!providerConfig.apiKey) {
+      throw new Error("API Key is not set for Anthropic provider.");
+    }
+  };
+
+  AnthropicProvider.prototype.prepareMessages = function (messages, instruction) {
+    this.systemMessageContent = instruction ? instruction.content : "";
+    return messages.filter((msg) => msg.role !== "system");
+  };
   AnthropicProvider.prototype.fetchChatCompletion = async function (
     messages,
     deploymentName,

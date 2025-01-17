@@ -6,6 +6,22 @@ const AzureProvider = (function () {
   AzureProvider.prototype = Object.create(BaseProvider.prototype);
   AzureProvider.prototype.constructor = AzureProvider;
 
+  AzureProvider.prototype.validateConfig = function (providerConfig) {
+    if (!providerConfig.apiKey || !providerConfig.endpoint) {
+      throw new Error("API Key or Endpoint is not set for Azure provider.");
+    }
+  };
+
+  AzureProvider.prototype.prepareMessages = function (messages, instruction) {
+    if (instruction) {
+      messages.unshift({
+        role: "system",
+        content: instruction.content,
+      });
+    }
+    return messages;
+  };
+
   AzureProvider.prototype.fetchChatCompletion = async function (
     messages,
     deploymentName,
