@@ -1,7 +1,18 @@
-import BaseProvider from './BaseProvider';
+const OpenAIProvider = (function () {
+  function OpenAIProvider() {
+    BaseProvider.call(this);
+  }
 
-class OpenAIProvider extends BaseProvider {
-  async fetchChatCompletion(messages, deploymentName, options = {}, systemMessageContent = "", providerConfig) {
+  OpenAIProvider.prototype = Object.create(BaseProvider.prototype);
+  OpenAIProvider.prototype.constructor = OpenAIProvider;
+
+  OpenAIProvider.prototype.fetchChatCompletion = async function (
+    messages,
+    deploymentName,
+    options = {},
+    systemMessageContent = "",
+    providerConfig
+  ) {
     const url = "https://api.openai.com/v1/chat/completions";
     const headers = {
       "Content-Type": "application/json",
@@ -23,7 +34,7 @@ class OpenAIProvider extends BaseProvider {
 
     const data = await this.makeApiRequest(url, headers, body);
     return data.choices[0].message;
-  }
-}
+  };
 
-export default OpenAIProvider;
+  return OpenAIProvider;
+})();

@@ -2,19 +2,13 @@
  * API Module
  * Handles all interactions with the APIs via provider classes.
  */
-import AzureProvider from './providers/AzureProvider';
-import OpenAIProvider from './providers/OpenAIProvider';
-import AnthropicProvider from './providers/AnthropicProvider';
-import OllamaProvider from './providers/OllamaProvider';
-
-const providers = {
-  azure: AzureProvider,
-  openai: OpenAIProvider,
-  anthropic: AnthropicProvider,
-  ollama: OllamaProvider,
-};
-
 const ApiModule = (function () {
+  const providers = {
+    azure: AzureProvider,
+    openai: OpenAIProvider,
+    anthropic: AnthropicProvider,
+    ollama: OllamaProvider,
+  };
   /**
    * Fetches a chat completion using the specified provider.
    * @param {Array} messages - The conversation messages to send.

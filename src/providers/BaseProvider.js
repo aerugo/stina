@@ -1,9 +1,17 @@
-class BaseProvider {
-  async fetchChatCompletion(messages, deploymentName, options = {}, systemMessageContent = "", providerConfig) {
-    throw new Error("fetchChatCompletion method not implemented.");
-  }
+const BaseProvider = (function () {
+  function BaseProvider() {}
 
-  async makeApiRequest(url, headers, body) {
+  BaseProvider.prototype.fetchChatCompletion = async function (
+    messages,
+    deploymentName,
+    options = {},
+    systemMessageContent = "",
+    providerConfig
+  ) {
+    throw new Error("fetchChatCompletion method not implemented.");
+  };
+
+  BaseProvider.prototype.makeApiRequest = async function (url, headers, body) {
     const response = await fetch(url, {
       method: "POST",
       headers: headers,
@@ -23,7 +31,7 @@ class BaseProvider {
     }
 
     return await response.json();
-  }
-}
+  };
 
-export default BaseProvider;
+  return BaseProvider;
+})();

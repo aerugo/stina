@@ -1,7 +1,17 @@
-import BaseProvider from './BaseProvider';
+const AnthropicProvider = (function () {
+  function AnthropicProvider() {
+    BaseProvider.call(this);
+  }
 
-class AnthropicProvider extends BaseProvider {
-  async fetchChatCompletion(messages, deploymentName, options = {}, systemMessageContent = "", providerConfig) {
+  AnthropicProvider.prototype = Object.create(BaseProvider.prototype);
+  AnthropicProvider.prototype.constructor = AnthropicProvider;
+  AnthropicProvider.prototype.fetchChatCompletion = async function (
+    messages,
+    deploymentName,
+    options = {},
+    systemMessageContent = "",
+    providerConfig
+  ) {
     let url = "https://api.anthropic.com/v1/complete";
     if (deploymentName.startsWith("claude")) {
       url = "https://api.anthropic.com/v1/messages";
@@ -61,7 +71,7 @@ class AnthropicProvider extends BaseProvider {
     }
   }
 
-  generateAnthropicPrompt(messages) {
+  AnthropicProvider.prototype.generateAnthropicPrompt = function (messages) {
     let prompt = "";
     messages.forEach((message) => {
       if (message.role === "user") {
@@ -73,6 +83,5 @@ class AnthropicProvider extends BaseProvider {
     prompt += `\n\nAssistant:`;
     return prompt.trim();
   }
-}
-
-export default AnthropicProvider;
+  return AnthropicProvider;
+})();

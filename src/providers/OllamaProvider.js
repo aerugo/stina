@@ -1,7 +1,18 @@
-import BaseProvider from './BaseProvider';
+const OllamaProvider = (function () {
+  function OllamaProvider() {
+    BaseProvider.call(this);
+  }
 
-class OllamaProvider extends BaseProvider {
-  async fetchChatCompletion(messages, deploymentName, options = {}, systemMessageContent = "", providerConfig) {
+  OllamaProvider.prototype = Object.create(BaseProvider.prototype);
+  OllamaProvider.prototype.constructor = OllamaProvider;
+
+  OllamaProvider.prototype.fetchChatCompletion = async function (
+    messages,
+    deploymentName,
+    options = {},
+    systemMessageContent = "",
+    providerConfig
+  ) {
     const ollamaEndpoint = providerConfig.endpoint || "http://localhost:11434";
     const url = `${ollamaEndpoint}/api/chat`;
     const headers = {
@@ -37,7 +48,7 @@ class OllamaProvider extends BaseProvider {
     } else {
       throw new Error("Invalid response from Ollama API");
     }
-  }
-}
+  };
 
-export default OllamaProvider;
+  return OllamaProvider;
+})();
