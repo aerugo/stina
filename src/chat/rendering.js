@@ -6,69 +6,9 @@
 const renderer = new marked.Renderer();
 
 renderer.code = function (code, infostring, escaped) {
-  const language = (infostring || "").match(/\S*/)[0];
-
-  // Log the code and its type for debugging
-  console.log("Code before processing:", code, "Type:", typeof code);
-
-  // Ensure code is a string
-  if (typeof code !== "string") {
-    console.warn("Expected code to be a string but got:", typeof code);
-    if (code && (code.raw || code.text)) {
-      code = code.raw || code.text;
-    } else {
-      code = String(code);
-    }
-  }
-
-  let highlighted = "";
-  try {
-    if (language && hljs.getLanguage(language)) {
-      highlighted = hljs.highlight(code, { language: language }).value;
-    } else {
-      highlighted = hljs.highlightAuto(code).value;
-    }
-  } catch (error) {
-    console.error("Error highlighting code:", error);
-    highlighted = code; // Fallback to unhighlighted code
-  }
-
-  // Sanitize the highlighted code
-  const sanitizedHighlighted = DOMPurify.sanitize(highlighted);
-
-  // Generate a unique ID for each code block
-  const codeBlockId = "code-block-" + Math.random().toString(36).substr(2, 9);
-
-  // Return the custom HTML for the code block with a copy button
-  return `
-    <div class="code-block-container">
-      <button class="copy-code-button" data-code-block-id="${codeBlockId}">
-        <img src="src/icons/copy.svg" alt="${TranslationModule.translate(
-          "copy"
-        )}" />
-      </button>
-      <pre><code id="${codeBlockId}" class="hljs ${
-    language || ""
-  }">${sanitizedHighlighted}</code></pre>
-    </div>
-  `;
+  return CodeBlockComponent.renderCodeBlock(code, infostring);
 };
 
-function showCopiedLabel(button) {
-  const copiedLabel = document.createElement('div');
-  copiedLabel.classList.add('copied-label');
-  copiedLabel.textContent = TranslationModule.translate('copied');
-
-  const container = button.closest('.code-block-container');
-  container.appendChild(copiedLabel);
-
-  const buttonRect = button.getBoundingClientRect();
-  copiedLabel.style.left = `${button.offsetLeft + button.offsetWidth / 2}px`;
-
-  setTimeout(() => {
-    copiedLabel.remove();
-  }, 2000);
-}
 
 // Configure marked parser to enable line breaks globally and use custom renderer
 marked.setOptions({
@@ -110,29 +50,8 @@ const RenderingModule = (function () {
         articleElem.classList.add("assistant-article");
         articleElem.innerHTML = htmlContent;
 
-        // Add event listener for copy buttons inside code blocks
-        assistantMessageContainer.addEventListener("click", function (event) {
-          const target = event.target;
-          if (target.closest(".copy-code-button")) {
-            const button = target.closest(".copy-code-button");
-            const codeBlockId = button.getAttribute("data-code-block-id");
-            const codeBlock = document.getElementById(codeBlockId);
-
-            if (codeBlock) {
-              // Get the code text without HTML tags
-              const codeText = codeBlock.textContent;
-
-              navigator.clipboard
-                .writeText(codeText)
-                .then(() => {
-                  showCopiedLabel(button);
-                })
-                .catch((err) => {
-                  console.error(TranslationModule.translate("copy_error"), err);
-                });
-            }
-          }
-        });
+        // Attach code block copy event listener
+        CodeBlockComponent.attachCopyEvent(assistantMessageContainer);
 
         // Create footer for copy button and model/instruction label
         const messageFooter = document.createElement("div");

@@ -1,0 +1,75 @@
+/* Code block container and button styling */
+.code-block-container {
+  position: relative;
+  margin: 1em 0;
+}
+
+.code-block-container .copy-code-button {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
+  z-index: 10;
+}
+
+.code-block-container .copy-code-button img {
+  width: 16px;
+  height: 16px;
+}
+
+.code-block-container .copy-code-button:hover {
+  opacity: 0.8;
+}
+
+.code-block-container pre {
+  margin: 0;
+  padding: 1em;
+  padding-top: 2em;
+  position: relative;
+  background-color: #2d2d2e;
+}
+
+/* Set code text color for better contrast */
+.code-block-container pre code {
+  color: #ffffff;
+}
+
+/* Styles for the copied label */
+.copied-label {
+  position: absolute;
+  top: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: var(--primary-color);
+  color: #ffffff;
+  padding: 5px 10px;
+  border-radius: 4px;
+  opacity: 0;
+  animation: fadeInOut 2s forwards;
+  z-index: 20;
+  white-space: nowrap;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+/* Fade in and out animation */
+@keyframes fadeInOut {
+  0% {
+    opacity: 0;
+    transform: translateX(-50%) translateY(10px);
+  }
+  10% {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+  90% {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-10px);
+  }
+}
