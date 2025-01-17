@@ -78,7 +78,6 @@ const EventModule = (function () {
         ChatModule.saveChats();
       }
     }
-  }
 
   function updateModelAndInstructionSelectors() {
     const models = ModelsModule.getModels();
