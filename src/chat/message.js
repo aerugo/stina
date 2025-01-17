@@ -84,9 +84,20 @@ const MessageModule = (function () {
     const provider = selectedModelParams.provider;
     const providerConfig = config.providerConfigs[provider] || {};
 
+    // Initialize provider
+    const ProviderClass = providers[provider];
+    if (!ProviderClass) {
+      throw new Error(`Unsupported provider: ${provider}`);
+    }
+    const providerInstance = new ProviderClass();
+
+    // Validate provider configuration
+    providerInstance.validateConfig(providerConfig);
+
     // Start with a copy of the conversation WITHOUT the loading message
     let conversationToSend = [...currentState.conversation];
     let instructionLabel = "";
+
     // Handle system message if the model supports it
     if (selectedModelParams && selectedModelParams.system) {
       // Get latest instruction ID and custom instructions
@@ -107,18 +118,15 @@ const MessageModule = (function () {
 
       instructionLabel = instruction.label;
 
-      // Initialize provider
-      const ProviderClass = providers[provider];
-      if (!ProviderClass) {
-        throw new Error(`Unsupported provider: ${provider}`);
-      }
-      const providerInstance = new ProviderClass();
-
-      // Validate provider configuration
-      providerInstance.validateConfig(providerConfig);
-
       // Prepare messages using the provider's method
-      conversationToSend = providerInstance.prepareMessages(conversationToSend, instruction);
+      conversationToSend = providerInstance.prepareMessages(
+        conversationToSend,
+        instruction
+      );
+    } else {
+      // Even if the model doesn't support system messages,
+      // we might still need to prepare messages
+      conversationToSend = providerInstance.prepareMessages(conversationToSend);
     }
 
     const loadingMessage = { role: "assistant", content: "", isLoading: true };
