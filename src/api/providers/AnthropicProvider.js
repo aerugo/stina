@@ -12,13 +12,11 @@ const AnthropicProvider = (function () {
     }
   };
 
-  AnthropicProvider.prototype.prepareMessages = function (
-    messages,
-    instruction
-  ) {
-    // Store the system message content
+  AnthropicProvider.prototype.prepareMessages = function (messages, instruction) {
+    // Store the instruction content in an instance variable
     this.systemMessageContent = instruction ? instruction.content : "";
-    // Return messages with roles 'user' and 'assistant' only
+
+    // Filter out any 'system' role messages, keeping only 'user' and 'assistant' roles
     return messages.filter(
       (msg) => msg.role === "user" || msg.role === "assistant"
     );
@@ -29,42 +27,28 @@ const AnthropicProvider = (function () {
     options = {},
     providerConfig
   ) {
-    // Set the API endpoint for Claude models
     const url = "https://api.anthropic.com/v1/messages";
 
-    // Prepare headers
     const headers = {
       "Content-Type": "application/json",
-      "anthropic-dangerous-direct-browser-access": "true",
-      "anthropic-version": "2023-06-01",
       "x-api-key": providerConfig.apiKey,
     };
 
-    // Filter out any 'system' role messages from the messages array
-    const filteredMessages = messages.filter(
-      (msg) => msg.role === "user" || msg.role === "assistant"
-    );
-
-    // Map messages to the required format
-    const formattedMessages = filteredMessages.map((message) => ({
-      role: message.role,
-      content: message.content,
-    }));
-
-    // Prepare model options with correct parameter names
-    const modelOptions = {
+    // Prepare the API request body
+    const body = {
       model: deploymentName,
-      max_tokens: options.max_tokens || 1024,
+      max_tokens: options.max_tokens || 500,
       temperature: options.temperature || 0.7,
-      // Include 'top_p' if it's specified
-      ...(options.top_p !== undefined && { top_p: options.top_p }),
-      // Include the 'system' message if present
-      ...(this.systemMessageContent && { system: this.systemMessageContent }),
-      messages: formattedMessages,
+      top_p: options.top_p !== undefined ? options.top_p : 0.95,
+      system: this.systemMessageContent, // Include the system prompt
+      messages: messages.map((message) => ({
+        role: message.role,
+        content: message.content,
+      })),
     };
 
     // Make the API request
-    const data = await this.makeApiRequest(url, headers, modelOptions);
+    const data = await this.makeApiRequest(url, headers, body);
 
     // Handle the response
     if (Array.isArray(data.content)) {

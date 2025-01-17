@@ -5,7 +5,6 @@ const BaseProvider = (function () {
     messages,
     deploymentName,
     options = {},
-    systemMessageContent = "",
     providerConfig
   ) {
     throw new Error("fetchChatCompletion method not implemented.");
