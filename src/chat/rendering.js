@@ -14,7 +14,11 @@ renderer.code = function (code, infostring, escaped) {
   // Ensure code is a string
   if (typeof code !== 'string') {
     console.warn('Expected code to be a string but got:', typeof code);
-    code = String(code);
+    if (code && (code.raw || code.text)) {
+      code = code.raw || code.text;
+    } else {
+      code = String(code);
+    }
   }
 
   let highlighted = '';

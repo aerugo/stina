@@ -202,11 +202,7 @@ const MessageModule = (function () {
         content:
           typeof apiResponse.content === 'string'
             ? apiResponse.content
-            : typeof apiResponse.content.text === 'string'
-            ? apiResponse.content.text
-            : typeof apiResponse.content.raw === 'string'
-            ? apiResponse.content.raw
-            : JSON.stringify(apiResponse.content),
+            : apiResponse.content.raw || apiResponse.content.text || JSON.stringify(apiResponse.content),
         model: selectedModelKey,
         instructionLabel: instructionLabel,
       };
