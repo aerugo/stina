@@ -13,7 +13,9 @@ const AnthropicProvider = (function () {
   };
 
   AnthropicProvider.prototype.prepareMessages = function (messages, instruction) {
+    // Store the system message content
     this.systemMessageContent = instruction ? instruction.content : "";
+    // For Claude models, messages are an array without system messages
     return messages.filter((msg) => msg.role !== "system");
   };
   AnthropicProvider.prototype.fetchChatCompletion = async function (
@@ -23,7 +25,8 @@ const AnthropicProvider = (function () {
     providerConfig
   ) {
     let url = "https://api.anthropic.com/v1/complete";
-    if (deploymentName.startsWith("claude")) {
+    const isClaudeModel = deploymentName.startsWith("claude");
+    if (isClaudeModel) {
       url = "https://api.anthropic.com/v1/messages";
     }
 
@@ -39,7 +42,8 @@ const AnthropicProvider = (function () {
     );
 
     let body;
-    if (url.endsWith("/v1/messages")) {
+    if (isClaudeModel) {
+      // For Claude models, use the 'messages' array and include 'system' parameter
       const filteredMessages = messages.filter((msg) => msg.role !== "system");
       body = {
         model: deploymentName,
@@ -47,13 +51,14 @@ const AnthropicProvider = (function () {
           role: message.role,
           content: message.content,
         })),
-        max_tokens: validOptions.max_tokens || 1024,
+        max_tokens_to_sample: validOptions.max_tokens || 1024,
         temperature: validOptions.temperature || 0.7,
       };
       if (this.systemMessageContent) {
         body.system = this.systemMessageContent;
       }
     } else {
+      // For other models, construct the prompt manually
       body = {
         prompt: this.generateAnthropicPrompt(messages),
         model: deploymentName,
@@ -63,13 +68,13 @@ const AnthropicProvider = (function () {
     }
 
     const data = await this.makeApiRequest(url, headers, body);
-    
+
     if (data.completion) {
       return {
         role: "assistant",
         content: data.completion.trim(),
       };
-    } else if (data.content) {
+    } else if (data.content && Array.isArray(data.content)) {
       const assistantContent = data.content
         .map((part) => part.text)
         .join("")
@@ -78,13 +83,26 @@ const AnthropicProvider = (function () {
         role: "assistant",
         content: assistantContent,
       };
-    } else {
-      throw new Error("Invalid response from Anthropic API");
+    } else if (data.messages) {
+      // For Claude models, the response is in 'messages'
+      const assistantMessage = data.messages.find(
+        (msg) => msg.role === "assistant"
+      );
+      if (assistantMessage) {
+        return {
+          role: "assistant",
+          content: assistantMessage.content.trim(),
+        };
+      }
     }
+    throw new Error("Invalid response from Anthropic API");
   }
 
   AnthropicProvider.prototype.generateAnthropicPrompt = function (messages) {
     let prompt = "";
+    if (this.systemMessageContent) {
+      prompt += `\n\n${this.systemMessageContent}`;
+    }
     messages.forEach((message) => {
       if (message.role === "user") {
         prompt += `\n\nHuman: ${message.content}`;
