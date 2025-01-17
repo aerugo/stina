@@ -6,14 +6,14 @@
 const renderer = new marked.Renderer();
 
 renderer.code = function (code, infostring, escaped) {
-  const language = (infostring || '').match(/\S*/)[0];
+  const language = (infostring || "").match(/\S*/)[0];
 
   // Log the code and its type for debugging
-  console.log('Code before processing:', code, 'Type:', typeof code);
+  console.log("Code before processing:", code, "Type:", typeof code);
 
   // Ensure code is a string
-  if (typeof code !== 'string') {
-    console.warn('Expected code to be a string but got:', typeof code);
+  if (typeof code !== "string") {
+    console.warn("Expected code to be a string but got:", typeof code);
     if (code && (code.raw || code.text)) {
       code = code.raw || code.text;
     } else {
@@ -21,7 +21,7 @@ renderer.code = function (code, infostring, escaped) {
     }
   }
 
-  let highlighted = '';
+  let highlighted = "";
   try {
     if (language && hljs.getLanguage(language)) {
       highlighted = hljs.highlight(code, { language: language }).value;
@@ -29,7 +29,7 @@ renderer.code = function (code, infostring, escaped) {
       highlighted = hljs.highlightAuto(code).value;
     }
   } catch (error) {
-    console.error('Error highlighting code:', error);
+    console.error("Error highlighting code:", error);
     highlighted = code; // Fallback to unhighlighted code
   }
 
@@ -37,15 +37,19 @@ renderer.code = function (code, infostring, escaped) {
   const sanitizedHighlighted = DOMPurify.sanitize(highlighted);
 
   // Generate a unique ID for each code block
-  const codeBlockId = 'code-block-' + Math.random().toString(36).substr(2, 9);
+  const codeBlockId = "code-block-" + Math.random().toString(36).substr(2, 9);
 
   // Return the custom HTML for the code block with a copy button
   return `
     <div class="code-block-container">
-      <pre><code id="${codeBlockId}" class="hljs ${language || ''}">${sanitizedHighlighted}</code></pre>
+      <pre><code id="${codeBlockId}" class="hljs ${
+    language || ""
+  }">${sanitizedHighlighted}</code></pre>
       <button class="copy-code-button" data-code-block-id="${codeBlockId}">
-        <img src="src/icons/copy.svg" alt="${TranslationModule.translate('copy')}" />
-        <span>${TranslationModule.translate('copy')}</span>
+        <img src="src/icons/copy.svg" alt="${TranslationModule.translate(
+          "copy"
+        )}" />
+        <span>${TranslationModule.translate("copy")}</span>
       </button>
     </div>
   `;
@@ -61,8 +65,8 @@ const RenderingModule = (function () {
   const models = ModelsModule.getModels(); // Retrieve models
 
   function createMessageElement(message) {
-    if (typeof message.content !== 'string') {
-      console.warn('message.content is not a string:', message.content);
+    if (typeof message.content !== "string") {
+      console.warn("message.content is not a string:", message.content);
       message.content = JSON.stringify(message.content);
     }
     const messageElem = document.createElement("div");
@@ -92,31 +96,38 @@ const RenderingModule = (function () {
         articleElem.innerHTML = htmlContent;
 
         // Add event listener for copy buttons inside code blocks
-        assistantMessageContainer.addEventListener('click', function (event) {
+        assistantMessageContainer.addEventListener("click", function (event) {
           const target = event.target;
-          if (target.closest('.copy-code-button')) {
-            const button = target.closest('.copy-code-button');
-            const codeBlockId = button.getAttribute('data-code-block-id');
+          if (target.closest(".copy-code-button")) {
+            const button = target.closest(".copy-code-button");
+            const codeBlockId = button.getAttribute("data-code-block-id");
             const codeBlock = document.getElementById(codeBlockId);
 
             if (codeBlock) {
               // Get the code text without HTML tags
               const codeText = codeBlock.textContent;
 
-              navigator.clipboard.writeText(codeText).then(() => {
-                button.innerHTML = `
-                  <img src="src/icons/copy.svg" alt="${TranslationModule.translate('copied')}" />
-                  <span>${TranslationModule.translate('copied')}</span>
-                `;
-                setTimeout(() => {
+              navigator.clipboard
+                .writeText(codeText)
+                .then(() => {
                   button.innerHTML = `
-                    <img src="src/icons/copy.svg" alt="${TranslationModule.translate('copy')}" />
-                    <span>${TranslationModule.translate('copy')}</span>
+                  <img src="src/icons/copy.svg" alt="${TranslationModule.translate(
+                    "copied"
+                  )}" />
+                  <span>${TranslationModule.translate("copied")}</span>
+                `;
+                  setTimeout(() => {
+                    button.innerHTML = `
+                    <img src="src/icons/copy.svg" alt="${TranslationModule.translate(
+                      "copy"
+                    )}" />
+                    <span>${TranslationModule.translate("copy")}</span>
                   `;
-                }, 2000);
-              }).catch((err) => {
-                console.error(TranslationModule.translate('copy_error'), err);
-              });
+                  }, 2000);
+                })
+                .catch((err) => {
+                  console.error(TranslationModule.translate("copy_error"), err);
+                });
             }
           }
         });
