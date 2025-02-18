@@ -159,8 +159,13 @@ const ChatModule = (function () {
    */
   function importChats(newChats) {
     if (!Array.isArray(newChats)) return;
-    chats = newChats;
-    if (chats.length > 0) {
+    // Merge new chats into existing chats
+    chats = chats.concat(newChats);
+    // Update currentChatId and conversation if necessary
+    const currentChat = chats.find(chat => chat.id === currentChatId);
+    if (currentChat) {
+      conversation = currentChat.conversation;
+    } else if (chats.length > 0) {
       currentChatId = chats[0].id;
       conversation = chats[0].conversation;
     } else {
