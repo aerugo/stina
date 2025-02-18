@@ -41,26 +41,6 @@ const SettingsEventsModule = (function () {
           saveSettings();
         }
 
-        // Export Chat
-        const exportChatButton = document.getElementById("export-chat-button");
-        if (exportChatButton) {
-          exportChatButton.addEventListener("click", handleExportChat);
-        }
-
-        // Import Chat (trigger hidden file input)
-        const importChatButton = document.getElementById("import-chat-button");
-        if (importChatButton) {
-          importChatButton.addEventListener("click", () => {
-            const fileInput = document.getElementById("import-chat-file");
-            if (fileInput) fileInput.click();
-          });
-        }
-
-        // Listen for the import file change event
-        const importChatFileInput = document.getElementById("import-chat-file");
-        if (importChatFileInput) {
-          importChatFileInput.addEventListener("change", handleImportChatFileSelected);
-        }
       }
     );
 
@@ -287,6 +267,27 @@ const SettingsEventsModule = (function () {
           }
         );
       });
+    }
+  
+    // Attach Export Chat Button listener
+    const exportChatButton = document.getElementById("export-chat-button");
+    if (exportChatButton) {
+      exportChatButton.addEventListener("click", handleExportChat);
+    }
+  
+    // Attach Import Chat Button listener (to trigger the hidden file input)
+    const importChatButton = document.getElementById("import-chat-button");
+    if (importChatButton) {
+      importChatButton.addEventListener("click", () => {
+        const fileInput = document.getElementById("import-chat-file");
+        if (fileInput) fileInput.click();
+      });
+    }
+  
+    // Attach listener for file input change (for importing JSON)
+    const importChatFileInput = document.getElementById("import-chat-file");
+    if (importChatFileInput) {
+      importChatFileInput.addEventListener("change", handleImportChatFileSelected);
     }
   }
 
