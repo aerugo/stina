@@ -398,8 +398,30 @@ const SettingsEventsModule = (function () {
       return;
     }
 
-    // Serialize the chat with pretty-print formatting.
-    const jsonStr = JSON.stringify(currentChat, null, 2);
+    // Compute the unique assistants used in this chat (from messages with role "assistant")
+    let assistantsUsed = [];
+    if (Array.isArray(currentChat.conversation)) {
+      const assistSet = new Set();
+      currentChat.conversation.forEach(msg => {
+        if (msg.role === "assistant") {
+          // If the message holds an "assistant" property, use it; otherwise fallback to the chat's selectedModelKey
+          if (msg.assistant) {
+            assistSet.add(msg.assistant);
+          } else if (currentChat.selectedModelKey) {
+            assistSet.add(currentChat.selectedModelKey);
+          }
+        }
+      });
+      assistantsUsed = Array.from(assistSet);
+    }
+  
+    // Create an export object that includes the assistants property.
+    const exportedChat = {
+      ...currentChat,
+      assistants: assistantsUsed
+    };
+  
+    const jsonStr = JSON.stringify(exportedChat, null, 2);
     // Create a safe filename from the chat name.
     const safeName = currentChat.name
       ? currentChat.name.replace(/[^\w\d_\-]/g, "_")
@@ -456,8 +478,40 @@ const SettingsEventsModule = (function () {
 
   function handleExportAllChats() {
     const state = ChatModule.getCurrentState();
-    const allChats = state.chats;
-    const jsonStr = JSON.stringify(allChats, null, 2);
+    // For each chat, compute its assistants property from its conversation.
+    const chatsWithAssistants = state.chats.map(chat => {
+      let assistantsUsed = [];
+      if (Array.isArray(chat.conversation)) {
+        const assistSet = new Set();
+        chat.conversation.forEach(msg => {
+          if (msg.role === "assistant") {
+            if (msg.assistant) {
+              assistSet.add(msg.assistant);
+            } else if (chat.selectedModelKey) {
+              assistSet.add(chat.selectedModelKey);
+            }
+          }
+        });
+        assistantsUsed = Array.from(assistSet);
+      }
+      return { ...chat, assistants: assistantsUsed };
+    });
+  
+    // Compute the global union of assistants across all chats.
+    const globalAssistantsSet = new Set();
+    chatsWithAssistants.forEach(chat => {
+      if (Array.isArray(chat.assistants))
+        chat.assistants.forEach(a => globalAssistantsSet.add(a));
+    });
+    const globalAssistants = Array.from(globalAssistantsSet);
+  
+    // Export an object that contains both chats and global assistants.
+    const exportObj = {
+      chats: chatsWithAssistants,
+      assistants: globalAssistants
+    };
+  
+    const jsonStr = JSON.stringify(exportObj, null, 2);
     const filename = "all-chats.json";
 
     const blob = new Blob([jsonStr], { type: "application/json" });
