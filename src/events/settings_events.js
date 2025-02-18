@@ -447,7 +447,18 @@ const SettingsEventsModule = (function () {
       try {
         // Parse the imported JSON.
         const importedChat = JSON.parse(e.target.result);
-
+      
+        // If the imported chat contains instructions, merge them into custom instructions.
+        if (importedChat.instructions && Array.isArray(importedChat.instructions)) {
+          const existingCustomInstructions = JSON.parse(localStorage.getItem("customInstructions")) || [];
+          importedChat.instructions.forEach(instr => {
+            if (!existingCustomInstructions.find(ci => ci.id === instr.id)) {
+              existingCustomInstructions.push(instr);
+            }
+          });
+          localStorage.setItem("customInstructions", JSON.stringify(existingCustomInstructions));
+        }
+      
         // Create a new chat object (assigning a new ID and timestamp).
         const newChat = {
           ...importedChat,
@@ -478,9 +489,10 @@ const SettingsEventsModule = (function () {
 
   function handleExportAllChats() {
     const state = ChatModule.getCurrentState();
-    // For each chat, compute its assistants property from its conversation.
+    // For each chat, compute its assistants and instructions properties.
     const chatsWithAssistants = state.chats.map(chat => {
       let assistantsUsed = [];
+      let instructionsUsed = [];
       if (Array.isArray(chat.conversation)) {
         const assistSet = new Set();
         chat.conversation.forEach(msg => {
@@ -494,7 +506,15 @@ const SettingsEventsModule = (function () {
         });
         assistantsUsed = Array.from(assistSet);
       }
-      return { ...chat, assistants: assistantsUsed };
+      // Compute instructions used in this chat using selectedInstructionId.
+      if (chat.selectedInstructionId) {
+        const instructionsLookup = window.instructions || window.defaultInstructions;
+        const matchingInstr = instructionsLookup.find(instr => instr.id === chat.selectedInstructionId);
+        if (matchingInstr) {
+          instructionsUsed.push(matchingInstr);
+        }
+      }
+      return { ...chat, assistants: assistantsUsed, instructions: instructionsUsed };
     });
   
     // Compute the global union of assistants across all chats.
@@ -504,11 +524,25 @@ const SettingsEventsModule = (function () {
         chat.assistants.forEach(a => globalAssistantsSet.add(a));
     });
     const globalAssistants = Array.from(globalAssistantsSet);
-  
-    // Export an object that contains both chats and global assistants.
+      
+    // Compute the global union of instructions across all chats.
+    const globalInstructionsSet = new Set();
+    chatsWithAssistants.forEach(chat => {
+      if (Array.isArray(chat.instructions))
+        chat.instructions.forEach(instr => globalInstructionsSet.add(instr.id));
+    });
+    const globalInstructions = [];
+    const instructionsLookup = window.instructions || window.defaultInstructions;
+    globalInstructionsSet.forEach(id => {
+      const instrDef = instructionsLookup.find(instr => instr.id === id);
+      if (instrDef) globalInstructions.push(instrDef);
+    });
+      
+    // Export an object that contains chats, global assistants, and global instructions.
     const exportObj = {
       chats: chatsWithAssistants,
-      assistants: globalAssistants
+      assistants: globalAssistants,
+      instructions: globalInstructions
     };
   
     const jsonStr = JSON.stringify(exportObj, null, 2);
@@ -536,8 +570,18 @@ const SettingsEventsModule = (function () {
           // Old format: an array of chats
           chatsToImport = importedData;
         } else if (importedData.chats && Array.isArray(importedData.chats)) {
-          // New format: object with "chats" and possibly "assistants"
+          // New format: object with "chats" and possibly "assistants" and "instructions"
           chatsToImport = importedData.chats;
+          // If instructions exist in the exported file, merge them into custom instructions.
+          if (importedData.instructions && Array.isArray(importedData.instructions)) {
+            const existingCustomInstructions = JSON.parse(localStorage.getItem("customInstructions")) || [];
+            importedData.instructions.forEach(instr => {
+              if (!existingCustomInstructions.find(ci => ci.id === instr.id)) {
+                existingCustomInstructions.push(instr);
+              }
+            });
+            localStorage.setItem("customInstructions", JSON.stringify(existingCustomInstructions));
+          }
           // (Optional: Process importedData.assistants if needed)
         } else {
           throw new Error("Imported data is not in a recognized format");
