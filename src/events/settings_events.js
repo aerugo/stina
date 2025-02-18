@@ -597,6 +597,17 @@ const SettingsEventsModule = (function () {
         } else if (importedData.chats && Array.isArray(importedData.chats)) {
           // New format: object with "chats" and possibly "assistants" and "instructions"
           chatsToImport = importedData.chats;
+          // If the exported data contains assistants, update the global assistant list.
+          if (importedData.assistants && Array.isArray(importedData.assistants)) {
+            importedData.assistants.forEach(assistId => {
+              if (!window.models[assistId]) {
+                window.models[assistId] = { id: assistId, name: assistId, provider: "custom" };
+              }
+            });
+            if (typeof ModelSelectionEventsModule.populateModelSelector === "function") {
+              ModelSelectionEventsModule.populateModelSelector();
+            }
+          }
           // If instructions exist in the exported file, merge them into custom instructions.
           if (importedData.instructions && Array.isArray(importedData.instructions)) {
             const existingCustomInstructions = JSON.parse(localStorage.getItem("customInstructions")) || [];
