@@ -115,7 +115,7 @@ const SettingsEventsModule = (function () {
     const enabledProviders = Object.keys(providerConfigs).filter(
       (provider) => providerConfigs[provider].enabled
     );
-    let content = '<div style="max-height: 400px; overflow-y: auto;">';
+    let content = '<div class="settings-providers-container">';
 
     enabledProviders.forEach((provider) => {
       const providerConfig = providerConfigs[provider] || {};
@@ -144,9 +144,7 @@ const SettingsEventsModule = (function () {
           </div>
           ${
             providerConfig.apiKeyFromProvidersJs
-              ? `<p style="color: gray; font-size: 0.9em;">${TranslationModule.translate(
-                  "apiKeyPreConfigured"
-                )}</p>`
+              ? `<p class="settings-note">${TranslationModule.translate("apiKeyPreConfigured")}</p>`
               : ""
           }
         </div>
@@ -171,9 +169,7 @@ const SettingsEventsModule = (function () {
             </div>
             ${
               providerConfig.endpointFromProvidersJs
-                ? `<p style="color: gray; font-size: 0.9em;">${TranslationModule.translate(
-                    "endpointPreConfigured"
-                  )}</p>`
+                ? `<p class="settings-note">${TranslationModule.translate("endpointPreConfigured")}</p>`
                 : ""
             }
           </div>
