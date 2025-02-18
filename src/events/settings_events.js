@@ -225,7 +225,7 @@ const SettingsEventsModule = (function () {
 
     // Return a structured layout with three sections: Export, Import, Reset.
     return `
-  <div class="data-tab-container" style="max-height: 480px; overflow-y: auto;">
+  <div class="data-tab-container">
 
     <!-- EXPORT SECTION -->
     <section class="data-section">
@@ -261,15 +261,11 @@ const SettingsEventsModule = (function () {
     <!-- IMPORT SECTION -->
     <section class="data-section">
       <h2 class="title is-5">${TranslationModule.translate("importChat")}</h2>
-      <div 
-        id="import-drop-area" 
-        class="import-drop-area" 
-        style="border: 2px dashed #ccc; padding: 2rem; text-align: center; cursor: pointer;"
-      >
-        <p style="margin-bottom: 1rem;">
+      <div id="import-drop-area" class="import-drop-area">
+        <p>
           ${TranslationModule.translate("dragDropOrClickToImport")}
         </p>
-        <p class="help" style="margin-bottom: 0.5rem;">
+        <p class="help">
           ${TranslationModule.translate("importChatHelpText")}
         </p>
         <!-- Hidden file input for selecting a file -->
