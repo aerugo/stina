@@ -415,10 +415,21 @@ const SettingsEventsModule = (function () {
       assistantsUsed = Array.from(assistSet);
     }
   
-    // Create an export object that includes the assistants property.
+    // Compute the instructions used in this chat.
+    let instructionsUsed = [];
+    if (currentChat.selectedInstructionId) {
+      // Use the global instructions array if available, otherwise fall back to default instructions.
+      const instructionsLookup = window.instructions || window.defaultInstructions;
+      const matchingInstr = instructionsLookup.find(instr => instr.id === currentChat.selectedInstructionId);
+      if (matchingInstr) {
+        instructionsUsed.push(matchingInstr);
+      }
+    }
+    // Create an export object that includes assistants and instructions.
     const exportedChat = {
       ...currentChat,
-      assistants: assistantsUsed
+      assistants: assistantsUsed,
+      instructions: instructionsUsed
     };
   
     const jsonStr = JSON.stringify(exportedChat, null, 2);
