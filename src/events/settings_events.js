@@ -208,6 +208,27 @@ const SettingsEventsModule = (function () {
           <input type="file" id="import-chat-file" style="display: none;" accept=".json" />
         </div>
       </div>
+
+     <hr />
+
+     <div class="field">
+       <label class="label">${TranslationModule.translate("exportAllChats")}</label>
+       <div class="control">
+         <button id="export-all-chats-button" class="button is-primary">
+           ${TranslationModule.translate("exportAllChats")}
+         </button>
+       </div>
+     </div>
+
+     <div class="field">
+       <label class="label">${TranslationModule.translate("importAllChats")}</label>
+       <div class="control">
+         <button id="import-all-chats-button" class="button is-primary">
+           ${TranslationModule.translate("importAllChats")}
+         </button>
+         <input type="file" id="import-all-chats-file" style="display: none;" accept=".json" />
+       </div>
+     </div>
     `;
   }
 
@@ -289,6 +310,27 @@ const SettingsEventsModule = (function () {
     if (importChatFileInput) {
       importChatFileInput.addEventListener("change", handleImportChatFileSelected);
     }
+
+ // New: Export All Chats button listener
+ const exportAllChatsButton = document.getElementById("export-all-chats-button");
+ if (exportAllChatsButton) {
+   exportAllChatsButton.addEventListener("click", handleExportAllChats);
+ }
+
+ // New: Import All Chats button listener (triggering hidden file input)
+ const importAllChatsButton = document.getElementById("import-all-chats-button");
+ if (importAllChatsButton) {
+   importAllChatsButton.addEventListener("click", () => {
+     const fileInput = document.getElementById("import-all-chats-file");
+     if (fileInput) fileInput.click();
+   });
+ }
+
+ // New: Listener for the file input change event (all chats)
+ const importAllChatsFileInput = document.getElementById("import-all-chats-file");
+ if (importAllChatsFileInput) {
+   importAllChatsFileInput.addEventListener("change", handleImportAllChatsFileSelected);
+ }
   }
 
   function collectProviderConfigs() {
@@ -406,6 +448,48 @@ const SettingsEventsModule = (function () {
         ModalModule.showCustomAlert(TranslationModule.translate("chatImportedSuccessfully"));
       } catch (error) {
         console.error("Error importing chat:", error);
+        ModalModule.showCustomAlert(TranslationModule.translate("errorImportingChatCheckFileFormat"));
+      }
+    };
+    reader.readAsText(file);
+  }
+
+  function handleExportAllChats() {
+    const state = ChatModule.getCurrentState();
+    const allChats = state.chats;
+    const jsonStr = JSON.stringify(allChats, null, 2);
+    const filename = "all-chats.json";
+
+    const blob = new Blob([jsonStr], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = filename;
+    link.click();
+    URL.revokeObjectURL(url);
+  }
+
+  function handleImportAllChatsFileSelected(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      try {
+        const importedChats = JSON.parse(e.target.result);
+        if (!Array.isArray(importedChats)) {
+          throw new Error("Imported data is not an array");
+        }
+
+        ChatModule.importChats(importedChats);
+
+        const state = ChatModule.getCurrentState();
+        RenderingModule.renderChatList(state.chats, state.currentChatId);
+        RenderingModule.renderConversation(state.conversation);
+
+        ModalModule.showCustomAlert(TranslationModule.translate("chatImportedSuccessfully"));
+      } catch (error) {
+        console.error("Error importing all chats:", error);
         ModalModule.showCustomAlert(TranslationModule.translate("errorImportingChatCheckFileFormat"));
       }
     };

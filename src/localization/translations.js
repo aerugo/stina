@@ -62,6 +62,8 @@ window.translationsData = {
     providers: "Providers",
     enterApiKey: "Enter API Key",
     enterEndpointURL: "Enter Endpoint URL",
+    exportAllChats: "Export All Chats",
+    importAllChats: "Import All Chats",
   },
   sv: {
     exportChat: "Exportera nuvarande chat",
@@ -124,5 +126,7 @@ window.translationsData = {
     openai: "OpenAI",
     anthropic: "Anthropic",
     ollama: "Ollama",
+    exportAllChats: "Exportera alla chattar",
+    importAllChats: "Importera alla chattar",
   },
 };
