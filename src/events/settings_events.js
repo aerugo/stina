@@ -446,55 +446,47 @@ const SettingsEventsModule = (function () {
     ModalModule.showCustomAlert(TranslationModule.translate("settingsSaved"));
   }
 
-  function handleExportChat() {
-    const currentChat = ChatModule.getCurrentChat();
-    if (!currentChat) {
-      ModalModule.showCustomAlert(TranslationModule.translate("noChatSelectedToExport"));
+  function handleExportChatById(chatId) {
+    const state = ChatModule.getCurrentState();
+    const chatToExport = state.chats.find((c) => c.id === chatId);
+    if (!chatToExport) {
+      ModalModule.showCustomAlert(TranslationModule.translate("chatNotFound"));
       return;
     }
-
-    // Compute the unique assistants used in this chat (from messages with role "assistant")
+  
     let assistantsUsed = [];
-    if (Array.isArray(currentChat.conversation)) {
+    if (Array.isArray(chatToExport.conversation)) {
       const assistSet = new Set();
-      currentChat.conversation.forEach(msg => {
+      chatToExport.conversation.forEach((msg) => {
         if (msg.role === "assistant") {
-          // If the message holds an "assistant" property, use it; otherwise fallback to the chat's selectedModelKey
-          if (msg.assistant) {
-            assistSet.add(msg.assistant);
-          } else if (currentChat.selectedModelKey) {
-            assistSet.add(currentChat.selectedModelKey);
-          }
+          if (msg.assistant) assistSet.add(msg.assistant);
+          else if (chatToExport.selectedModelKey) assistSet.add(chatToExport.selectedModelKey);
         }
       });
       assistantsUsed = Array.from(assistSet);
     }
   
-    // Compute the instructions used in this chat.
     let instructionsUsed = [];
-    if (currentChat.selectedInstructionId) {
-      // Use the global instructions array if available, otherwise fall back to default instructions.
+    if (chatToExport.selectedInstructionId) {
       const instructionsLookup = window.instructions || window.defaultInstructions;
-      const matchingInstr = instructionsLookup.find(instr => instr.id === currentChat.selectedInstructionId);
-      if (matchingInstr) {
-        instructionsUsed.push(matchingInstr);
-      }
+      const matchingInstr = instructionsLookup.find(
+        (instr) => instr.id === chatToExport.selectedInstructionId
+      );
+      if (matchingInstr) instructionsUsed.push(matchingInstr);
     }
-    // Create an export object that includes assistants and instructions.
+  
     const exportedChat = {
-      ...currentChat,
+      ...chatToExport,
       assistants: assistantsUsed,
       instructions: instructionsUsed
     };
   
     const jsonStr = JSON.stringify(exportedChat, null, 2);
-    // Create a safe filename from the chat name.
-    const safeName = currentChat.name
-      ? currentChat.name.replace(/[^\w\d_\-]/g, "_")
+    const safeName = chatToExport.name
+      ? chatToExport.name.replace(/[^\w\d_\-]/g, "_")
       : "chat";
     const filename = `${safeName}.json`;
-
-    // Create a temporary download link.
+  
     const blob = new Blob([jsonStr], { type: "application/json" });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
