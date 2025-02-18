@@ -458,6 +458,20 @@ const SettingsEventsModule = (function () {
       try {
         // Parse the imported JSON.
         const importedChat = JSON.parse(e.target.result);
+        
+        // If the chat export contains assistants, update the global assistant list.
+        if (importedChat.assistants && Array.isArray(importedChat.assistants)) {
+          importedChat.assistants.forEach(assistId => {
+            if (!window.models[assistId]) {
+              // Add the new assistant with a basic structure; adjust as needed.
+              window.models[assistId] = { id: assistId, name: assistId, provider: "custom" };
+            }
+          });
+          // Refresh the assistant/model selection UI immediately.
+          if (typeof ModelSelectionEventsModule.populateModelSelector === "function") {
+            ModelSelectionEventsModule.populateModelSelector();
+          }
+        }
       
         // If the imported chat contains instructions, merge them into custom instructions.
         if (importedChat.instructions && Array.isArray(importedChat.instructions)) {
