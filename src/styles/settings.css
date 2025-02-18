@@ -29,6 +29,10 @@
   margin-bottom: 1.5rem;
 }
 
+.select {
+  margin-bottom: 1rem;
+}
+
 /* Add spacing between controls in the export section */
 .data-section .field.is-grouped > .control:not(:last-child) {
   margin-right: 1rem;
