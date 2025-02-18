@@ -1,5 +1,10 @@
 window.translationsData = {
   en: {
+    exportChat: "Export Current Chat",
+    importChat: "Import Chat",
+    noChatSelectedToExport: "No chat selected to export.",
+    chatImportedSuccessfully: "Chat imported successfully!",
+    errorImportingChatCheckFileFormat: "Error importing chat. Please check the file format.",
     data: "Data",
     clearData: "Clear Data",
     clearAllData: "Clear All Data", 
@@ -59,6 +64,11 @@ window.translationsData = {
     enterEndpointURL: "Enter Endpoint URL",
   },
   sv: {
+    exportChat: "Exportera nuvarande chat",
+    importChat: "Importera chat",
+    noChatSelectedToExport: "Ingen chat vald att exportera.",
+    chatImportedSuccessfully: "Chatten har importerats!",
+    errorImportingChatCheckFileFormat: "Fel vid import av chat. Kontrollera filformatet.",
     data: "Data",
     clearData: "Rensa data",
     clearAllData: "Rensa all data",

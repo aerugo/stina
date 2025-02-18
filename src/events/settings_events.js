@@ -40,6 +40,27 @@ const SettingsEventsModule = (function () {
         if (result) {
           saveSettings();
         }
+
+        // Export Chat
+        const exportChatButton = document.getElementById("export-chat-button");
+        if (exportChatButton) {
+          exportChatButton.addEventListener("click", handleExportChat);
+        }
+
+        // Import Chat (trigger hidden file input)
+        const importChatButton = document.getElementById("import-chat-button");
+        if (importChatButton) {
+          importChatButton.addEventListener("click", () => {
+            const fileInput = document.getElementById("import-chat-file");
+            if (fileInput) fileInput.click();
+          });
+        }
+
+        // Listen for the import file change event
+        const importChatFileInput = document.getElementById("import-chat-file");
+        if (importChatFileInput) {
+          importChatFileInput.addEventListener("change", handleImportChatFileSelected);
+        }
       }
     );
 
@@ -186,6 +207,27 @@ const SettingsEventsModule = (function () {
         </div>
         <p class="help">${TranslationModule.translate("clearDataWarning")}</p>
       </div>
+
+      <hr />
+
+      <div class="field">
+        <label class="label">${TranslationModule.translate("exportChat")}</label>
+        <div class="control">
+          <button id="export-chat-button" class="button is-primary">
+            ${TranslationModule.translate("exportChat")}
+          </button>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="label">${TranslationModule.translate("importChat")}</label>
+        <div class="control">
+          <button id="import-chat-button" class="button is-primary">
+            ${TranslationModule.translate("importChat")}
+          </button>
+          <input type="file" id="import-chat-file" style="display: none;" accept=".json" />
+        </div>
+      </div>
     `;
   }
 
@@ -304,6 +346,69 @@ const SettingsEventsModule = (function () {
     TranslationModule.applyTranslations();
 
     ModalModule.showCustomAlert(TranslationModule.translate("settingsSaved"));
+  }
+
+  function handleExportChat() {
+    const currentChat = ChatModule.getCurrentChat();
+    if (!currentChat) {
+      ModalModule.showCustomAlert(TranslationModule.translate("noChatSelectedToExport"));
+      return;
+    }
+
+    // Serialize the chat with pretty-print formatting.
+    const jsonStr = JSON.stringify(currentChat, null, 2);
+    // Create a safe filename from the chat name.
+    const safeName = currentChat.name
+      ? currentChat.name.replace(/[^\w\d_\-]/g, "_")
+      : "chat";
+    const filename = `${safeName}.json`;
+
+    // Create a temporary download link.
+    const blob = new Blob([jsonStr], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = filename;
+    link.click();
+    URL.revokeObjectURL(url);
+  }
+
+  function handleImportChatFileSelected(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      try {
+        // Parse the imported JSON.
+        const importedChat = JSON.parse(e.target.result);
+
+        // Create a new chat object (assigning a new ID and timestamp).
+        const newChat = {
+          ...importedChat,
+          id: Date.now().toString(),
+          lastUpdated: Date.now(),
+        };
+
+        // Insert the new chat at the beginning of the chat list.
+        const state = ChatModule.getCurrentState();
+        state.chats.unshift(newChat);
+
+        // Save the updated chats and load the new chat.
+        ChatModule.saveChats();
+        ChatModule.loadChat(newChat.id);
+
+        const newState = ChatModule.getCurrentState();
+        RenderingModule.renderChatList(newState.chats, newState.currentChatId);
+        RenderingModule.renderConversation(newState.conversation);
+
+        ModalModule.showCustomAlert(TranslationModule.translate("chatImportedSuccessfully"));
+      } catch (error) {
+        console.error("Error importing chat:", error);
+        ModalModule.showCustomAlert(TranslationModule.translate("errorImportingChatCheckFileFormat"));
+      }
+    };
+    reader.readAsText(file);
   }
 
   return {
