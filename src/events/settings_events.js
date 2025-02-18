@@ -482,6 +482,9 @@ const SettingsEventsModule = (function () {
             }
           });
           localStorage.setItem("customInstructions", JSON.stringify(existingCustomInstructions));
+          if (typeof InstructionEventsModule.populateInstructions === "function") {
+            InstructionEventsModule.populateInstructions();
+          }
         }
       
         // Create a new chat object (assigning a new ID and timestamp).
@@ -617,6 +620,9 @@ const SettingsEventsModule = (function () {
               }
             });
             localStorage.setItem("customInstructions", JSON.stringify(existingCustomInstructions));
+            if (typeof InstructionEventsModule.populateInstructions === "function") {
+              InstructionEventsModule.populateInstructions();
+            }
           }
           // (Optional: Process importedData.assistants if needed)
         } else {
