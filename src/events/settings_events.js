@@ -177,60 +177,96 @@ const SettingsEventsModule = (function () {
   }
 
   function getDataContent() {
-    return `
-      <div class="field">
-        <label class="label">${TranslationModule.translate("clearData")}</label>
+  // Get current state to identify the chats
+  const state = ChatModule.getCurrentState();
+  const currentChat = ChatModule.getCurrentChat();
+
+  // Build a list of <option>s for the chat selector (escape the name as needed)
+  let chatOptionsHtml = "";
+  state.chats.forEach((chat) => {
+    const isSelected = chat.id === currentChat.id ? "selected" : "";
+    // Here, use your sanitization method; in this example we use DOMPurify:
+    const escapedChatName = DOMPurify.sanitize(chat.name);
+    chatOptionsHtml += `<option value="${chat.id}" ${isSelected}>${escapedChatName}</option>`;
+  });
+
+  // Return a structured layout with three sections: Export, Import, Reset.
+  return `
+  <div class="data-tab-container" style="max-height: 480px; overflow-y: auto;">
+
+    <!-- EXPORT SECTION -->
+    <section class="data-section">
+      <h2 class="title is-5">${TranslationModule.translate("exportChat")}</h2>
+      <div class="field is-grouped" style="flex-wrap: wrap;">
+        <!-- Chat Selector: user chooses the chat to export -->
         <div class="control">
-          <button id="clear-data-button" class="button is-danger">
-            ${TranslationModule.translate("clearAllData")}
-          </button>
+          <div class="select">
+            <select id="export-chat-selector">
+              ${chatOptionsHtml}
+            </select>
+          </div>
         </div>
-        <p class="help">${TranslationModule.translate("clearDataWarning")}</p>
-      </div>
 
-      <hr />
-
-      <div class="field">
-        <label class="label">${TranslationModule.translate("exportChat")}</label>
+        <!-- Export Current Chat Button -->
         <div class="control">
           <button id="export-chat-button" class="button is-primary">
             ${TranslationModule.translate("exportChat")}
           </button>
         </div>
-      </div>
 
-      <div class="field">
-        <label class="label">${TranslationModule.translate("importChat")}</label>
+        <!-- Export All Chats Button -->
         <div class="control">
-          <button id="import-chat-button" class="button is-primary">
-            ${TranslationModule.translate("importChat")}
+          <button id="export-all-chats-button" class="button is-primary">
+            ${TranslationModule.translate("exportAllChats")}
           </button>
-          <input type="file" id="import-chat-file" style="display: none;" accept=".json" />
         </div>
       </div>
+    </section>
 
-     <hr />
+    <hr />
 
-     <div class="field">
-       <label class="label">${TranslationModule.translate("exportAllChats")}</label>
-       <div class="control">
-         <button id="export-all-chats-button" class="button is-primary">
-           ${TranslationModule.translate("exportAllChats")}
-         </button>
-       </div>
-     </div>
+    <!-- IMPORT SECTION -->
+    <section class="data-section">
+      <h2 class="title is-5">${TranslationModule.translate("importChat")}</h2>
+      <div 
+        id="import-drop-area" 
+        class="import-drop-area" 
+        style="border: 2px dashed #ccc; padding: 2rem; text-align: center; cursor: pointer;"
+      >
+        <p style="margin-bottom: 1rem;">
+          ${TranslationModule.translate("dragDropOrClickToImport")}
+        </p>
+        <p class="help" style="margin-bottom: 0.5rem;">
+          ${TranslationModule.translate("importChatHelpText")}
+        </p>
+        <!-- Hidden file input for selecting a file -->
+        <input 
+          type="file" 
+          id="import-chat-file" 
+          style="display: none;" 
+          accept=".json" 
+        />
+      </div>
+    </section>
 
-     <div class="field">
-       <label class="label">${TranslationModule.translate("importAllChats")}</label>
-       <div class="control">
-         <button id="import-all-chats-button" class="button is-primary">
-           ${TranslationModule.translate("importAllChats")}
-         </button>
-         <input type="file" id="import-all-chats-file" style="display: none;" accept=".json" />
-       </div>
-     </div>
-    `;
-  }
+    <hr />
+
+    <!-- RESET SECTION -->
+    <section class="data-section">
+      <h2 class="title is-5">${TranslationModule.translate("clearData")}</h2>
+      <div class="field">
+        <p class="help">
+          ${TranslationModule.translate("clearDataWarning")}
+        </p>
+        <button id="clear-data-button" class="button is-danger">
+          ${TranslationModule.translate("clearAllData")}
+        </button>
+      </div>
+    </section>
+
+  </div>
+  `;
+}
 
   function setupProvidersTabEventListeners() {
     const config = ConfigModule.getConfig();
@@ -273,65 +309,84 @@ const SettingsEventsModule = (function () {
   }
 
   function setupDataTabEventListeners() {
-    const clearDataButton = document.getElementById("clear-data-button");
-    if (clearDataButton) {
-      clearDataButton.addEventListener("click", () => {
-        ModalModule.showCustomConfirm(
-          TranslationModule.translate("confirmClearData"),
-          function (confirmClear) {
-            if (confirmClear) {
-              // Clear all data from localStorage
-              localStorage.clear();
-              // Reload the page to reset the application state
-              location.reload();
-            }
+  // --- RESET SECTION ---
+  const clearDataButton = document.getElementById("clear-data-button");
+  if (clearDataButton) {
+    clearDataButton.addEventListener("click", () => {
+      ModalModule.showCustomConfirm(
+        TranslationModule.translate("confirmClearData"),
+        function (confirmClear) {
+          if (confirmClear) {
+            localStorage.clear();
+            location.reload();
           }
-        );
-      });
-    }
-  
-    // Attach Export Chat Button listener
-    const exportChatButton = document.getElementById("export-chat-button");
-    if (exportChatButton) {
-      exportChatButton.addEventListener("click", handleExportChat);
-    }
-  
-    // Attach Import Chat Button listener (to trigger the hidden file input)
-    const importChatButton = document.getElementById("import-chat-button");
-    if (importChatButton) {
-      importChatButton.addEventListener("click", () => {
-        const fileInput = document.getElementById("import-chat-file");
-        if (fileInput) fileInput.click();
-      });
-    }
-  
-    // Attach listener for file input change (for importing JSON)
-    const importChatFileInput = document.getElementById("import-chat-file");
-    if (importChatFileInput) {
-      importChatFileInput.addEventListener("change", handleImportChatFileSelected);
-    }
-
- // New: Export All Chats button listener
- const exportAllChatsButton = document.getElementById("export-all-chats-button");
- if (exportAllChatsButton) {
-   exportAllChatsButton.addEventListener("click", handleExportAllChats);
- }
-
- // New: Import All Chats button listener (triggering hidden file input)
- const importAllChatsButton = document.getElementById("import-all-chats-button");
- if (importAllChatsButton) {
-   importAllChatsButton.addEventListener("click", () => {
-     const fileInput = document.getElementById("import-all-chats-file");
-     if (fileInput) fileInput.click();
-   });
- }
-
- // New: Listener for the file input change event (all chats)
- const importAllChatsFileInput = document.getElementById("import-all-chats-file");
- if (importAllChatsFileInput) {
-   importAllChatsFileInput.addEventListener("change", handleImportAllChatsFileSelected);
- }
+        }
+      );
+    });
   }
+
+  // --- EXPORT SECTION ---
+  const exportChatSelector = document.getElementById("export-chat-selector");
+  const exportChatButton = document.getElementById("export-chat-button");
+  if (exportChatButton && exportChatSelector) {
+    exportChatButton.addEventListener("click", () => {
+      const chatId = exportChatSelector.value;
+      if (!chatId) {
+        ModalModule.showCustomAlert(
+          TranslationModule.translate("noChatSelectedToExport")
+        );
+        return;
+      }
+      handleExportChatById(chatId);
+    });
+  }
+  const exportAllChatsButton = document.getElementById("export-all-chats-button");
+  if (exportAllChatsButton) {
+    exportAllChatsButton.addEventListener("click", handleExportAllChats);
+  }
+
+  // --- IMPORT SECTION ---
+  const dropArea = document.getElementById("import-drop-area");
+  const fileInput = document.getElementById("import-chat-file");
+
+  if (dropArea && fileInput) {
+    // When the drop area is clicked, trigger the hidden file input.
+    dropArea.addEventListener("click", () => fileInput.click());
+
+    // When a file is selected via the file input.
+    fileInput.addEventListener("change", (e) => {
+      if (e.target.files && e.target.files.length) {
+        handleFileImport(e.target.files[0]);
+        e.target.value = "";
+      }
+    });
+
+    // Drag events to style the drop area.
+    dropArea.addEventListener("dragenter", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      dropArea.style.backgroundColor = "#f0f0f0";
+    });
+    dropArea.addEventListener("dragover", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      dropArea.style.backgroundColor = "#f0f0f0";
+    });
+    dropArea.addEventListener("dragleave", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      dropArea.style.backgroundColor = "";
+    });
+    dropArea.addEventListener("drop", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      dropArea.style.backgroundColor = "";
+      if (e.dataTransfer.files && e.dataTransfer.files.length) {
+        handleFileImport(e.dataTransfer.files[0]);
+      }
+    });
+  }
+}
 
   function collectProviderConfigs() {
     const config = ConfigModule.getConfig();
@@ -517,56 +572,43 @@ const SettingsEventsModule = (function () {
 
   function handleExportAllChats() {
     const state = ChatModule.getCurrentState();
-    // For each chat, compute its assistants and instructions properties.
-    const chatsWithAssistants = state.chats.map(chat => {
-      let assistantsUsed = [];
-      let instructionsUsed = [];
+    const chatsWithAssistants = state.chats.map((chat) => {
+      const assistSet = new Set();
       if (Array.isArray(chat.conversation)) {
-        const assistSet = new Set();
-        chat.conversation.forEach(msg => {
+        chat.conversation.forEach((msg) => {
           if (msg.role === "assistant") {
-            if (msg.assistant) {
-              assistSet.add(msg.assistant);
-            } else if (chat.selectedModelKey) {
-              assistSet.add(chat.selectedModelKey);
-            }
+            if (msg.assistant) assistSet.add(msg.assistant);
+            else if (chat.selectedModelKey) assistSet.add(chat.selectedModelKey);
           }
         });
-        assistantsUsed = Array.from(assistSet);
       }
-      // Compute instructions used in this chat using selectedInstructionId.
+      const assistantsUsed = Array.from(assistSet);
+      let instructionsUsed = [];
       if (chat.selectedInstructionId) {
         const instructionsLookup = window.instructions || window.defaultInstructions;
-        const matchingInstr = instructionsLookup.find(instr => instr.id === chat.selectedInstructionId);
-        if (matchingInstr) {
-          instructionsUsed.push(matchingInstr);
-        }
+        const matchingInstr = instructionsLookup.find(
+          (instr) => instr.id === chat.selectedInstructionId
+        );
+        if (matchingInstr) instructionsUsed.push(matchingInstr);
       }
       return { ...chat, assistants: assistantsUsed, instructions: instructionsUsed };
     });
   
-    // Compute the global union of assistants across all chats.
-    const globalAssistantsSet = new Set();
-    chatsWithAssistants.forEach(chat => {
-      if (Array.isArray(chat.assistants))
-        chat.assistants.forEach(a => globalAssistantsSet.add(a));
+    const globalAssistants = Array.from(new Set(chatsWithAssistants.flatMap(c => c.assistants)));
+    const globalInstructionsMap = new Map();
+    chatsWithAssistants.forEach((chat) => {
+      if (Array.isArray(chat.instructions)) {
+        chat.instructions.forEach((instr) => {
+          if (!globalInstructionsMap.has(instr.id)) {
+            const fullDef = (window.instructions || window.defaultInstructions)
+              .find((i) => i.id === instr.id) || instr;
+            globalInstructionsMap.set(instr.id, fullDef);
+          }
+        });
+      }
     });
-    const globalAssistants = Array.from(globalAssistantsSet);
-      
-    // Compute the global union of instructions across all chats.
-    const globalInstructionsSet = new Set();
-    chatsWithAssistants.forEach(chat => {
-      if (Array.isArray(chat.instructions))
-        chat.instructions.forEach(instr => globalInstructionsSet.add(instr.id));
-    });
-    const globalInstructions = [];
-    const instructionsLookup = window.instructions || window.defaultInstructions;
-    globalInstructionsSet.forEach(id => {
-      const instrDef = instructionsLookup.find(instr => instr.id === id);
-      if (instrDef) globalInstructions.push(instrDef);
-    });
-      
-    // Export an object that contains chats, global assistants, and global instructions.
+    const globalInstructions = Array.from(globalInstructionsMap.values());
+  
     const exportObj = {
       chats: chatsWithAssistants,
       assistants: globalAssistants,
@@ -575,7 +617,7 @@ const SettingsEventsModule = (function () {
   
     const jsonStr = JSON.stringify(exportObj, null, 2);
     const filename = "all-chats.json";
-
+  
     const blob = new Blob([jsonStr], { type: "application/json" });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
@@ -585,10 +627,30 @@ const SettingsEventsModule = (function () {
     URL.revokeObjectURL(url);
   }
 
+  function handleFileImport(file) {
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      try {
+        const importedData = JSON.parse(e.target.result);
+        // If there's a 'chats' array, assume multi-chat format.
+        if (importedData.chats && Array.isArray(importedData.chats)) {
+          importAllChatsData(importedData);
+        } else {
+          importSingleChatData(importedData);
+        }
+        ModalModule.showCustomAlert(TranslationModule.translate("chatImportedSuccessfully"));
+      } catch (error) {
+        console.error("Error importing chat:", error);
+        ModalModule.showCustomAlert(TranslationModule.translate("errorImportingChatCheckFileFormat"));
+      }
+    };
+    reader.readAsText(file);
+  }
+  
   function handleImportAllChatsFileSelected(event) {
     const file = event.target.files[0];
     if (!file) return;
-
+  
     const reader = new FileReader();
     reader.onload = function(e) {
       try {
@@ -630,11 +692,11 @@ const SettingsEventsModule = (function () {
         }
         
         ChatModule.importChats(chatsToImport);
-
+  
         const state = ChatModule.getCurrentState();
         RenderingModule.renderChatList(state.chats, state.currentChatId);
         RenderingModule.renderConversation(state.conversation);
-
+  
         ModalModule.showCustomAlert(TranslationModule.translate("chatImportedSuccessfully"));
       } catch (error) {
         console.error("Error importing all chats:", error);
