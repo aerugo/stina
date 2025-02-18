@@ -530,12 +530,20 @@ const SettingsEventsModule = (function () {
     const reader = new FileReader();
     reader.onload = function(e) {
       try {
-        const importedChats = JSON.parse(e.target.result);
-        if (!Array.isArray(importedChats)) {
-          throw new Error("Imported data is not an array");
+        const importedData = JSON.parse(e.target.result);
+        let chatsToImport;
+        if (Array.isArray(importedData)) {
+          // Old format: an array of chats
+          chatsToImport = importedData;
+        } else if (importedData.chats && Array.isArray(importedData.chats)) {
+          // New format: object with "chats" and possibly "assistants"
+          chatsToImport = importedData.chats;
+          // (Optional: Process importedData.assistants if needed)
+        } else {
+          throw new Error("Imported data is not in a recognized format");
         }
-
-        ChatModule.importChats(importedChats);
+        
+        ChatModule.importChats(chatsToImport);
 
         const state = ChatModule.getCurrentState();
         RenderingModule.renderChatList(state.chats, state.currentChatId);
