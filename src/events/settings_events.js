@@ -698,6 +698,109 @@ const SettingsEventsModule = (function () {
     reader.readAsText(file);
   }
 
+  /**
+   * Import multiple chats from the imported data.
+   * This function processes exported data containing a "chats" array
+   * (and optionally "assistants" and "instructions") and then updates the
+   * application state accordingly.
+   */
+  function importAllChatsData(importedData) {
+    let chatsToImport;
+    if (Array.isArray(importedData)) {
+      // Old format: exported data is directly an array of chats.
+      chatsToImport = importedData;
+    } else if (importedData.chats && Array.isArray(importedData.chats)) {
+      // New format: the exported object has a 'chats' property.
+      chatsToImport = importedData.chats;
+  
+      // Process assistants: add any missing assistant to global models.
+      if (importedData.assistants && Array.isArray(importedData.assistants)) {
+        importedData.assistants.forEach(assistId => {
+          if (!window.models[assistId]) {
+            window.models[assistId] = { id: assistId, name: assistId, provider: "custom" };
+          }
+        });
+        if (typeof ModelSelectionEventsModule.populateModelSelector === "function") {
+          ModelSelectionEventsModule.populateModelSelector();
+        }
+      }
+  
+      // Process instructions: merge imported instructions into custom instructions.
+      if (importedData.instructions && Array.isArray(importedData.instructions)) {
+        const existingCustomInstructions = JSON.parse(localStorage.getItem("customInstructions")) || [];
+        importedData.instructions.forEach(instr => {
+          if (!existingCustomInstructions.find(ci => ci.id === instr.id)) {
+            existingCustomInstructions.push(instr);
+          }
+        });
+        localStorage.setItem("customInstructions", JSON.stringify(existingCustomInstructions));
+        if (typeof InstructionEventsModule.populateInstructions === "function") {
+          InstructionEventsModule.populateInstructions();
+        }
+      }
+    } else {
+      throw new Error("Imported data is not in a recognized format");
+    }
+  
+    // Merge imported chats with the existing ones.
+    ChatModule.importChats(chatsToImport);
+  
+    // Refresh the UI with the new chat list.
+    const state = ChatModule.getCurrentState();
+    RenderingModule.renderChatList(state.chats, state.currentChatId);
+    RenderingModule.renderConversation(state.conversation);
+  
+    ModalModule.showCustomAlert(TranslationModule.translate("chatImportedSuccessfully"));
+  }
+  
+  /**
+   * (Optional) Import a single chat from the imported data.
+   * This function is similar to handleImportChatFileSelected, but can be called by handleFileImport.
+   */
+  function importSingleChatData(importedChat) {
+    // Process assistants.
+    if (importedChat.assistants && Array.isArray(importedChat.assistants)) {
+      importedChat.assistants.forEach(assistId => {
+        if (!window.models[assistId]) {
+          window.models[assistId] = { id: assistId, name: assistId, provider: "custom" };
+        }
+      });
+      if (typeof ModelSelectionEventsModule.populateModelSelector === "function") {
+        ModelSelectionEventsModule.populateModelSelector();
+      }
+    }
+  
+    // Process instructions.
+    if (importedChat.instructions && Array.isArray(importedChat.instructions)) {
+      const existingCustomInstructions = JSON.parse(localStorage.getItem("customInstructions")) || [];
+      importedChat.instructions.forEach(instr => {
+        if (!existingCustomInstructions.find(ci => ci.id === instr.id)) {
+          existingCustomInstructions.push(instr);
+        }
+      });
+      localStorage.setItem("customInstructions", JSON.stringify(existingCustomInstructions));
+      if (typeof InstructionEventsModule.populateInstructions === "function") {
+        InstructionEventsModule.populateInstructions();
+      }
+    }
+  
+    // Create new chat object with a new ID.
+    const newChat = {
+      ...importedChat,
+      id: Date.now().toString(),
+      lastUpdated: Date.now(),
+    };
+  
+    // Prepend the new chat to the chat list.
+    const state = ChatModule.getCurrentState();
+    state.chats.unshift(newChat);
+    ChatModule.saveChats();
+    ChatModule.loadChat(newChat.id);
+    const newState = ChatModule.getCurrentState();
+    RenderingModule.renderChatList(newState.chats, newState.currentChatId);
+    RenderingModule.renderConversation(newState.conversation);
+  }
+  
   return {
     setupEventListeners
   };
