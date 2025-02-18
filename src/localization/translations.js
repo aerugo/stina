@@ -68,6 +68,8 @@ window.translationsData = {
     enterEndpointURL: "Enter Endpoint URL",
     exportAllChats: "Export All Chats",
     importAllChats: "Import All Chats",
+    dragDropOrClickToImport: "Drag and drop or click to import",
+    importChatHelpText: "Select a JSON file containing the exported chat data"
   },
   sv: {
     exportChat: "Exportera",
@@ -136,5 +138,7 @@ window.translationsData = {
     openai: "OpenAI",
     anthropic: "Anthropic",
     ollama: "Ollama",
+    dragDropOrClickToImport: "Dra och släpp eller klicka för att importera",
+    importChatHelpText: "Välj en JSON-fil med exporterad chattdata"
   },
 };
