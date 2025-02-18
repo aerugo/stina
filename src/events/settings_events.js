@@ -15,9 +15,15 @@ const SettingsEventsModule = (function () {
           <aside class="menu">
             <p class="menu-label">${TranslationModule.translate("settings")}</p>
             <ul class="menu-list">
-              <li><a id="settings-tab-providers" class="is-active">${TranslationModule.translate("providers")}</a></li>
-              <li><a id="settings-tab-language">${TranslationModule.translate("language")}</a></li>
-              <li><a id="settings-tab-data">${TranslationModule.translate("data")}</a></li>
+              <li><a id="settings-tab-providers" class="is-active">${TranslationModule.translate(
+                "providers"
+              )}</a></li>
+              <li><a id="settings-tab-language">${TranslationModule.translate(
+                "language"
+              )}</a></li>
+              <li><a id="settings-tab-data">${TranslationModule.translate(
+                "data"
+              )}</a></li>
             </ul>
           </aside>
         </div>
@@ -29,7 +35,11 @@ const SettingsEventsModule = (function () {
 
     const buttons = [
       { label: TranslationModule.translate("cancel"), value: false },
-      { label: TranslationModule.translate("saveChanges"), value: true, class: "is-success" },
+      {
+        label: TranslationModule.translate("saveChanges"),
+        value: true,
+        class: "is-success",
+      },
     ];
 
     ModalModule.showCustomModal(
@@ -40,7 +50,6 @@ const SettingsEventsModule = (function () {
         if (result) {
           saveSettings();
         }
-
       }
     );
 
@@ -51,12 +60,12 @@ const SettingsEventsModule = (function () {
     const tabs = {
       providers: document.getElementById("settings-tab-providers"),
       language: document.getElementById("settings-tab-language"),
-      data: document.getElementById("settings-tab-data")
+      data: document.getElementById("settings-tab-data"),
     };
     const settingsContent = document.getElementById("settings-content");
 
     function deactivateAllTabs() {
-      Object.values(tabs).forEach(tab => tab.classList.remove("is-active"));
+      Object.values(tabs).forEach((tab) => tab.classList.remove("is-active"));
     }
 
     Object.entries(tabs).forEach(([key, tab]) => {
@@ -75,18 +84,28 @@ const SettingsEventsModule = (function () {
 
   function getTabContent(tab) {
     switch (tab) {
-      case "providers": return getProvidersContent();
-      case "language": return getLanguageContent();
-      case "data": return getDataContent();
-      default: return "";
+      case "providers":
+        return getProvidersContent();
+      case "language":
+        return getLanguageContent();
+      case "data":
+        return getDataContent();
+      default:
+        return "";
     }
   }
 
   function setupTabEventListeners(tab) {
     switch (tab) {
-      case "providers": setupProvidersTabEventListeners(); break;
-      case "language": setupLanguageTabEventListeners(); break;
-      case "data": setupDataTabEventListeners(); break;
+      case "providers":
+        setupProvidersTabEventListeners();
+        break;
+      case "language":
+        setupLanguageTabEventListeners();
+        break;
+      case "data":
+        setupDataTabEventListeners();
+        break;
     }
   }
 
@@ -102,8 +121,12 @@ const SettingsEventsModule = (function () {
       const providerConfig = providerConfigs[provider] || {};
 
       // Determine if fields should be disabled based on per-property flags
-      const apiKeyDisabled = providerConfig.apiKeyFromProvidersJs ? "disabled" : "";
-      const endpointDisabled = providerConfig.endpointFromProvidersJs ? "disabled" : "";
+      const apiKeyDisabled = providerConfig.apiKeyFromProvidersJs
+        ? "disabled"
+        : "";
+      const endpointDisabled = providerConfig.endpointFromProvidersJs
+        ? "disabled"
+        : "";
 
       content += `
         <h2 class="title is-4">${provider}</h2>
@@ -121,7 +144,9 @@ const SettingsEventsModule = (function () {
           </div>
           ${
             providerConfig.apiKeyFromProvidersJs
-              ? `<p style="color: gray; font-size: 0.9em;">${TranslationModule.translate("apiKeyPreConfigured")}</p>`
+              ? `<p style="color: gray; font-size: 0.9em;">${TranslationModule.translate(
+                  "apiKeyPreConfigured"
+                )}</p>`
               : ""
           }
         </div>
@@ -131,7 +156,9 @@ const SettingsEventsModule = (function () {
       if (provider === "azure" || provider === "ollama") {
         content += `
           <div class="field">
-            <label class="label">${TranslationModule.translate("endpointURL")}</label>
+            <label class="label">${TranslationModule.translate(
+              "endpointURL"
+            )}</label>
             <div class="control">
               <input
                 class="input"
@@ -144,7 +171,9 @@ const SettingsEventsModule = (function () {
             </div>
             ${
               providerConfig.endpointFromProvidersJs
-                ? `<p style="color: gray; font-size: 0.9em;">${TranslationModule.translate("endpointPreConfigured")}</p>`
+                ? `<p style="color: gray; font-size: 0.9em;">${TranslationModule.translate(
+                    "endpointPreConfigured"
+                  )}</p>`
                 : ""
             }
           </div>
@@ -167,8 +196,12 @@ const SettingsEventsModule = (function () {
         <div class="control">
           <div class="select">
             <select id="language-select">
-              <option value="en"${config.language === "en" ? " selected" : ""}>${TranslationModule.translate("english")}</option>
-              <option value="sv"${config.language === "sv" ? " selected" : ""}>${TranslationModule.translate("swedish")}</option>
+              <option value="en"${
+                config.language === "en" ? " selected" : ""
+              }>${TranslationModule.translate("english")}</option>
+              <option value="sv"${
+                config.language === "sv" ? " selected" : ""
+              }>${TranslationModule.translate("swedish")}</option>
             </select>
           </div>
         </div>
@@ -177,21 +210,21 @@ const SettingsEventsModule = (function () {
   }
 
   function getDataContent() {
-  // Get current state to identify the chats
-  const state = ChatModule.getCurrentState();
-  const currentChat = ChatModule.getCurrentChat();
+    // Get current state to identify the chats
+    const state = ChatModule.getCurrentState();
+    const currentChat = ChatModule.getCurrentChat();
 
-  // Build a list of <option>s for the chat selector (escape the name as needed)
-  let chatOptionsHtml = "";
-  state.chats.forEach((chat) => {
-    const isSelected = chat.id === currentChat.id ? "selected" : "";
-    // Here, use your sanitization method; in this example we use DOMPurify:
-    const escapedChatName = DOMPurify.sanitize(chat.name);
-    chatOptionsHtml += `<option value="${chat.id}" ${isSelected}>${escapedChatName}</option>`;
-  });
+    // Build a list of <option>s for the chat selector (escape the name as needed)
+    let chatOptionsHtml = "";
+    state.chats.forEach((chat) => {
+      const isSelected = chat.id === currentChat.id ? "selected" : "";
+      // Here, use your sanitization method; in this example we use DOMPurify:
+      const escapedChatName = DOMPurify.sanitize(chat.name);
+      chatOptionsHtml += `<option value="${chat.id}" ${isSelected}>${escapedChatName}</option>`;
+    });
 
-  // Return a structured layout with three sections: Export, Import, Reset.
-  return `
+    // Return a structured layout with three sections: Export, Import, Reset.
+    return `
   <div class="data-tab-container" style="max-height: 480px; overflow-y: auto;">
 
     <!-- EXPORT SECTION -->
@@ -266,7 +299,7 @@ const SettingsEventsModule = (function () {
 
   </div>
   `;
-}
+  }
 
   function setupProvidersTabEventListeners() {
     const config = ConfigModule.getConfig();
@@ -286,7 +319,7 @@ const SettingsEventsModule = (function () {
       }
 
       if (
-        ("endpoint" in providerConfig) &&
+        "endpoint" in providerConfig &&
         !providerConfig.endpointFromProvidersJs
       ) {
         const endpointInput = document.getElementById(`endpoint-${provider}`);
@@ -309,84 +342,86 @@ const SettingsEventsModule = (function () {
   }
 
   function setupDataTabEventListeners() {
-  // --- RESET SECTION ---
-  const clearDataButton = document.getElementById("clear-data-button");
-  if (clearDataButton) {
-    clearDataButton.addEventListener("click", () => {
-      ModalModule.showCustomConfirm(
-        TranslationModule.translate("confirmClearData"),
-        function (confirmClear) {
-          if (confirmClear) {
-            localStorage.clear();
-            location.reload();
+    // --- RESET SECTION ---
+    const clearDataButton = document.getElementById("clear-data-button");
+    if (clearDataButton) {
+      clearDataButton.addEventListener("click", () => {
+        ModalModule.showCustomConfirm(
+          TranslationModule.translate("confirmClearData"),
+          function (confirmClear) {
+            if (confirmClear) {
+              localStorage.clear();
+              location.reload();
+            }
           }
-        }
-      );
-    });
-  }
-
-  // --- EXPORT SECTION ---
-  const exportChatSelector = document.getElementById("export-chat-selector");
-  const exportChatButton = document.getElementById("export-chat-button");
-  if (exportChatButton && exportChatSelector) {
-    exportChatButton.addEventListener("click", () => {
-      const chatId = exportChatSelector.value;
-      if (!chatId) {
-        ModalModule.showCustomAlert(
-          TranslationModule.translate("noChatSelectedToExport")
         );
-        return;
-      }
-      handleExportChatById(chatId);
-    });
+      });
+    }
+
+    // --- EXPORT SECTION ---
+    const exportChatSelector = document.getElementById("export-chat-selector");
+    const exportChatButton = document.getElementById("export-chat-button");
+    if (exportChatButton && exportChatSelector) {
+      exportChatButton.addEventListener("click", () => {
+        const chatId = exportChatSelector.value;
+        if (!chatId) {
+          ModalModule.showCustomAlert(
+            TranslationModule.translate("noChatSelectedToExport")
+          );
+          return;
+        }
+        handleExportChatById(chatId);
+      });
+    }
+    const exportAllChatsButton = document.getElementById(
+      "export-all-chats-button"
+    );
+    if (exportAllChatsButton) {
+      exportAllChatsButton.addEventListener("click", handleExportAllChats);
+    }
+
+    // --- IMPORT SECTION ---
+    const dropArea = document.getElementById("import-drop-area");
+    const fileInput = document.getElementById("import-chat-file");
+
+    if (dropArea && fileInput) {
+      // When the drop area is clicked, trigger the hidden file input.
+      dropArea.addEventListener("click", () => fileInput.click());
+
+      // When a file is selected via the file input.
+      fileInput.addEventListener("change", (e) => {
+        if (e.target.files && e.target.files.length) {
+          handleFileImport(e.target.files[0]);
+          e.target.value = "";
+        }
+      });
+
+      // Drag events to style the drop area.
+      dropArea.addEventListener("dragenter", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        dropArea.style.backgroundColor = "#f0f0f0";
+      });
+      dropArea.addEventListener("dragover", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        dropArea.style.backgroundColor = "#f0f0f0";
+      });
+      dropArea.addEventListener("dragleave", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        dropArea.style.backgroundColor = "";
+      });
+      dropArea.addEventListener("drop", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        dropArea.style.backgroundColor = "";
+        if (e.dataTransfer.files && e.dataTransfer.files.length) {
+          handleFileImport(e.dataTransfer.files[0]);
+        }
+      });
+    }
   }
-  const exportAllChatsButton = document.getElementById("export-all-chats-button");
-  if (exportAllChatsButton) {
-    exportAllChatsButton.addEventListener("click", handleExportAllChats);
-  }
-
-  // --- IMPORT SECTION ---
-  const dropArea = document.getElementById("import-drop-area");
-  const fileInput = document.getElementById("import-chat-file");
-
-  if (dropArea && fileInput) {
-    // When the drop area is clicked, trigger the hidden file input.
-    dropArea.addEventListener("click", () => fileInput.click());
-
-    // When a file is selected via the file input.
-    fileInput.addEventListener("change", (e) => {
-      if (e.target.files && e.target.files.length) {
-        handleFileImport(e.target.files[0]);
-        e.target.value = "";
-      }
-    });
-
-    // Drag events to style the drop area.
-    dropArea.addEventListener("dragenter", (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      dropArea.style.backgroundColor = "#f0f0f0";
-    });
-    dropArea.addEventListener("dragover", (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      dropArea.style.backgroundColor = "#f0f0f0";
-    });
-    dropArea.addEventListener("dragleave", (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      dropArea.style.backgroundColor = "";
-    });
-    dropArea.addEventListener("drop", (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      dropArea.style.backgroundColor = "";
-      if (e.dataTransfer.files && e.dataTransfer.files.length) {
-        handleFileImport(e.dataTransfer.files[0]);
-      }
-    });
-  }
-}
 
   function collectProviderConfigs() {
     const config = ConfigModule.getConfig();
@@ -435,8 +470,11 @@ const SettingsEventsModule = (function () {
     const config = ConfigModule.getConfig();
     const updatedConfig = {
       providerConfigs: collectProviderConfigs(),
-      language: document.getElementById("language-select")?.value || config.language,
-      theme: document.body.classList.contains("light-mode") ? "light-mode" : "dark-mode"
+      language:
+        document.getElementById("language-select")?.value || config.language,
+      theme: document.body.classList.contains("light-mode")
+        ? "light-mode"
+        : "dark-mode",
     };
 
     ConfigModule.updateConfig(updatedConfig);
@@ -453,40 +491,42 @@ const SettingsEventsModule = (function () {
       ModalModule.showCustomAlert(TranslationModule.translate("chatNotFound"));
       return;
     }
-  
+
     let assistantsUsed = [];
     if (Array.isArray(chatToExport.conversation)) {
       const assistSet = new Set();
       chatToExport.conversation.forEach((msg) => {
         if (msg.role === "assistant") {
           if (msg.assistant) assistSet.add(msg.assistant);
-          else if (chatToExport.selectedModelKey) assistSet.add(chatToExport.selectedModelKey);
+          else if (chatToExport.selectedModelKey)
+            assistSet.add(chatToExport.selectedModelKey);
         }
       });
       assistantsUsed = Array.from(assistSet);
     }
-  
+
     let instructionsUsed = [];
     if (chatToExport.selectedInstructionId) {
-      const instructionsLookup = window.instructions || window.defaultInstructions;
+      const instructionsLookup =
+        window.instructions || window.defaultInstructions;
       const matchingInstr = instructionsLookup.find(
         (instr) => instr.id === chatToExport.selectedInstructionId
       );
       if (matchingInstr) instructionsUsed.push(matchingInstr);
     }
-  
+
     const exportedChat = {
       ...chatToExport,
       assistants: assistantsUsed,
-      instructions: instructionsUsed
+      instructions: instructionsUsed,
     };
-  
+
     const jsonStr = JSON.stringify(exportedChat, null, 2);
     const safeName = chatToExport.name
       ? chatToExport.name.replace(/[^\w\d_\-]/g, "_")
       : "chat";
     const filename = `${safeName}.json`;
-  
+
     const blob = new Blob([jsonStr], { type: "application/json" });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
@@ -494,72 +534,6 @@ const SettingsEventsModule = (function () {
     link.download = filename;
     link.click();
     URL.revokeObjectURL(url);
-  }
-
-  function handleImportChatFileSelected(event) {
-    const file = event.target.files[0];
-    if (!file) return;
-
-    const reader = new FileReader();
-    reader.onload = function(e) {
-      try {
-        // Parse the imported JSON.
-        const importedChat = JSON.parse(e.target.result);
-        
-        // If the chat export contains assistants, update the global assistant list.
-        if (importedChat.assistants && Array.isArray(importedChat.assistants)) {
-          importedChat.assistants.forEach(assistId => {
-            if (!window.models[assistId]) {
-              // Add the new assistant with a basic structure; adjust as needed.
-              window.models[assistId] = { id: assistId, name: assistId, provider: "custom" };
-            }
-          });
-          // Refresh the assistant/model selection UI immediately.
-          if (typeof ModelSelectionEventsModule.populateModelSelector === "function") {
-            ModelSelectionEventsModule.populateModelSelector();
-          }
-        }
-      
-        // If the imported chat contains instructions, merge them into custom instructions.
-        if (importedChat.instructions && Array.isArray(importedChat.instructions)) {
-          const existingCustomInstructions = JSON.parse(localStorage.getItem("customInstructions")) || [];
-          importedChat.instructions.forEach(instr => {
-            if (!existingCustomInstructions.find(ci => ci.id === instr.id)) {
-              existingCustomInstructions.push(instr);
-            }
-          });
-          localStorage.setItem("customInstructions", JSON.stringify(existingCustomInstructions));
-          if (typeof InstructionEventsModule.populateInstructions === "function") {
-            InstructionEventsModule.populateInstructions();
-          }
-        }
-      
-        // Create a new chat object (assigning a new ID and timestamp).
-        const newChat = {
-          ...importedChat,
-          id: Date.now().toString(),
-          lastUpdated: Date.now(),
-        };
-
-        // Insert the new chat at the beginning of the chat list.
-        const state = ChatModule.getCurrentState();
-        state.chats.unshift(newChat);
-
-        // Save the updated chats and load the new chat.
-        ChatModule.saveChats();
-        ChatModule.loadChat(newChat.id);
-
-        const newState = ChatModule.getCurrentState();
-        RenderingModule.renderChatList(newState.chats, newState.currentChatId);
-        RenderingModule.renderConversation(newState.conversation);
-
-        ModalModule.showCustomAlert(TranslationModule.translate("chatImportedSuccessfully"));
-      } catch (error) {
-        console.error("Error importing chat:", error);
-        ModalModule.showCustomAlert(TranslationModule.translate("errorImportingChatCheckFileFormat"));
-      }
-    };
-    reader.readAsText(file);
   }
 
   function handleExportAllChats() {
@@ -570,46 +544,56 @@ const SettingsEventsModule = (function () {
         chat.conversation.forEach((msg) => {
           if (msg.role === "assistant") {
             if (msg.assistant) assistSet.add(msg.assistant);
-            else if (chat.selectedModelKey) assistSet.add(chat.selectedModelKey);
+            else if (chat.selectedModelKey)
+              assistSet.add(chat.selectedModelKey);
           }
         });
       }
       const assistantsUsed = Array.from(assistSet);
       let instructionsUsed = [];
       if (chat.selectedInstructionId) {
-        const instructionsLookup = window.instructions || window.defaultInstructions;
+        const instructionsLookup =
+          window.instructions || window.defaultInstructions;
         const matchingInstr = instructionsLookup.find(
           (instr) => instr.id === chat.selectedInstructionId
         );
         if (matchingInstr) instructionsUsed.push(matchingInstr);
       }
-      return { ...chat, assistants: assistantsUsed, instructions: instructionsUsed };
+      return {
+        ...chat,
+        assistants: assistantsUsed,
+        instructions: instructionsUsed,
+      };
     });
-  
-    const globalAssistants = Array.from(new Set(chatsWithAssistants.flatMap(c => c.assistants)));
+
+    const globalAssistants = Array.from(
+      new Set(chatsWithAssistants.flatMap((c) => c.assistants))
+    );
     const globalInstructionsMap = new Map();
     chatsWithAssistants.forEach((chat) => {
       if (Array.isArray(chat.instructions)) {
         chat.instructions.forEach((instr) => {
           if (!globalInstructionsMap.has(instr.id)) {
-            const fullDef = (window.instructions || window.defaultInstructions)
-              .find((i) => i.id === instr.id) || instr;
+            const fullDef =
+              (window.instructions || window.defaultInstructions).find(
+                (i) => i.id === instr.id
+              ) || instr;
             globalInstructionsMap.set(instr.id, fullDef);
           }
         });
       }
     });
     const globalInstructions = Array.from(globalInstructionsMap.values());
-  
+
     const exportObj = {
       chats: chatsWithAssistants,
       assistants: globalAssistants,
-      instructions: globalInstructions
+      instructions: globalInstructions,
     };
-  
+
     const jsonStr = JSON.stringify(exportObj, null, 2);
     const filename = "all-chats.json";
-  
+
     const blob = new Blob([jsonStr], { type: "application/json" });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
@@ -630,69 +614,14 @@ const SettingsEventsModule = (function () {
         } else {
           importSingleChatData(importedData);
         }
-        ModalModule.showCustomAlert(TranslationModule.translate("chatImportedSuccessfully"));
+        ModalModule.showCustomAlert(
+          TranslationModule.translate("chatImportedSuccessfully")
+        );
       } catch (error) {
         console.error("Error importing chat:", error);
-        ModalModule.showCustomAlert(TranslationModule.translate("errorImportingChatCheckFileFormat"));
-      }
-    };
-    reader.readAsText(file);
-  }
-  
-  function handleImportAllChatsFileSelected(event) {
-    const file = event.target.files[0];
-    if (!file) return;
-  
-    const reader = new FileReader();
-    reader.onload = function(e) {
-      try {
-        const importedData = JSON.parse(e.target.result);
-        let chatsToImport;
-        if (Array.isArray(importedData)) {
-          // Old format: an array of chats
-          chatsToImport = importedData;
-        } else if (importedData.chats && Array.isArray(importedData.chats)) {
-          // New format: object with "chats" and possibly "assistants" and "instructions"
-          chatsToImport = importedData.chats;
-          // If the exported data contains assistants, update the global assistant list.
-          if (importedData.assistants && Array.isArray(importedData.assistants)) {
-            importedData.assistants.forEach(assistId => {
-              if (!window.models[assistId]) {
-                window.models[assistId] = { id: assistId, name: assistId, provider: "custom" };
-              }
-            });
-            if (typeof ModelSelectionEventsModule.populateModelSelector === "function") {
-              ModelSelectionEventsModule.populateModelSelector();
-            }
-          }
-          // If instructions exist in the exported file, merge them into custom instructions.
-          if (importedData.instructions && Array.isArray(importedData.instructions)) {
-            const existingCustomInstructions = JSON.parse(localStorage.getItem("customInstructions")) || [];
-            importedData.instructions.forEach(instr => {
-              if (!existingCustomInstructions.find(ci => ci.id === instr.id)) {
-                existingCustomInstructions.push(instr);
-              }
-            });
-            localStorage.setItem("customInstructions", JSON.stringify(existingCustomInstructions));
-            if (typeof InstructionEventsModule.populateInstructions === "function") {
-              InstructionEventsModule.populateInstructions();
-            }
-          }
-          // (Optional: Process importedData.assistants if needed)
-        } else {
-          throw new Error("Imported data is not in a recognized format");
-        }
-        
-        ChatModule.importChats(chatsToImport);
-  
-        const state = ChatModule.getCurrentState();
-        RenderingModule.renderChatList(state.chats, state.currentChatId);
-        RenderingModule.renderConversation(state.conversation);
-  
-        ModalModule.showCustomAlert(TranslationModule.translate("chatImportedSuccessfully"));
-      } catch (error) {
-        console.error("Error importing all chats:", error);
-        ModalModule.showCustomAlert(TranslationModule.translate("errorImportingChatCheckFileFormat"));
+        ModalModule.showCustomAlert(
+          TranslationModule.translate("errorImportingChatCheckFileFormat")
+        );
       }
     };
     reader.readAsText(file);
@@ -712,47 +641,64 @@ const SettingsEventsModule = (function () {
     } else if (importedData.chats && Array.isArray(importedData.chats)) {
       // New format: the exported object has a 'chats' property.
       chatsToImport = importedData.chats;
-  
+
       // Process assistants: add any missing assistant to global models.
       if (importedData.assistants && Array.isArray(importedData.assistants)) {
-        importedData.assistants.forEach(assistId => {
+        importedData.assistants.forEach((assistId) => {
           if (!window.models[assistId]) {
-            window.models[assistId] = { id: assistId, name: assistId, provider: "custom" };
+            window.models[assistId] = {
+              id: assistId,
+              name: assistId,
+              provider: "custom",
+            };
           }
         });
-        if (typeof ModelSelectionEventsModule.populateModelSelector === "function") {
+        if (
+          typeof ModelSelectionEventsModule.populateModelSelector === "function"
+        ) {
           ModelSelectionEventsModule.populateModelSelector();
         }
       }
-  
+
       // Process instructions: merge imported instructions into custom instructions.
-      if (importedData.instructions && Array.isArray(importedData.instructions)) {
-        const existingCustomInstructions = JSON.parse(localStorage.getItem("customInstructions")) || [];
-        importedData.instructions.forEach(instr => {
-          if (!existingCustomInstructions.find(ci => ci.id === instr.id)) {
+      if (
+        importedData.instructions &&
+        Array.isArray(importedData.instructions)
+      ) {
+        const existingCustomInstructions =
+          JSON.parse(localStorage.getItem("customInstructions")) || [];
+        importedData.instructions.forEach((instr) => {
+          if (!existingCustomInstructions.find((ci) => ci.id === instr.id)) {
             existingCustomInstructions.push(instr);
           }
         });
-        localStorage.setItem("customInstructions", JSON.stringify(existingCustomInstructions));
-        if (typeof InstructionEventsModule.populateInstructions === "function") {
+        localStorage.setItem(
+          "customInstructions",
+          JSON.stringify(existingCustomInstructions)
+        );
+        if (
+          typeof InstructionEventsModule.populateInstructions === "function"
+        ) {
           InstructionEventsModule.populateInstructions();
         }
       }
     } else {
       throw new Error("Imported data is not in a recognized format");
     }
-  
+
     // Merge imported chats with the existing ones.
     ChatModule.importChats(chatsToImport);
-  
+
     // Refresh the UI with the new chat list.
     const state = ChatModule.getCurrentState();
     RenderingModule.renderChatList(state.chats, state.currentChatId);
     RenderingModule.renderConversation(state.conversation);
-  
-    ModalModule.showCustomAlert(TranslationModule.translate("chatImportedSuccessfully"));
+
+    ModalModule.showCustomAlert(
+      TranslationModule.translate("chatImportedSuccessfully")
+    );
   }
-  
+
   /**
    * (Optional) Import a single chat from the imported data.
    * This function is similar to handleImportChatFileSelected, but can be called by handleFileImport.
@@ -760,37 +706,47 @@ const SettingsEventsModule = (function () {
   function importSingleChatData(importedChat) {
     // Process assistants.
     if (importedChat.assistants && Array.isArray(importedChat.assistants)) {
-      importedChat.assistants.forEach(assistId => {
+      importedChat.assistants.forEach((assistId) => {
         if (!window.models[assistId]) {
-          window.models[assistId] = { id: assistId, name: assistId, provider: "custom" };
+          window.models[assistId] = {
+            id: assistId,
+            name: assistId,
+            provider: "custom",
+          };
         }
       });
-      if (typeof ModelSelectionEventsModule.populateModelSelector === "function") {
+      if (
+        typeof ModelSelectionEventsModule.populateModelSelector === "function"
+      ) {
         ModelSelectionEventsModule.populateModelSelector();
       }
     }
-  
+
     // Process instructions.
     if (importedChat.instructions && Array.isArray(importedChat.instructions)) {
-      const existingCustomInstructions = JSON.parse(localStorage.getItem("customInstructions")) || [];
-      importedChat.instructions.forEach(instr => {
-        if (!existingCustomInstructions.find(ci => ci.id === instr.id)) {
+      const existingCustomInstructions =
+        JSON.parse(localStorage.getItem("customInstructions")) || [];
+      importedChat.instructions.forEach((instr) => {
+        if (!existingCustomInstructions.find((ci) => ci.id === instr.id)) {
           existingCustomInstructions.push(instr);
         }
       });
-      localStorage.setItem("customInstructions", JSON.stringify(existingCustomInstructions));
+      localStorage.setItem(
+        "customInstructions",
+        JSON.stringify(existingCustomInstructions)
+      );
       if (typeof InstructionEventsModule.populateInstructions === "function") {
         InstructionEventsModule.populateInstructions();
       }
     }
-  
+
     // Create new chat object with a new ID.
     const newChat = {
       ...importedChat,
       id: Date.now().toString(),
       lastUpdated: Date.now(),
     };
-  
+
     // Prepend the new chat to the chat list.
     const state = ChatModule.getCurrentState();
     state.chats.unshift(newChat);
@@ -800,8 +756,8 @@ const SettingsEventsModule = (function () {
     RenderingModule.renderChatList(newState.chats, newState.currentChatId);
     RenderingModule.renderConversation(newState.conversation);
   }
-  
+
   return {
-    setupEventListeners
+    setupEventListeners,
   };
 })();
