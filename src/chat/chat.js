@@ -153,6 +153,29 @@ const ChatModule = (function () {
     }
   }
 
+  /**
+   * Replaces all existing chats with the provided array.
+   * Updates currentChatId and conversation accordingly.
+   */
+  function importChats(newChats) {
+    if (!Array.isArray(newChats)) return;
+    // Merge new chats into existing chats
+    chats = chats.concat(newChats);
+    // Update currentChatId and conversation if necessary
+    const currentChat = chats.find(chat => chat.id === currentChatId);
+    if (currentChat) {
+      conversation = currentChat.conversation;
+    } else if (chats.length > 0) {
+      currentChatId = chats[0].id;
+      conversation = chats[0].conversation;
+    } else {
+      currentChatId = null;
+      conversation = [];
+    }
+    saveChats();
+    saveCurrentChatId();
+  }
+
   function getCurrentState() {
     // Sort chats to ensure empty new chats at the top, then by lastUpdated
     chats.sort((a, b) => {
@@ -222,5 +245,6 @@ const ChatModule = (function () {
     updateChatLastUpdated,
     getCurrentState,
     saveChats,
+    importChats,
   };
 })();

@@ -1,10 +1,18 @@
 window.translationsData = {
   en: {
+    exportChat: "Export Data",
+    importChat: "Import Data",
+    noChatSelectedToExport: "No chat selected to export.",
+    chatImportedSuccessfully: "Chat imported successfully!",
+    errorImportingChatCheckFileFormat:
+      "Error importing chat. Please check the file format.",
     data: "Data",
     clearData: "Clear Data",
-    clearAllData: "Clear All Data", 
-    clearDataWarning: "This will erase all your settings, chats, and custom instructions. This action cannot be undone.",
-    confirmClearData: "Are you sure you want to clear all data? This action cannot be undone.",
+    clearAllData: "Clear All Data",
+    clearDataWarning:
+      "This will erase all your settings, chats, and custom instructions. This action cannot be undone.",
+    confirmClearData:
+      "Are you sure you want to clear all data? This action cannot be undone.",
     loading: "Loading...",
     newChat: "New Chat",
     settings: "Settings",
@@ -23,7 +31,8 @@ window.translationsData = {
     pleaseSetConfiguration:
       "Please set your configuration in the settings before sending messages.",
     delete: "Delete",
-    confirmDeleteInstruction: "Are you sure you want to delete this custom instruction? This action cannot be undone.",
+    confirmDeleteInstruction:
+      "Are you sure you want to delete this custom instruction? This action cannot be undone.",
     pleaseFillRequiredFields: "Please fill in all required fields.",
     createNewInstruction: "Create New Instruction",
     customInstructionTitle: "Custom Instruction",
@@ -57,13 +66,27 @@ window.translationsData = {
     providers: "Providers",
     enterApiKey: "Enter API Key",
     enterEndpointURL: "Enter Endpoint URL",
+    exportAllChats: "Export All Chats",
+    importAllChats: "Import All Chats",
+    dragDropOrClickToImport: "Drag and drop or click to import",
+    importChatHelpText: "Select a JSON file containing the exported chat data"
   },
   sv: {
+    exportChat: "Exportera",
+    importChat: "Importera chat",
+    exportAllChats: "Exportera alla",
+    importAllChats: "Importera alla",
+    noChatSelectedToExport: "Ingen chat vald att exportera.",
+    chatImportedSuccessfully: "Chatten har importerats!",
+    errorImportingChatCheckFileFormat:
+      "Fel vid import av chat. Kontrollera filformatet.",
     data: "Data",
     clearData: "Rensa data",
     clearAllData: "Rensa all data",
-    clearDataWarning: "Detta kommer att radera alla dina inställningar, chattar och anpassade instruktioner. Denna åtgärd kan inte ångras.",
-    confirmClearData: "Är du säker på att du vill rensa all data? Denna åtgärd kan inte ångras.",
+    clearDataWarning:
+      "Detta kommer att radera alla dina inställningar, chattar och anpassade instruktioner. Denna åtgärd kan inte ångras.",
+    confirmClearData:
+      "Är du säker på att du vill rensa all data? Denna åtgärd kan inte ångras.",
     loading: "Laddar...",
     newChat: "Ny chat",
     settings: "Inställningar",
@@ -82,7 +105,8 @@ window.translationsData = {
     pleaseSetConfiguration:
       "Vänligen ställ in din konfiguration i inställningarna innan du skickar meddelanden.",
     delete: "Ta bort",
-    confirmDeleteInstruction: "Är du säker på att du vill ta bort denna anpassade instruktion? Denna åtgärd kan inte ångras.",
+    confirmDeleteInstruction:
+      "Är du säker på att du vill ta bort denna anpassade instruktion? Denna åtgärd kan inte ångras.",
     pleaseFillRequiredFields: "Vänligen fyll i alla obligatoriska fält.",
     createNewInstruction: "Skapa ny instruktion",
     customInstructionTitle: "Anpassad instruktion",
@@ -114,5 +138,7 @@ window.translationsData = {
     openai: "OpenAI",
     anthropic: "Anthropic",
     ollama: "Ollama",
+    dragDropOrClickToImport: "Dra och släpp eller klicka för att importera",
+    importChatHelpText: "Välj en JSON-fil med exporterad chattdata"
   },
 };
