@@ -9,6 +9,15 @@ const MessageModule = (function () {
     anthropic: AnthropicProvider,
     ollama: OllamaProvider,
   };
+  function findWeakModelKey() {
+    const allModels = ModelsModule.getModels();
+    for (const [key, modelDef] of Object.entries(allModels)) {
+      if (modelDef.weak === true) {
+        return key;
+      }
+    }
+    return null;
+  }
   async function generateChatTitle(userMessage) {
     const models = ModelsModule.getModels();
     const prompt = `${TranslationModule.translate(
@@ -16,9 +25,10 @@ const MessageModule = (function () {
     )} ${userMessage}`;
     const titleMessage = { role: "user", content: prompt };
     const config = ConfigModule.getConfig();
-
-    // Get the selected model or default to 'gpt-4o'
-    const selectedModelKey = config.selectedModelKey || "gpt-4o";
+    
+    // Get the selected model or default to 'gpt-4o', preferring a weak model if available
+    const weakModelKey = findWeakModelKey();
+    const selectedModelKey = weakModelKey ? weakModelKey : (config.selectedModelKey || "gpt-4o");
     let selectedModel = models[selectedModelKey];
 
     // If selectedModel is undefined, fallback to 'gpt-4o'
