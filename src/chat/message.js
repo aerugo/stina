@@ -39,7 +39,9 @@ const MessageModule = (function () {
     // Get provider and config
     const provider = selectedModel.provider;
     if (!provider) {
-      throw new Error(`Provider is not defined for model "${selectedModelKey}"`);
+      throw new Error(
+        `Provider is not defined for model "${selectedModelKey}"`
+      );
     }
 
     const providerConfig = config.providerConfigs[provider] || {};
@@ -59,11 +61,7 @@ const MessageModule = (function () {
 
     // Prepare model options
     const modelOptions = {
-      max_tokens: selectedModel.max_tokens || 50,
       temperature: selectedModel.temperature || 0.7,
-      top_p: selectedModel.top_p !== undefined ? selectedModel.top_p : 0.95,
-      frequency_penalty: selectedModel.frequency_penalty || 0,
-      presence_penalty: selectedModel.presence_penalty || 0,
     };
 
     // Call the API using the provider instance
@@ -97,7 +95,7 @@ const MessageModule = (function () {
       currentState.currentChatId,
       currentState.conversation
     );
-    
+
     // Update lastUpdated after adding user message
     ChatModule.updateChatLastUpdated(currentState.currentChatId);
 
@@ -172,11 +170,11 @@ const MessageModule = (function () {
       };
 
       // Call the API directly on the provider instance
-      console.log('Sending request with:', {
+      console.log("Sending request with:", {
         conversationToSend,
         deploymentName,
         modelOptions,
-        providerConfig
+        providerConfig,
       });
 
       const apiResponse = await providerInstance.fetchChatCompletion(
@@ -187,20 +185,22 @@ const MessageModule = (function () {
       );
 
       // Now log the response after it's been initialized
-      console.log('apiResponse:', apiResponse);
+      console.log("apiResponse:", apiResponse);
       console.log(
-        'apiResponse.content:',
+        "apiResponse.content:",
         apiResponse.content,
-        'Type:',
+        "Type:",
         typeof apiResponse.content
       );
 
       currentState.conversation[currentState.conversation.length - 1] = {
-        role: 'assistant',
+        role: "assistant",
         content:
-          typeof apiResponse.content === 'string'
+          typeof apiResponse.content === "string"
             ? apiResponse.content
-            : apiResponse.content.raw || apiResponse.content.text || JSON.stringify(apiResponse.content),
+            : apiResponse.content.raw ||
+              apiResponse.content.text ||
+              JSON.stringify(apiResponse.content),
         model: selectedModelKey,
         instructionLabel: instructionLabel,
       };
