@@ -121,6 +121,7 @@ const InputEventsModule = (function () {
     userInput.addEventListener("input", function () {
       this.style.height = "auto";
       this.style.height = this.scrollHeight + "px";
+      // Ensure token check runs on every input event
       checkTokenWarning();
     });
 

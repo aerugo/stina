@@ -220,6 +220,8 @@ const MessageModule = (function () {
         currentState.currentChatId,
         currentState.conversation
       );
+      // Re-check token usage right after the new assistant message is added
+      InputEventsModule.checkTokenWarning();
 
       // Update lastUpdated after receiving assistant's response
       ChatModule.updateChatLastUpdated(currentState.currentChatId);
