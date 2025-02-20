@@ -131,11 +131,8 @@
     <script src="lib/highlight/highlight.min.js"></script> <!-- Highlight.js JavaScript -->
 
     <!-- Include PDF.js -->
-    <script type="module">
-      import * as pdfjsLibModule from 'lib/build/pdfjs/pdf.min.mjs';
-      window.pdfjsLib = pdfjsLibModule;
-      window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://mozilla.github.io/pdf.js/build/pdf.worker.mjs';
-    </script>
+    <script src="lib/pdfjs/pdf.min.js"></script>
+    <script src="lib/pdfjs/pdf.worker.min.js"></script>
 
     <!-- Include Mammoth.js -->
     <script src="lib/mammoth/mammoth.browser.min.js"></script>
@@ -179,7 +176,7 @@
     <script src="src/events/instruction_events.js"></script>
     <script src="src/events/model_selection_events.js"></script>
     <script src="src/events/events_module.js"></script>
-    <script src="src/events/file_upload_events.js" defer></script>
+    <script src="src/events/file_upload_events.js"></script>
     <script src="src/modal/modal.js"></script>
 
     <script>
