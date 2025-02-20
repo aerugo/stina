@@ -18,15 +18,23 @@ const InputEventsModule = (function () {
       return;
     }
     // Find the last assistant message with usage info
-    const lastAssistantMessage = [...chat.conversation].reverse().find(
-      m => m.role === "assistant" && m.usage && typeof m.usage.total_tokens === "number"
-    );
+    const lastAssistantMessage = [...chat.conversation]
+      .reverse()
+      .find(
+        (m) =>
+          m.role === "assistant" &&
+          m.usage &&
+          typeof m.usage.total_tokens === "number"
+      );
     if (!lastAssistantMessage) {
       tokenWarningEl.style.display = "none";
       return;
     }
     const totalTokens = lastAssistantMessage.usage.total_tokens;
     const remaining = selectedModel.context_length - totalTokens;
+    console.log("Remaining tokens:", remaining);
+    console.log("Total tokens:", totalTokens);
+    console.log("Context length:", selectedModel.context_length);
     if (remaining <= 5000) {
       tokenWarningEl.style.display = "block";
       tokenWarningEl.innerText =
@@ -60,7 +68,6 @@ const InputEventsModule = (function () {
     sel.removeAllRanges();
     sel.addRange(range);
   }
-
 
   function handleSendButtonClick() {
     const userInput = document.getElementById("user-input");
