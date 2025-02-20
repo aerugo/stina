@@ -64,10 +64,10 @@ const FileUploadEventsModule = (function () {
 
     // Create radio inputs
     const classificationRadios = classificationOptions
-      .map((c) => {
+      .map((c, index) => {
         return `
           <label class="radio">
-            <input type="radio" name="info-class" value="${c}" />
+            <input type="radio" name="info-class" value="${c}" ${index === 0 ? "checked" : ""} />
             ${c}
           </label>
         `;
