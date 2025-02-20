@@ -50,7 +50,7 @@ const FileUploadEventsModule = (function () {
       return;
     }
     // Process current file then move on to the next one
-    showClassificationModal(file, function() {
+    showClassificationModal(file, function () {
       processFiles(files, index + 1);
     });
   }
@@ -76,7 +76,9 @@ const FileUploadEventsModule = (function () {
 
     // Build the modal content
     const modalContent = `
-      <p>Choose an Information Class for <strong>${DOMPurify.sanitize(file.name)}</strong>:</p>
+      <p>Choose an Information Class for <strong>${DOMPurify.sanitize(
+        file.name
+      )}</strong>:</p>
       <div style="margin: 1rem 0;">
         ${classificationRadios}
       </div>
@@ -85,7 +87,11 @@ const FileUploadEventsModule = (function () {
     // Modal buttons
     const buttons = [
       { label: TranslationModule.translate("cancel"), value: false },
-      { label: TranslationModule.translate("confirm"), value: true, class: "is-primary" },
+      {
+        label: TranslationModule.translate("confirm"),
+        value: true,
+        class: "is-primary",
+      },
     ];
 
     // Show the modal and process the response via onComplete callback
