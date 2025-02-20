@@ -74,16 +74,12 @@ const FileUploadEventsModule = (function () {
     // Modal buttons
     const buttons = [
       { label: TranslationModule.translate("cancel"), value: false },
-      {
-        label: "Confirm",
-        value: true,
-        class: "is-primary",
-      },
+      { label: TranslationModule.translate("confirm"), value: true, class: "is-primary" },
     ];
 
     // Show the modal
     ModalModule.showCustomModal(
-      "Select Classification",
+      TranslationModule.translate("selectClassification"),
       modalContent,
       buttons,
       function (confirmed) {
