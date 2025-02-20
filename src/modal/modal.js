@@ -35,18 +35,19 @@ const ModalModule = (function () {
       modalBody.innerHTML = DOMPurify.sanitize(message);
     }
 
+    // Clear the modal footer
     modalFooter.innerHTML = "";
-    buttons.forEach(function(btn) {
+
+    // Create and append buttons
+    buttons.forEach(function (btn) {
       const buttonElem = document.createElement("button");
+      // Use the provided CSS classes or default to "button"
+      buttonElem.className = "button" + (btn.class ? " " + btn.class : "");
       buttonElem.textContent = btn.label;
-      buttonElem.classList.add("button");
-      if (btn.class) {
-        btn.class.split(" ").forEach((cls) => buttonElem.classList.add(cls));
-      } else if (btn.value === true) {
-        buttonElem.classList.add("is-primary");
-      }
       buttonElem.addEventListener("click", function () {
+        // Remove the modal's active class so it closes
         modal.classList.remove("is-active");
+        // Call the passed callback with the button value (true for confirm, false for cancel)
         if (callback) callback(btn.value);
       });
       modalFooter.appendChild(buttonElem);
@@ -54,13 +55,17 @@ const ModalModule = (function () {
 
     const modalBackground = modal.querySelector(".modal-background");
     const closeButton = modal.querySelector(".delete");
+    const modalClose = document.getElementById("custom-modal-close");
 
     modalBackground.onclick = closeModal;
     closeButton.onclick = closeModal;
+    if (modalClose) {
+      modalClose.onclick = closeModal;
+    }
 
     function closeModal() {
       modal.classList.remove("is-active");
-      if (callback) callback(null);
+      if (callback) callback(false);
     }
   }
 
