@@ -131,5 +131,6 @@ const InputEventsModule = (function () {
 
   return {
     setupEventListeners,
+    checkTokenWarning,
   };
 })();
