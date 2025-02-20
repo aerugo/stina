@@ -26,6 +26,7 @@ const EventModule = (function () {
     SettingsEventsModule.setupEventListeners();
     InstructionEventsModule.setupEventListeners();
     ModelSelectionEventsModule.setupEventListeners();
+    FileUploadEventsModule.setupEventListeners();
   }
 
   return {
