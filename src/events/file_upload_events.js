@@ -6,8 +6,8 @@ const FileUploadEventsModule = (function () {
   // Allowed file extensions
   const ALLOWED_EXTENSIONS = ["pdf", "txt", "md", "docx"];
 
-  // Global array to store attached files and their classifications
-  const attachedFiles = [];
+  // Global array to store pending files and their classifications
+  let pendingFiles = [];
 
   function setupEventListeners() {
     const attachBtn = document.getElementById("attach-file-btn");
@@ -114,9 +114,17 @@ const FileUploadEventsModule = (function () {
           return;
         }
 
-        // Add the file and its classification to the attachedFiles array
-        attachedFiles.push({ file: file, classification: chosenClass });
-        console.log("Current Attached Files:", attachedFiles);
+        // Create a pending file object with a unique ID and additional metadata
+        const pendingFile = {
+          id: Date.now().toString(),  // simple unique ID
+          file: file,
+          classification: chosenClass,
+          fileName: file.name,
+          extension: file.name.split('.').pop().toLowerCase()
+        };
+        pendingFiles.push(pendingFile);
+        renderPendingFiles(pendingFiles);
+        console.log("Pending Files:", pendingFiles);
         onComplete(true);
       }
     );
@@ -128,6 +136,33 @@ const FileUploadEventsModule = (function () {
       }
       return null;
     }
+  }
+
+  function renderPendingFiles(files) {
+    const container = document.getElementById("pending-uploads-container");
+    if (!container) return;
+    container.innerHTML = ""; // Clear existing chips
+
+    files.forEach(item => {
+      const chip = document.createElement("div");
+      chip.classList.add("file-chip");
+      chip.dataset.fileId = item.id;
+      chip.innerHTML = `
+        <span class="file-chip-name">${DOMPurify.sanitize(item.fileName)}</span>
+        <span class="file-chip-classification">${item.classification}</span>
+        <button class="file-chip-remove">×</button>
+      `;
+      chip.querySelector(".file-chip-remove").addEventListener("click", (e) => {
+        e.stopPropagation();
+        removePendingFile(item.id);
+      });
+      container.appendChild(chip);
+    });
+  }
+
+  function removePendingFile(fileId) {
+    pendingFiles = pendingFiles.filter(file => file.id !== fileId);
+    renderPendingFiles(pendingFiles);
   }
 
   // Public API
