@@ -48,12 +48,17 @@ const OpenAIProvider = (function () {
     };
 
     const data = await this.makeApiRequest(url, headers, body);
+    
+    // Extract usage from the response via the BaseProvider helper
+    const usage = this.parseUsage(data);
+    
     return {
       role: data.choices[0].message.role,
       content:
         typeof data.choices[0].message.content === 'string'
           ? data.choices[0].message.content
           : data.choices[0].message.content.raw || data.choices[0].message.content.text || JSON.stringify(data.choices[0].message.content),
+      usage: usage
     };
   };
 

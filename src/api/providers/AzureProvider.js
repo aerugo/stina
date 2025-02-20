@@ -50,7 +50,14 @@ const AzureProvider = (function () {
     const data = await this.makeApiRequest(url, headers, body);
     console.log("data!");
     console.log(data);
-    return data.choices[0].message;
+    
+    // Extract usage data using the BaseProvider helper
+    const usage = this.parseUsage(data);
+    
+    return {
+      ...data.choices[0].message,
+      usage: usage
+    };
   };
 
   return AzureProvider;

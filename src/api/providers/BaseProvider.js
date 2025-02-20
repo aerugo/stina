@@ -41,5 +41,23 @@ const BaseProvider = (function () {
     return await response.json();
   };
 
+  /**
+   * Helper to extract token usage from the API response.
+   * Returns an object with prompt_tokens, completion_tokens, and total_tokens,
+   * or zeroes if not available.
+   * @param {object} data - The raw response data from the API.
+   * @returns {object} Usage information.
+   */
+  BaseProvider.prototype.parseUsage = function (data) {
+    if (!data || !data.usage) {
+      return { prompt_tokens: 0, completion_tokens: 0, total_tokens: 0 };
+    }
+    return {
+      prompt_tokens: data.usage.prompt_tokens || 0,
+      completion_tokens: data.usage.completion_tokens || 0,
+      total_tokens: data.usage.total_tokens || 0,
+    };
+  };
+
   return BaseProvider;
 })();
