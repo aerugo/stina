@@ -48,6 +48,8 @@ const AzureProvider = (function () {
     };
 
     const data = await this.makeApiRequest(url, headers, body);
+    console.log("data!");
+    console.log(data);
     return data.choices[0].message;
   };
 
