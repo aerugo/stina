@@ -96,6 +96,24 @@ const MessageModule = (function () {
   async function sendMessage(messageContent) {
     const config = ConfigModule.getConfig();
 
+    // Check for any pending uploaded files
+    const pendingFiles = FileUploadEventsModule.getPendingFiles();
+    if (pendingFiles.length > 0) {
+      let filesPrefix = "";
+      pendingFiles.forEach(fileObj => {
+        filesPrefix += "-----------------\n" +
+                      fileObj.fileName + "\n\n" +
+                      fileObj.content + "\n\n";
+      });
+      filesPrefix += "-----------------\n";
+      
+      // Prepend file contents to the user's prompt message
+      messageContent = filesPrefix + messageContent;
+
+      // Clear pending files so they won't be appended in subsequent messages
+      FileUploadEventsModule.clearPendingFiles();
+    }
+
     const currentState = ChatModule.getCurrentState();
     const newMessage = { role: "user", content: messageContent };
     currentState.conversation.push(newMessage);

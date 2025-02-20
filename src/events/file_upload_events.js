@@ -9,6 +9,15 @@ const FileUploadEventsModule = (function () {
   // Global array to store pending files and their classifications
   let pendingFiles = [];
 
+  function getPendingFiles() {
+    return pendingFiles;
+  }
+
+  function clearPendingFiles() {
+    pendingFiles = [];
+    renderPendingFiles(pendingFiles);
+  }
+
   // File parsing functions
   async function parseTextFile(file) {
     return new Promise((resolve, reject) => {
@@ -256,5 +265,7 @@ const FileUploadEventsModule = (function () {
   // Public API
   return {
     setupEventListeners,
+    getPendingFiles,
+    clearPendingFiles,
   };
 })();
