@@ -22,17 +22,30 @@ const FileUploadEventsModule = (function () {
   async function parsePDFFile(file) {
     try {
       const arrayBuffer = await file.arrayBuffer();
-      const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
-      let fullText = '';
-      
-      for (let i = 1; i <= pdf.numPages; i++) {
-        const page = await pdf.getPage(i);
-        const textContent = await page.getTextContent();
-        const pageText = textContent.items.map(item => item.str).join(' ');
-        fullText += pageText + '\n';
+
+      // Set the PDF.js worker URL if not already set
+      if (!pdfjsLib.GlobalWorkerOptions.workerSrc) {
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://mozilla.github.io/pdf.js/build/pdf.worker.mjs';
       }
-      
-      return fullText;
+
+      const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer });
+      const pdf = await loadingTask.promise;
+      const totalPages = pdf.numPages;
+
+      // Extract text content from all pages concurrently
+      const pagePromises = [];
+      for (let i = 1; i <= totalPages; i++) {
+        pagePromises.push(
+          pdf.getPage(i).then(page =>
+            page.getTextContent().then(textContent =>
+              textContent.items.map(s => s.str).join('')
+            )
+          )
+        );
+      }
+      const pageTexts = await Promise.all(pagePromises);
+
+      return pageTexts.join('\n');
     } catch (error) {
       console.error('PDF parsing error:', error);
       throw error;
