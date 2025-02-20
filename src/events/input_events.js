@@ -32,9 +32,6 @@ const InputEventsModule = (function () {
     }
     const totalTokens = lastAssistantMessage.usage.total_tokens;
     const remaining = selectedModel.context_length - totalTokens;
-    console.log("Remaining tokens:", remaining);
-    console.log("Total tokens:", totalTokens);
-    console.log("Context length:", selectedModel.context_length);
     if (remaining <= 5000) {
       tokenWarningEl.style.display = "block";
       tokenWarningEl.innerText =
