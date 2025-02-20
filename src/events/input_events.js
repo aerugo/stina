@@ -34,8 +34,7 @@ const InputEventsModule = (function () {
     const remaining = selectedModel.context_length - totalTokens;
     if (remaining <= 5000) {
       tokenWarningEl.style.display = "block";
-      tokenWarningEl.innerText =
-        "Warning: This chat is getting long. The model may not be able to handle more context. Consider starting a new chat.";
+      tokenWarningEl.innerText = TranslationModule.translate("tokenLengthWarning");
     } else {
       tokenWarningEl.style.display = "none";
     }
