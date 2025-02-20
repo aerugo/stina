@@ -2,7 +2,8 @@
 .send-button img,
 #edit-instruction-btn img,
 #settings-btn img,
-.copy-button img {
+.copy-button img,
+#attach-file-btn img {
   width: 1em;
   height: 1em;
   vertical-align: middle;
