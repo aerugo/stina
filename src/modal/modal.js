@@ -36,18 +36,20 @@ const ModalModule = (function () {
     }
 
     modalFooter.innerHTML = "";
-    buttons.forEach((button) => {
-      const btn = document.createElement("button");
-      btn.classList.add("button");
-      if (button.class) btn.classList.add(button.class);
-      if (button.value === true && !button.class)
-        btn.classList.add("is-primary");
-      btn.textContent = button.label;
-      btn.addEventListener("click", () => {
+    buttons.forEach(function(btn) {
+      const buttonElem = document.createElement("button");
+      buttonElem.textContent = btn.label;
+      buttonElem.classList.add("button");
+      if (btn.class) {
+        btn.class.split(" ").forEach((cls) => buttonElem.classList.add(cls));
+      } else if (btn.value === true) {
+        buttonElem.classList.add("is-primary");
+      }
+      buttonElem.addEventListener("click", function () {
         modal.classList.remove("is-active");
-        if (callback) callback(button.value);
+        if (callback) callback(btn.value);
       });
-      modalFooter.appendChild(btn);
+      modalFooter.appendChild(buttonElem);
     });
 
     const modalBackground = modal.querySelector(".modal-background");
