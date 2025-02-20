@@ -213,6 +213,7 @@ const MessageModule = (function () {
               JSON.stringify(apiResponse.content),
         model: selectedModelKey,
         instructionLabel: instructionLabel,
+        usage: apiResponse.usage || { prompt_tokens: 0, completion_tokens: 0, total_tokens: 0 },
       };
 
       RenderingModule.renderConversation(currentState.conversation);
