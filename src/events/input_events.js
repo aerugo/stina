@@ -3,6 +3,39 @@
  * Handles events related to user input and message sending.
  */
 const InputEventsModule = (function () {
+  function checkTokenWarning() {
+    const tokenWarningEl = document.getElementById("token-warning");
+    if (!tokenWarningEl) return;
+    const chat = ChatModule.getCurrentChat();
+    if (!chat) {
+      tokenWarningEl.style.display = "none";
+      return;
+    }
+    const selectedModelKey = chat.selectedModelKey || "gpt-4o";
+    const selectedModel = ModelsModule.getModel(selectedModelKey);
+    if (!selectedModel || !selectedModel.context_length) {
+      tokenWarningEl.style.display = "none";
+      return;
+    }
+    // Find the last assistant message with usage info
+    const lastAssistantMessage = [...chat.conversation].reverse().find(
+      m => m.role === "assistant" && m.usage && typeof m.usage.total_tokens === "number"
+    );
+    if (!lastAssistantMessage) {
+      tokenWarningEl.style.display = "none";
+      return;
+    }
+    const totalTokens = lastAssistantMessage.usage.total_tokens;
+    const remaining = selectedModel.context_length - totalTokens;
+    if (remaining <= 5000) {
+      tokenWarningEl.style.display = "block";
+      tokenWarningEl.innerText =
+        "Warning: This chat is getting long. The model may not be able to handle more context. Consider starting a new chat.";
+    } else {
+      tokenWarningEl.style.display = "none";
+    }
+  }
+
   function placeCaretAtEnd(el) {
     el.focus();
     const range = document.createRange();
@@ -81,6 +114,7 @@ const InputEventsModule = (function () {
     userInput.addEventListener("input", function () {
       this.style.height = "auto";
       this.style.height = this.scrollHeight + "px";
+      checkTokenWarning();
     });
 
     userInput.addEventListener("keydown", handleUserInputKeyDown);
