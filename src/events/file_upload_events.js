@@ -9,6 +9,67 @@ const FileUploadEventsModule = (function () {
   // Global array to store pending files and their classifications
   let pendingFiles = [];
 
+  // File parsing functions
+  async function parseTextFile(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = (e) => resolve(e.target.result);
+      reader.onerror = (e) => reject(e);
+      reader.readAsText(file);
+    });
+  }
+
+  async function parsePDFFile(file) {
+    try {
+      const arrayBuffer = await file.arrayBuffer();
+      const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+      let fullText = '';
+      
+      for (let i = 1; i <= pdf.numPages; i++) {
+        const page = await pdf.getPage(i);
+        const textContent = await page.getTextContent();
+        const pageText = textContent.items.map(item => item.str).join(' ');
+        fullText += pageText + '\n';
+      }
+      
+      return fullText;
+    } catch (error) {
+      console.error('PDF parsing error:', error);
+      throw error;
+    }
+  }
+
+  async function parseDocxFile(file) {
+    try {
+      const arrayBuffer = await file.arrayBuffer();
+      const result = await mammoth.extractRawText({ arrayBuffer });
+      return result.value;
+    } catch (error) {
+      console.error('DOCX parsing error:', error);
+      throw error;
+    }
+  }
+
+  async function parseFile(file) {
+    const ext = file.name.split('.').pop().toLowerCase();
+    try {
+      switch (ext) {
+        case 'txt':
+        case 'md':
+          return await parseTextFile(file);
+        case 'pdf':
+          return await parsePDFFile(file);
+        case 'docx':
+          return await parseDocxFile(file);
+        default:
+          throw new Error(`Unsupported file type: ${ext}`);
+      }
+    } catch (error) {
+      console.error('File parsing error:', error);
+      throw error;
+    }
+  }
+
   function setupEventListeners() {
     const attachBtn = document.getElementById("attach-file-btn");
     if (attachBtn) {
@@ -36,7 +97,7 @@ const FileUploadEventsModule = (function () {
     processFiles(files, 0);
   }
 
-  function processFiles(files, index) {
+  async function processFiles(files, index) {
     if (index >= files.length) return; // all files processed
 
     const file = files[index];
@@ -49,17 +110,26 @@ const FileUploadEventsModule = (function () {
       processFiles(files, index + 1);
       return;
     }
-    // Process current file then move on to the next one
-    showClassificationModal(file, function () {
+
+    try {
+      const content = await parseFile(file);
+      // Process current file then move on to the next one
+      showClassificationModal(file, content, function () {
+        processFiles(files, index + 1);
+      });
+    } catch (error) {
+      ModalModule.showCustomAlert(
+        `Error parsing file ${file.name}: ${error.message}`
+      );
       processFiles(files, index + 1);
-    });
+    }
   }
 
   /**
    * Shows a modal with radio buttons for classification (C1..C5).
    * On Confirm, logs the File object and classification to the console.
    */
-  function showClassificationModal(file, onComplete) {
+  function showClassificationModal(file, content, onComplete) {
     const classificationOptions = ["C1", "C2", "C3", "C4", "C5"];
 
     // Create radio inputs
@@ -120,7 +190,8 @@ const FileUploadEventsModule = (function () {
           file: file,
           classification: chosenClass,
           fileName: file.name,
-          extension: file.name.split('.').pop().toLowerCase()
+          extension: file.name.split('.').pop().toLowerCase(),
+          content: content
         };
         pendingFiles.push(pendingFile);
         renderPendingFiles(pendingFiles);
