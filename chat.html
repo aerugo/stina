@@ -131,8 +131,11 @@
     <script src="lib/highlight/highlight.min.js"></script> <!-- Highlight.js JavaScript -->
 
     <!-- Include PDF.js -->
-    <script src="lib/build/pdfjs/pdf.min.mjs"></script>
-    <script src="lib/build/pdfjs/pdf.worker.min.mjs"></script>
+    <script type="module">
+      import * as pdfjsLibModule from 'lib/build/pdfjs/pdf.min.mjs';
+      window.pdfjsLib = pdfjsLibModule;
+      window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://mozilla.github.io/pdf.js/build/pdf.worker.mjs';
+    </script>
 
     <!-- Include Mammoth.js -->
     <script src="lib/mammoth/mammoth.browser.min.js"></script>

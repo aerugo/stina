@@ -24,11 +24,11 @@ const FileUploadEventsModule = (function () {
       const arrayBuffer = await file.arrayBuffer();
 
       // Set the PDF.js worker URL if not already set
-      if (!pdfjsLib.GlobalWorkerOptions.workerSrc) {
-        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://mozilla.github.io/pdf.js/build/pdf.worker.mjs';
+      if (!window.pdfjsLib.GlobalWorkerOptions.workerSrc) {
+        window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://mozilla.github.io/pdf.js/build/pdf.worker.mjs';
       }
 
-      const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer });
+      const loadingTask = window.pdfjsLib.getDocument({ data: arrayBuffer });
       const pdf = await loadingTask.promise;
       const totalPages = pdf.numPages;
 
