@@ -197,6 +197,9 @@ const FileUploadEventsModule = (function () {
           return;
         }
 
+        // Tokenize parsed file content
+        const tokenCount = TokenizationModule.countTokens(content);
+
         // Create a pending file object with a unique ID and additional metadata
         const pendingFile = {
           id: Date.now().toString(),  // simple unique ID
@@ -204,7 +207,8 @@ const FileUploadEventsModule = (function () {
           classification: chosenClass,
           fileName: file.name,
           extension: file.name.split('.').pop().toLowerCase(),
-          content: content
+          content: content,
+          tokenCount: tokenCount
         };
         pendingFiles.push(pendingFile);
         renderPendingFiles(pendingFiles);
