@@ -172,3 +172,10 @@ body.dark-mode .send-button {
   border: 1px solid #f08080;
   opacity: 0.6;
 }
+
+.ignored-files-summary {
+  font-size: 0.8rem;
+  color: #a00;
+  margin-top: 0.5rem;
+  font-style: italic;
+}

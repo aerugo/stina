@@ -208,6 +208,19 @@ const RenderingModule = (function () {
       contentDiv.innerText = message.content;
       
       userMessageContainer.appendChild(contentDiv);
+      
+      // If there are any ignored attached files, list their file names below the message.
+      if (message.attachedFiles && message.attachedFiles.length > 0) {
+        const ignoredFiles = message.attachedFiles.filter(file => file.ignored);
+        if (ignoredFiles.length > 0) {
+          const ignoredInfoElem = document.createElement("div");
+          ignoredInfoElem.classList.add("ignored-files-summary");
+          const fileNames = ignoredFiles.map(file => DOMPurify.sanitize(file.fileName));
+          ignoredInfoElem.innerText = "Ignored: " + fileNames.join(", ");
+          userMessageContainer.appendChild(ignoredInfoElem);
+        }
+      }
+      
       messageElem.appendChild(userMessageContainer);
     }
 
