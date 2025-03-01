@@ -177,7 +177,7 @@ const FileUploadEventsModule = (function () {
 
     // Build the modal content
     const modalContent = `
-      <p>Choose an Information Class for <strong>${DOMPurify.sanitize(
+      <p>${TranslationModule.translate("chooseInformationClass")} <strong>${DOMPurify.sanitize(
         file.name
       )}</strong>:</p>
       <div style="margin: 1rem 0;">
@@ -208,7 +208,7 @@ const FileUploadEventsModule = (function () {
 
         const chosenClass = getSelectedClassification();
         if (!chosenClass) {
-          ModalModule.showCustomAlert("Please select a classification.");
+          ModalModule.showCustomAlert(TranslationModule.translate("pleaseSelectClassification"));
           onComplete(false);
           return;
         }

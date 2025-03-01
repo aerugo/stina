@@ -77,6 +77,10 @@ window.translationsData = {
     unsupportedFileType: "Unsupported file type: .{ext}.",
     allowedFileTypes: "Allowed: pdf, txt, md, docx.",
     errorParsingFile: "Error parsing file {fileName}: {errorMessage}",
+    selectClassification: "Select Classification",
+    confirm: "Confirm",
+    pleaseSelectClassification: "Please select a classification.",
+    chooseInformationClass: "Choose an Information Class for",
   },
   sv: {
     exportChat: "Exportera",
@@ -154,5 +158,9 @@ window.translationsData = {
     unsupportedFileType: "Ej stödd filtyp: .{ext}.",
     allowedFileTypes: "Tillåtna: pdf, txt, md, docx.",
     errorParsingFile: "Fel vid tolkning av fil {fileName}: {errorMessage}",
+    selectClassification: "Välj klassificering",
+    confirm: "Bekräfta",
+    pleaseSelectClassification: "Vänligen välj en klassificering.",
+    chooseInformationClass: "Välj en informationsklass för",
   },
 };
