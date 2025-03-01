@@ -3,6 +3,13 @@
  * Handles chat management including creation, loading, and deletion of chats.
  */
 const ChatModule = (function () {
+  // Global mapping for attachment ignore state (applies to both pending and older attachments)
+  let ignoredAttachments = {}; 
+  
+  function clearIgnoredAttachments() {
+    ignoredAttachments = {};
+  }
+  
   // Private variables
   let chats = StorageModule.loadData("chats") || [];
   let currentChatId = StorageModule.loadData("currentChatId");
@@ -246,5 +253,7 @@ const ChatModule = (function () {
     getCurrentState,
     saveChats,
     importChats,
+    ignoredAttachments,
+    clearIgnoredAttachments
   };
 })();
