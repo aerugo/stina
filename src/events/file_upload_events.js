@@ -125,9 +125,9 @@ const FileUploadEventsModule = (function () {
     const file = files[index];
     const ext = file.name.split(".").pop().toLowerCase();
     if (!ALLOWED_EXTENSIONS.includes(ext)) {
-      ModalModule.showCustomAlert(
-        `Unsupported file type: .${ext}. Allowed: pdf, txt, md, docx.`
-      );
+      const unsupportedText = TranslationModule.translate("unsupportedFileType").replace("{ext}", ext);
+      const allowedText = TranslationModule.translate("allowedFileTypes");
+      ModalModule.showCustomAlert(`${unsupportedText} ${allowedText}`);
       // Continue with next file even if this one is not allowed
       processFiles(files, index + 1);
       return;
@@ -146,9 +146,10 @@ const FileUploadEventsModule = (function () {
     } catch (error) {
       // Hide processing modal on error
       hideProcessingModal();
-      ModalModule.showCustomAlert(
-        `Error parsing file ${file.name}: ${error.message}`
-      );
+      const errorMsg = TranslationModule.translate("errorParsingFile")
+        .replace("{fileName}", file.name)
+        .replace("{errorMessage}", error.message);
+      ModalModule.showCustomAlert(errorMsg);
       processFiles(files, index + 1);
     }
   }
@@ -270,8 +271,8 @@ const FileUploadEventsModule = (function () {
 
   function showProcessingModal() {
     ModalModule.showCustomModal(
-      "Processing document...",
-      "<p>Please wait while we parse your file.</p>",
+      TranslationModule.translate("processingDocumentTitle"),
+      `<p>${TranslationModule.translate("processingDocumentMessage")}</p>`,
       // No buttons so the user can't cancel early
       [],
       () => { /* no-op callback */ }

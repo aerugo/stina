@@ -72,6 +72,11 @@ window.translationsData = {
     importChatHelpText: "Select a JSON file containing the exported chat data",
     tokenLengthWarning:
       "This chat is getting long. The model will soon not be able to handle more context. You will need to start a new chat.",
+    processingDocumentTitle: "Processing document...",
+    processingDocumentMessage: "Please wait while we parse your file.",
+    unsupportedFileType: "Unsupported file type: .{ext}.",
+    allowedFileTypes: "Allowed: pdf, txt, md, docx.",
+    errorParsingFile: "Error parsing file {fileName}: {errorMessage}",
   },
   sv: {
     exportChat: "Exportera",
@@ -144,5 +149,10 @@ window.translationsData = {
     importChatHelpText: "Välj en JSON-fil med exporterad chattdata",
     tokenLengthWarning:
       "Den här chatten börjar bli lång. Modellen klarar snart inte mer kontext. Du behöver snart starta en ny chatt.",
+    processingDocumentTitle: "Bearbetar dokument...",
+    processingDocumentMessage: "Vänligen vänta medan vi bearbetar ditt dokument.",
+    unsupportedFileType: "Ej stödd filtyp: .{ext}.",
+    allowedFileTypes: "Tillåtna: pdf, txt, md, docx.",
+    errorParsingFile: "Fel vid tolkning av fil {fileName}: {errorMessage}",
   },
 };
