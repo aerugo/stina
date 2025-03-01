@@ -96,6 +96,10 @@ window.translationsData = {
     classificationOption5: "C5",
     showPreview: "Show Preview",
     hidePreview: "Hide Preview",
+    documentInfoTitle: "Document Information",
+    fileName: "File Name",
+    classification: "Classification",
+    tokenCount: "Token Count",
   },
   sv: {
     exportChat: "Exportera",
@@ -192,5 +196,9 @@ window.translationsData = {
     classificationOption5: "K5",
     showPreview: "Visa förhandsgranskning",
     hidePreview: "Dölj förhandsgranskning",
+    documentInfoTitle: "Dokumentinformation",
+    fileName: "Filnamn",
+    classification: "Klassificering",
+    tokenCount: "Antal Token",
   },
 };

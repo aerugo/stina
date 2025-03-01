@@ -96,26 +96,15 @@ const MessageModule = (function () {
   async function sendMessage(messageContent) {
     const config = ConfigModule.getConfig();
 
-    // Check for any pending uploaded files
-    const pendingFiles = FileUploadEventsModule.getPendingFiles();
-    if (pendingFiles.length > 0) {
-      let filesPrefix = "";
-      pendingFiles.forEach(fileObj => {
-        filesPrefix += "-----------------\n" +
-                      fileObj.fileName + "\n\n" +
-                      fileObj.content + "\n\n";
-      });
-      filesPrefix += "-----------------\n";
-      
-      // Prepend file contents to the user's prompt message
-      messageContent = filesPrefix + messageContent;
-
-      // Clear pending files so they won't be appended in subsequent messages
-      FileUploadEventsModule.clearPendingFiles();
-    }
-
+    // Get and clear any pending uploaded files
+    const attachedFiles = FileUploadEventsModule.getAndClearPendingFiles();
+    
     const currentState = ChatModule.getCurrentState();
-    const newMessage = { role: "user", content: messageContent };
+    const newMessage = { 
+      role: "user", 
+      content: messageContent,
+      attachedFiles: attachedFiles.length > 0 ? attachedFiles : undefined
+    };
     currentState.conversation.push(newMessage);
 
     RenderingModule.renderConversation(currentState.conversation);
@@ -171,6 +160,27 @@ const MessageModule = (function () {
 
       instructionLabel = instruction.label;
 
+      // Merge attached files content with user messages before sending
+      conversationToSend = conversationToSend.map(msg => {
+        if (msg.role === "user" && Array.isArray(msg.attachedFiles) && msg.attachedFiles.length > 0) {
+          let mergedContent = msg.content;
+          
+          // Add a separator before documents
+          mergedContent += "\n\n-----------------\n";
+          
+          // Add each document with its metadata
+          msg.attachedFiles.forEach(file => {
+            mergedContent += `DOCUMENT: ${file.fileName} [${file.classification}]\n\n${file.content}\n\n`;
+          });
+          
+          // Add a closing separator
+          mergedContent += "-----------------\n";
+          
+          return { ...msg, content: mergedContent };
+        }
+        return msg;
+      });
+      
       // Prepare messages using the provider's method
       conversationToSend = providerInstance.prepareMessages(
         conversationToSend,

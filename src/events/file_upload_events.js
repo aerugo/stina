@@ -17,6 +17,12 @@ const FileUploadEventsModule = (function () {
     pendingFiles = [];
     renderPendingFiles(pendingFiles);
   }
+  
+  function getAndClearPendingFiles() {
+    const files = [...pendingFiles];
+    clearPendingFiles();
+    return files;
+  }
 
   // File parsing functions
   async function parseTextFile(file) {

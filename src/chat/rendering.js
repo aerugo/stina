@@ -142,11 +142,50 @@ const RenderingModule = (function () {
         }
       }
     } else {
+      // Create a container for user message and any attached files
+      const userMessageContainer = document.createElement("div");
+      userMessageContainer.classList.add("user-message-container");
+      
+      // If there are attached files, render them as pills
+      if (message.attachedFiles && message.attachedFiles.length > 0) {
+        const filesContainer = document.createElement("div");
+        filesContainer.classList.add("attached-files-container");
+        
+        message.attachedFiles.forEach(file => {
+          const pill = document.createElement("div");
+          pill.classList.add("file-pill");
+          pill.innerHTML = `
+            <span class="file-name">${DOMPurify.sanitize(file.fileName)}</span>
+            <span class="file-classification">${file.classification}</span>
+          `;
+          
+          // Add click event to show file content in a modal
+          pill.addEventListener("click", () => {
+            ModalModule.showCustomModal(
+              TranslationModule.translate("documentInfoTitle") || "Document Info",
+              `<p><strong>${TranslationModule.translate("fileName") || "File"}:</strong> ${DOMPurify.sanitize(file.fileName)}</p>
+               <p><strong>${TranslationModule.translate("classification") || "Classification"}:</strong> ${file.classification}</p>
+               <p><strong>${TranslationModule.translate("tokenCount") || "Token Count"}:</strong> ${file.tokenCount}</p>
+               <hr>
+               <div class="file-content-preview">${DOMPurify.sanitize(file.content)}</div>`,
+              [{ label: TranslationModule.translate("ok") || "OK", value: true }],
+              () => {}
+            );
+          });
+          
+          filesContainer.appendChild(pill);
+        });
+        
+        userMessageContainer.appendChild(filesContainer);
+      }
+      
+      // Add the user message content
       const contentDiv = document.createElement("div");
       contentDiv.classList.add("user-message-content");
       contentDiv.innerText = message.content;
-
-      messageElem.appendChild(contentDiv);
+      
+      userMessageContainer.appendChild(contentDiv);
+      messageElem.appendChild(userMessageContainer);
     }
 
     return messageElem;
