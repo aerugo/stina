@@ -108,12 +108,8 @@ const MessageModule = (function () {
       role: "user", 
       content: messageContent,
       attachedFiles: attachedFiles.length > 0 ? attachedFiles : undefined,
-      attachmentsLocked: true,  // Mark these attachments as locked (historical)
-      ignoredFilesSummary: ignoredFiles.length > 0
-        ? "Ignored: " + ignoredFiles.map(file => file.fileName).join(", ")
-        : undefined
+      attachmentsLocked: true  // Mark these attachments as locked (historical)
     };
-    console.log("[DEBUG][sendMessage] New Message's ignoredFilesSummary:", newMessage.ignoredFilesSummary);
     currentState.conversation.push(newMessage);
 
     RenderingModule.renderConversation(currentState.conversation);
@@ -243,6 +239,27 @@ const MessageModule = (function () {
         "Type:",
         typeof apiResponse.content
       );
+
+      // Gather which files from the current user message were ignored
+      const ignoredDocs = [];
+      if (newMessage.attachedFiles && Array.isArray(newMessage.attachedFiles)) {
+        newMessage.attachedFiles.forEach(file => {
+          if (file.ignored) {
+            ignoredDocs.push(file.fileName);
+          }
+        });
+      }
+
+      // If any were ignored, insert a dynamic "context notice" message
+      if (ignoredDocs.length > 0) {
+        const noticeMsg = {
+          role: "system",
+          content: "Ignored documents for this response: " + ignoredDocs.join(", "),
+          isIgnoredDocsNotice: true
+        };
+        // Insert the notice message just before the assistant's reply (the loading message is the last item)
+        currentState.conversation.splice(currentState.conversation.length - 1, 0, noticeMsg);
+      }
 
       currentState.conversation[currentState.conversation.length - 1] = {
         role: "assistant",

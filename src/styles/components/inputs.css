@@ -179,3 +179,11 @@ body.dark-mode .send-button {
   margin-top: 0.5rem;
   font-style: italic;
 }
+
+.ignored-docs-notice {
+  font-size: 0.8rem;
+  color: #a00;
+  margin-bottom: 0.5rem;
+  font-style: italic;
+  text-align: center;
+}
