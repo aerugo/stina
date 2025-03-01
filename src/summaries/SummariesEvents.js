@@ -37,8 +37,15 @@ const SummariesEventsModule = (function () {
         if (!result) return;  // User cancelled
         const instructions = document.getElementById("summary-instructions").value;
         const modelKey = document.getElementById("summary-model-select").value;
-        const summaryResultElem = document.getElementById("summary-result");
-        summaryResultElem.innerHTML = `<progress class="progress is-small is-primary" max="100">Loading</progress>`;
+        
+        // Replace the entire modal content with a loading indicator
+        const modalBody = document.getElementById("custom-modal-body");
+        modalBody.innerHTML = `
+          <div class="has-text-centered">
+            <p>${TranslationModule.translate("processingDocumentMessage") || "Generating summary..."}</p>
+            <progress class="progress is-small is-primary" max="100">Loading</progress>
+          </div>
+        `;
 
         try {
           // Note: Use domain logic from SummariesModule here
@@ -56,13 +63,34 @@ const SummariesEventsModule = (function () {
             modelKey
           };
           
-          onSummaryGenerated(newSummary);
-          
           // Close the modal
           const modal = document.getElementById("custom-modal");
           if (modal) modal.classList.remove("is-active");
+          
+          // Call the callback with the new summary
+          onSummaryGenerated(newSummary);
+          
         } catch (e) {
-          summaryResultElem.innerHTML = `<p class="has-text-danger">${TranslationModule.translate("errorGeneratingSummary")}: ${e.message}</p>`;
+          // Show error in the modal
+          modalBody.innerHTML = `
+            <div class="has-text-centered">
+              <p class="has-text-danger">${TranslationModule.translate("errorGeneratingSummary")}: ${e.message}</p>
+              <button class="button is-primary mt-4" id="summary-error-close-btn">
+                ${TranslationModule.translate("ok")}
+              </button>
+            </div>
+          `;
+          
+          // Add event listener to close button
+          setTimeout(() => {
+            const closeBtn = document.getElementById("summary-error-close-btn");
+            if (closeBtn) {
+              closeBtn.addEventListener("click", () => {
+                const modal = document.getElementById("custom-modal");
+                if (modal) modal.classList.remove("is-active");
+              });
+            }
+          }, 0);
         }
       }
     );
