@@ -243,7 +243,7 @@ const FileUploadEventsModule = (function () {
       let msgTokens = TokenizationModule.countTokens(msg.content);
       if (msg.attachedFiles && Array.isArray(msg.attachedFiles)) {
         msgTokens += msg.attachedFiles.reduce((fileSum, file) => {
-          return fileSum + (file.tokenCount || TokenizationModule.countTokens(file.content));
+          return fileSum + (!file.ignored ? (file.tokenCount || TokenizationModule.countTokens(file.content)) : 0);
         }, 0);
       }
       return sum + msgTokens;
