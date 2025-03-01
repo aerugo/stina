@@ -212,6 +212,22 @@ const FileUploadEventsModule = (function () {
       [],
       () => { /* no-op callback */ }
     );
+    
+    // Attach toggle functionality for the content preview
+    setTimeout(() => {
+      const toggleBtn = document.getElementById("toggle-preview-btn");
+      if (toggleBtn) {
+        toggleBtn.addEventListener("click", function() {
+          const previewElem = document.getElementById("content-preview");
+          previewElem.classList.toggle("is-hidden");
+          if (previewElem.classList.contains("is-hidden")) {
+            toggleBtn.textContent = TranslationModule.translate("showContentPreview");
+          } else {
+            toggleBtn.textContent = TranslationModule.translate("hideContentPreview");
+          }
+        });
+      }
+    }, 0);
   }
 
   function hideProcessingModal() {
@@ -266,7 +282,12 @@ const FileUploadEventsModule = (function () {
         <div class="preview-body">
           <div class="preview-detail">
             <strong>${TranslationModule.translate("previewContent")}:</strong>
-            <p class="preview-text">${DOMPurify.sanitize(content.slice(0, 300))}${content.length > 300 ? "..." : ""}</p>
+            <a id="toggle-preview-btn" class="toggle-preview is-size-7 has-text-link" style="cursor: pointer;">
+              ${TranslationModule.translate("showContentPreview")}
+            </a>
+            <div id="content-preview" class="preview-text is-hidden">
+              ${DOMPurify.sanitize(content.slice(0, 300))}${content.length > 300 ? "..." : ""}
+            </div>
           </div>
           <div class="preview-details-pills">
             <span class="pill"><strong>${TranslationModule.translate("previewDocumentTokens")}</strong>: ${documentTokens}</span>
