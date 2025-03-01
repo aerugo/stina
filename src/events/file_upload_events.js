@@ -268,23 +268,11 @@ const FileUploadEventsModule = (function () {
             <strong>${TranslationModule.translate("previewContent")}:</strong>
             <p class="preview-text">${DOMPurify.sanitize(content.slice(0, 300))}${content.length > 300 ? "..." : ""}</p>
           </div>
-          <div class="preview-details-grid">
-            <div class="detail-item">
-              <span class="detail-title">${TranslationModule.translate("previewDocumentTokens")}</span>: 
-              <span class="detail-value">${documentTokens}</span>
-            </div>
-            <div class="detail-item">
-              <span class="detail-title">${TranslationModule.translate("previewModelTokenLimit")}</span>: 
-              <span class="detail-value">${modelTokenLimit}</span>
-            </div>
-            <div class="detail-item">
-              <span class="detail-title">${TranslationModule.translate("previewHistoryTokens")}</span>: 
-              <span class="detail-value">${historyTokens}</span>
-            </div>
-            <div class="detail-item">
-              <span class="detail-title">${TranslationModule.translate("previewPendingTokens")}</span>: 
-              <span class="detail-value">${pendingTokens}</span>
-            </div>
+          <div class="preview-details-pills">
+            <span class="pill"><strong>${TranslationModule.translate("previewDocumentTokens")}</strong>: ${documentTokens}</span>
+            <span class="pill"><strong>${TranslationModule.translate("previewModelTokenLimit")}</strong>: ${modelTokenLimit}</span>
+            <span class="pill"><strong>${TranslationModule.translate("previewHistoryTokens")}</strong>: ${historyTokens}</span>
+            <span class="pill"><strong>${TranslationModule.translate("previewPendingTokens")}</strong>: ${pendingTokens}</span>
           </div>
         </div>
         <hr>

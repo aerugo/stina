@@ -211,3 +211,20 @@
 .option-label input {
   margin-right: 0.3rem;
 }
+
+/* Pill element styles for document details */
+.preview-details-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.pill {
+  background-color: #e0e0e0; /* adjust the color or use a variable if desired */
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.9rem;
+  color: var(--text-color);
+  display: inline-block;
+}
