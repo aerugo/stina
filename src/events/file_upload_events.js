@@ -253,29 +253,51 @@ const FileUploadEventsModule = (function () {
 
     // Build modal content that combines preview info and classification options
     let modalContent = `
-      <div>
-        <p><strong>${TranslationModule.translate("previewFileName") || "File Name"}: </strong>${DOMPurify.sanitize(file.name)}</p>
-        <p><strong>${TranslationModule.translate("previewContent") || "Content Preview"}: </strong>${DOMPurify.sanitize(content.slice(0, 300))}${content.length > 300 ? "..." : ""}</p>
-        <p><strong>${TranslationModule.translate("previewDocumentTokens") || "Document Tokens"}: </strong>${documentTokens}</p>
-        <p><strong>${TranslationModule.translate("previewModelTokenLimit") || "Model Token Limit"}: </strong>${modelTokenLimit}</p>
-        <p><strong>${TranslationModule.translate("previewHistoryTokens") || "History Tokens"}: </strong>${historyTokens}</p>
-        <p><strong>${TranslationModule.translate("previewPendingTokens") || "Pending Documents Tokens"}: </strong>${pendingTokens}</p>
+      <div class="modal-preview-container">
+        <div class="preview-header">
+          <h3>${TranslationModule.translate("previewFileName")}: ${DOMPurify.sanitize(file.name)}</h3>
+        </div>
+        <div class="preview-body">
+          <div class="preview-detail">
+            <strong>${TranslationModule.translate("previewContent")}:</strong>
+            <p class="preview-text">${DOMPurify.sanitize(content.slice(0, 300))}${content.length > 300 ? "..." : ""}</p>
+          </div>
+          <div class="preview-details-grid">
+            <div class="detail-item">
+              <span class="detail-title">${TranslationModule.translate("previewDocumentTokens")}</span>: 
+              <span class="detail-value">${documentTokens}</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-title">${TranslationModule.translate("previewModelTokenLimit")}</span>: 
+              <span class="detail-value">${modelTokenLimit}</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-title">${TranslationModule.translate("previewHistoryTokens")}</span>: 
+              <span class="detail-value">${historyTokens}</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-title">${TranslationModule.translate("previewPendingTokens")}</span>: 
+              <span class="detail-value">${pendingTokens}</span>
+            </div>
+          </div>
+        </div>
         <hr>
-        <p>${TranslationModule.translate("chooseInformationClass")} <strong>${DOMPurify.sanitize(file.name)}</strong>:</p>
-        <div style="margin: 1rem 0;">
+        <div class="classification-section">
+          <h3>${TranslationModule.translate("classificationModalTitle")}</h3>
+          <form id="classification-form">
     `;
 
     // Add classification radio buttons
-    classificationOptions.forEach((option, index) => {
-      modalContent += `
-        <label class="radio">
-          <input type="radio" name="info-class" value="${option}" ${index === 0 ? "checked" : ""} />
-          ${option}
-        </label><br>
-      `;
-    });
-    
-    modalContent += `</div></div>`;
+            ${classificationOptions.map((option, index) => `
+              <label class="radio option-label">
+                <input type="radio" name="classification" value="${option}" ${index === 0 ? "checked" : ""}>
+                <span>${option}</span>
+              </label>
+            `).join('')}
+          </form>
+        </div>
+      </div>
+    `;
 
     // Modal buttons
     const buttons = [
@@ -310,7 +332,7 @@ const FileUploadEventsModule = (function () {
     );
 
     function getSelectedClassification() {
-      const radios = document.querySelectorAll('input[name="info-class"]');
+      const radios = document.querySelectorAll('input[name="classification"]');
       for (const r of radios) {
         if (r.checked) return r.value;
       }

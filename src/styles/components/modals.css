@@ -152,3 +152,62 @@
     border: 1px solid var(--border-color);
     color: var(--text-color);
 }
+
+/* Combined Preview & Classification Modal Styles */
+.modal-preview-container {
+  padding: 1rem;
+  font-family: sans-serif;
+}
+
+.preview-header h3 {
+  margin-bottom: 0.5rem;
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 0.5rem;
+}
+
+.preview-body {
+  margin: 1rem 0;
+}
+
+.preview-detail {
+  margin-bottom: 1rem;
+}
+
+.preview-text {
+  background: #f8f8f8;
+  padding: 0.5rem;
+  border-radius: 4px;
+  font-size: 0.95em;
+}
+
+.preview-details-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.detail-item {
+  background: #f0f0f0;
+  padding: 0.5rem;
+  border-radius: 4px;
+  text-align: center;
+}
+
+.detail-title {
+  font-weight: bold;
+}
+
+.classification-section {
+  margin-top: 1rem;
+}
+
+.option-label {
+  display: inline-block;
+  margin-right: 1rem;
+  cursor: pointer;
+}
+
+.option-label input {
+  margin-right: 0.3rem;
+}
