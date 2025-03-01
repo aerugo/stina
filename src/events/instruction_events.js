@@ -11,7 +11,9 @@ const InstructionEventsModule = (function () {
     instructionsSelect = document.getElementById("instructions-select");
 
     editInstructionBtn.addEventListener("click", handleEditInstructionClick);
-    instructionsSelect.addEventListener("change", handleInstructionChange);
+    instructionsSelect.addEventListener("change", function() {
+      handleInstructionChange.call(this);
+    });
 
     populateInstructions();
   }
@@ -108,7 +110,7 @@ const InstructionEventsModule = (function () {
     }
   }
 
-  function handleInstructionChange() {
+  async function handleInstructionChange() {
     if (this.value === "custom") {
       ModalModule.showEditInstructionModal(
         TranslationModule.translate("createCustomInstructionTitle"),
@@ -127,6 +129,7 @@ const InstructionEventsModule = (function () {
 
             await populateInstructions();
             instructionsSelect.value = newInstruction.id;
+            await StorageModule.saveData("selectedInstructionId", newInstruction.id);
             ConfigModule.updateConfig({
               selectedInstructionId: newInstruction.id,
             });
@@ -144,10 +147,12 @@ const InstructionEventsModule = (function () {
         }
       );
     } else {
-      ConfigModule.updateConfig({ selectedInstructionId: this.value });
+      const newInstructionId = this.value;
+      await StorageModule.saveData("selectedInstructionId", newInstructionId);
+      ConfigModule.updateConfig({ selectedInstructionId: newInstructionId });
       const currentChat = ChatModule.getCurrentChat();
       if (currentChat) {
-        currentChat.selectedInstructionId = this.value;
+        currentChat.selectedInstructionId = newInstructionId;
         ChatModule.saveChats();
       }
       updateEditButtonVisibility();

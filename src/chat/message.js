@@ -171,25 +171,35 @@ const MessageModule = (function () {
     // Declare instruction variable outside the if block so it's available for the API request
     let instruction = null;
 
+    // Declare instruction variable outside the if block so it's available for the API request
+    let instruction = null;
+    let instructionLabel = "";
+
     // Handle system message if the model supports it (undefined is treated as supported)
     if (selectedModelParams && selectedModelParams.system !== false) {
       // Get latest instruction ID and custom instructions
       const selectedInstructionId =
-        currentChat.selectedInstructionId || instructions[0].id;
+        currentChat.selectedInstructionId || 
+        config.selectedInstructionId ||
+        (window.instructions && window.instructions[0] ? window.instructions[0].id : null);
+      
       const customInstructions =
         await StorageModule.loadData("customInstructions") || [];
 
       // Find selected instruction
       instruction =
-        customInstructions.find(
-          (instr) => instr.id === selectedInstructionId
-        ) || instructions.find((instr) => instr.id === selectedInstructionId);
+        customInstructions.find((instr) => instr.id === selectedInstructionId) ||
+        window.instructions.find((instr) => instr.id === selectedInstructionId) ||
+        (window.instructions && window.instructions[0]) ||
+        null;
 
       if (!instruction) {
-        instruction = instructions[0]; // Fallback to default instruction
+        // This fallback should not normally occur.
+        console.warn("No valid instruction found; falling back to default.");
+        instruction = window.instructions && window.instructions[0];
       }
 
-      instructionLabel = instruction.label;
+      instructionLabel = instruction ? instruction.label : "";
     }
 
     // Conditionally merge attached file contents into user messages, skipping ignored files.
@@ -215,7 +225,7 @@ const MessageModule = (function () {
     });
       
     // Prepare the messages normally:
-    if (selectedModelParams && selectedModelParams.system) {
+    if (selectedModelParams && selectedModelParams.system !== false) {
       // Prepare messages using the provider's method with instruction
       conversationToSend = providerInstance.prepareMessages(
         conversationToSend,
