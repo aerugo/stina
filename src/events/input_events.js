@@ -32,11 +32,22 @@ const InputEventsModule = (function () {
     }
     
     // Calculate additional tokens from attached files (excluding ignored ones)
+    // Use the token count for the selected summary if available, otherwise use the full file token count.
     let attachedFilesTokens = 0;
     chat.conversation.forEach(msg => {
       if (msg.role === "user" && msg.attachedFiles && Array.isArray(msg.attachedFiles)) {
         attachedFilesTokens += msg.attachedFiles.reduce((sum, file) => {
-          return sum + (!file.ignored ? (file.tokenCount || 0) : 0);
+          if (file.ignored) {
+            return sum;
+          }
+          if (file.selectedSummaryId && file.summaries && file.summaries.length > 0) {
+            const summaryObj = file.summaries.find(s => s.id === file.selectedSummaryId);
+            if (summaryObj) {
+              // Count tokens for the displayed summary text
+              return sum + TokenizationModule.countTokens(`[SUMMARY: ${summaryObj.name}]\n\n${summaryObj.content}`);
+            }
+          }
+          return sum + (file.tokenCount || 0);
         }, 0);
       }
     });
