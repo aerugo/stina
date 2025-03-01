@@ -285,9 +285,6 @@ const FileUploadEventsModule = (function () {
         <div class="classification-section">
           <h3>${TranslationModule.translate("classificationModalTitle")}</h3>
           <form id="classification-form">
-    `;
-
-    // Add classification radio buttons
             ${classificationOptions.map((option, index) => `
               <label class="radio option-label">
                 <input type="radio" name="classification" value="${option}" ${index === 0 ? "checked" : ""}>
