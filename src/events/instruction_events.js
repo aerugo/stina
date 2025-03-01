@@ -22,7 +22,9 @@ const InstructionEventsModule = (function () {
     const config = ConfigModule.getConfig();
 
     const customInstructions = (await StorageModule.loadData("customInstructions")) || [];
-    window.instructions = (window.defaultInstructions || []).concat(customInstructions);
+    window.instructions = (window.defaultInstructions || [])
+      .concat(window.additionalInstructions || [])
+      .concat(customInstructions);
 
     const selectedInstructionId = 
       (currentChat && currentChat.selectedInstructionId) ||
