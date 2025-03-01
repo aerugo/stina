@@ -163,38 +163,46 @@ const RenderingModule = (function () {
           `;
           
           // Add click event to show file content in a modal
-          pill.addEventListener("click", () => {
-            ModalModule.showCustomModal(
-              TranslationModule.translate("documentInfoTitle") || "Document Info",
-              `<p><strong>${TranslationModule.translate("fileName") || "File"}:</strong> ${DOMPurify.sanitize(file.fileName)}</p>
-               <p><strong>${TranslationModule.translate("classification") || "Classification"}:</strong> ${file.classification}</p>
-               <p><strong>${TranslationModule.translate("tokenCount") || "Token Count"}:</strong> ${file.tokenCount}</p>
-               <hr>
-               <div class="file-content-preview">${DOMPurify.sanitize(file.content)}</div>
-               <hr>
-               <label class="checkbox" style="margin-top: 1em;">
-                 <input type="checkbox" id="ignore-file-checkbox" ${file.ignored ? "checked" : ""} />
-                 <span style="margin-left: 0.5rem;">Ignore This Document</span>
-               </label>`,
-              [{ label: TranslationModule.translate("ok") || "OK", value: true }],
-              () => {
-                const ignoreCheckbox = document.getElementById("ignore-file-checkbox");
-                if (ignoreCheckbox) {
-                  const newIgnoredValue = ignoreCheckbox.checked;
-                  file.ignored = newIgnoredValue;
-                  
-                  // Save the updated conversation (including the 'ignored' flag)
-                  MessageModule.saveConversation(
-                    ChatModule.getCurrentState().currentChatId,
-                    ChatModule.getCurrentState().conversation
-                  );
-                  
-                  // Re-render the conversation to update the file pill style
-                  RenderingModule.renderConversation(ChatModule.getCurrentState().conversation);
+          if (message.attachmentsLocked) {
+            // Already sent—read-only view (no ignore toggle)
+            pill.addEventListener("click", () => {
+              ModalModule.showCustomModal(
+                TranslationModule.translate("documentInfoTitle") || "Document Info",
+                `<p><strong>${TranslationModule.translate("fileName") || "File"}:</strong> ${DOMPurify.sanitize(file.fileName)}</p>
+                 <p><strong>${TranslationModule.translate("classification") || "Classification"}:</strong> ${file.classification}</p>
+                 <p><strong>${TranslationModule.translate("tokenCount") || "Token Count"}:</strong> ${file.tokenCount}</p>
+                 <hr>
+                 <div class="file-content-preview">${DOMPurify.sanitize(file.content)}</div>`,
+                [{ label: TranslationModule.translate("ok") || "OK", value: true }]
+              );
+            });
+          } else {
+            // Pending attachments—allow toggling the "ignore" state.
+            pill.addEventListener("click", () => {
+              ModalModule.showCustomModal(
+                TranslationModule.translate("documentInfoTitle") || "Document Info",
+                `<p><strong>${TranslationModule.translate("fileName") || "File"}:</strong> ${DOMPurify.sanitize(file.fileName)}</p>
+                 <p><strong>${TranslationModule.translate("classification") || "Classification"}:</strong> ${file.classification}</p>
+                 <p><strong>${TranslationModule.translate("tokenCount") || "Token Count"}:</strong> ${file.tokenCount}</p>
+                 <hr>
+                 <div class="file-content-preview">${DOMPurify.sanitize(file.content)}</div>
+                 <hr>
+                 <label class="checkbox" style="margin-top: 1em;">
+                   <input type="checkbox" id="ignore-file-checkbox" ${file.ignored ? "checked" : ""} />
+                   <span style="margin-left: 0.5rem;">Ignore This Document</span>
+                 </label>`,
+                [{ label: TranslationModule.translate("ok") || "OK", value: true }],
+                () => {
+                  const ignoreCheckbox = document.getElementById("ignore-file-checkbox");
+                  if (ignoreCheckbox) {
+                    file.ignored = ignoreCheckbox.checked;
+                    // Re-render the current (pending) conversation section only
+                    RenderingModule.renderConversation(ChatModule.getCurrentChat().conversation);
+                  }
                 }
-              }
-            );
-          });
+              );
+            });
+          }
           
           filesContainer.appendChild(pill);
         });
@@ -209,16 +217,12 @@ const RenderingModule = (function () {
       
       userMessageContainer.appendChild(contentDiv);
       
-      // If there are any ignored attached files, list their file names below the message.
-      if (message.attachedFiles && message.attachedFiles.length > 0) {
-        const ignoredFiles = message.attachedFiles.filter(file => file.ignored);
-        if (ignoredFiles.length > 0) {
-          const ignoredInfoElem = document.createElement("div");
-          ignoredInfoElem.classList.add("ignored-files-summary");
-          const fileNames = ignoredFiles.map(file => DOMPurify.sanitize(file.fileName));
-          ignoredInfoElem.innerText = "Ignored: " + fileNames.join(", ");
-          userMessageContainer.appendChild(ignoredInfoElem);
-        }
+      // For user messages that include an ignore summary (set when sending), display it
+      if (message.ignoredFilesSummary) {
+        const ignoredInfoElem = document.createElement("div");
+        ignoredInfoElem.classList.add("ignored-files-summary");
+        ignoredInfoElem.innerText = message.ignoredFilesSummary;
+        userMessageContainer.appendChild(ignoredInfoElem);
       }
       
       messageElem.appendChild(userMessageContainer);

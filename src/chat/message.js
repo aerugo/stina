@@ -100,11 +100,17 @@ const MessageModule = (function () {
     const attachedFiles = FileUploadEventsModule.getAndClearPendingFiles();
     console.log("Attached Files:", attachedFiles);
     
+    const ignoredFiles = attachedFiles.filter(file => file.ignored);
+    
     const currentState = ChatModule.getCurrentState();
     const newMessage = { 
       role: "user", 
       content: messageContent,
-      attachedFiles: attachedFiles.length > 0 ? attachedFiles : undefined
+      attachedFiles: attachedFiles.length > 0 ? attachedFiles : undefined,
+      attachmentsLocked: true,  // Mark these attachments as locked (historical)
+      ignoredFilesSummary: ignoredFiles.length > 0
+        ? "Ignored: " + ignoredFiles.map(file => file.fileName).join(", ")
+        : undefined
     };
     currentState.conversation.push(newMessage);
 
