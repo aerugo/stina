@@ -2,11 +2,11 @@
 
 <img width="1455" alt="Screenshot 2025-01-15 at 18 12 42" src="https://github.com/user-attachments/assets/382bc604-ac73-46eb-b1e6-fce83db012b5" />
 
-Stina is a lightweight AI chat client specifically designed for environments with strict restrictions. In many government, healthcare, and large corporate settings, stringent IT policies prohibit the use of web servers, installations of new software, or access to online AI chat bots. 
+Stina is a **lightweight AI chat client** specifically designed for environments with strict security or IT restrictions. In government, healthcare, and large corporate settings, installing servers or external dependencies is often **not allowed**; internet access to AI services might be heavily controlled, and only certain APIs or local LLMs (like [Ollama](https://github.com/jmorganca/ollama)) can be used.
 
-**Stina is a client-side solution that requires no server, no installations, and no build tools.** Chat with with LLMs with your own API keys or a local Ollama instance after downloading the repo and opening the chat.html file from the file system.
+**Stina requires no server, no software installation, and no build tools**—just download the repository and open `chat.html` in a modern browser. You can still configure advanced setups via optional JavaScript config files or by editing settings in the UI. Stina supports **multiple LLM providers** (Azure, OpenAI, Anthropic, Ollama), **custom instructions**, dynamic system prompts, and **SharePoint** compatibility.
 
-Stina can be hosted on a SharePoint server, run directly from the filesystem, or accessed through a local web server. It supports multiple language models, custom instructions, and dynamic system prompts.
+---
 
 ## Table of Contents
 
@@ -31,74 +31,80 @@ Stina can be hosted on a SharePoint server, run directly from the filesystem, or
 - [Planned Features](#planned-features)
 - [Contributing](#contributing)
 - [License](#license)
+- [Bundled Libraries and Credits](#bundled-libraries-and-credits)
+
+---
 
 ## Introduction
 
-Stina is an AI chat client built with pure JavaScript, HTML, and CSS. It is designed to function in environments where:
+Stina is an AI chat client built with **pure JavaScript, HTML, and CSS**—no Node.js or build step required. Its key design goals:
 
-- A web server cannot be set up.
-- No installations of software or packages are allowed.
-- Usage of online AI chat bots is prohibited.
-- There is access to API keys for language models or an Ollama instance.
+- **Run from the local filesystem** (open `chat.html` directly). 
+- **Zero server dependencies**—everything is processed client-side, except for calls to your chosen LLM endpoints (Azure, OpenAI, etc.).
+- **Strict-environment friendly**—ideal for locked-down enterprise or government setups.
+- **Ollama integration**—use local LLMs if you have Ollama running on your machine.
+
+---
 
 ## Features
 
-- **No Build Dependencies**: Run directly from the filesystem without any server or installations or dependencies.
-- **API Key Support**: Connect to various language models using your own API keys. Currently supports Azure AI Foundry, OpenAI, and Anthropic.
-- **Ollama Integration**: Supports local language models via Ollama.
-- **Dynamic System Prompts**: Configure and change system prompts (custom instructions) during conversations, allowing you to switch contexts seamlessly.
-- **Model Switching**: Change between different language models in the middle of a conversation.
-- **Customization**: Easily modify the code or configurations without build tools. In environments that don't support Node.js and NPM, Stina is ideal.
-- **Multi-language Support**: Includes localization support for multiple languages. Currently, English and Swedish are supported.
-- **SharePoint Compatibility**: Can be served through a SharePoint server by renaming `chat.html` to `chat.aspx`.
-- **User-friendly Interface**: Clean and simple UI for seamless interaction.
+- **No Build Dependencies**: Simply download and open `chat.html`. No server or package installations are needed.
+- **API Key Support**: Connect to Azure AI Foundry, OpenAI, Anthropic, or other providers using your own keys.
+- **Ollama Integration**: Run local language models if you have [Ollama](https://github.com/jmorganca/ollama) installed.
+- **Dynamic System Prompts (Instructions)**: Edit or add new instructions to change the assistant’s behavior on the fly.
+- **Multiple Models**: Switch to different models mid-chat (e.g., from GPT-4 to GPT-3.5 or a local model).
+- **Multi-language UI**: English and Swedish translations are included by default.
+- **SharePoint Compatibility**: Rename `chat.html` to `chat.aspx` and upload to SharePoint if that’s your environment.
+- **User-Friendly**: A simple, clean interface with a sidebar of chats, an input area, and a customizable prompt toolbar.
+
+---
 
 ## Getting Started
 
 ### Prerequisites
 
-- A modern web browser (Chrome, Firefox, Edge, or Safari).
-- API keys for language models (e.g., OpenAI, Azure, Anthropic) or access to an Ollama instance.
+- A **modern web browser** (Chrome, Firefox, Edge, or Safari).  
+- (Optional) **API keys** for your desired LLM provider(s) (Azure, OpenAI, Anthropic).  
+- (Optional) A **local Ollama instance** if you want to run local LLMs.
 
 ### Installation
 
-1. **Clone or Download the Repository**
-
+1. **Clone or Download** this repository:
    ```bash
    git clone https://github.com/yourusername/stina.git
    ```
+   or download the ZIP and extract it.
 
-   Or download the ZIP file and extract it.
+2. **(Optional) Add Keys/Configs**: If you wish to predefine providers or instructions, see [Using Configuration Files](#using-configuration-files).
 
-2. **Set Up API Keys**
+3. **Open `chat.html`**: 
+   - **Directly**: Double-click `chat.html` or select “File > Open...” in your browser.
+   - If your browser blocks local file scripts for security reasons, you can:
+     - Change local security settings, or
+     - Temporarily serve the folder via a minimal local server (e.g., `python -m http.server 8080`) and visit `http://localhost:8080/chat.html`.
+   - If you are on a closed network that supports SharePoint, see [Accessing Through SharePoint](#accessing-through-sharepoint).
 
-   Obtain API keys from your language model provider (e.g., Azure AI Foundry, OpenAI). If using Ollama, ensure it's running locally.
+---
 
 ## Configuration
 
-Stina can be configured using template files or directly in the browser's local storage.
+Stina can pull configuration from optional JavaScript files **or** from local storage via the UI. This helps in strict environments: you can either edit the code or just do everything in-memory via a “Settings” modal.
 
 ### Using Configuration Files
 
-1. **Locate Template Files**
-
+1. **Locate Template Files** (if provided or in your custom fork):
    - `providers.template.js`
    - `models.template.js`
    - `instructions.template.js`
 
-2. **Create Configuration Files**
-
-   Copy the template files and rename them:
-
+2. **Create Actual Configuration Files**:
    - `providers.template.js` → `providers.js`
    - `models.template.js` → `models.js`
    - `instructions.template.js` → `instructions.js`
 
-3. **Edit Configuration Files**
-
-   - **providers.js**: Enable providers and insert your API keys and endpoints.
-
-     ```javascript
+3. **Edit Configuration**:
+   - **providers.js**: Enable/disable providers and insert your API keys/endpoints:
+     ```js
      window.providerConfigs = {
        azure: {
          enabled: true,
@@ -109,24 +115,15 @@ Stina can be configured using template files or directly in the browser's local 
          enabled: false,
          apiKey: "YOUR_OPENAI_API_KEY",
        },
-       ollama: {
-         enabled: false,
-         endpoint: "http://localhost:11434",
-       },
-       anthropic: {
-         enabled: false,
-         apiKey: "",
-       },
+       // ...
      };
      ```
-
-   - **models.js**: Define custom models or override existing ones. Stina currently only supports setting model configurations through the models file. If you need models with differnt temperature, max tokens, or context length, you can add them here.
-
-     ```javascript
+   - **models.js**: Add or override model definitions, including temperature, max tokens, etc.:
+     ```js
      window.additionalModels = {
        "gpt-4-custom": {
          label: "GPT-4 Custom",
-         deployment: "your-deployment-name",
+         deployment: "your-azure-deployment",
          provider: "azure",
          context_length: 8000,
          max_tokens: 2000,
@@ -135,347 +132,211 @@ Stina can be configured using template files or directly in the browser's local 
        },
      };
      ```
-
-   - **instructions.js**: Add additional assistant instructions.
-
-     ```javascript
+   - **instructions.js**: Add additional instructions or system prompts:
+     ```js
      window.additionalInstructions = [
        {
          id: "custom_instructor",
          order: 3,
          label: "Custom Instructor",
-         content: "Provide guidance in a friendly and concise manner.",
+         content: "Provide guidance in a friendly, concise manner.",
        },
      ];
      ```
 
 ### In-Memory Configuration
 
-If you cannot use configuration files, Stina allows setting configurations in memory through the settings UI.
+If you cannot create/edit local files or prefer not to:
 
-1. **Open Stina**: Open `chat.html` in your web browser.
-2. **Access Settings**: Click on the `Settings` button in the top navigation bar.
-3. **Configure Providers**: In the `Providers` section, enable the desired providers and input your API keys and endpoints.
-4. **Set Language**: Navigate to the `Language` tab to change the interface language.
-5. **Save Changes**: Click `Save Changes` to apply the configurations.
+1. **Open Stina**—just open `chat.html` in your browser.
+2. **Click “Settings”** (top-right gear icon).
+3. **Providers** tab:
+   - Enable providers and enter your keys/URLs.  
+4. **Language** tab:
+   - Switch the UI between English and Swedish (or your custom translations if added).  
+5. **Data** tab:
+   - Import/export chats, clear all local storage, etc.
 
-**Note**: In-memory configurations are stored in the browser's local storage and will persist across sessions on the same machine and browser.
+These **in-memory** settings are stored in your browser’s **IndexedDB** (and partially local storage). They persist for that browser/profile on the same machine.
 
 ### Configuring Azure AI Foundry with User-Provided API Keys
 
-In environments where the Azure AI Foundry endpoint is shared, but each user must provide their own API key (e.g., to ensure that only cleared users can access the API), you can set up Stina to use a common endpoint while requiring individual users to input their own API keys.
+You can set up a **common Azure endpoint** but require each user to enter their own API key:
 
-**Steps to Configure:**
-
-1. **Edit `providers.js`**
-
-   - Copy `providers.template.js` to `providers.js` if you haven't already.
-   - Set up the Azure provider with the shared endpoint and leave the `apiKey` field empty or omit it entirely.
-
-   ```javascript
+1. **Edit `providers.js`**:
+   ```js
    window.providerConfigs = {
      azure: {
        enabled: true,
        endpoint: "https://YOUR_RESOURCE_NAME.openai.azure.com",
-       // No apiKey provided here to require users to input their own
+       // Omit apiKey so each user enters their own
      },
-     openai: {
-       enabled: false,
-     },
-     ollama: {
-       enabled: false,
-     },
-     anthropic: {
-       enabled: false,
-     },
+     openai: { ... },
+     // ...
    };
    ```
+2. **User Steps**:
+   - **Open** `chat.html` → **Settings** → **Providers** → **Azure** → input personal `apiKey`.
+   - **Save** → The key is stored locally in that user’s browser.
 
-2. **User Instructions**
+**Advantages**:  
+- Maintains **security** by not bundling any shared key.  
+- Centralizes the endpoint while letting each user handle their own credentials.
 
-   - **Open Stina**: Users open `chat.html` in their web browser.
-   - **Access Settings**: Click on the `Settings` button in the top navigation bar.
-   - **Enter API Key**:
-     - Navigate to the `Providers` tab if not already there.
-     - Locate the Azure provider configuration.
-     - Enter their personal Azure AI Foundry API key in the `API Key` field.
-   - **Save Changes**: Click `Save Changes` to store the API key securely in the browser's local storage.
-
-**Benefits of This Configuration**:
-
-- **Security Compliance**: Only authorized users with valid API keys can access the AI services, adhering to organizational security policies.
-- **Centralized Endpoint Management**: The endpoint is pre-configured, reducing setup complexity for individual users.
-- **User Accountability**: Each user is responsible for their own API key, ensuring traceability and accountability.
-
-**Notes**:
-
-- **API Key Security**: Users should keep their API keys confidential and avoid sharing them.
-- **Local Storage**: The API key is stored in the browser's local storage and is not transmitted or shared.
-- **Provider Configuration**: Ensure that other providers are disabled if not in use, to prevent unauthorized access.
+---
 
 ## Usage
 
 ### Running Stina
 
-1. **Open the Application**
-
-   - Double-click on `chat.html` to open it in your default web browser.
-   - Alternatively, open the file from within your browser by navigating to `File` → `Open File`.
-
-2. **Initial Setup**
-
-   - Upon first launch, you may need to configure your providers if not using configuration files.
+1. **Open `chat.html`** in your browser.
+2. **Initial Setup**:
+   - If you do not have any config files, you may need to add your keys in **Settings**.
 
 ### Using Features
 
-- **Starting a New Chat**
-
-  - Click on the `New Chat` button to start a fresh conversation.
-
-- **Sending Messages**
-
-  - Type your message in the input box at the bottom and press `Enter` or click the `Send` button.
-
-- **Switching Models**
-
-  - Use the model selector in the toolbar below the input box to change the language model.
-
-- **Using Instructions**
-
-  - Select predefined instructions to guide the assistant's behavior.
-  - Create custom instructions by selecting `Create new instruction...` from the instructions dropdown.
-
-- **Managing Chats**
-
-  - All active chats are listed in the sidebar. Click on a chat to switch to it.
-  - Delete a chat by clicking the `×` button next to the chat name in the sidebar.
-
-- **Settings**
-
-  - Access settings to configure providers, API keys, endpoints, and language preferences.
+- **New Chat**:
+  - Click **New Chat** in the navbar. 
+- **Sending Messages**:
+  - Type in the bottom input box; press **Enter** or click **Send**.
+- **Switching Models**:
+  - Use the **model selector** in the toolbar beneath the input to switch LLMs.
+- **Instructions (System Prompts)**:
+  - Drop down the **instructions** menu. Choose an existing prompt or select `Create new instruction...`.
+- **Sidebar Management**:
+  - All chats are listed in the **left sidebar**. Click to switch; click `×` to delete.
+- **Settings**:
+  - Configure providers, API keys, endpoints, language, etc.
 
 ### Example: Collaborating with Mini-Agents
 
-One of the powerful features of Stina is the ability to define and interact with multiple specialized "mini-agents" within a single conversation. By switching between custom instructions and models, you can simulate a collaborative environment with experts in different domains.
-
-#### Step-by-Step Usage Example
-
 <img width="892" alt="Screenshot 2025-01-15 at 18 11 49" src="https://github.com/user-attachments/assets/1fb31c50-266d-4f7a-9948-f8a560c37ca7" />
 
-**Objective**: You are working on drafting a technical policy document and need input from both a technical expert and a legal expert.
+**Scenario**: You want input from both a technical specialist and a legal specialist in the same conversation.
 
-1. **Create Custom Instructions**
+1. **Create Instructions**  
+   - “Technical Expert” → a prompt for network security topics.  
+   - “Legal Expert” → a prompt for regulatory compliance.
 
-   - **Technical Expert**
+2. **Select Technical Expert**  
+   - Send questions on infrastructure best practices; get specialized answers.
 
-     - Go to the instructions dropdown below the input box.
-     - Select **Create new instruction...**.
-     - In the modal that appears, fill in:
-       - **Title**: `Technical Expert`
-       - **Content**:
-         ```
-         You are a technical expert specializing in network security and infrastructure. Provide detailed technical insights and recommendations.
-         ```
-     - Click **Save**.
+3. **Switch to Legal Expert**  
+   - In the instructions dropdown, pick “Legal Expert.” Ask about compliance or privacy regulations.
 
-   - **Legal Expert**
+4. **Switch Models (optional)**  
+   - If you have different models for different tasks, select them in the model dropdown.
 
-     - Repeat the above steps to create another instruction:
-       - **Title**: `Legal Expert`
-       - **Content**:
-         ```
-         You are a legal expert with knowledge in corporate law and compliance. Provide legal advice and ensure all recommendations adhere to regulatory standards.
-         ```
-     - Click **Save**.
+5. **Continue**  
+   - The chat retains context. You can jump back to the “Technical Expert” at any time.
 
-2. **Start the Conversation**
+6. **Export**  
+   - In **Settings** > **Data** > Export Chat, you can save the conversation as JSON.
 
-   - **Select the Technical Expert**
+**Benefit**: You effectively have **two different system prompts** in the same conversation, letting you switch roles fluidly.
 
-     - In the instructions dropdown, select **Technical Expert**.
-
-   - **Interact with the Technical Expert**
-
-     - Ask your technical questions, for example:
-       ```
-       What are the best practices for securing our network infrastructure against cyber attacks?
-       ```
-     - Receive detailed technical advice from the assistant.
-
-3. **Switch to the Legal Expert**
-
-   - **Change the Instruction**
-
-     - In the instructions dropdown, select **Legal Expert**.
-
-   - **Interact with the Legal Expert**
-
-     - Ask your legal questions, for example:
-       ```
-       Are there any compliance issues we need to be aware of when implementing these security measures?
-       ```
-     - Receive legal guidance from the assistant.
-
-4. **Switch Between Models (Optional)**
-
-   - If you have different models configured that are better suited for technical or legal advice, you can switch between them:
-
-     - Use the model selector to choose the appropriate model at any time.
-
-5. **Continue the Conversation**
-
-   - **Iterate as Needed**
-
-     - Continue switching between the **Technical Expert** and **Legal Expert** as your conversation progresses.
-     - Refine your document based on the insights provided.
-
-6. **Save or Export Your Conversation**
-
-   - **Preserve the Discussion**
-
-     - Your conversation, along with the context of each mini-agent, is saved within the chat session.
-     - You can refer back to previous messages or export the conversation as needed.
-
-**Benefits of This Approach**:
-
-- **Contextual Expertise**: Tailor the assistant's knowledge to specific domains by defining custom instructions.
-- **Dynamic Switching**: Seamlessly switch between different experts without starting new chats.
-- **Efficiency**: Consolidate all relevant discussions into a single conversation for easy reference.
-- **Flexibility**: Adjust instructions and models on the fly to adapt to your evolving needs.
-
-**Note**: The assistant maintains the conversation history, so even when you switch instructions or models, it retains the context from previous messages. This allows for coherent and continuous dialogue across different domains.
+---
 
 ## Customization
 
-Stina is designed to be easily customizable, allowing you to tailor it to your specific needs.
-
 ### Adding Custom Instructions
 
-1. **Through the Application**
-
-   - In the instructions dropdown, select `Create new instruction...`.
-   - Provide a title and content for your instruction.
-   - Save the instruction to have it available in the dropdown menu.
-
-2. **Using `instructions.js`**
-
-   - If you have access to the filesystem, edit `instructions.js` to add custom instructions.
-
-   - Example:
-
-     ```javascript
-     window.additionalInstructions = [
-       {
-         id: "friendly-assistant",
-         order: 4,
-         label: "Friendly Assistant",
-         content: "You are a friendly assistant who provides helpful and kind responses.",
-       },
-     ];
-     ```
+1. **In the UI**:  
+   - `Create new instruction...` from the instructions dropdown → name it, write content, save.
+2. **Using `instructions.js`** (filesystem approach):  
+   ```js
+   window.additionalInstructions = [
+     { 
+       id: "friendly-assistant", 
+       order: 4, 
+       label: "Friendly Assistant", 
+       content: "Provide kind, helpful responses."
+     }
+   ];
+   ```
 
 ### Adding Custom Models
 
-1. **Using `models.js`**
+1. **Using `models.js`**:
+   ```js
+   window.additionalModels = {
+     "custom-model": {
+       label: "Custom Model",
+       deployment: "gpt-3.5-mydeployment",
+       provider: "openai",
+       max_tokens: 1500,
+       temperature: 0.5,
+       system: true
+     }
+   };
+   ```
 
-   - Copy `models.template.js` to `models.js`.
-   - Add your custom model configurations as shown:
+If you have `providers.js` set up, ensure that `custom-model` references a provider that’s enabled.
 
-     ```javascript
-     window.additionalModels = {
-       "custom-model": {
-         label: "Custom Model",
-         deployment: "your-deployment-name",
-         provider: "openai",
-         max_tokens: 1500,
-         temperature: 0.5,
-         system: true,
-       },
-     };
-     ```
-
-**Note**: Customization through files requires access to modify files on the filesystem.
+---
 
 ## Data Privacy
 
-Stina is designed with privacy in mind. All chat history and user data are stored **only** in the browser's local storage. This means:
+- **Local Storage**: Chat history, instructions, and configurations persist in your **browser’s IndexedDB**. 
+- **No Server**: No messages or data are sent to any server outside of calls to the configured LLM endpoints. 
+- **Self-Control**: You can clear all data in **Settings** > **Data** or by clearing your browser’s storage.
 
-- **Local Storage**: Your conversations are kept locally on your machine within your browser's storage.
-- **No Server Transmission**: Messages are not sent to or stored on any servers beyond what is necessary to communicate with the AI API endpoints you have configured.
-- **Session Persistence**: Your chat history is preserved between sessions on the same machine and browser.
-- **Data Control**: You have full control over your data. Clearing your browser's cache or local storage will permanently delete your chat history.
+*Note: On shared machines, other users with the same browser profile could access your stored data.*
 
-**Note**: Be cautious when using shared or public computers. Other users with access to the same machine and browser may be able to view your chat history stored in the local storage.
+---
 
 ## Accessing Through SharePoint
 
-If you need to share Stina via SharePoint:
+If you need to **host Stina on SharePoint**:
 
-1. **Rename File**
+1. Rename `chat.html` to `chat.aspx`.
+2. Upload `chat.aspx` and all `src/` files to your SharePoint document library, preserving their structure.
+3. Access the `.aspx` page in SharePoint to run Stina.
 
-   - Rename `chat.html` to `chat.aspx`.
-
-2. **Upload to SharePoint**
-
-   - Add the `chat.aspx` file and all associated resources to your SharePoint document library.
-
-3. **Access the Application**
-
-   - Navigate to the `chat.aspx` file in SharePoint to run the application.
-
-**Note**: Ensure that all script files and assets are uploaded and accessible in the same directory structure.
+---
 
 ## Planned Features
 
-Stina is a work in progress, maintained in collaboration with the community. Here are some planned features and enhancements:
+- **Export/Import**: More robust import/export (JSON or YAML).  
+- **Advanced File Upload**: Parse PDFs, DOCX (partially supported now), images, or entire knowledge bases.  
+- **Vector Database**: Possibly store large doc sets for advanced retrieval-augmented generation.  
+- **Additional Providers**: Add more LLM endpoints as usage demands.
 
-- **Export and Import Conversations**: Implement the ability to export and import conversations using YAML files for easy sharing and backup.
-- **File Upload Support**: Enable users to upload files, extract text from PDFs and other documents, and use vision models for image processing.
-- **In-Memory Vector Databases**: Consider integrating in-memory vector databases to allow adding large numbers of files or large documents, enabling in-memory Retrieval-Augmented Generation (RAG) within conversations.
-- **Additional Providers**: Extend support for more AI providers to offer users a wider range of models and services.
-
+---
 
 ## Contributing
 
-Contributions are welcome! We are eager to collaborate with the community to implement new features and improve Stina. If you're interested in working on any of the planned features or have ideas of your own, please follow these steps:
+We welcome community contributions! Feel free to:
 
-1. **Fork the Repository**
+1. **Fork** the repo.  
+2. **Create a branch** (`feature/your-feature`).  
+3. **Commit and push** changes.  
+4. **Open a Pull Request**, describing your feature or fix.
 
-2. **Create a Feature Branch**
-
-   ```bash
-   git checkout -b feature/your-feature-name
-   ```
-
-3. **Commit Your Changes**
-
-   ```bash
-   git commit -am 'Add new feature: Your Feature Name'
-   ```
-
-4. **Push to the Branch**
-
-   ```bash
-   git push origin feature/your-feature-name
-   ```
-
-5. **Open a Pull Request**
-
-   - Provide a clear description of your changes and indicate which planned feature you are contributing to.
+---
 
 ## License
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+Stina is licensed under the **MIT License**. See the [LICENSE](LICENSE) file for details.
+
+---
 
 ## Bundled Libraries and Credits
 
-Stina uses the following open-source projects and libraries:
+Stina includes or references:
 
-- **Bulma** (MIT License): A modern CSS framework based on Flexbox.  
-  [https://bulma.io](https://bulma.io)
-- **Marked.js** (MIT License): A fast and lightweight Markdown parsing library.  
-  [https://marked.js.org](https://marked.js.org)
-- **DOMPurify** (Apache-2.0 License): An HTML sanitization library that protects against XSS attacks.  
-  [https://github.com/cure53/DOMPurify](https://github.com/cure53/DOMPurify)
-- **highlight.js** (BSD-3-Clause License): A library for syntax highlighting of code blocks.  
-  [https://highlightjs.org](https://highlightjs.org)
+- **Bulma** (MIT License): CSS framework for styling.  
+  <https://bulma.io>  
+- **Marked.js** (MIT License): Fast, lightweight Markdown parser.  
+  <https://marked.js.org>  
+- **DOMPurify** (Apache License 2.0): Sanitizes HTML for security.  
+  <https://github.com/cure53/DOMPurify>  
+- **highlight.js** (BSD-3-Clause License): Syntax highlighting in code blocks.  
+  <https://highlightjs.org>  
+- **PDF.js** (Apache License 2.0): PDF parsing.  
+  <https://mozilla.github.io/pdf.js>  
+- **Mammoth.js** (BSD-2-Clause License): DOCX conversion.  
+  <https://github.com/mwilliamson/mammoth.js>  
+- **GPT Tokenizer** (various open licenses): GPT token counting.  
+
+All trademarks are the property of their respective owners. Contributions and issues are welcome!  
