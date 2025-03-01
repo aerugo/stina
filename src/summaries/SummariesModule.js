@@ -24,20 +24,33 @@ const SummariesModule = (function () {
     const config = ConfigModule.getConfig();
     providerInstance.validateConfig(config.providerConfigs[provider] || {});
 
-    const prompt = `
+    // Build two separate prompts—
+    // one for generating the summary and one for the title.
+    const summaryPrompt = `
 Instructions for summary:
 ${instructions}
 
 Document content:
 ${docText}
 
-Please provide:
-1) A concise plain text summary.
-2) A short summary title that follows "Summary with focus on ..." (max 50 characters)
+Please provide a concise plain text summary.
     `;
-    const messages = [{ role: "user", content: prompt }];
-    const conversationToSend = providerInstance.prepareMessages(messages);
 
+    const titlePrompt = `
+Instructions for summary title:
+${instructions}
+
+Document content:
+${docText}
+
+Please provide a short summary title that follows "Summary with focus on ..." (max 50 characters).
+    `;
+
+    // Prepare messages (using the provider's prepareMessages method)
+    const summaryMessages = providerInstance.prepareMessages([{ role: "user", content: summaryPrompt }]);
+    const titleMessages = providerInstance.prepareMessages([{ role: "user", content: titlePrompt }]);
+
+    // Use the same model parameters for both calls
     const modelOptions = {
       max_tokens: modelParams.max_tokens,
       temperature: modelParams.temperature,
@@ -48,33 +61,28 @@ Please provide:
     };
 
     const deploymentName = config.titleDeployment || modelParams.deployment;
-    const apiResponse = await providerInstance.fetchChatCompletion(
-      conversationToSend,
-      deploymentName,
-      modelOptions,
-      config.providerConfigs[provider] || {}
-    );
 
-    const rawText = apiResponse.content.trim();
-    const [summaryText, summaryName] = parseSummaryOutput(rawText);
-    return { summaryText, summaryName };
-  }
+    // Run both API calls in parallel
+    const [summaryResponse, titleResponse] = await Promise.all([
+      providerInstance.fetchChatCompletion(
+        summaryMessages,
+        deploymentName,
+        modelOptions,
+        config.providerConfigs[provider] || {}
+      ),
+      providerInstance.fetchChatCompletion(
+        titleMessages,
+        deploymentName,
+        modelOptions,
+        config.providerConfigs[provider] || {}
+      )
+    ]);
 
-  function parseSummaryOutput(text) {
-    if (text.includes("Title:")) {
-      const parts = text.split(/Title:/i);
-      const summaryText = parts[0].trim();
-      const summaryName = parts[1] ? parts[1].trim() : "Summary";
-      return [summaryText, summaryName];
-    } else if (text.includes("Summary title:")) {
-      const parts = text.split(/Summary title:/i);
-      const summaryText = parts[0].trim();
-      const summaryName = parts[1] ? parts[1].trim() : "Summary";
-      return [summaryText, summaryName];
-    } else {
-      const summaryName = text.length > 50 ? text.substring(0, 50) + "..." : text;
-      return [text, summaryName];
-    }
+    // Return the results directly, no parsing needed.
+    return {
+      summaryText: summaryResponse.content.trim(),
+      summaryName: titleResponse.content.trim()
+    };
   }
 
   return {
