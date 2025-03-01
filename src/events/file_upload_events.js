@@ -212,22 +212,6 @@ const FileUploadEventsModule = (function () {
       [],
       () => { /* no-op callback */ }
     );
-    
-    // Attach toggle functionality for the content preview
-    setTimeout(() => {
-      const toggleBtn = document.getElementById("toggle-preview-btn");
-      if (toggleBtn) {
-        toggleBtn.addEventListener("click", function() {
-          const previewElem = document.getElementById("content-preview");
-          previewElem.classList.toggle("is-hidden");
-          if (previewElem.classList.contains("is-hidden")) {
-            toggleBtn.textContent = TranslationModule.translate("showContentPreview");
-          } else {
-            toggleBtn.textContent = TranslationModule.translate("hideContentPreview");
-          }
-        });
-      }
-    }, 0);
   }
 
   function hideProcessingModal() {
@@ -342,6 +326,22 @@ const FileUploadEventsModule = (function () {
         onComplete(true, chosenClass);
       }
     );
+    
+    // Attach toggle functionality for the content preview in the combined modal
+    setTimeout(() => {
+      const toggleBtn = document.getElementById("toggle-preview-btn");
+      if (toggleBtn) {
+        toggleBtn.addEventListener("click", function() {
+          const previewElem = document.getElementById("content-preview");
+          previewElem.classList.toggle("is-hidden");
+          if (previewElem.classList.contains("is-hidden")) {
+            toggleBtn.textContent = TranslationModule.translate("showContentPreview");
+          } else {
+            toggleBtn.textContent = TranslationModule.translate("hideContentPreview");
+          }
+        });
+      }
+    }, 0);
 
     function getSelectedClassification() {
       const radios = document.querySelectorAll('input[name="classification"]');
