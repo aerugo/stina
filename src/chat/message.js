@@ -160,22 +160,16 @@ const MessageModule = (function () {
 
       instructionLabel = instruction.label;
 
-      // Merge attached files content with user messages before sending
+      // Merge attached file contents into user messages.
+      // For each attached file, prepend its filename and content (separated by a blank line and a separator)
+      // before appending the original user prompt.
       conversationToSend = conversationToSend.map(msg => {
         if (msg.role === "user" && Array.isArray(msg.attachedFiles) && msg.attachedFiles.length > 0) {
-          let mergedContent = msg.content;
-          
-          // Add a separator before documents
-          mergedContent += "\n\n-----------------\n";
-          
-          // Add each document with its metadata
+          let mergedContent = "";
           msg.attachedFiles.forEach(file => {
-            mergedContent += `DOCUMENT: ${file.fileName} [${file.classification}]\n\n${file.content}\n\n`;
+            mergedContent += `${file.fileName}\n\n${file.content}\n\n----------\n`;
           });
-          
-          // Add a closing separator
-          mergedContent += "-----------------\n";
-          
+          mergedContent += msg.content;
           return { ...msg, content: mergedContent };
         }
         return msg;
