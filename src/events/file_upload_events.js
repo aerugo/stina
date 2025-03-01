@@ -204,12 +204,12 @@ const FileUploadEventsModule = (function () {
         chip.classList.add("summary-active");
       }
       
-      // Determine display name - if summary is active, show filename: summary title
+      // Determine display name - if summary is active, show summary title instead of the file name
       let pillDisplayName = item.fileName;
       if (item.selectedSummaryId) {
         const summaryObj = item.summaries.find(s => s.id === item.selectedSummaryId);
         if (summaryObj) {
-          pillDisplayName = `${item.fileName}: ${summaryObj.name}`;
+          pillDisplayName = summaryObj.name;
         }
       }
       

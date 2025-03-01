@@ -170,12 +170,12 @@ const RenderingModule = (function () {
             pill.classList.add("summary-active");
           }
           
-          // Determine display name - if summary is active, show filename: summary title
+          // Determine display name - if summary is active, show summary title instead of the file name
           let pillDisplayName = file.fileName;
           if (file.selectedSummaryId && file.summaries) {
             const summaryObj = file.summaries.find(s => s.id === file.selectedSummaryId);
             if (summaryObj) {
-              pillDisplayName = `${file.fileName}: ${summaryObj.name}`;
+              pillDisplayName = summaryObj.name;
             }
           }
           
