@@ -83,13 +83,13 @@ Please provide:
   function showSummarizationModal(file, onSummaryGenerated) {
     const modalContent = `
       <div class="field">
-        <label class="label">Summarization Instructions</label>
+        <label class="label">${TranslationModule.translate("summarizationInstructions")}</label>
         <div class="control">
-          <textarea id="summary-instructions" class="textarea" placeholder="e.g., Focus on legal aspects"></textarea>
+          <textarea id="summary-instructions" class="textarea" placeholder="${TranslationModule.translate("summarizationInstructionsPlaceholder")}"></textarea>
         </div>
       </div>
       <div class="field">
-        <label class="label">Select Model</label>
+        <label class="label">${TranslationModule.translate("selectModel")}</label>
         <div class="control">
           <div class="select">
             <select id="summary-model-select">
@@ -104,7 +104,7 @@ Please provide:
     `;
 
     ModalModule.showCustomModal(
-      "Generate Summary", 
+      TranslationModule.translate("generateSummary"), 
       modalContent, 
       [
         { label: TranslationModule.translate("cancel"), value: false },
@@ -143,7 +143,7 @@ Please provide:
               modal.classList.remove("is-active");
             }
           } catch (e) {
-            summaryResultElem.innerHTML = `<p class="has-text-danger">Error generating summary: ${e.message}</p>`;
+            summaryResultElem.innerHTML = `<p class="has-text-danger">${TranslationModule.translate("errorGeneratingSummary")}: ${e.message}</p>`;
           }
         }
       }
