@@ -11,8 +11,8 @@ const ChatModule = (function () {
   }
   
   // Private variables
-  let chats = StorageModule.loadData("chats") || [];
-  let currentChatId = StorageModule.loadData("currentChatId");
+  let chats = [];
+  let currentChatId;
   let conversation = [];
 
   function createNewChat() {
@@ -203,7 +203,10 @@ const ChatModule = (function () {
     };
   }
 
-  function initialize() {
+  async function initialize() {
+    chats = (await StorageModule.loadData("chats")) || [];
+    currentChatId = await StorageModule.loadData("currentChatId");
+    
     if (chats.length === 0) {
       // No chats exist, create a new one
       return createNewChat();
