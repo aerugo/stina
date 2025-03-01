@@ -221,21 +221,6 @@
     <!-- Include Instructions -->
     <script src="src/chat/default_instructions.js"></script>
 
-    <!-- Optionally Include Additional Instructions -->
-    <script>
-      // Function to dynamically load instructions.js if it exists
-      (function() {
-        const script = document.createElement('script');
-        script.src = 'instructions.js';
-        script.onload = function() {
-          console.log('instructions.js has been loaded.');
-        };
-        script.onerror = function() {
-          console.warn('instructions.js could not be loaded, continuing without additional instructions.');
-        };
-        document.head.appendChild(script);
-      })();
-    </script>
 
     <!-- Define mergeInstructions function -->
     <script>
@@ -274,6 +259,7 @@
         };
         script.onerror = function() {
           console.warn('instructions.js could not be loaded, continuing without additional instructions.');
+          window.additionalInstructions = []; // Ensure additionalInstructions is defined even if file is missing
           mergeInstructions().then(() => {
             instructionsLoaded = true;
             initializeAppIfReady();
