@@ -324,7 +324,7 @@ const FileUploadEventsModule = (function () {
       const generateSummaryBtn = document.getElementById("generate-summary-btn");
       if (generateSummaryBtn) {
         generateSummaryBtn.addEventListener("click", () => {
-          SummariesModule.showSummarizationModal(file, (newSummary) => {
+          SummariesEventsModule.showSummarizationModal(file, (newSummary) => {
             file.summaries.push(newSummary);
             file.selectedSummaryId = newSummary.id;
             showDocumentInfoModal(file); // Re-open the modal with updated summaries
