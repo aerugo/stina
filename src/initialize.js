@@ -3,25 +3,16 @@
  * Coordinates interactions between modules and manages application flow.
  */
 const InitializationModule = (function () {
-  function cleanUpLocalStorage() {
-    ["selectedModelKey", "selectedInstructionId"].forEach((key) => {
-      const value = localStorage.getItem(key);
-      if (value === "undefined" || value === undefined || value === null) {
-        localStorage.removeItem(key);
-      }
-    });
-  }
-
   async function initializeApp() {
     console.log("Initializing application...");
-    
+
     // Show loading indicator
-    const loadingIndicator = document.createElement('div');
-    loadingIndicator.id = 'app-loading-indicator';
-    loadingIndicator.className = 'app-loading';
-    loadingIndicator.innerHTML = '<span>Loading application...</span>';
+    const loadingIndicator = document.createElement("div");
+    loadingIndicator.id = "app-loading-indicator";
+    loadingIndicator.className = "app-loading";
+    loadingIndicator.innerHTML = "<span>Loading application...</span>";
     document.body.appendChild(loadingIndicator);
-    
+
     try {
       await ConfigModule.initialize();
       TranslationModule.initialize();
@@ -48,18 +39,19 @@ const InitializationModule = (function () {
       EventModule.setupEventListeners(); // Initialize all event modules
       await ModelSelectionEventsModule.populateModelSelector(); // Populate model selector
       await ModelSelectionEventsModule.updateModelAndInstructionSelectors(); // Update selectors after initialization
-      
+
       console.log("Application initialization complete");
     } catch (error) {
       console.error("Error during application initialization:", error);
       // Show error message
-      const errorDiv = document.createElement('div');
-      errorDiv.className = 'initialization-error';
-      errorDiv.textContent = "Failed to initialize application. Please refresh the page.";
+      const errorDiv = document.createElement("div");
+      errorDiv.className = "initialization-error";
+      errorDiv.textContent =
+        "Failed to initialize application. Please refresh the page.";
       document.body.appendChild(errorDiv);
     } finally {
       // Remove loading indicator
-      const indicator = document.getElementById('app-loading-indicator');
+      const indicator = document.getElementById("app-loading-indicator");
       if (indicator) {
         indicator.remove();
       }
