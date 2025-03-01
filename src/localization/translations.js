@@ -89,11 +89,11 @@ window.translationsData = {
     previewHistoryTokens: "History Tokens",
     previewPendingTokens: "Pending Documents Tokens",
     classificationModalTitle: "Select Classification",
-    classificationOption1: "C1",
-    classificationOption2: "C2",
-    classificationOption3: "C3",
-    classificationOption4: "C4",
-    classificationOption5: "C5",
+    classificationOption1: "1: OPEN",
+    classificationOption2: "2: RESTRICTED",
+    classificationOption3: "3: CONFIDENTIAL",
+    classificationOption4: "4: HIGHLY CONFIDENTIAL",
+    classificationOption5: "5: CLASSIFIED",
     showPreview: "Show Preview",
     hidePreview: "Hide Preview",
     documentInfoTitle: "Document Information",
@@ -102,7 +102,8 @@ window.translationsData = {
     tokenCount: "Token Count",
     generate: "Generate",
     summarizationInstructions: "Summarization Instructions",
-    summarizationInstructionsPlaceholder: "Enter instructions for summarization (e.g., focus on key points)",
+    summarizationInstructionsPlaceholder:
+      "Enter instructions for summarization (e.g., focus on key points)",
     generateSummary: "Generate Summary",
     availableSummaries: "Available Summaries:",
     noSummary: "No Summary (Use full document)",
@@ -113,8 +114,10 @@ window.translationsData = {
     errorGeneratingSummary: "Error generating summary",
     ignoredDocuments: "Ignored documents",
     documentsUsingSummaries: "Documents using summaries",
-    summaryDomainPrompt: "Instructions for summary:\n{instructions}\n\nDocument content:\n{docText}\n\nPlease provide a comprehensive and detailed summary of the document, according to the instructions. Take care to ensure that the summary is accurate and complete. Do not include any personal opinions or additional information. Make sure that all details and facts are correct and that the summary is well-structured.",
-    titleDomainPrompt: "Instructions for summary title:\n{instructions}\n\nDocument content:\n{docText}\n\nPlease provide a short summary title that follows \"Summary with focus on ...\" (max 50 characters).",
+    summaryDomainPrompt:
+      "Instructions for summary:\n{instructions}\n\nDocument content:\n{docText}\n\nPlease provide a comprehensive and detailed summary of the document, according to the instructions. Take care to ensure that the summary is accurate and complete. Do not include any personal opinions or additional information. Make sure that all details and facts are correct and that the summary is well-structured.",
+    titleDomainPrompt:
+      'Instructions for summary title:\n{instructions}\n\nDocument content:\n{docText}\n\nPlease provide a short summary title that follows "Summary with focus on ..." (max 50 characters).',
   },
   sv: {
     exportChat: "Exportera",
@@ -188,7 +191,8 @@ window.translationsData = {
     tokenLengthWarning:
       "Den här chatten börjar bli lång. Modellen klarar snart inte mer kontext. Du behöver snart starta en ny chatt.",
     processingDocumentTitle: "Bearbetar dokument...",
-    processingDocumentMessage: "Vänligen vänta medan vi bearbetar ditt dokument.",
+    processingDocumentMessage:
+      "Vänligen vänta medan vi bearbetar ditt dokument.",
     unsupportedFileType: "Ej stödd filtyp: .{ext}.",
     allowedFileTypes: "Tillåtna: pdf, txt, md, docx.",
     errorParsingFile: "Fel vid tolkning av fil {fileName}: {errorMessage}",
@@ -204,11 +208,11 @@ window.translationsData = {
     previewHistoryTokens: "Historik Token",
     previewPendingTokens: "Väntande Dokument Token",
     classificationModalTitle: "Välj klassificering",
-    classificationOption1: "K1",
-    classificationOption2: "K2",
-    classificationOption3: "K3",
-    classificationOption4: "K4",
-    classificationOption5: "K5",
+    classificationOption1: "1: ÖPPEN",
+    classificationOption2: "2: BEGRÄNSAD",
+    classificationOption3: "3: KÄNSLIG",
+    classificationOption4: "4: MYCKET KÄNSLIG",
+    classificationOption5: "5: SEKRETESS",
     showPreview: "Visa förhandsgranskning",
     hidePreview: "Dölj förhandsgranskning",
     documentInfoTitle: "Dokumentinformation",
@@ -217,7 +221,8 @@ window.translationsData = {
     tokenCount: "Antal Token",
     generate: "Generera",
     summarizationInstructions: "Sammanfattningsinstruktioner",
-    summarizationInstructionsPlaceholder: "Ange instruktioner för sammanfattning (t.ex. fokusera på viktiga punkter)",
+    summarizationInstructionsPlaceholder:
+      "Ange instruktioner för sammanfattning (t.ex. fokusera på viktiga punkter)",
     generateSummary: "Generera sammanfattning",
     availableSummaries: "Tillgängliga sammanfattningar:",
     noSummary: "Ingen sammanfattning (Använd hela dokumentet)",
@@ -228,7 +233,9 @@ window.translationsData = {
     errorGeneratingSummary: "Fel vid generering av sammanfattning",
     ignoredDocuments: "Ignorerade dokument",
     documentsUsingSummaries: "Dokument som använder sammanfattningar",
-    summaryDomainPrompt: "Instruktioner för sammanfattning:\n{instructions}\n\nDokumentinnehåll:\n{docText}\n\nVänligen ge en omfattande och detaljerad sammanfattning av dokumentet, enligt instruktionerna. Se till att sammanfattningen är korrekt och fullständig. Inkludera inte några personliga åsikter eller extra information. Se till att alla detaljer och fakta är korrekta och att sammanfattningen är välstrukturerad.",
-    titleDomainPrompt: "Instruktioner för sammanfattningstitel:\n{instructions}\n\nDokumentinnehåll:\n{docText}\n\nVänligen ge en kort sammanfattningstitel som följer mönstret \"Sammanfattning med fokus på ...\" (max 50 tecken).",
+    summaryDomainPrompt:
+      "Instruktioner för sammanfattning:\n{instructions}\n\nDokumentinnehåll:\n{docText}\n\nVänligen ge en omfattande och detaljerad sammanfattning av dokumentet, enligt instruktionerna. Se till att sammanfattningen är korrekt och fullständig. Inkludera inte några personliga åsikter eller extra information. Se till att alla detaljer och fakta är korrekta och att sammanfattningen är välstrukturerad.",
+    titleDomainPrompt:
+      'Instruktioner för sammanfattningstitel:\n{instructions}\n\nDokumentinnehåll:\n{docText}\n\nVänligen ge en kort sammanfattningstitel som följer mönstret "Sammanfattning med fokus på ..." (max 50 tecken).',
   },
 };
