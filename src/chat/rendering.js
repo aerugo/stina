@@ -20,6 +20,13 @@ const RenderingModule = (function () {
   const models = ModelsModule.getModels(); // Retrieve models
 
   function createMessageElement(message) {
+    if (message.isIgnoredDocsNotice) {
+      const noticeElem = document.createElement("div");
+      noticeElem.classList.add("ignored-docs-notice");
+      noticeElem.textContent = message.content;
+      return noticeElem;
+    }
+    
     if (typeof message.content !== "string") {
       console.warn("message.content is not a string:", message.content);
       message.content = JSON.stringify(message.content);
