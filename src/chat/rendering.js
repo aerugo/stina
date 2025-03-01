@@ -162,47 +162,36 @@ const RenderingModule = (function () {
             <span class="file-classification">${file.classification}</span>
           `;
           
-          // Add click event to show file content in a modal
-          if (message.attachmentsLocked) {
-            // Already sent—read-only view (no ignore toggle)
-            pill.addEventListener("click", () => {
-              ModalModule.showCustomModal(
-                TranslationModule.translate("documentInfoTitle") || "Document Info",
-                `<p><strong>${TranslationModule.translate("fileName") || "File"}:</strong> ${DOMPurify.sanitize(file.fileName)}</p>
-                 <p><strong>${TranslationModule.translate("classification") || "Classification"}:</strong> ${file.classification}</p>
-                 <p><strong>${TranslationModule.translate("tokenCount") || "Token Count"}:</strong> ${file.tokenCount}</p>
-                 <hr>
-                 <div class="file-content-preview">${DOMPurify.sanitize(file.content)}</div>`,
-                [{ label: TranslationModule.translate("ok") || "OK", value: true }]
-              );
-            });
-          } else {
-            // Pending attachments—allow toggling the "ignore" state.
-            pill.addEventListener("click", () => {
-              ModalModule.showCustomModal(
-                TranslationModule.translate("documentInfoTitle") || "Document Info",
-                `<p><strong>${TranslationModule.translate("fileName") || "File"}:</strong> ${DOMPurify.sanitize(file.fileName)}</p>
-                 <p><strong>${TranslationModule.translate("classification") || "Classification"}:</strong> ${file.classification}</p>
-                 <p><strong>${TranslationModule.translate("tokenCount") || "Token Count"}:</strong> ${file.tokenCount}</p>
-                 <hr>
-                 <div class="file-content-preview">${DOMPurify.sanitize(file.content)}</div>
-                 <hr>
-                 <label class="checkbox" style="margin-top: 1em;">
-                   <input type="checkbox" id="ignore-file-checkbox" ${file.ignored ? "checked" : ""} />
-                   <span style="margin-left: 0.5rem;">Ignore This Document</span>
-                 </label>`,
-                [{ label: TranslationModule.translate("ok") || "OK", value: true }],
-                () => {
-                  const ignoreCheckbox = document.getElementById("ignore-file-checkbox");
-                  if (ignoreCheckbox) {
-                    file.ignored = ignoreCheckbox.checked;
-                    // Re-render the current (pending) conversation section only
-                    RenderingModule.renderConversation(ChatModule.getCurrentChat().conversation);
-                  }
+          // Always allow toggling the "ignore" state regardless of attachmentsLocked
+          pill.addEventListener("click", () => {
+            ModalModule.showCustomModal(
+              TranslationModule.translate("documentInfoTitle") || "Document Info",
+              `<p><strong>${TranslationModule.translate("fileName") || "File"}:</strong> ${DOMPurify.sanitize(file.fileName)}</p>
+               <p><strong>${TranslationModule.translate("classification") || "Classification"}:</strong> ${file.classification}</p>
+               <p><strong>${TranslationModule.translate("tokenCount") || "Token Count"}:</strong> ${file.tokenCount}</p>
+               <hr>
+               <div class="file-content-preview">${DOMPurify.sanitize(file.content)}</div>
+               <hr>
+               <label class="checkbox" style="margin-top: 1em;">
+                 <input type="checkbox" id="ignore-file-checkbox" ${file.ignored ? "checked" : ""} />
+                 <span style="margin-left: 0.5rem;">Ignore This Document</span>
+               </label>`,
+              [{ label: TranslationModule.translate("ok") || "OK", value: true }],
+              () => {
+                const ignoreCheckbox = document.getElementById("ignore-file-checkbox");
+                if (ignoreCheckbox) {
+                  file.ignored = ignoreCheckbox.checked;
+                  // Update the parent message's ignoredFilesSummary by filtering its attachedFiles:
+                  const ignoredFiles = message.attachedFiles.filter(f => f.ignored);
+                  message.ignoredFilesSummary = ignoredFiles.length > 0 
+                    ? "Ignored: " + ignoredFiles.map(f => f.fileName).join(", ")
+                    : undefined;
+                  ChatModule.saveChats();
+                  RenderingModule.renderConversation(ChatModule.getCurrentChat().conversation);
                 }
-              );
-            });
-          }
+              }
+            );
+          });
           
           filesContainer.appendChild(pill);
         });
