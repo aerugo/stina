@@ -181,9 +181,21 @@ body.dark-mode .send-button {
 }
 
 .ignored-docs-notice {
-  font-size: 0.8rem;
-  color: #a00;
-  margin-bottom: 0.5rem;
-  font-style: italic;
+  background-color: #fff4f4;
+  border: 1px solid #f08080;
+  border-radius: 8px;
+  padding: 10px 15px;
+  margin-bottom: 0.75rem;
+  font-size: 0.9rem;
+  color: #d8000c;
+  font-style: normal;
   text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ignored-docs-notice .ignored-icon {
+  margin-right: 8px;
+  font-size: 1.1em;
 }
