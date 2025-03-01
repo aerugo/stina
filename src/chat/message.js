@@ -167,7 +167,6 @@ const MessageModule = (function () {
 
     // Start with a copy of the conversation WITHOUT the loading message
     let conversationToSend = [...currentState.conversation];
-    let instructionLabel = "";
     // Declare instruction variable outside the if block so it's available for the API request
     let instruction = null;
     let instructionLabel = "";
