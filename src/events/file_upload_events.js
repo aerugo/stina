@@ -423,5 +423,6 @@ const FileUploadEventsModule = (function () {
     setupEventListeners,
     getPendingFiles,
     clearPendingFiles,
+    getAndClearPendingFiles,
   };
 })();
