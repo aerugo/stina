@@ -159,23 +159,24 @@ const MessageModule = (function () {
       }
 
       instructionLabel = instruction.label;
+    }
 
-      // Merge attached file contents into user messages.
-      // For each attached file, prepend its filename and content (separated by a blank line and a separator)
-      // before appending the original user prompt.
-      conversationToSend = conversationToSend.map(msg => {
-        if (msg.role === "user" && Array.isArray(msg.attachedFiles) && msg.attachedFiles.length > 0) {
-          let mergedContent = "";
-          msg.attachedFiles.forEach(file => {
-            mergedContent += `${file.fileName}\n\n${file.content}\n\n----------\n`;
-          });
-          mergedContent += msg.content;
-          return { ...msg, content: mergedContent };
-        }
-        return msg;
-      });
+    // Unconditionally merge attached file contents into user messages.
+    conversationToSend = conversationToSend.map(msg => {
+      if (msg.role === "user" && Array.isArray(msg.attachedFiles) && msg.attachedFiles.length > 0) {
+        let mergedContent = "";
+        msg.attachedFiles.forEach(file => {
+          mergedContent += `${file.fileName}\n\n${file.content}\n\n----------\n`;
+        });
+        mergedContent += msg.content;
+        return { ...msg, content: mergedContent };
+      }
+      return msg;
+    });
       
-      // Prepare messages using the provider's method
+    // Prepare the messages normally:
+    if (selectedModelParams && selectedModelParams.system) {
+      // Prepare messages using the provider's method with instruction
       conversationToSend = providerInstance.prepareMessages(
         conversationToSend,
         instruction
