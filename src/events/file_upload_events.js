@@ -295,7 +295,7 @@ const FileUploadEventsModule = (function () {
         // Handle summary selection
         const selectedSummaryRadio = document.querySelector('input[name="document-summary"]:checked');
         if (selectedSummaryRadio) {
-          file.selectedSummaryId = selectedSummaryRadio.value;
+          file.selectedSummaryId = selectedSummaryRadio.value || null;
           console.log("[DEBUG][file_upload] Selected summary:", file.selectedSummaryId);
         } else {
           file.selectedSummaryId = null;
