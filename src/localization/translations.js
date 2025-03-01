@@ -70,7 +70,8 @@ window.translationsData = {
     importAllChats: "Import All Chats",
     dragDropOrClickToImport: "Drag and drop or click to import",
     importChatHelpText: "Select a JSON file containing the exported chat data",
-    tokenLengthWarning: "Warning: This chat is getting long. The model may not be able to handle more context. Consider starting a new chat."
+    tokenLengthWarning:
+      "This chat is getting long. The model will soon not be able to handle more context. You will need to start a new chat.",
   },
   sv: {
     exportChat: "Exportera",
@@ -141,6 +142,7 @@ window.translationsData = {
     ollama: "Ollama",
     dragDropOrClickToImport: "Dra och släpp eller klicka för att importera",
     importChatHelpText: "Välj en JSON-fil med exporterad chattdata",
-    tokenLengthWarning: "Varning: Den här chatten håller på att bli lång. Modellen kanske inte klarar mer kontext. Överväg att starta en ny chatt."
+    tokenLengthWarning:
+      "Den här chatten börjar bli lång. Modellen klarar snart inte mer kontext. Du behöver snart starta en ny chatt.",
   },
 };
