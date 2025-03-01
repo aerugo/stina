@@ -46,6 +46,9 @@ const SummariesEventsModule = (function () {
             <progress class="progress is-small is-primary" max="100">Loading</progress>
           </div>
         `;
+  
+        // Force the browser to render the new content
+        await new Promise(resolve => setTimeout(resolve, 50));
 
         try {
           // Note: Use domain logic from SummariesModule here
