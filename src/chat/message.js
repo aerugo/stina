@@ -98,9 +98,10 @@ const MessageModule = (function () {
 
     // Get and clear any pending uploaded files
     const attachedFiles = FileUploadEventsModule.getAndClearPendingFiles();
-    console.log("Attached Files:", attachedFiles);
+    console.log("[DEBUG][sendMessage] Attached Files:", attachedFiles);
     
     const ignoredFiles = attachedFiles.filter(file => file.ignored);
+    console.log("[DEBUG][sendMessage] Ignored Files:", ignoredFiles);
     
     const currentState = ChatModule.getCurrentState();
     const newMessage = { 
@@ -112,6 +113,7 @@ const MessageModule = (function () {
         ? "Ignored: " + ignoredFiles.map(file => file.fileName).join(", ")
         : undefined
     };
+    console.log("[DEBUG][sendMessage] New Message's ignoredFilesSummary:", newMessage.ignoredFilesSummary);
     currentState.conversation.push(newMessage);
 
     RenderingModule.renderConversation(currentState.conversation);

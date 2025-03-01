@@ -219,6 +219,7 @@ const RenderingModule = (function () {
       
       // For user messages that include an ignore summary (set when sending), display it
       if (message.ignoredFilesSummary) {
+        console.log("[DEBUG][rendering] Rendering ignoredFilesSummary:", message.ignoredFilesSummary);
         const ignoredInfoElem = document.createElement("div");
         ignoredInfoElem.classList.add("ignored-files-summary");
         ignoredInfoElem.innerText = message.ignoredFilesSummary;

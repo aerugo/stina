@@ -226,6 +226,7 @@ const FileUploadEventsModule = (function () {
             const ignoreCheckbox = document.getElementById("ignore-file-checkbox");
             if (ignoreCheckbox) {
               item.ignored = ignoreCheckbox.checked;
+              console.log("[DEBUG][file_upload] File", item.fileName, "ignored state set to:", item.ignored);
               renderPendingFiles(files);
             }
           }
