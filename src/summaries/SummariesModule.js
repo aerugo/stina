@@ -33,7 +33,9 @@ ${instructions}
 Document content:
 ${docText}
 
-Please provide a concise plain text summary.
+Please provide a comprehensive and detailed summary of the document, according to the instructions.
+Take care to ensure that the summary is accurate and complete. Do not include any personal opinions or additional information.
+Make sure that all details and facts are correct and that the summary is well-structured.
     `;
 
     const titlePrompt = `
@@ -47,8 +49,12 @@ Please provide a short summary title that follows "Summary with focus on ..." (m
     `;
 
     // Prepare messages (using the provider's prepareMessages method)
-    const summaryMessages = providerInstance.prepareMessages([{ role: "user", content: summaryPrompt }]);
-    const titleMessages = providerInstance.prepareMessages([{ role: "user", content: titlePrompt }]);
+    const summaryMessages = providerInstance.prepareMessages([
+      { role: "user", content: summaryPrompt },
+    ]);
+    const titleMessages = providerInstance.prepareMessages([
+      { role: "user", content: titlePrompt },
+    ]);
 
     // Use the same model parameters for both calls
     const modelOptions = {
@@ -75,13 +81,13 @@ Please provide a short summary title that follows "Summary with focus on ..." (m
         deploymentName,
         modelOptions,
         config.providerConfigs[provider] || {}
-      )
+      ),
     ]);
 
     // Return the results directly, no parsing needed.
     return {
       summaryText: summaryResponse.content.trim(),
-      summaryName: titleResponse.content.trim()
+      summaryName: titleResponse.content.trim(),
     };
   }
 
