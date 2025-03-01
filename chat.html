@@ -239,9 +239,10 @@
 
     <!-- Define mergeInstructions function -->
     <script>
-      function mergeInstructions() {
-        // Get customInstructions from localStorage
-        const customInstructions = JSON.parse(localStorage.getItem("customInstructions")) || [];
+      async function mergeInstructions() {
+        // Get customInstructions from StorageModule (async IndexedDB call)
+        const storedCustomInstructions = await StorageModule.loadData("customInstructions");
+        const customInstructions = storedCustomInstructions || [];
 
         // Log values for debugging
         console.log("Before merging:");
@@ -266,15 +267,17 @@
         script.src = 'instructions.js';
         script.onload = function() {
           console.log('instructions.js has been loaded.');
-          mergeInstructions();
-          instructionsLoaded = true;
-          initializeAppIfReady();
+          mergeInstructions().then(() => {
+            instructionsLoaded = true;
+            initializeAppIfReady();
+          });
         };
         script.onerror = function() {
           console.warn('instructions.js could not be loaded, continuing without additional instructions.');
-          mergeInstructions();
-          instructionsLoaded = true;
-          initializeAppIfReady();
+          mergeInstructions().then(() => {
+            instructionsLoaded = true;
+            initializeAppIfReady();
+          });
         };
         document.head.appendChild(script);
       })();
