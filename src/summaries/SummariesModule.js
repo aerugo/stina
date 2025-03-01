@@ -26,27 +26,13 @@ const SummariesModule = (function () {
 
     // Build two separate prompts—
     // one for generating the summary and one for the title.
-    const summaryPrompt = `
-Instructions for summary:
-${instructions}
+    const summaryPrompt = TranslationModule.translate("summaryDomainPrompt")
+      .replace("{instructions}", instructions)
+      .replace("{docText}", docText);
 
-Document content:
-${docText}
-
-Please provide a comprehensive and detailed summary of the document, according to the instructions.
-Take care to ensure that the summary is accurate and complete. Do not include any personal opinions or additional information.
-Make sure that all details and facts are correct and that the summary is well-structured.
-    `;
-
-    const titlePrompt = `
-Instructions for summary title:
-${instructions}
-
-Document content:
-${docText}
-
-Please provide a short summary title that follows "Summary with focus on ..." (max 50 characters).
-    `;
+    const titlePrompt = TranslationModule.translate("titleDomainPrompt")
+      .replace("{instructions}", instructions)
+      .replace("{docText}", docText);
 
     // Prepare messages (using the provider's prepareMessages method)
     const summaryMessages = providerInstance.prepareMessages([
