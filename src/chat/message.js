@@ -100,8 +100,7 @@ const MessageModule = (function () {
     const attachedFiles = FileUploadEventsModule.getAndClearPendingFiles();
     console.log("[DEBUG][sendMessage] Attached Files:", attachedFiles);
     
-    const ignoredFiles = attachedFiles.filter(file => file.ignored);
-    console.log("[DEBUG][sendMessage] Ignored Files:", ignoredFiles);
+    console.log("[DEBUG][sendMessage] Attached Files:", attachedFiles);
     
     const currentState = ChatModule.getCurrentState();
     const newMessage = { 
@@ -111,6 +110,31 @@ const MessageModule = (function () {
       attachmentsLocked: true  // Mark these attachments as locked (historical)
     };
     currentState.conversation.push(newMessage);
+
+    // Build a list of all ignored document names from the conversation
+    function getAllIgnoredDocs(conversation) {
+      const ignoredSet = new Set();
+      conversation.forEach(msg => {
+        if (msg.role === "user" && Array.isArray(msg.attachedFiles)) {
+          msg.attachedFiles.forEach(file => {
+            if (file.ignored) {
+              ignoredSet.add(file.fileName);
+            }
+          });
+        }
+      });
+      return Array.from(ignoredSet);
+    }
+
+    const ignoredDocs = getAllIgnoredDocs(currentState.conversation);
+    if (ignoredDocs.length > 0) {
+      const noticeMsg = {
+        role: "system",
+        content: "Ignored documents for this response: " + ignoredDocs.join(", "),
+        isIgnoredDocsNotice: true
+      };
+      currentState.conversation.push(noticeMsg);
+    }
 
     RenderingModule.renderConversation(currentState.conversation);
     MessageModule.saveConversation(
@@ -240,26 +264,8 @@ const MessageModule = (function () {
         typeof apiResponse.content
       );
 
-      // Gather which files from the current user message were ignored
-      const ignoredDocs = [];
-      if (newMessage.attachedFiles && Array.isArray(newMessage.attachedFiles)) {
-        newMessage.attachedFiles.forEach(file => {
-          if (file.ignored) {
-            ignoredDocs.push(file.fileName);
-          }
-        });
-      }
-
-      // If any were ignored, insert a dynamic "context notice" message
-      if (ignoredDocs.length > 0) {
-        const noticeMsg = {
-          role: "system",
-          content: "Ignored documents for this response: " + ignoredDocs.join(", "),
-          isIgnoredDocsNotice: true
-        };
-        // Insert the notice message just before the assistant's reply (the loading message is the last item)
-        currentState.conversation.splice(currentState.conversation.length - 1, 0, noticeMsg);
-      }
+      // The ignored documents notice is now added right after the user message
+      // so we don't need to add it here
 
       currentState.conversation[currentState.conversation.length - 1] = {
         role: "assistant",
