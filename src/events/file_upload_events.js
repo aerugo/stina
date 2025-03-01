@@ -139,9 +139,15 @@ const FileUploadEventsModule = (function () {
       const content = await parseFile(file);
       // Hide processing modal on success
       hideProcessingModal();
-      // Process current file then move on to the next one
-      showClassificationModal(file, content, function () {
-        processFiles(files, index + 1);
+      
+      // Save the parsed content with the file for token calculations
+      file.parsedContent = content;
+      
+      // Show the file preview modal and, on confirmation, display the classification modal
+      showFilePreviewModal(file, content, files, index, function() {
+        showClassificationModal(file, content, function () {
+          processFiles(files, index + 1);
+        });
       });
     } catch (error) {
       // Hide processing modal on error
@@ -284,6 +290,66 @@ const FileUploadEventsModule = (function () {
     if (modal) {
       modal.classList.remove("is-active");
     }
+  }
+
+  /**
+   * Shows a preview modal with file details and token information
+   */
+  function showFilePreviewModal(file, content, files, currentIndex, onConfirm) {
+    // Calculate the document token count
+    const documentTokens = TokenizationModule.countTokens(content);
+
+    // Get current chat and selected model info
+    const currentChat = ChatModule.getCurrentChat();
+    const config = ConfigModule.getConfig();
+    const selectedModelKey = currentChat.selectedModelKey || config.selectedModelKey || "gpt-4o";
+    const selectedModel = ModelsModule.getModel(selectedModelKey);
+    const modelTokenLimit = selectedModel.tokenLimit || selectedModel.maxTokens || 0;
+
+    // Calculate tokens used in the current conversation (i.e. history)
+    const historyTokens = (currentChat.conversation || []).reduce((sum, msg) => {
+      return sum + TokenizationModule.countTokens(msg.content);
+    }, 0);
+
+    // Calculate tokens from other pending documents
+    let pendingTokens = 0;
+    for (let i = 0; i < currentIndex; i++) {
+      if (files[i].parsedContent) {
+        pendingTokens += TokenizationModule.countTokens(files[i].parsedContent);
+      }
+    }
+    // Add tokens from already pending files
+    pendingFiles.forEach(file => {
+      pendingTokens += file.tokenCount || 0;
+    });
+
+    // Create the modal content with localized labels
+    const modalContent = `
+      <p><strong>${TranslationModule.translate("previewFileName")}: </strong>${DOMPurify.sanitize(file.name)}</p>
+      <p><strong>${TranslationModule.translate("previewContent")}: </strong>${DOMPurify.sanitize(content.slice(0, 300))}${content.length > 300 ? "..." : ""}</p>
+      <p><strong>${TranslationModule.translate("previewDocumentTokens")}: </strong>${documentTokens}</p>
+      <p><strong>${TranslationModule.translate("previewModelTokenLimit")}: </strong>${modelTokenLimit}</p>
+      <p><strong>${TranslationModule.translate("previewHistoryTokens")}: </strong>${historyTokens}</p>
+      <p><strong>${TranslationModule.translate("previewPendingTokens")}: </strong>${pendingTokens}</p>
+    `;
+
+    // Show the preview modal; when confirmed, call onConfirm
+    ModalModule.showCustomModal(
+      TranslationModule.translate("previewModalTitle"),
+      modalContent,
+      [
+        {
+          label: TranslationModule.translate("previewModalConfirm"),
+          value: true,
+          class: "is-primary"
+        }
+      ],
+      function(result) {
+        if (result) {
+          onConfirm();
+        }
+      }
+    );
   }
 
   // Public API
