@@ -233,6 +233,9 @@ const MessageModule = (function () {
       conversationToSend = providerInstance.prepareMessages(conversationToSend);
     }
 
+    // Filter out any messages that are just ignored documents notices
+    conversationToSend = conversationToSend.filter(msg => !msg.isIgnoredDocsNotice);
+
     const loadingMessage = { role: "assistant", content: "", isLoading: true };
     currentState.conversation.push(loadingMessage);
     RenderingModule.renderConversation(currentState.conversation);
