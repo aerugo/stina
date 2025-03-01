@@ -8,13 +8,13 @@ const ConfigModule = (function () {
   // Use defaultConfig from config.js
   const defaultConfig = window.defaultConfig;
 
-  function initialize() {
+  async function initialize() {
     // Load stored language or use default
-    const storedLanguage = StorageModule.loadData("language");
+    const storedLanguage = await StorageModule.loadData("language");
     config.language = storedLanguage || defaultConfig.defaultLanguage || "en";
 
     // Load stored provider or use default
-    const storedProvider = StorageModule.loadData("provider");
+    const storedProvider = await StorageModule.loadData("provider");
     config.provider = storedProvider || defaultConfig.provider || "azure";
 
     // Initialize provider configurations
@@ -59,7 +59,7 @@ const ConfigModule = (function () {
     }
 
     // Load stored providerConfigs from local storage and merge
-    const storedProviderConfigs = StorageModule.loadData("providerConfigs") || {};
+    const storedProviderConfigs = (await StorageModule.loadData("providerConfigs")) || {};
 
     // Merge stored configurations over initial configurations
     config.providerConfigs = {};
@@ -95,25 +95,20 @@ const ConfigModule = (function () {
    * @returns {Object} The current configuration settings.
    */
   function getConfig() {
-    const storedProvider =
-      StorageModule.loadData("provider") || config.provider || "azure";
+    const storedProvider = config.provider || "azure";
     const providerConfig = config.providerConfigs[storedProvider] || {};
-
+    
     return {
       ...config,
-      endpoint:
-        providerConfig.endpoint || StorageModule.loadData("endpoint") || "",
-      apiKey: providerConfig.apiKey || StorageModule.loadData("apiKey") || "",
-      theme: StorageModule.loadData("theme") || "light-mode",
-      selectedModelKey: StorageModule.loadData("selectedModelKey") || "gpt-4o",
-      selectedInstructionId:
-        StorageModule.loadData("selectedInstructionId") || instructions[0].id,
-      lastUsedModelKey: StorageModule.loadData("selectedModelKey") || "gpt-4o",
-      lastUsedInstructionId:
-        StorageModule.loadData("selectedInstructionId") || instructions[0].id,
-      titleDeployment: StorageModule.loadData("titleDeployment") || "",
-      language:
-        StorageModule.loadData("language") || config.defaultLanguage || "en",
+      endpoint: providerConfig.endpoint || "",
+      apiKey: providerConfig.apiKey || "",
+      theme: config.theme || "light-mode",
+      selectedModelKey: config.selectedModelKey || "gpt-4o",
+      selectedInstructionId: config.selectedInstructionId || instructions[0].id,
+      lastUsedModelKey: config.selectedModelKey || "gpt-4o",
+      lastUsedInstructionId: config.selectedInstructionId || instructions[0].id,
+      titleDeployment: config.titleDeployment || "",
+      language: config.language || defaultConfig.defaultLanguage || "en",
       provider: storedProvider,
       providerConfigs: config.providerConfigs,
     };
