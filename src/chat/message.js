@@ -162,16 +162,20 @@ const MessageModule = (function () {
       instructionLabel = instruction.label;
     }
 
-    // Unconditionally merge attached file contents into user messages.
+    // Conditionally merge attached file contents into user messages, skipping ignored files.
     conversationToSend = conversationToSend.map(msg => {
       if (msg.role === "user" && Array.isArray(msg.attachedFiles) && msg.attachedFiles.length > 0) {
         let mergedContent = "";
         console.log("Merging attached files for message. Count:", msg.attachedFiles.length);
         msg.attachedFiles.forEach(file => {
-          console.log("Merging file:", file.fileName);
-          // Normalize newlines to LF for consistency
-          const normalizedContent = file.content.replace(/\r\n/g, "\n").replace(/\r/g, "\n");
-          mergedContent += `${file.fileName}\n\n${normalizedContent}\n\n----------\n`;
+          if (!file.ignored) {  // Only merge if not ignored
+            console.log("Merging file:", file.fileName);
+            // Normalize newlines to LF for consistency
+            const normalizedContent = file.content.replace(/\r\n/g, "\n").replace(/\r/g, "\n");
+            mergedContent += `${file.fileName}\n\n${normalizedContent}\n\n----------\n`;
+          } else {
+            console.log("Skipping ignored file:", file.fileName);
+          }
         });
         mergedContent += msg.content;
         console.log("Resulting merged content:", mergedContent);

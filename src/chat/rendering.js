@@ -154,6 +154,9 @@ const RenderingModule = (function () {
         message.attachedFiles.forEach(file => {
           const pill = document.createElement("div");
           pill.classList.add("file-pill");
+          if (file.ignored) {
+            pill.classList.add("ignored-file");  // Use this CSS class to highlight ignored docs
+          }
           pill.innerHTML = `
             <span class="file-name">${DOMPurify.sanitize(file.fileName)}</span>
             <span class="file-classification">${file.classification}</span>
@@ -167,9 +170,29 @@ const RenderingModule = (function () {
                <p><strong>${TranslationModule.translate("classification") || "Classification"}:</strong> ${file.classification}</p>
                <p><strong>${TranslationModule.translate("tokenCount") || "Token Count"}:</strong> ${file.tokenCount}</p>
                <hr>
-               <div class="file-content-preview">${DOMPurify.sanitize(file.content)}</div>`,
+               <div class="file-content-preview">${DOMPurify.sanitize(file.content)}</div>
+               <hr>
+               <label class="checkbox" style="margin-top: 1em;">
+                 <input type="checkbox" id="ignore-file-checkbox" ${file.ignored ? "checked" : ""} />
+                 <span style="margin-left: 0.5rem;">Ignore This Document</span>
+               </label>`,
               [{ label: TranslationModule.translate("ok") || "OK", value: true }],
-              () => {}
+              () => {
+                const ignoreCheckbox = document.getElementById("ignore-file-checkbox");
+                if (ignoreCheckbox) {
+                  const newIgnoredValue = ignoreCheckbox.checked;
+                  file.ignored = newIgnoredValue;
+                  
+                  // Save the updated conversation (including the 'ignored' flag)
+                  MessageModule.saveConversation(
+                    ChatModule.getCurrentState().currentChatId,
+                    ChatModule.getCurrentState().conversation
+                  );
+                  
+                  // Re-render the conversation to update the file pill style
+                  RenderingModule.renderConversation(ChatModule.getCurrentState().conversation);
+                }
+              }
             );
           });
           

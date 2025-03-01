@@ -163,7 +163,8 @@ const FileUploadEventsModule = (function () {
             fileName: file.name,
             extension: file.name.split('.').pop().toLowerCase(),
             content: content,
-            tokenCount: tokenCount
+            tokenCount: tokenCount,
+            ignored: false     // initialize ignored state to false
           };
           pendingFiles.push(pendingFile);
           renderPendingFiles(pendingFiles);

@@ -30,7 +30,18 @@ const InputEventsModule = (function () {
       tokenWarningEl.style.display = "none";
       return;
     }
-    const totalTokens = lastAssistantMessage.usage.total_tokens;
+    
+    // Calculate additional tokens from attached files (excluding ignored ones)
+    let attachedFilesTokens = 0;
+    chat.conversation.forEach(msg => {
+      if (msg.role === "user" && msg.attachedFiles && Array.isArray(msg.attachedFiles)) {
+        attachedFilesTokens += msg.attachedFiles.reduce((sum, file) => {
+          return sum + (!file.ignored ? (file.tokenCount || 0) : 0);
+        }, 0);
+      }
+    });
+    
+    const totalTokens = lastAssistantMessage.usage.total_tokens + attachedFilesTokens;
     const remaining = selectedModel.context_length - totalTokens;
     if (remaining <= 5000) {
       tokenWarningEl.style.display = "block";

@@ -166,3 +166,9 @@ body.dark-mode .send-button {
 .file-chip-remove:hover {
   color: #666;
 }
+
+.file-pill.ignored-file {
+  background-color: #faeaea; /* Example: pale red background */
+  border: 1px solid #f08080;
+  opacity: 0.6;
+}
