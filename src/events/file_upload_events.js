@@ -235,6 +235,10 @@ const FileUploadEventsModule = (function () {
   }
   
   function showDocumentInfoModal(file) {
+    // Ensure file has required properties
+    if (!file.summaries) file.summaries = [];
+    if (file.selectedSummaryId === undefined) file.selectedSummaryId = null;
+    
     // Build summaries section HTML
     let summariesHTML = '';
     if (file.summaries && file.summaries.length > 0) {
@@ -297,7 +301,15 @@ const FileUploadEventsModule = (function () {
           file.selectedSummaryId = null;
         }
         
-        renderPendingFiles(pendingFiles);
+        // If this is a file in a chat message, update the chat
+        if (!pendingFiles.some(pf => pf.id === file.id)) {
+          // This is likely a file from a chat message
+          ChatModule.saveChats();
+          RenderingModule.renderConversation(ChatModule.getCurrentChat().conversation);
+        } else {
+          // This is a pending file
+          renderPendingFiles(pendingFiles);
+        }
       }
     );
     
@@ -562,5 +574,6 @@ const FileUploadEventsModule = (function () {
     getPendingFiles,
     clearPendingFiles,
     getAndClearPendingFiles,
+    showDocumentInfoModal,
   };
 })();
