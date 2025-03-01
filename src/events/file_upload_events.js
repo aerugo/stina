@@ -267,7 +267,7 @@ const FileUploadEventsModule = (function () {
           <div class="preview-detail">
             <strong>${TranslationModule.translate("previewContent")}:</strong>
             <a id="toggle-preview-btn" class="toggle-preview is-size-7 has-text-link" style="cursor: pointer;">
-              ${TranslationModule.translate("showContentPreview")}
+              ${TranslationModule.translate("showPreview")}
             </a>
             <div id="content-preview" class="preview-text is-hidden">
               ${DOMPurify.sanitize(content.slice(0, 300))}${content.length > 300 ? "..." : ""}
@@ -335,9 +335,9 @@ const FileUploadEventsModule = (function () {
           const previewElem = document.getElementById("content-preview");
           previewElem.classList.toggle("is-hidden");
           if (previewElem.classList.contains("is-hidden")) {
-            toggleBtn.textContent = TranslationModule.translate("showContentPreview");
+            toggleBtn.textContent = TranslationModule.translate("showPreview");
           } else {
-            toggleBtn.textContent = TranslationModule.translate("hideContentPreview");
+            toggleBtn.textContent = TranslationModule.translate("hidePreview");
           }
         });
       }
@@ -399,7 +399,7 @@ const FileUploadEventsModule = (function () {
       modalContent,
       [
         {
-          label: TranslationModule.translate("previewModalConfirm"),
+          label: TranslationModule.translate("confirm"),
           value: true,
           class: "is-primary"
         }

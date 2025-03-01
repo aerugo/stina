@@ -94,6 +94,8 @@ window.translationsData = {
     classificationOption3: "C3",
     classificationOption4: "C4",
     classificationOption5: "C5",
+    showPreview: "Show Preview",
+    hidePreview: "Hide Preview",
   },
   sv: {
     exportChat: "Exportera",
@@ -188,5 +190,7 @@ window.translationsData = {
     classificationOption3: "K3",
     classificationOption4: "K4",
     classificationOption5: "K5",
+    showPreview: "Visa förhandsgranskning",
+    hidePreview: "Dölj förhandsgranskning",
   },
 };
