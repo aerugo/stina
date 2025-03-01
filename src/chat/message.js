@@ -170,9 +170,6 @@ const MessageModule = (function () {
     let instructionLabel = "";
     // Declare instruction variable outside the if block so it's available for the API request
     let instruction = null;
-
-    // Declare instruction variable outside the if block so it's available for the API request
-    let instruction = null;
     let instructionLabel = "";
 
     // Handle system message if the model supports it (undefined is treated as supported)
