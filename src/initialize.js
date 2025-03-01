@@ -39,7 +39,16 @@ const InitializationModule = (function () {
       EventModule.setupEventListeners(); // Initialize all event modules
       await ModelSelectionEventsModule.populateModelSelector(); // Populate model selector
       await ModelSelectionEventsModule.updateModelAndInstructionSelectors(); // Update selectors after initialization
-
+      
+      // Debug information about models and instructions
+      console.log("Available models:", ModelsModule.getModels());
+      console.log("Selected model:", ConfigModule.getConfig().selectedModelKey);
+      console.log("Available instructions:", window.instructions);
+      console.log("Selected instruction:", ConfigModule.getConfig().selectedInstructionId);
+      
+      // Force update of instruction visibility
+      ModelSelectionEventsModule.updateInstructionsVisibility();
+      
       console.log("Application initialization complete");
     } catch (error) {
       console.error("Error during application initialization:", error);

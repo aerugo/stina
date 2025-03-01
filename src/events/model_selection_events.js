@@ -29,11 +29,17 @@ const ModelSelectionEventsModule = (function () {
     const instructionsGroup = document.getElementById("instructions-group");
 
     if (!selectedModelParams) {
+      console.warn(`Model with key "${currentModelKey}" not found in models:`, models);
       instructionsGroup.style.display = "none";
       return;
     }
 
-    instructionsGroup.style.display = selectedModelParams.system ? "flex" : "none";
+    // Default to showing instructions if system property is undefined or true
+    const shouldShowInstructions = selectedModelParams.system !== false;
+    console.log(`Model ${currentModelKey} system property:`, selectedModelParams.system, 
+                `Showing instructions: ${shouldShowInstructions}`);
+    
+    instructionsGroup.style.display = shouldShowInstructions ? "flex" : "none";
   }
 
   function setupEventListeners() {
@@ -47,7 +53,11 @@ const ModelSelectionEventsModule = (function () {
         currentChat.selectedModelKey = newModelKey;
         ChatModule.saveChats();
       }
-      updateInstructionsVisibility();
+      // Ensure instruction visibility is updated
+      setTimeout(() => {
+        updateInstructionsVisibility();
+        console.log("Model changed to:", newModelKey, "- Updated instruction visibility");
+      }, 0);
     });
   }
 
