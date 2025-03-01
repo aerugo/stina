@@ -45,8 +45,10 @@ const ModalModule = (function () {
       buttonElem.className = "button" + (btn.class ? " " + btn.class : "");
       buttonElem.textContent = btn.label;
       buttonElem.addEventListener("click", function () {
-        // Remove the modal's active class so it closes
-        modal.classList.remove("is-active");
+        // Only remove the "is-active" class for actions other than "generate"
+        if (btn.value !== "generate") {
+          modal.classList.remove("is-active");
+        }
         // Call the passed callback with the button value (true for confirm, false for cancel)
         if (callback) callback(btn.value);
       });

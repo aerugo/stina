@@ -31,10 +31,10 @@ const SummariesEventsModule = (function () {
       modalContent, 
       [
         { label: TranslationModule.translate("cancel"), value: false },
-        { label: TranslationModule.translate("generate"), value: true, class: "is-primary" }
+        { label: TranslationModule.translate("generate"), value: "generate", class: "is-primary" }
       ], 
       async function(result) {
-        if (!result) return;  // User cancelled
+        if (result !== "generate") return;  // Only proceed for generation
         const instructions = document.getElementById("summary-instructions").value;
         const modelKey = document.getElementById("summary-model-select").value;
         
