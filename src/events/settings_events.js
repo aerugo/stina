@@ -614,14 +614,14 @@ const SettingsEventsModule = (function () {
 
   function handleFileImport(file) {
     const reader = new FileReader();
-    reader.onload = function (e) {
+    reader.onload = async function (e) {
       try {
         const importedData = JSON.parse(e.target.result);
         // If there's a 'chats' array, assume multi-chat format.
         if (importedData.chats && Array.isArray(importedData.chats)) {
-          importAllChatsData(importedData);
+          await importAllChatsData(importedData);
         } else {
-          importSingleChatData(importedData);
+          await importSingleChatData(importedData);
         }
         ModalModule.showCustomAlert(
           TranslationModule.translate("chatImportedSuccessfully")
@@ -642,7 +642,7 @@ const SettingsEventsModule = (function () {
    * (and optionally "assistants" and "instructions") and then updates the
    * application state accordingly.
    */
-  function importAllChatsData(importedData) {
+  async function importAllChatsData(importedData) {
     let chatsToImport;
     if (Array.isArray(importedData)) {
       // Old format: exported data is directly an array of chats.
@@ -675,16 +675,13 @@ const SettingsEventsModule = (function () {
         Array.isArray(importedData.instructions)
       ) {
         const existingCustomInstructions =
-          JSON.parse(localStorage.getItem("customInstructions")) || [];
+          await StorageModule.loadData("customInstructions") || [];
         importedData.instructions.forEach((instr) => {
           if (!existingCustomInstructions.find((ci) => ci.id === instr.id)) {
             existingCustomInstructions.push(instr);
           }
         });
-        localStorage.setItem(
-          "customInstructions",
-          JSON.stringify(existingCustomInstructions)
-        );
+        await StorageModule.saveData("customInstructions", existingCustomInstructions);
         if (
           typeof InstructionEventsModule.populateInstructions === "function"
         ) {
@@ -712,7 +709,7 @@ const SettingsEventsModule = (function () {
    * (Optional) Import a single chat from the imported data.
    * This function is similar to handleImportChatFileSelected, but can be called by handleFileImport.
    */
-  function importSingleChatData(importedChat) {
+  async function importSingleChatData(importedChat) {
     // Process assistants.
     if (importedChat.assistants && Array.isArray(importedChat.assistants)) {
       importedChat.assistants.forEach((assistId) => {
@@ -734,16 +731,13 @@ const SettingsEventsModule = (function () {
     // Process instructions.
     if (importedChat.instructions && Array.isArray(importedChat.instructions)) {
       const existingCustomInstructions =
-        JSON.parse(localStorage.getItem("customInstructions")) || [];
+        await StorageModule.loadData("customInstructions") || [];
       importedChat.instructions.forEach((instr) => {
         if (!existingCustomInstructions.find((ci) => ci.id === instr.id)) {
           existingCustomInstructions.push(instr);
         }
       });
-      localStorage.setItem(
-        "customInstructions",
-        JSON.stringify(existingCustomInstructions)
-      );
+      await StorageModule.saveData("customInstructions", existingCustomInstructions);
       if (typeof InstructionEventsModule.populateInstructions === "function") {
         InstructionEventsModule.populateInstructions();
       }

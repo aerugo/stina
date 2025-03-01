@@ -175,7 +175,7 @@ const MessageModule = (function () {
       const selectedInstructionId =
         currentChat.selectedInstructionId || instructions[0].id;
       const customInstructions =
-        JSON.parse(localStorage.getItem("customInstructions")) || [];
+        await StorageModule.loadData("customInstructions") || [];
 
       // Find selected instruction
       let instruction =

@@ -285,8 +285,8 @@
 
     <!-- Function to merge models -->
     <script>
-      function mergeModels() {
-        const customModels = JSON.parse(localStorage.getItem("customModels")) || {};
+      async function mergeModels() {
+        const customModels = await StorageModule.loadData("customModels") || {};
 
         // Combine all models
         window.models = {
@@ -304,16 +304,18 @@
         script.src = 'models.js';
         script.onload = function() {
           console.log('models.js loaded.');
-          mergeModels();
-          modelsLoaded = true;
-          initializeAppIfReady();
+          mergeModels().then(() => {
+            modelsLoaded = true;
+            initializeAppIfReady();
+          });
         };
         script.onerror = function() {
           console.warn('models.js not found, continuing without user definied models.');
           window.additionalModels = {};
-          mergeModels();
-          modelsLoaded = true;
-          initializeAppIfReady();
+          mergeModels().then(() => {
+            modelsLoaded = true;
+            initializeAppIfReady();
+          });
         };
         document.head.appendChild(script);
       })();

@@ -43,7 +43,8 @@ const StorageInitializerModule = (function() {
     const keysToMigrate = [
       "chats", "currentChatId", "language", "provider", "providerConfigs",
       "endpoint", "apiKey", "theme", "selectedModelKey", "selectedInstructionId",
-      "lastUsedModelKey", "lastUsedInstructionId", "titleDeployment", "customInstructions"
+      "lastUsedModelKey", "lastUsedInstructionId", "titleDeployment", "customInstructions",
+      "customModels"
     ];
     
     let migratedCount = 0;
