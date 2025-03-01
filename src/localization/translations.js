@@ -109,6 +109,8 @@ window.translationsData = {
     noSummariesAvailable: "No summaries available.",
     viewSummary: "View",
     errorGeneratingSummary: "Error generating summary",
+    ignoredDocuments: "Ignored documents",
+    documentsUsingSummaries: "Documents using summaries",
   },
   sv: {
     exportChat: "Exportera",
@@ -218,5 +220,7 @@ window.translationsData = {
     noSummariesAvailable: "Ingen sammanfattning tillgänglig.",
     viewSummary: "Visa",
     errorGeneratingSummary: "Fel vid generering av sammanfattning",
+    ignoredDocuments: "Ignorerade dokument",
+    documentsUsingSummaries: "Dokument som använder sammanfattningar",
   },
 };

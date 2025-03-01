@@ -111,26 +111,40 @@ const MessageModule = (function () {
     };
     currentState.conversation.push(newMessage);
 
-    // Build a list of all ignored document names from the conversation
-    function getAllIgnoredDocs(conversation) {
-      const ignoredSet = new Set();
+    // Build lists of ignored documents and documents using summaries from the conversation
+    function getIgnoredAndSummaryDocs(conversation) {
+      const ignoredDocs = [];
+      const summaryDocs = [];
       conversation.forEach(msg => {
         if (msg.role === "user" && Array.isArray(msg.attachedFiles)) {
           msg.attachedFiles.forEach(file => {
             if (file.ignored) {
-              ignoredSet.add(file.fileName);
+              ignoredDocs.push(file.fileName);
+            } else if (file.selectedSummaryId && file.summaries && file.summaries.length > 0) {
+              const summaryObj = file.summaries.find(s => s.id === file.selectedSummaryId);
+              if (summaryObj) {
+                summaryDocs.push(`${file.fileName} (summary: ${summaryObj.name})`);
+              }
             }
           });
         }
       });
-      return Array.from(ignoredSet);
+      return { ignoredDocs, summaryDocs };
     }
 
-    const ignoredDocs = getAllIgnoredDocs(currentState.conversation);
-    if (ignoredDocs.length > 0) {
+    const { ignoredDocs, summaryDocs } = getIgnoredAndSummaryDocs(currentState.conversation);
+    if (ignoredDocs.length > 0 || summaryDocs.length > 0) {
+      let noticeMsgContent = "";
+      if (ignoredDocs.length > 0) {
+        noticeMsgContent += TranslationModule.translate("ignoredDocuments") + ": " + ignoredDocs.join(", ");
+      }
+      if (summaryDocs.length > 0) {
+        if (noticeMsgContent) noticeMsgContent += "; ";
+        noticeMsgContent += TranslationModule.translate("documentsUsingSummaries") + ": " + summaryDocs.join(", ");
+      }
       const noticeMsg = {
         role: "system",
-        content: "Ignored documents for this response: " + ignoredDocs.join(", "),
+        content: noticeMsgContent,
         isIgnoredDocsNotice: true
       };
       currentState.conversation.push(noticeMsg);
