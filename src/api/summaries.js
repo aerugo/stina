@@ -40,13 +40,18 @@ Please provide:
     const messages = [{ role: "user", content: prompt }];
     const conversationToSend = providerInstance.prepareMessages(messages);
     const modelOptions = {
-      max_tokens: modelParams.max_tokens || 500,
-      temperature: modelParams.temperature || 0.7,
+      max_tokens: modelParams.max_tokens,
+      temperature: modelParams.temperature,
+      top_p: modelParams.top_p,
+      frequency_penalty: modelParams.frequency_penalty,
+      presence_penalty: modelParams.presence_penalty,
+      stop: modelParams.stop,
     };
 
+    const deploymentName = config.titleDeployment || modelParams.deployment;
     const apiResponse = await providerInstance.fetchChatCompletion(
       conversationToSend,
-      modelParams.deployment,
+      deploymentName,
       modelOptions,
       config.providerConfigs[provider] || {}
     );
