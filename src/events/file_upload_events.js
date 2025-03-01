@@ -134,12 +134,18 @@ const FileUploadEventsModule = (function () {
     }
 
     try {
+      // Show processing modal before starting PDF parsing
+      showProcessingModal();
       const content = await parseFile(file);
+      // Hide processing modal on success
+      hideProcessingModal();
       // Process current file then move on to the next one
       showClassificationModal(file, content, function () {
         processFiles(files, index + 1);
       });
     } catch (error) {
+      // Hide processing modal on error
+      hideProcessingModal();
       ModalModule.showCustomAlert(
         `Error parsing file ${file.name}: ${error.message}`
       );
@@ -260,6 +266,23 @@ const FileUploadEventsModule = (function () {
   function removePendingFile(fileId) {
     pendingFiles = pendingFiles.filter(file => file.id !== fileId);
     renderPendingFiles(pendingFiles);
+  }
+
+  function showProcessingModal() {
+    ModalModule.showCustomModal(
+      "Processing document...",
+      "<p>Please wait while we parse your file.</p>",
+      // No buttons so the user can't cancel early
+      [],
+      () => { /* no-op callback */ }
+    );
+  }
+
+  function hideProcessingModal() {
+    const modal = document.getElementById("custom-modal");
+    if (modal) {
+      modal.classList.remove("is-active");
+    }
   }
 
   // Public API
