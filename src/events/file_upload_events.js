@@ -239,7 +239,13 @@ const FileUploadEventsModule = (function () {
     const selectedModel = ModelsModule.getModel(selectedModelKey);
     const modelTokenLimit = selectedModel.context_length || 0;
     const historyTokens = (currentChat.conversation || []).reduce((sum, msg) => {
-      return sum + TokenizationModule.countTokens(msg.content);
+      let msgTokens = TokenizationModule.countTokens(msg.content);
+      if (msg.attachedFiles && Array.isArray(msg.attachedFiles)) {
+        msgTokens += msg.attachedFiles.reduce((fileSum, file) => {
+          return fileSum + (file.tokenCount || TokenizationModule.countTokens(file.content));
+        }, 0);
+      }
+      return sum + msgTokens;
     }, 0);
     
     // Calculate tokens from other pending documents
