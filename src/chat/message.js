@@ -98,6 +98,7 @@ const MessageModule = (function () {
 
     // Get and clear any pending uploaded files
     const attachedFiles = FileUploadEventsModule.getAndClearPendingFiles();
+    console.log("Attached Files:", attachedFiles);
     
     const currentState = ChatModule.getCurrentState();
     const newMessage = { 
@@ -165,10 +166,13 @@ const MessageModule = (function () {
     conversationToSend = conversationToSend.map(msg => {
       if (msg.role === "user" && Array.isArray(msg.attachedFiles) && msg.attachedFiles.length > 0) {
         let mergedContent = "";
+        console.log("Merging attached files for message. Count:", msg.attachedFiles.length);
         msg.attachedFiles.forEach(file => {
+          console.log("Merging file:", file.fileName);
           mergedContent += `${file.fileName}\n\n${file.content}\n\n----------\n`;
         });
         mergedContent += msg.content;
+        console.log("Resulting merged content:", mergedContent);
         return { ...msg, content: mergedContent };
       }
       return msg;
