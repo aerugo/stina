@@ -237,7 +237,7 @@ const FileUploadEventsModule = (function () {
     const config = ConfigModule.getConfig();
     const selectedModelKey = currentChat.selectedModelKey || config.selectedModelKey || "gpt-4o";
     const selectedModel = ModelsModule.getModel(selectedModelKey);
-    const modelTokenLimit = selectedModel.tokenLimit || selectedModel.maxTokens || 0;
+    const modelTokenLimit = selectedModel.context_length || 0;
     const historyTokens = (currentChat.conversation || []).reduce((sum, msg) => {
       return sum + TokenizationModule.countTokens(msg.content);
     }, 0);
