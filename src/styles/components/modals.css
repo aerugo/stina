@@ -178,6 +178,7 @@
   padding: 0.5rem;
   border-radius: 4px;
   font-size: 0.95em;
+  white-space: pre-wrap;
 }
 
 .preview-details-grid {
