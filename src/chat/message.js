@@ -171,8 +171,8 @@ const MessageModule = (function () {
     // Declare instruction variable outside the if block so it's available for the API request
     let instruction = null;
 
-    // Handle system message if the model supports it
-    if (selectedModelParams && selectedModelParams.system) {
+    // Handle system message if the model supports it (undefined is treated as supported)
+    if (selectedModelParams && selectedModelParams.system !== false) {
       // Get latest instruction ID and custom instructions
       const selectedInstructionId =
         currentChat.selectedInstructionId || instructions[0].id;

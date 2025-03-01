@@ -42,7 +42,7 @@ const ChatModule = (function () {
     const selectedModel = models[selectedModelKey];
 
     let selectedInstructionId;
-    if (selectedModel && selectedModel.system) {
+    if (selectedModel && selectedModel.system !== false) {
       // Model supports instructions
       // Find the instruction with the lowest 'order' property
       const instructionWithLowestOrder = instructions.reduce((prev, curr) => {
