@@ -12,30 +12,58 @@ const InitializationModule = (function () {
     });
   }
 
-  function initializeApp() {
-    ConfigModule.initialize();
-    TranslationModule.initialize();
+  async function initializeApp() {
+    console.log("Initializing application...");
+    
+    // Show loading indicator
+    const loadingIndicator = document.createElement('div');
+    loadingIndicator.id = 'app-loading-indicator';
+    loadingIndicator.className = 'app-loading';
+    loadingIndicator.innerHTML = '<span>Loading application...</span>';
+    document.body.appendChild(loadingIndicator);
+    
+    try {
+      await ConfigModule.initialize();
+      TranslationModule.initialize();
 
-    // Set language for TranslationModule
-    TranslationModule.setLanguage(ConfigModule.getConfig().language);
+      // Set language for TranslationModule
+      const config = await ConfigModule.getConfig();
+      TranslationModule.setLanguage(config.language);
 
-    // Apply translations to UI
-    TranslationModule.applyTranslations();
+      // Apply translations to UI
+      TranslationModule.applyTranslations();
 
-    // Set placeholder for user input
-    const userInput = document.getElementById("user-input");
-    userInput.setAttribute(
-      "data-placeholder",
-      TranslationModule.translate("writeToAssistantPlaceholder")
-    );
+      // Set placeholder for user input
+      const userInput = document.getElementById("user-input");
+      if (userInput) {
+        userInput.setAttribute(
+          "data-placeholder",
+          TranslationModule.translate("writeToAssistantPlaceholder")
+        );
+      }
 
-    cleanUpLocalStorage(); // Clean up invalid localStorage entries
-    const state = ChatModule.initialize();
-    RenderingModule.renderChatList(state.chats, state.currentChatId);
-    RenderingModule.renderConversation(state.conversation);
-    EventModule.setupEventListeners(); // Initialize all event modules
-    ModelSelectionEventsModule.populateModelSelector(); // Populate model selector
-    ModelSelectionEventsModule.updateModelAndInstructionSelectors(); // Update selectors after initialization
+      const state = await ChatModule.initialize();
+      RenderingModule.renderChatList(state.chats, state.currentChatId);
+      RenderingModule.renderConversation(state.conversation);
+      EventModule.setupEventListeners(); // Initialize all event modules
+      await ModelSelectionEventsModule.populateModelSelector(); // Populate model selector
+      await ModelSelectionEventsModule.updateModelAndInstructionSelectors(); // Update selectors after initialization
+      
+      console.log("Application initialization complete");
+    } catch (error) {
+      console.error("Error during application initialization:", error);
+      // Show error message
+      const errorDiv = document.createElement('div');
+      errorDiv.className = 'initialization-error';
+      errorDiv.textContent = "Failed to initialize application. Please refresh the page.";
+      document.body.appendChild(errorDiv);
+    } finally {
+      // Remove loading indicator
+      const indicator = document.getElementById('app-loading-indicator');
+      if (indicator) {
+        indicator.remove();
+      }
+    }
   }
 
   return {

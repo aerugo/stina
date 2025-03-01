@@ -340,10 +340,27 @@ const SettingsEventsModule = (function () {
       clearDataButton.addEventListener("click", () => {
         ModalModule.showCustomConfirm(
           TranslationModule.translate("confirmClearData"),
-          function (confirmClear) {
+          async function (confirmClear) {
             if (confirmClear) {
-              localStorage.clear();
-              location.reload();
+              try {
+                // Show a loading indicator
+                const loadingDiv = document.createElement('div');
+                loadingDiv.className = 'clear-data-loading';
+                loadingDiv.textContent = "Clearing data...";
+                document.body.appendChild(loadingDiv);
+                
+                // Clear IndexedDB data
+                await StorageModule.clearAll();
+                
+                // Also clear any remaining localStorage items for completeness
+                localStorage.clear();
+                
+                // Reload the page
+                location.reload();
+              } catch (error) {
+                console.error("Error clearing data:", error);
+                ModalModule.showCustomAlert("Error clearing data. Please try again.");
+              }
             }
           }
         );

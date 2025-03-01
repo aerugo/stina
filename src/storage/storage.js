@@ -50,5 +50,9 @@ const StorageModule = (function () {
   return {
     saveData,
     loadData,
+    removeData,
+    clearAll,
+    migrateFromLocalStorage,
+    openDatabase
   };
 })();
