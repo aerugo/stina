@@ -193,14 +193,43 @@ const FileUploadEventsModule = (function () {
       const chip = document.createElement("div");
       chip.classList.add("file-chip");
       chip.dataset.fileId = item.id;
+      // Optionally, mark the chip with a class if ignored
+      if (item.ignored) {
+        chip.classList.add("ignored-file");
+      }
       chip.innerHTML = `
         <span class="file-chip-name">${DOMPurify.sanitize(item.fileName)}</span>
         <span class="file-chip-classification">${item.classification}</span>
         <button class="file-chip-remove">×</button>
       `;
+      // Remove button event
       chip.querySelector(".file-chip-remove").addEventListener("click", (e) => {
         e.stopPropagation();
         removePendingFile(item.id);
+      });
+      // Add click event to allow toggling the ignored state
+      chip.addEventListener("click", () => {
+        ModalModule.showCustomModal(
+          TranslationModule.translate("documentInfoTitle") || "Document Info",
+          `<p><strong>${TranslationModule.translate("fileName") || "File"}:</strong> ${DOMPurify.sanitize(item.fileName)}</p>
+           <p><strong>${TranslationModule.translate("classification") || "Classification"}:</strong> ${item.classification}</p>
+           <p><strong>${TranslationModule.translate("tokenCount") || "Token Count"}:</strong> ${item.tokenCount}</p>
+           <hr>
+           <div class="file-content-preview">${DOMPurify.sanitize(item.content)}</div>
+           <hr>
+           <label class="checkbox" style="margin-top: 1em;">
+             <input type="checkbox" id="ignore-file-checkbox" ${item.ignored ? "checked" : ""} />
+             <span style="margin-left: 0.5rem;">Ignore This Document</span>
+           </label>`,
+          [{ label: TranslationModule.translate("ok") || "OK", value: true }],
+          () => {
+            const ignoreCheckbox = document.getElementById("ignore-file-checkbox");
+            if (ignoreCheckbox) {
+              item.ignored = ignoreCheckbox.checked;
+              renderPendingFiles(files);
+            }
+          }
+        );
       });
       container.appendChild(chip);
     });
