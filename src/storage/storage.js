@@ -1,58 +1,94 @@
 /**
  * Storage Module
- * Abstracts localStorage interactions for persistent data.
+ * Abstracts IndexedDB interactions for persistent data.
  */
 const StorageModule = (function () {
-  /**
-   * Saves data to localStorage under a specified key.
-   * @param {string} key - The key under which to store the data.
-   * @param {*} value - The data to store (will be JSON-stringified).
-   */
-  function saveData(key, value) {
-    if (value === undefined || value === null) {
-      // Remove the item from storage if the value is undefined or null
-      try {
-        localStorage.removeItem(key);
-      } catch (e) {
-        console.error(`Error removing data for key "${key}":`, e);
-      }
-    } else {
-      try {
-        localStorage.setItem(key, JSON.stringify(value));
-      } catch (e) {
-        console.error(`Error saving data for key "${key}":`, e);
-      }
+  const DB_NAME = "StinaAI_DB";
+  const STORE_NAME = "appData";
+  const DB_VERSION = 1;
+  let dbPromise = null;
+
+  function openDatabase() {
+    if (!dbPromise) {
+      dbPromise = new Promise((resolve, reject) => {
+        const request = indexedDB.open(DB_NAME, DB_VERSION);
+
+        request.onupgradeneeded = (e) => {
+          const db = e.target.result;
+          if (!db.objectStoreNames.contains(STORE_NAME)) {
+            db.createObjectStore(STORE_NAME);
+          }
+        };
+
+        request.onsuccess = (e) => resolve(e.target.result);
+        request.onerror = (e) => reject(e.target.error);
+      });
     }
+    return dbPromise;
   }
 
-  /**
-   * Loads data from localStorage by key.
-   * @param {string} key - The key of the data to retrieve.
-   * @returns {*} - The parsed data, or null if not found or on error.
-   */
-  function loadData(key) {
-    try {
-      const data = localStorage.getItem(key);
-      if (!data || data === "undefined" || data === "null") return null;
-      try {
-        return JSON.parse(data);
-      } catch (e) {
-        console.error(`Error parsing data for key "${key}":`, e);
-        localStorage.removeItem(key);
-        return null;
-      }
-    } catch (e) {
-      console.error(`Error accessing localStorage for key "${key}":`, e);
-      return null;
+  async function saveData(key, value) {
+    if (value === undefined || value === null) {
+      return removeData(key);
     }
+    const db = await openDatabase();
+    return new Promise((resolve, reject) => {
+      const txn = db.transaction([STORE_NAME], "readwrite");
+      const store = txn.objectStore(STORE_NAME);
+      const request = store.put(JSON.stringify(value), key);
+      request.onsuccess = () => resolve();
+      request.onerror = () => reject(request.error);
+    });
+  }
+
+  async function loadData(key) {
+    const db = await openDatabase();
+    return new Promise((resolve, reject) => {
+      const txn = db.transaction([STORE_NAME], "readonly");
+      const store = txn.objectStore(STORE_NAME);
+      const request = store.get(key);
+      request.onsuccess = () => {
+        if (!request.result) {
+          resolve(null);
+          return;
+        }
+        try {
+          resolve(JSON.parse(request.result));
+        } catch (err) {
+          removeData(key);
+          resolve(null);
+        }
+      };
+      request.onerror = () => reject(request.error);
+    });
+  }
+
+  async function removeData(key) {
+    const db = await openDatabase();
+    return new Promise((resolve, reject) => {
+      const txn = db.transaction([STORE_NAME], "readwrite");
+      const store = txn.objectStore(STORE_NAME);
+      const request = store.delete(key);
+      request.onsuccess = () => resolve();
+      request.onerror = () => reject(request.error);
+    });
+  }
+
+  async function clearAll() {
+    const db = await openDatabase();
+    return new Promise((resolve, reject) => {
+      const txn = db.transaction([STORE_NAME], "readwrite");
+      const store = txn.objectStore(STORE_NAME);
+      const request = store.clear();
+      request.onsuccess = () => resolve();
+      request.onerror = () => reject(request.error);
+    });
   }
 
   return {
     saveData,
     loadData,
     removeData,
-    clearAll,
-    migrateFromLocalStorage,
-    openDatabase
+    clearAll
   };
 })();
