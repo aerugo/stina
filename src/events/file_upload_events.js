@@ -246,6 +246,12 @@ const FileUploadEventsModule = (function () {
         <div class="field">
           <label class="label">Available Summaries:</label>
           <div id="existing-summaries-list">
+            <div class="summary-item">
+              <label class="radio">
+                <input type="radio" name="document-summary" value="" ${!file.selectedSummaryId ? "checked" : ""}>
+                <span>No Summary (Use full document)</span>
+              </label>
+            </div>
             ${file.summaries.map(summary => `
               <div class="summary-item">
                 <label class="radio">
