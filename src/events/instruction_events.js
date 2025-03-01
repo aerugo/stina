@@ -14,16 +14,15 @@ const InstructionEventsModule = (function () {
     instructionsSelect.addEventListener("change", handleInstructionChange);
 
     populateInstructions();
-    updateEditButtonVisibility();
   }
 
-  function populateInstructions() {
+  async function populateInstructions() {
     instructionsSelect.innerHTML = "";
     const currentChat = ChatModule.getCurrentChat();
     const config = ConfigModule.getConfig();
 
-    const customInstructions = JSON.parse(localStorage.getItem("customInstructions")) || [];
-    window.instructions = window.defaultInstructions.concat(customInstructions);
+    const customInstructions = (await StorageModule.loadData("customInstructions")) || [];
+    window.instructions = (window.defaultInstructions || []).concat(customInstructions);
 
     const selectedInstructionId = 
       (currentChat && currentChat.selectedInstructionId) ||
@@ -48,17 +47,16 @@ const InstructionEventsModule = (function () {
 
   function updateEditButtonVisibility() {
     const selectedValue = instructionsSelect.value;
-    const customInstructions = JSON.parse(localStorage.getItem("customInstructions")) || [];
-    const isCustomFromMemory = customInstructions.some(
+    // If the selected ID is not in the defaultInstructions, assume it's custom.
+    const isCustomFromMemory = !(window.defaultInstructions || []).some(
       (instr) => instr.id === selectedValue
     );
-
     editInstructionBtn.style.display = isCustomFromMemory ? "inline-block" : "none";
   }
 
-  function handleEditInstructionClick() {
+  async function handleEditInstructionClick() {
     const selectedInstructionId = instructionsSelect.value;
-    let customInstructions = JSON.parse(localStorage.getItem("customInstructions")) || [];
+    let customInstructions = (await StorageModule.loadData("customInstructions")) || [];
     let instructionIndex = customInstructions.findIndex(
       (instr) => instr.id === selectedInstructionId
     );
@@ -69,26 +67,23 @@ const InstructionEventsModule = (function () {
         TranslationModule.translate("editCustomInstructionTitle"),
         instruction.label,
         instruction.content,
-        function (result) {
+        async function (result) {
           if (result) {
             if (result.action === "delete") {
               ModalModule.showCustomConfirm(
                 TranslationModule.translate("confirmDeleteInstruction"),
-                function (confirmDelete) {
+                async function (confirmDelete) {
                   if (confirmDelete) {
                     customInstructions.splice(instructionIndex, 1);
-                    localStorage.setItem(
-                      "customInstructions",
-                      JSON.stringify(customInstructions)
-                    );
-                    populateInstructions();
-                    instructionsSelect.value = instructions[0].id;
+                    await StorageModule.saveData("customInstructions", customInstructions);
+                    await populateInstructions();
+                    instructionsSelect.value = window.instructions[0].id;
                     ConfigModule.updateConfig({
-                      selectedInstructionId: instructions[0].id,
+                      selectedInstructionId: window.instructions[0].id,
                     });
                     const currentChat = ChatModule.getCurrentChat();
                     if (currentChat) {
-                      currentChat.selectedInstructionId = instructions[0].id;
+                      currentChat.selectedInstructionId = window.instructions[0].id;
                       ChatModule.saveChats();
                     }
                     updateEditButtonVisibility();
@@ -99,11 +94,8 @@ const InstructionEventsModule = (function () {
               instruction.label = result.label;
               instruction.content = result.content;
               customInstructions[instructionIndex] = instruction;
-              localStorage.setItem(
-                "customInstructions",
-                JSON.stringify(customInstructions)
-              );
-              populateInstructions();
+              await StorageModule.saveData("customInstructions", customInstructions);
+              await populateInstructions();
               instructionsSelect.value = instruction.id;
               updateEditButtonVisibility();
             }
@@ -120,19 +112,18 @@ const InstructionEventsModule = (function () {
         TranslationModule.translate("createCustomInstructionTitle"),
         "",
         "",
-        function (result) {
+        async function (result) {
           if (result && result.label && result.content) {
             const newInstruction = {
               id: "custom_" + Date.now(),
               label: result.label,
               content: result.content,
             };
-
-            const customInstructions = JSON.parse(localStorage.getItem("customInstructions")) || [];
+            let customInstructions = (await StorageModule.loadData("customInstructions")) || [];
             customInstructions.push(newInstruction);
-            localStorage.setItem("customInstructions", JSON.stringify(customInstructions));
+            await StorageModule.saveData("customInstructions", customInstructions);
 
-            populateInstructions();
+            await populateInstructions();
             instructionsSelect.value = newInstruction.id;
             ConfigModule.updateConfig({
               selectedInstructionId: newInstruction.id,
