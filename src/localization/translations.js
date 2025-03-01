@@ -100,6 +100,7 @@ window.translationsData = {
     fileName: "File Name",
     classification: "Classification",
     tokenCount: "Token Count",
+    generate: "Generate",
   },
   sv: {
     exportChat: "Exportera",
@@ -200,5 +201,6 @@ window.translationsData = {
     fileName: "Filnamn",
     classification: "Klassificering",
     tokenCount: "Antal Token",
+    generate: "Generera",
   },
 };

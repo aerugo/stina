@@ -164,7 +164,9 @@ const FileUploadEventsModule = (function () {
             extension: file.name.split('.').pop().toLowerCase(),
             content: content,
             tokenCount: tokenCount,
-            ignored: false     // initialize ignored state to false
+            ignored: false,    // initialize ignored state to false
+            summaries: [],     // array to store document summaries
+            selectedSummaryId: null  // currently active summary (if any)
           };
           pendingFiles.push(pendingFile);
           renderPendingFiles(pendingFiles);
@@ -193,47 +195,146 @@ const FileUploadEventsModule = (function () {
       const chip = document.createElement("div");
       chip.classList.add("file-chip");
       chip.dataset.fileId = item.id;
-      // Optionally, mark the chip with a class if ignored
+      
+      // Apply appropriate classes
       if (item.ignored) {
         chip.classList.add("ignored-file");
       }
+      if (item.selectedSummaryId) {
+        chip.classList.add("summary-active");
+      }
+      
+      // Determine display name - if summary is active, show filename: summary title
+      let pillDisplayName = item.fileName;
+      if (item.selectedSummaryId) {
+        const summaryObj = item.summaries.find(s => s.id === item.selectedSummaryId);
+        if (summaryObj) {
+          pillDisplayName = `${item.fileName}: ${summaryObj.name}`;
+        }
+      }
+      
       chip.innerHTML = `
-        <span class="file-chip-name">${DOMPurify.sanitize(item.fileName)}</span>
+        <span class="file-chip-name">${DOMPurify.sanitize(pillDisplayName)}</span>
         <span class="file-chip-classification">${item.classification}</span>
         <button class="file-chip-remove">×</button>
       `;
+      
       // Remove button event
       chip.querySelector(".file-chip-remove").addEventListener("click", (e) => {
         e.stopPropagation();
         removePendingFile(item.id);
       });
-      // Add click event to allow toggling the ignored state
+      
+      // Add click event to show document info modal
       chip.addEventListener("click", () => {
-        ModalModule.showCustomModal(
-          TranslationModule.translate("documentInfoTitle") || "Document Info",
-          `<p><strong>${TranslationModule.translate("fileName") || "File"}:</strong> ${DOMPurify.sanitize(item.fileName)}</p>
-           <p><strong>${TranslationModule.translate("classification") || "Classification"}:</strong> ${item.classification}</p>
-           <p><strong>${TranslationModule.translate("tokenCount") || "Token Count"}:</strong> ${item.tokenCount}</p>
-           <hr>
-           <div class="file-content-preview">${DOMPurify.sanitize(item.content)}</div>
-           <hr>
-           <label class="checkbox" style="margin-top: 1em;">
-             <input type="checkbox" id="ignore-file-checkbox" ${item.ignored ? "checked" : ""} />
-             <span style="margin-left: 0.5rem;">Ignore This Document</span>
-           </label>`,
-          [{ label: TranslationModule.translate("ok") || "OK", value: true }],
-          () => {
-            const ignoreCheckbox = document.getElementById("ignore-file-checkbox");
-            if (ignoreCheckbox) {
-              item.ignored = ignoreCheckbox.checked;
-              console.log("[DEBUG][file_upload] File", item.fileName, "ignored state set to:", item.ignored);
-              renderPendingFiles(files);
-            }
-          }
-        );
+        showDocumentInfoModal(item);
       });
+      
       container.appendChild(chip);
     });
+  }
+  
+  function showDocumentInfoModal(file) {
+    // Build summaries section HTML
+    let summariesHTML = '';
+    if (file.summaries && file.summaries.length > 0) {
+      summariesHTML = `
+        <div class="field">
+          <label class="label">Available Summaries:</label>
+          <div id="existing-summaries-list">
+            ${file.summaries.map(summary => `
+              <div class="summary-item">
+                <label class="radio">
+                  <input type="radio" name="document-summary" value="${summary.id}" 
+                    ${file.selectedSummaryId === summary.id ? "checked" : ""}>
+                  <span class="summary-name">${DOMPurify.sanitize(summary.name)}</span>
+                </label>
+                <button class="button is-small view-summary-btn" data-summary-id="${summary.id}">View</button>
+              </div>
+            `).join('')}
+          </div>
+        </div>`;
+    } else {
+      summariesHTML = `
+        <div class="field">
+          <label class="label">Summaries:</label>
+          <p>No summaries available.</p>
+        </div>`;
+    }
+    
+    ModalModule.showCustomModal(
+      TranslationModule.translate("documentInfoTitle") || "Document Info",
+      `<p><strong>${TranslationModule.translate("fileName") || "File"}:</strong> ${DOMPurify.sanitize(file.fileName)}</p>
+       <p><strong>${TranslationModule.translate("classification") || "Classification"}:</strong> ${file.classification}</p>
+       <p><strong>${TranslationModule.translate("tokenCount") || "Token Count"}:</strong> ${file.tokenCount}</p>
+       <hr>
+       <div class="file-content-preview">${DOMPurify.sanitize(file.content)}</div>
+       <hr>
+       ${summariesHTML}
+       <div class="field">
+         <button id="generate-summary-btn" class="button is-primary">Generate New Summary</button>
+       </div>
+       <hr>
+       <label class="checkbox" style="margin-top: 1em;">
+         <input type="checkbox" id="ignore-file-checkbox" ${file.ignored ? "checked" : ""} />
+         <span style="margin-left: 0.5rem;">Ignore This Document</span>
+       </label>`,
+      [{ label: TranslationModule.translate("ok") || "OK", value: true }],
+      () => {
+        // Handle ignore checkbox
+        const ignoreCheckbox = document.getElementById("ignore-file-checkbox");
+        if (ignoreCheckbox) {
+          file.ignored = ignoreCheckbox.checked;
+          console.log("[DEBUG][file_upload] File", file.fileName, "ignored state set to:", file.ignored);
+        }
+        
+        // Handle summary selection
+        const selectedSummaryRadio = document.querySelector('input[name="document-summary"]:checked');
+        if (selectedSummaryRadio) {
+          file.selectedSummaryId = selectedSummaryRadio.value;
+          console.log("[DEBUG][file_upload] Selected summary:", file.selectedSummaryId);
+        } else {
+          file.selectedSummaryId = null;
+        }
+        
+        renderPendingFiles(pendingFiles);
+      }
+    );
+    
+    // Add event listener for the generate summary button
+    setTimeout(() => {
+      const generateSummaryBtn = document.getElementById("generate-summary-btn");
+      if (generateSummaryBtn) {
+        generateSummaryBtn.addEventListener("click", () => {
+          SummariesModule.showSummarizationModal(file, (newSummary) => {
+            file.summaries.push(newSummary);
+            file.selectedSummaryId = newSummary.id;
+            showDocumentInfoModal(file); // Re-open the modal with updated summaries
+          });
+        });
+      }
+      
+      // Add event listeners for view summary buttons
+      const viewSummaryBtns = document.querySelectorAll('.view-summary-btn');
+      viewSummaryBtns.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+          const summaryId = btn.dataset.summaryId;
+          const summary = file.summaries.find(s => s.id === summaryId);
+          if (summary) {
+            ModalModule.showCustomModal(
+              "Summary: " + summary.name,
+              `<div class="summary-content">
+                <p><strong>Instructions:</strong> ${DOMPurify.sanitize(summary.instructions)}</p>
+                <hr>
+                <p>${DOMPurify.sanitize(summary.content)}</p>
+              </div>`,
+              [{ label: TranslationModule.translate("ok") || "OK", value: true }]
+            );
+          }
+        });
+      });
+    }, 0);
   }
 
   function removePendingFile(fileId) {

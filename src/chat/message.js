@@ -206,8 +206,19 @@ const MessageModule = (function () {
         msg.attachedFiles.forEach(file => {
           if (!file.ignored) {  // Only merge if not ignored
             console.log("Merging file:", file.fileName);
+            
+            // Determine which content to use - summary or full content
+            let textToUse = file.content;
+            if (file.selectedSummaryId) {
+              const summaryObj = file.summaries.find(s => s.id === file.selectedSummaryId);
+              if (summaryObj) {
+                console.log("Using summary instead of full content for:", file.fileName);
+                textToUse = `[SUMMARY: ${summaryObj.name}]\n\n${summaryObj.content}`;
+              }
+            }
+            
             // Normalize newlines to LF for consistency
-            const normalizedContent = file.content.replace(/\r\n/g, "\n").replace(/\r/g, "\n");
+            const normalizedContent = textToUse.replace(/\r\n/g, "\n").replace(/\r/g, "\n");
             mergedContent += `${file.fileName}\n\n${normalizedContent}\n\n----------\n`;
           } else {
             console.log("Skipping ignored file:", file.fileName);

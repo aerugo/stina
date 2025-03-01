@@ -161,21 +161,58 @@ const RenderingModule = (function () {
         message.attachedFiles.forEach(file => {
           const pill = document.createElement("div");
           pill.classList.add("file-pill");
+          
+          // Apply appropriate classes
           if (file.ignored) {
-            pill.classList.add("ignored-file");  // Use this CSS class to highlight ignored docs
+            pill.classList.add("ignored-file");
           }
+          if (file.selectedSummaryId) {
+            pill.classList.add("summary-active");
+          }
+          
+          // Determine display name - if summary is active, show filename: summary title
+          let pillDisplayName = file.fileName;
+          if (file.selectedSummaryId && file.summaries) {
+            const summaryObj = file.summaries.find(s => s.id === file.selectedSummaryId);
+            if (summaryObj) {
+              pillDisplayName = `${file.fileName}: ${summaryObj.name}`;
+            }
+          }
+          
           pill.innerHTML = `
-            <span class="file-name">${DOMPurify.sanitize(file.fileName)}</span>
+            <span class="file-name">${DOMPurify.sanitize(pillDisplayName)}</span>
             <span class="file-classification">${file.classification}</span>
           `;
           
           // Always allow toggling the "ignore" state regardless of attachmentsLocked
           pill.addEventListener("click", () => {
+            // Build summaries section HTML if summaries exist
+            let summariesHTML = '';
+            if (file.summaries && file.summaries.length > 0) {
+              summariesHTML = `
+                <div class="field">
+                  <label class="label">Used Summary:</label>
+                  <div>
+                    ${file.selectedSummaryId ? 
+                      `<div class="summary-item">
+                        <span class="summary-name">${DOMPurify.sanitize(
+                          file.summaries.find(s => s.id === file.selectedSummaryId)?.name || "Unknown Summary"
+                        )}</span>
+                        <button class="button is-small view-summary-btn" data-summary-id="${file.selectedSummaryId}">View</button>
+                      </div>` : 
+                      `<p>No summary selected</p>`
+                    }
+                  </div>
+                </div>`;
+            }
+            
             ModalModule.showCustomModal(
               TranslationModule.translate("documentInfoTitle") || "Document Info",
               `<p><strong>${TranslationModule.translate("fileName") || "File"}:</strong> ${DOMPurify.sanitize(file.fileName)}</p>
                <p><strong>${TranslationModule.translate("classification") || "Classification"}:</strong> ${file.classification}</p>
                <p><strong>${TranslationModule.translate("tokenCount") || "Token Count"}:</strong> ${file.tokenCount}</p>
+               <hr>
+               ${summariesHTML}
                <hr>
                <div class="file-content-preview">${DOMPurify.sanitize(file.content)}</div>
                <hr>
@@ -198,6 +235,29 @@ const RenderingModule = (function () {
                 }
               }
             );
+            
+            // Add event listeners for view summary buttons
+            setTimeout(() => {
+              const viewSummaryBtns = document.querySelectorAll('.view-summary-btn');
+              viewSummaryBtns.forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                  e.preventDefault();
+                  const summaryId = btn.dataset.summaryId;
+                  const summary = file.summaries.find(s => s.id === summaryId);
+                  if (summary) {
+                    ModalModule.showCustomModal(
+                      "Summary: " + summary.name,
+                      `<div class="summary-content">
+                        <p><strong>Instructions:</strong> ${DOMPurify.sanitize(summary.instructions || "Not specified")}</p>
+                        <hr>
+                        <p>${DOMPurify.sanitize(summary.content)}</p>
+                      </div>`,
+                      [{ label: TranslationModule.translate("ok") || "OK", value: true }]
+                    );
+                  }
+                });
+              });
+            }, 0);
           });
           
           filesContainer.appendChild(pill);
