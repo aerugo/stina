@@ -143,11 +143,27 @@ const FileUploadEventsModule = (function () {
       // Save the parsed content with the file for token calculations
       file.parsedContent = content;
       
-      // Show the file preview modal and, on confirmation, display the classification modal
-      showFilePreviewModal(file, content, files, index, function() {
-        showClassificationModal(file, content, function () {
-          processFiles(files, index + 1);
-        });
+      // Show the combined preview and classification modal
+      showPreviewAndClassificationModal(file, content, files, index, function(success, chosenClass) {
+        if (success) {
+          // Tokenize parsed file content
+          const tokenCount = TokenizationModule.countTokens(content);
+
+          // Create a pending file object with a unique ID and additional metadata
+          const pendingFile = {
+            id: Date.now().toString(),  // simple unique ID
+            file: file,
+            classification: chosenClass,
+            fileName: file.name,
+            extension: file.name.split('.').pop().toLowerCase(),
+            content: content,
+            tokenCount: tokenCount
+          };
+          pendingFiles.push(pendingFile);
+          renderPendingFiles(pendingFiles);
+          console.log("Pending Files:", pendingFiles);
+        }
+        processFiles(files, index + 1);
       });
     } catch (error) {
       // Hide processing modal on error
@@ -160,93 +176,6 @@ const FileUploadEventsModule = (function () {
     }
   }
 
-  /**
-   * Shows a modal with radio buttons for classification (C1..C5).
-   * On Confirm, logs the File object and classification to the console.
-   */
-  function showClassificationModal(file, content, onComplete) {
-    const classificationOptions = ["C1", "C2", "C3", "C4", "C5"];
-
-    // Create radio inputs
-    const classificationRadios = classificationOptions
-      .map((c, index) => {
-        return `
-          <label class="radio">
-            <input type="radio" name="info-class" value="${c}" ${
-          index === 0 ? "checked" : ""
-        } />
-            ${c}
-          </label>
-        `;
-      })
-      .join("<br/>");
-
-    // Build the modal content
-    const modalContent = `
-      <p>${TranslationModule.translate("chooseInformationClass")} <strong>${DOMPurify.sanitize(
-        file.name
-      )}</strong>:</p>
-      <div style="margin: 1rem 0;">
-        ${classificationRadios}
-      </div>
-    `;
-
-    // Modal buttons
-    const buttons = [
-      { label: TranslationModule.translate("cancel"), value: false },
-      {
-        label: TranslationModule.translate("confirm"),
-        value: true,
-        class: "is-primary",
-      },
-    ];
-
-    // Show the modal and process the response via onComplete callback
-    ModalModule.showCustomModal(
-      TranslationModule.translate("selectClassification"),
-      modalContent,
-      buttons,
-      function (confirmed) {
-        if (!confirmed) {
-          onComplete(false);
-          return;
-        }
-
-        const chosenClass = getSelectedClassification();
-        if (!chosenClass) {
-          ModalModule.showCustomAlert(TranslationModule.translate("pleaseSelectClassification"));
-          onComplete(false);
-          return;
-        }
-
-        // Tokenize parsed file content
-        const tokenCount = TokenizationModule.countTokens(content);
-
-        // Create a pending file object with a unique ID and additional metadata
-        const pendingFile = {
-          id: Date.now().toString(),  // simple unique ID
-          file: file,
-          classification: chosenClass,
-          fileName: file.name,
-          extension: file.name.split('.').pop().toLowerCase(),
-          content: content,
-          tokenCount: tokenCount
-        };
-        pendingFiles.push(pendingFile);
-        renderPendingFiles(pendingFiles);
-        console.log("Pending Files:", pendingFiles);
-        onComplete(true);
-      }
-    );
-
-    function getSelectedClassification() {
-      const radios = document.querySelectorAll('input[name="info-class"]');
-      for (const r of radios) {
-        if (r.checked) return r.value;
-      }
-      return null;
-    }
-  }
 
   function renderPendingFiles(files) {
     const container = document.getElementById("pending-uploads-container");
@@ -289,6 +218,103 @@ const FileUploadEventsModule = (function () {
     const modal = document.getElementById("custom-modal");
     if (modal) {
       modal.classList.remove("is-active");
+    }
+  }
+
+  /**
+   * Shows a combined preview and classification modal
+   */
+  function showPreviewAndClassificationModal(file, content, files, currentIndex, onComplete) {
+    // Calculate token counts
+    const documentTokens = TokenizationModule.countTokens(content);
+    const currentChat = ChatModule.getCurrentChat();
+    const config = ConfigModule.getConfig();
+    const selectedModelKey = currentChat.selectedModelKey || config.selectedModelKey || "gpt-4o";
+    const selectedModel = ModelsModule.getModel(selectedModelKey);
+    const modelTokenLimit = selectedModel.tokenLimit || selectedModel.maxTokens || 0;
+    const historyTokens = (currentChat.conversation || []).reduce((sum, msg) => {
+      return sum + TokenizationModule.countTokens(msg.content);
+    }, 0);
+    
+    // Calculate tokens from other pending documents
+    let pendingTokens = 0;
+    for (let i = 0; i < currentIndex; i++) {
+      if (files[i].parsedContent) {
+        pendingTokens += TokenizationModule.countTokens(files[i].parsedContent);
+      }
+    }
+    // Add tokens from already pending files
+    pendingFiles.forEach(file => {
+      pendingTokens += file.tokenCount || 0;
+    });
+
+    // Classification options
+    const classificationOptions = ["C1", "C2", "C3", "C4", "C5"];
+
+    // Build modal content that combines preview info and classification options
+    let modalContent = `
+      <div>
+        <p><strong>${TranslationModule.translate("previewFileName") || "File Name"}: </strong>${DOMPurify.sanitize(file.name)}</p>
+        <p><strong>${TranslationModule.translate("previewContent") || "Content Preview"}: </strong>${DOMPurify.sanitize(content.slice(0, 300))}${content.length > 300 ? "..." : ""}</p>
+        <p><strong>${TranslationModule.translate("previewDocumentTokens") || "Document Tokens"}: </strong>${documentTokens}</p>
+        <p><strong>${TranslationModule.translate("previewModelTokenLimit") || "Model Token Limit"}: </strong>${modelTokenLimit}</p>
+        <p><strong>${TranslationModule.translate("previewHistoryTokens") || "History Tokens"}: </strong>${historyTokens}</p>
+        <p><strong>${TranslationModule.translate("previewPendingTokens") || "Pending Documents Tokens"}: </strong>${pendingTokens}</p>
+        <hr>
+        <p>${TranslationModule.translate("chooseInformationClass")} <strong>${DOMPurify.sanitize(file.name)}</strong>:</p>
+        <div style="margin: 1rem 0;">
+    `;
+
+    // Add classification radio buttons
+    classificationOptions.forEach((option, index) => {
+      modalContent += `
+        <label class="radio">
+          <input type="radio" name="info-class" value="${option}" ${index === 0 ? "checked" : ""} />
+          ${option}
+        </label><br>
+      `;
+    });
+    
+    modalContent += `</div></div>`;
+
+    // Modal buttons
+    const buttons = [
+      { label: TranslationModule.translate("cancel"), value: false },
+      {
+        label: TranslationModule.translate("confirm"),
+        value: true,
+        class: "is-primary",
+      },
+    ];
+
+    // Open the combined modal
+    ModalModule.showCustomModal(
+      TranslationModule.translate("previewModalTitle") || "Document Details",
+      modalContent,
+      buttons,
+      function(confirmed) {
+        if (!confirmed) {
+          onComplete(false);
+          return;
+        }
+
+        const chosenClass = getSelectedClassification();
+        if (!chosenClass) {
+          ModalModule.showCustomAlert(TranslationModule.translate("pleaseSelectClassification"));
+          onComplete(false);
+          return;
+        }
+
+        onComplete(true, chosenClass);
+      }
+    );
+
+    function getSelectedClassification() {
+      const radios = document.querySelectorAll('input[name="info-class"]');
+      for (const r of radios) {
+        if (r.checked) return r.value;
+      }
+      return null;
     }
   }
 
