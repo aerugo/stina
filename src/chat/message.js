@@ -168,6 +168,8 @@ const MessageModule = (function () {
     // Start with a copy of the conversation WITHOUT the loading message
     let conversationToSend = [...currentState.conversation];
     let instructionLabel = "";
+    // Declare instruction variable outside the if block so it's available for the API request
+    let instruction = null;
 
     // Handle system message if the model supports it
     if (selectedModelParams && selectedModelParams.system) {
@@ -178,7 +180,7 @@ const MessageModule = (function () {
         await StorageModule.loadData("customInstructions") || [];
 
       // Find selected instruction
-      let instruction =
+      instruction =
         customInstructions.find(
           (instr) => instr.id === selectedInstructionId
         ) || instructions.find((instr) => instr.id === selectedInstructionId);
