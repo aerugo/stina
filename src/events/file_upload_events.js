@@ -248,8 +248,14 @@ const FileUploadEventsModule = (function () {
       pendingTokens += file.tokenCount || 0;
     });
 
-    // Classification options
-    const classificationOptions = ["C1", "C2", "C3", "C4", "C5"];
+    // Classification options (localized)
+    const classificationOptions = [
+      TranslationModule.translate("classificationOption1"),
+      TranslationModule.translate("classificationOption2"),
+      TranslationModule.translate("classificationOption3"),
+      TranslationModule.translate("classificationOption4"),
+      TranslationModule.translate("classificationOption5")
+    ];
 
     // Build modal content that combines preview info and classification options
     let modalContent = `
@@ -308,7 +314,7 @@ const FileUploadEventsModule = (function () {
 
     // Open the combined modal
     ModalModule.showCustomModal(
-      TranslationModule.translate("previewModalTitle") || "Document Details",
+      TranslationModule.translate("previewModalTitle"),
       modalContent,
       buttons,
       function(confirmed) {
