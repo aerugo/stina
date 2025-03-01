@@ -169,7 +169,9 @@ const MessageModule = (function () {
         console.log("Merging attached files for message. Count:", msg.attachedFiles.length);
         msg.attachedFiles.forEach(file => {
           console.log("Merging file:", file.fileName);
-          mergedContent += `${file.fileName}\n\n${file.content}\n\n----------\n`;
+          // Normalize newlines to LF for consistency
+          const normalizedContent = file.content.replace(/\r\n/g, "\n").replace(/\r/g, "\n");
+          mergedContent += `${file.fileName}\n\n${normalizedContent}\n\n----------\n`;
         });
         mergedContent += msg.content;
         console.log("Resulting merged content:", mergedContent);
