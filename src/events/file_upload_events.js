@@ -244,12 +244,12 @@ const FileUploadEventsModule = (function () {
     if (file.summaries && file.summaries.length > 0) {
       summariesHTML = `
         <div class="field">
-          <label class="label">Available Summaries:</label>
+          <label class="label">${TranslationModule.translate("availableSummaries")}</label>
           <div id="existing-summaries-list">
             <div class="summary-item">
               <label class="radio">
                 <input type="radio" name="document-summary" value="" ${!file.selectedSummaryId ? "checked" : ""}>
-                <span>No Summary (Use full document)</span>
+                <span>${TranslationModule.translate("noSummary")}</span>
               </label>
             </div>
             ${file.summaries.map(summary => `
@@ -259,7 +259,9 @@ const FileUploadEventsModule = (function () {
                     ${file.selectedSummaryId === summary.id ? "checked" : ""}>
                   <span class="summary-name">${DOMPurify.sanitize(summary.name)}</span>
                 </label>
-                <button class="button is-small view-summary-btn" data-summary-id="${summary.id}">View</button>
+                <button class="button is-small view-summary-btn" data-summary-id="${summary.id}">
+                  ${TranslationModule.translate("viewSummary")}
+                </button>
               </div>
             `).join('')}
           </div>
@@ -267,29 +269,31 @@ const FileUploadEventsModule = (function () {
     } else {
       summariesHTML = `
         <div class="field">
-          <label class="label">Summaries:</label>
-          <p>No summaries available.</p>
+          <label class="label">${TranslationModule.translate("summaries")}</label>
+          <p>${TranslationModule.translate("noSummariesAvailable")}</p>
         </div>`;
     }
     
     ModalModule.showCustomModal(
-      TranslationModule.translate("documentInfoTitle") || "Document Info",
-      `<p><strong>${TranslationModule.translate("fileName") || "File"}:</strong> ${DOMPurify.sanitize(file.fileName)}</p>
-       <p><strong>${TranslationModule.translate("classification") || "Classification"}:</strong> ${file.classification}</p>
-       <p><strong>${TranslationModule.translate("tokenCount") || "Token Count"}:</strong> ${file.tokenCount}</p>
+      TranslationModule.translate("documentInfoTitle"),
+      `<p><strong>${TranslationModule.translate("fileName")}:</strong> ${DOMPurify.sanitize(file.fileName)}</p>
+       <p><strong>${TranslationModule.translate("classification")}:</strong> ${file.classification}</p>
+       <p><strong>${TranslationModule.translate("tokenCount")}:</strong> ${file.tokenCount}</p>
        <hr>
        <div class="file-content-preview">${DOMPurify.sanitize(file.content)}</div>
        <hr>
        ${summariesHTML}
        <div class="field">
-         <button id="generate-summary-btn" class="button is-primary">Generate New Summary</button>
+         <button id="generate-summary-btn" class="button is-primary">
+           ${TranslationModule.translate("generateSummary")}
+         </button>
        </div>
        <hr>
        <label class="checkbox" style="margin-top: 1em;">
          <input type="checkbox" id="ignore-file-checkbox" ${file.ignored ? "checked" : ""} />
-         <span style="margin-left: 0.5rem;">Ignore This Document</span>
+         <span style="margin-left: 0.5rem;">${TranslationModule.translate("ignoreThisDocument")}</span>
        </label>`,
-      [{ label: TranslationModule.translate("ok") || "OK", value: true }],
+      [{ label: TranslationModule.translate("ok"), value: true }],
       () => {
         // Handle ignore checkbox
         const ignoreCheckbox = document.getElementById("ignore-file-checkbox");
