@@ -49,6 +49,9 @@ const InitializationModule = (function () {
       // Force update of instruction visibility
       ModelSelectionEventsModule.updateInstructionsVisibility();
       
+      // Initialize the tutorial feature
+      await TutorialModule.init();
+      
       console.log("Application initialization complete");
     } catch (error) {
       console.error("Error during application initialization:", error);

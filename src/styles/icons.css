@@ -46,3 +46,8 @@
   max-height: 1.5em; /* Adjust this value to match the other button icons */
   object-fit: contain;
 }
+
+/* Highlight the help icon if the tutorial is not yet completed */
+.help-button-highlight img {
+  filter: hue-rotate(200deg);
+}

@@ -33,6 +33,11 @@
         </div>
         <div class="navbar-end">
           <div class="navbar-item">
+            <button id="help-btn" class="button is-light help-button-highlight" aria-label="Help">
+              <img src="src/icons/help.svg" alt="Help" />
+            </button>
+          </div>
+          <div class="navbar-item">
             <button id="settings-btn" class="button is-light" aria-label="Settings">
               <img src="src/icons/settings.svg" alt="Settings" />
             </button>
@@ -305,6 +310,26 @@
             modelsLoaded = true;
             initializeAppIfReady();
           });
+        };
+        document.head.appendChild(script);
+      })();
+    </script>
+
+    <!-- Include new tutorial module -->
+    <script src="src/tutorial/TutorialModule.js"></script>
+
+    <script>
+      (function() {
+        const script = document.createElement('script');
+        script.src = 'tutorial.js';
+        script.onload = function() {
+          console.log('tutorial.js has been loaded.');
+        };
+        script.onerror = function() {
+          console.warn('tutorial.js could not be loaded, falling back to tutorial.template.js.');
+          const fallbackScript = document.createElement('script');
+          fallbackScript.src = 'tutorial.template.js';
+          document.head.appendChild(fallbackScript);
         };
         document.head.appendChild(script);
       })();
