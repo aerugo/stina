@@ -167,15 +167,23 @@ const TutorialModule = (function() {
         currentPageIndex++;
         renderCurrentLesson();
       } else {
+        // Mark lesson as complete
         tutorialState.completedLessons[lesson.id] = true;
-        const allDone = tutorialData.lessons.every(l => tutorialState.completedLessons[l.id]);
-        if (allDone) {
+        // Determine if the current lesson is the last one in the tutorial
+        const currentLessonIndex = tutorialData.lessons.findIndex(l => l.id === lesson.id);
+        if (currentLessonIndex === tutorialData.lessons.length - 1) {
+          // If this is the last lesson, mark all complete and close the modal.
           tutorialState.allCompleted = true;
+          await saveTutorialState();
+          updateHelpButtonHighlight();
+          hideTutorialModal();
+        } else {
+          // Not the last lesson: update state and UI as usual.
+          await saveTutorialState();
+          updateHelpButtonHighlight();
+          renderLessonList();
+          renderCurrentLesson();
         }
-        await saveTutorialState();
-        updateHelpButtonHighlight();
-        renderLessonList();
-        renderCurrentLesson();
       }
     });
     modalFooter.appendChild(nextBtn);
