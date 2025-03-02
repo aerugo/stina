@@ -30,6 +30,11 @@
   --modal-title-color: #333333;
   --modal-text-color: #444444;
   --modal-overlay-color: rgba(0, 0, 0, 0.8);
+  
+  /* Tutorial Modal Variables */
+  --tutorial-background-color: #ffffff;
+  --tutorial-header-footer-background: #f0f7ff;
+  --tutorial-border-color: #d0e8ff;
 
   /* Button Variables */
   --button-primary-background: #005fcc;

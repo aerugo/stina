@@ -217,12 +217,12 @@ const TutorialModule = (function() {
       existingModal.classList.add("modal");
       existingModal.innerHTML = `
         <div class="modal-background"></div>
-        <div class="modal-card" style="max-width: 1200px; height: 80vh; display: flex; flex-direction: column;">
+        <div class="modal-card" style="height: 80vh; display: flex; flex-direction: column;">
           <header class="modal-card-head">
             <p class="modal-card-title" id="tutorial-modal-title">Tutorial</p>
             <button class="delete" aria-label="close"></button>
           </header>
-          <div class="progress-container" style="padding: 0 1.5rem; background-color: var(--modal-header-footer-background);">
+          <div class="progress-container" style="padding: 0 1.5rem; background-color: var(--tutorial-header-footer-background, var(--modal-header-footer-background));">
             <div class="columns is-mobile is-vcentered" style="margin-bottom: 0.5rem;">
               <div class="column is-narrow">
                 <span class="has-text-weight-medium">

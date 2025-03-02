@@ -5,7 +5,7 @@
 
 /* Modal Customizations */
 .modal-card {
-    max-width: 1200px;
+    max-width: 900px;
     margin: 0 auto;
     animation: fadeInUp 0.3s ease;
     background-color: var(--modal-background-color);
@@ -13,6 +13,13 @@
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
     border-radius: var(--border-radius);
     transition: all 0.3s ease;
+}
+
+/* Tutorial Modal - wider than standard modals */
+#tutorial-modal .modal-card {
+    max-width: 1400px; /* Wider than standard modals */
+    background-color: var(--tutorial-background-color, var(--modal-background-color));
+    border-radius: 8px; /* Slightly more rounded corners */
 }
 
 @keyframes fadeInUp {
@@ -28,6 +35,18 @@
     border-bottom: 1px solid var(--border-color);
     border-top-left-radius: var(--border-radius);
     border-top-right-radius: var(--border-radius);
+}
+
+/* Tutorial modal header/footer styling */
+#tutorial-modal .modal-card-head,
+#tutorial-modal .modal-card-foot {
+    background-color: var(--tutorial-header-footer-background, var(--modal-header-footer-background));
+    border-color: var(--tutorial-border-color, var(--border-color));
+}
+
+#tutorial-modal .modal-card-title {
+    font-size: 1.4rem;
+    color: var(--primary-color);
 }
 
 .modal-card-title {
