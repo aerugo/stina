@@ -90,7 +90,7 @@ const TutorialModule = (function() {
             </div>
           </div>
           <section class="modal-card-body" style="padding: 0;">
-            <div class="columns is-gapless" style="margin: 0; height: 100%;">
+            <div class="columns is-gapless" style="margin: 0; height: 100%; display: flex;">
               <div class="column sidebar-column" id="tutorial-sidebar-column" style="border-right: 1px solid #ddd; padding: 0; height: 100%; width: 25%; position: relative;">
                 <aside class="menu" style="padding: 1rem;">
                   <div class="is-flex is-justify-content-space-between is-align-items-center mb-2">
@@ -193,6 +193,7 @@ const TutorialModule = (function() {
       
       // Expand main content to fill the space
       mainContentColumn.style.width = "calc(100% - 30px)";
+      mainContentColumn.style.flex = "1";
       
       // Create a new button to expand the sidebar
       const expandBtn = document.createElement("button");
@@ -207,6 +208,10 @@ const TutorialModule = (function() {
       
       // Add the expand button to the sidebar column
       sidebarColumn.appendChild(expandBtn);
+      
+      // Force the columns to recalculate
+      const columnsContainer = sidebarColumn.parentElement;
+      columnsContainer.style.display = "flex";
     } else {
       // Expand sidebar
       sidebarColumn.style.width = "25%";
@@ -215,6 +220,7 @@ const TutorialModule = (function() {
       
       // Adjust main content width
       mainContentColumn.style.width = "75%";
+      mainContentColumn.style.flex = "";
       
       // Remove the expand button if it exists
       const expandBtn = sidebarColumn.querySelector("#expand-sidebar-btn");
@@ -225,6 +231,10 @@ const TutorialModule = (function() {
       // Update the toggle button
       toggleBtn.innerHTML = `<span class="icon is-small"><i class="fas fa-chevron-left"></i></span>`;
       toggleBtn.setAttribute("title", TranslationModule.translate("collapseSidebar"));
+      
+      // Reset the columns container
+      const columnsContainer = sidebarColumn.parentElement;
+      columnsContainer.style.display = "";
     }
   }
 
