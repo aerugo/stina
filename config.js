@@ -1,9 +1,9 @@
 window.defaultConfig = {
-  defaultLanguage: "en",
+  defaultLanguage: "sv",
   storage: {
     type: "indexeddb",
     dbName: "StinaAI_DB",
     storeName: "appData",
-    version: 1
-  }
+    version: 1,
+  },
 };

@@ -5,3 +5,4 @@ config.yaml
 instructions.js
 providers.js
 models.js
+tutorial.js
