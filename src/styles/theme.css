@@ -43,6 +43,11 @@
   --button-tertiary-hover-background: #d6d8db;
 }
 
+/* Smooth transition for modal card appearance */
+.modal-card {
+  transition: all 0.3s ease;
+}
+
 /* Override Bulma's .button.is-link styles */
 .button.is-link {
   background-color: var(--primary-color);

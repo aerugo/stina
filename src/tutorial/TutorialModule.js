@@ -71,16 +71,20 @@ const TutorialModule = (function() {
       existingModal.classList.add("modal");
       existingModal.innerHTML = `
         <div class="modal-background"></div>
-        <div class="modal-card" style="width: 80%; max-width: 900px;">
+        <div class="modal-card">
           <header class="modal-card-head">
             <p class="modal-card-title" id="tutorial-modal-title">Tutorial</p>
             <button class="delete" aria-label="close"></button>
           </header>
-          <section class="modal-card-body" style="display: flex; gap: 1rem;">
-            <!-- Lessons sidebar -->
-            <aside id="tutorial-lessons-list" style="width: 200px; border-right: 1px solid #eee;"></aside>
-            <!-- Lesson content area -->
-            <div id="tutorial-main-content" style="flex: 1;"></div>
+          <section class="modal-card-body">
+            <div class="columns is-gapless is-mobile">
+              <div class="column is-3-desktop is-12-mobile" id="tutorial-lessons-list" style="border-right: 1px solid #ddd; padding: 1rem;">
+                <!-- Lessons list will be rendered here -->
+              </div>
+              <div class="column is-9-desktop is-12-mobile" id="tutorial-main-content" style="padding: 1rem;">
+                <!-- Lesson content will be rendered here -->
+              </div>
+            </div>
           </section>
           <footer class="modal-card-foot" id="tutorial-modal-footer"></footer>
         </div>
@@ -158,6 +162,9 @@ const TutorialModule = (function() {
 
     // Footer navigation buttons.
     modalFooter.innerHTML = "";
+    const btnContainer = document.createElement("div");
+    btnContainer.className = "buttons is-centered";
+
     const prevBtn = document.createElement("button");
     prevBtn.classList.add("button");
     prevBtn.textContent = "← Previous";
@@ -166,7 +173,7 @@ const TutorialModule = (function() {
       currentPageIndex--;
       renderCurrentLesson();
     });
-    modalFooter.appendChild(prevBtn);
+    btnContainer.appendChild(prevBtn);
 
     const nextBtn = document.createElement("button");
     nextBtn.classList.add("button", "is-primary");
@@ -178,17 +185,13 @@ const TutorialModule = (function() {
       } else {
         // Mark lesson as complete
         tutorialState.completedLessons[lesson.id] = true;
-        // Determine if the current lesson is the last one in the tutorial
         const currentLessonIndex = tutorialData.lessons.findIndex(l => l.id === lesson.id);
         if (currentLessonIndex === tutorialData.lessons.length - 1) {
-          // If this is the last lesson, mark all complete and close the modal.
           tutorialState.allCompleted = true;
           await saveTutorialState();
           updateHelpButtonHighlight();
           hideTutorialModal();
         } else {
-          // Not the last lesson: navigate to the next lesson.
-          const currentLessonIndex = tutorialData.lessons.findIndex(l => l.id === lesson.id);
           const nextLesson = tutorialData.lessons[currentLessonIndex + 1];
           currentLessonId = nextLesson.id;
           currentPageIndex = 0;
@@ -199,7 +202,9 @@ const TutorialModule = (function() {
         }
       }
     });
-    modalFooter.appendChild(nextBtn);
+    btnContainer.appendChild(nextBtn);
+
+    modalFooter.appendChild(btnContainer);
   }
 
   async function saveTutorialState() {
