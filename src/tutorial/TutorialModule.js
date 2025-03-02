@@ -205,7 +205,7 @@ const TutorialModule = (function() {
       existingModal.classList.add("modal");
       existingModal.innerHTML = `
         <div class="modal-background"></div>
-        <div class="modal-card" style="max-width: 900px; height: 80vh; display: flex; flex-direction: column;">
+        <div class="modal-card" style="max-width: 1200px; height: 80vh; display: flex; flex-direction: column;">
           <header class="modal-card-head">
             <p class="modal-card-title" id="tutorial-modal-title">Tutorial</p>
             <button class="delete" aria-label="close"></button>

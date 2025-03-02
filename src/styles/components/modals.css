@@ -5,7 +5,7 @@
 
 /* Modal Customizations */
 .modal-card {
-    max-width: 900px;
+    max-width: 1200px;
     margin: 0 auto;
     animation: fadeInUp 0.3s ease;
     background-color: var(--modal-background-color);
