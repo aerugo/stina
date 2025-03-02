@@ -190,6 +190,8 @@ const TutorialModule = (function() {
       sidebarColumn.style.width = "30px";
       sidebarColumn.style.minWidth = "30px";
       sidebarColumn.querySelector("aside").style.display = "none";
+      
+      // Expand main content to fill the space
       mainContentColumn.style.width = "calc(100% - 30px)";
       
       // Create a new button to expand the sidebar
@@ -210,6 +212,8 @@ const TutorialModule = (function() {
       sidebarColumn.style.width = "25%";
       sidebarColumn.style.minWidth = "";
       sidebarColumn.querySelector("aside").style.display = "block";
+      
+      // Adjust main content width
       mainContentColumn.style.width = "75%";
       
       // Remove the expand button if it exists
