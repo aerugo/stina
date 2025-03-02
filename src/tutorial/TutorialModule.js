@@ -178,7 +178,11 @@ const TutorialModule = (function() {
           updateHelpButtonHighlight();
           hideTutorialModal();
         } else {
-          // Not the last lesson: update state and UI as usual.
+          // Not the last lesson: navigate to the next lesson.
+          const currentLessonIndex = tutorialData.lessons.findIndex(l => l.id === lesson.id);
+          const nextLesson = tutorialData.lessons[currentLessonIndex + 1];
+          currentLessonId = nextLesson.id;
+          currentPageIndex = 0;
           await saveTutorialState();
           updateHelpButtonHighlight();
           renderLessonList();
