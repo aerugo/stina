@@ -323,11 +323,16 @@
 
 /* Sidebar animation */
 .sidebar-column {
-  transition: width 0.3s ease, min-width 0.3s ease;
+  transition: width 0.3s ease, min-width 0.3s ease, max-width 0.3s ease;
 }
 
 .sidebar-column.sidebar-collapsed {
   overflow: hidden;
+}
+
+/* Main content column */
+.main-content-column {
+  transition: width 0.3s ease, flex 0.3s ease;
 }
 
 /* Progress bar animation */

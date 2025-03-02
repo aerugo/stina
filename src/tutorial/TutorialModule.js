@@ -190,8 +190,8 @@ const TutorialModule = (function() {
             </div>
           </div>
           <section class="modal-card-body" style="padding: 0;">
-            <div class="columns is-gapless" style="margin: 0; height: 100%; display: flex;">
-              <div class="column sidebar-column" id="tutorial-sidebar-column" style="border-right: 1px solid #ddd; padding: 0; height: 100%; width: 25%; position: relative;">
+            <div class="columns is-gapless" style="margin: 0; height: 100%; display: flex; width: 100%;">
+              <div class="column sidebar-column" id="tutorial-sidebar-column" style="border-right: 1px solid #ddd; padding: 0; height: 100%; width: 25%; position: relative; flex: 0 0 25%;">
                 <aside class="menu" style="padding: 1rem;">
                   <div class="is-flex is-justify-content-space-between is-align-items-center mb-2">
                     <p class="menu-label">${TranslationModule.translate("tutorialLessons")}</p>
@@ -211,7 +211,7 @@ const TutorialModule = (function() {
                   </div>
                 </aside>
               </div>
-              <div class="column main-content-column" id="tutorial-main-content-column" style="padding: 0;">
+              <div class="column main-content-column" id="tutorial-main-content-column" style="padding: 0; flex: 1 1 75%;">
                 <div class="card" style="box-shadow: none; height: 100%; border-radius: 0;">
                   <div class="card-content" id="tutorial-main-content">
                     <!-- Lesson content will be rendered here -->
@@ -326,11 +326,13 @@ const TutorialModule = (function() {
       sidebarColumn.classList.add('sidebar-collapsed');
       sidebarColumn.style.width = "40px";
       sidebarColumn.style.minWidth = "40px";
+      sidebarColumn.style.maxWidth = "40px";
       sidebarColumn.querySelector("aside").style.display = "none";
       
       // Expand main content to fill the space
       mainContentColumn.style.width = "calc(100% - 40px)";
-      mainContentColumn.style.flex = "1";
+      mainContentColumn.style.flex = "1 1 auto";
+      mainContentColumn.style.maxWidth = "none";
       
       // Create a new button to expand the sidebar
       const expandBtn = document.createElement("button");
@@ -351,11 +353,13 @@ const TutorialModule = (function() {
       sidebarColumn.classList.remove('sidebar-collapsed');
       sidebarColumn.style.width = "25%";
       sidebarColumn.style.minWidth = "";
+      sidebarColumn.style.maxWidth = "";
       sidebarColumn.querySelector("aside").style.display = "block";
       
       // Adjust main content width
       mainContentColumn.style.width = "75%";
       mainContentColumn.style.flex = "";
+      mainContentColumn.style.maxWidth = "";
       
       // Remove the expand button if it exists
       const expandBtn = sidebarColumn.querySelector("#expand-sidebar-btn");
