@@ -157,6 +157,13 @@ const TutorialModule = (function() {
       if (!currentLessonId && tutorialData.lessons.length > 0) {
         currentLessonId = tutorialData.lessons[0].id;
         currentPageIndex = 0;
+      } else if (currentLessonId) {
+        // Ensure the lesson ID is valid
+        const lessonExists = tutorialData.lessons.some(lesson => lesson.id === currentLessonId);
+        if (!lessonExists && tutorialData.lessons.length > 0) {
+          currentLessonId = tutorialData.lessons[0].id;
+          currentPageIndex = 0;
+        }
       }
       
       renderLessonList();
@@ -566,6 +573,12 @@ const TutorialModule = (function() {
     isRendering = true;
     
     try {
+      // If no lesson is selected but lessons exist, select the first one
+      if (!currentLessonId && tutorialData.lessons.length > 0) {
+        currentLessonId = tutorialData.lessons[0].id;
+        currentPageIndex = 0;
+      }
+      
       const lesson = tutorialData.lessons.find(l => l.id === currentLessonId);
       if (!lesson) {
         modalBody.innerHTML = "<div class='notification is-warning'>No lesson found.</div>";
