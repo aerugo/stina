@@ -123,6 +123,29 @@ body {
   transition: background-color 0.2s ease, color 0.2s ease;
 }
 
+/* Tutorial tabs styling */
+.tabs.is-boxed li.is-active a {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+  color: white;
+}
+
+.tabs.is-boxed li a:hover {
+  background-color: var(--hover-item-color);
+  border-color: var(--border-color);
+}
+
+/* Sidebar toggle button */
+#toggle-sidebar-btn {
+  padding: 0.25rem;
+  height: auto;
+}
+
+/* Transition for sidebar collapse/expand */
+.sidebar-column, .main-content-column {
+  transition: width 0.3s ease;
+}
+
 .menu-label {
   color: var(--placeholder-color);
   font-size: 0.8em;
