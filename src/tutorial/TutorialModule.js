@@ -532,9 +532,22 @@ const TutorialModule = (function () {
       (completedCount / totalLessons) * 100
     );
 
-    // Update progress bar with animation
-    const currentValue = parseInt(progressBar.value, 10);
-    animateProgressBar(currentValue, progressPercentage);
+    // Store the last progress value to prevent unnecessary animations
+    if (!progressBar.lastValue) {
+      progressBar.lastValue = 0;
+    }
+
+    // Only animate if the value has changed significantly
+    if (Math.abs(progressBar.lastValue - progressPercentage) >= 1) {
+      animateProgressBar(progressBar.lastValue, progressPercentage);
+      progressBar.lastValue = progressPercentage;
+    } else {
+      // Just set the value directly without animation
+      progressBar.value = progressPercentage;
+      progressBar.textContent = `${progressPercentage}%`;
+      progressBar.setAttribute("aria-valuenow", progressPercentage);
+      progressBar.setAttribute("aria-valuetext", `${progressPercentage}% complete`);
+    }
 
     // Update lesson overview label
     const currentLessonIndex =
@@ -557,14 +570,19 @@ const TutorialModule = (function () {
   function animateProgressBar(from, to) {
     if (!progressBar) return;
 
+    // If the values are the same, no need to animate
+    if (Math.round(from) === Math.round(to)) {
+      return;
+    }
+
     // Cancel any existing animation
     if (progressBar.animation) {
       clearInterval(progressBar.animation);
+      progressBar.animation = null;
     }
 
     const duration = 600; // ms
     const steps = 30;
-    const stepValue = (to - from) / steps;
     let currentStep = 0;
     let currentValue = from;
 
@@ -578,7 +596,7 @@ const TutorialModule = (function () {
 
       if (currentStep >= steps) {
         currentValue = to;
-        clearInterval(progress.animation);
+        clearInterval(progressBar.animation);
         progressBar.animation = null;
       }
 
