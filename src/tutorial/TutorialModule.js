@@ -10,6 +10,15 @@ const TutorialModule = (function() {
 
   // References for modal elements.
   let modalElem, modalTitle, modalBody, modalFooter;
+  
+  function localize(field) {
+    if (typeof field === "object") {
+      // Get the current language from config; default to English if not available.
+      const { language } = ConfigModule.getConfig() || { language: "en" };
+      return field[language] || field.en || "";
+    }
+    return field;
+  }
 
   // Initialize the tutorial system.
   async function init() {
@@ -94,7 +103,7 @@ const TutorialModule = (function() {
       const lessonItem = document.createElement("div");
       lessonItem.style.padding = "0.5rem";
       lessonItem.style.cursor = "pointer";
-      lessonItem.textContent = (isCompleted ? "✓ " : "") + lesson.title;
+      lessonItem.textContent = (isCompleted ? "✓ " : "") + localize(lesson.title);
       if (lesson.id === currentLessonId) {
         lessonItem.style.fontWeight = "bold";
       }
@@ -131,7 +140,7 @@ const TutorialModule = (function() {
       modalBody.innerHTML = "<p>No lesson found.</p>";
       return;
     }
-    modalTitle.textContent = `Tutorial: ${lesson.title}`;
+    modalTitle.textContent = `Tutorial: ${localize(lesson.title)}`;
 
     const currentPage = lesson.pages[currentPageIndex];
     if (!currentPage) {
@@ -139,8 +148,8 @@ const TutorialModule = (function() {
       return;
     }
     let contentHtml = `<div style="margin-bottom: 1rem;">
-      <h3>${currentPage.title || ""}</h3>
-      <p>${currentPage.text || ""}</p>
+      <h3>${localize(currentPage.title)}</h3>
+      <p>${localize(currentPage.text)}</p>
     </div>`;
     if (currentPage.screenshot) {
       contentHtml += `<img src="${currentPage.screenshot}" alt="Screenshot" style="max-width:100%; border:1px solid #ccc; margin-bottom:1rem;" />`;
