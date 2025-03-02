@@ -264,7 +264,7 @@ const TutorialModule = (function () {
                       "collapseSidebar"
                     )}">
                       <span class="icon is-small">
-                        <i class="fas fa-chevron-left"></i>
+                        <img src="src/icons/sidebar.svg" alt="Toggle Sidebar" />
                       </span>
                     </button>
                   </div>
@@ -472,7 +472,7 @@ const TutorialModule = (function () {
       expandBtn.style.left = "5px";
       expandBtn.style.top = "10px";
       expandBtn.innerHTML = `
-        <span class="icon is-small"><i class="fas fa-chevron-right"></i></span>
+        <span class="icon is-small"><img src="src/icons/sidebar.svg" alt="Toggle Sidebar" /></span>
       `;
       expandBtn.setAttribute(
         "title",
@@ -508,7 +508,7 @@ const TutorialModule = (function () {
 
       // Update the toggle button
       toggleBtn.innerHTML = `
-        <span class="icon is-small"><i class="fas fa-chevron-left"></i></span>
+        <span class="icon is-small"><img src="src/icons/sidebar.svg" alt="Toggle Sidebar" /></span>
       `;
       toggleBtn.setAttribute(
         "title",
