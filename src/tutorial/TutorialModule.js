@@ -199,10 +199,17 @@ const TutorialModule = (function() {
       return;
     }
     
-    // Create content with Bulma styling
+    // Create content with Bulma styling and integrated page tracker
     let contentHtml = `
       <div class="content">
-        <h3 class="title is-4">${localize(currentPage.title)}</h3>
+        <div class="level is-mobile">
+          <div class="level-left">
+            <h3 class="title is-4">${localize(currentPage.title)}</h3>
+          </div>
+          <div class="level-right">
+            <span class="tag is-info is-medium">Page ${currentPageIndex + 1} of ${lesson.pages.length}</span>
+          </div>
+        </div>
         <div class="block">${localize(currentPage.text)}</div>
     `;
     
@@ -220,12 +227,7 @@ const TutorialModule = (function() {
     // Footer navigation buttons
     modalFooter.innerHTML = "";
     
-    // NEW: Create page tracker element
-    const tracker = document.createElement("div");
-    tracker.classList.add("has-text-centered", "is-size-7");
-    tracker.style.marginBottom = "0.5rem";
-    tracker.textContent = `Page ${currentPageIndex + 1} of ${lesson.pages.length}`;
-    modalFooter.appendChild(tracker);
+    // Page tracker is now integrated into the content area
     
     const btnContainer = document.createElement("div");
     btnContainer.className = "buttons is-centered";

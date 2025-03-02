@@ -141,3 +141,9 @@ body {
   background-color: var(--primary-color);
 }
 
+/* Style for the page tracker tag within lessons */
+.level .tag.is-info {
+  font-size: 0.9rem;
+  padding: 0.4em 0.8em;
+}
+
