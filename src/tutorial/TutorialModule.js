@@ -219,6 +219,14 @@ const TutorialModule = (function() {
 
     // Footer navigation buttons
     modalFooter.innerHTML = "";
+    
+    // NEW: Create page tracker element
+    const tracker = document.createElement("div");
+    tracker.classList.add("has-text-centered", "is-size-7");
+    tracker.style.marginBottom = "0.5rem";
+    tracker.textContent = `Page ${currentPageIndex + 1} of ${lesson.pages.length}`;
+    modalFooter.appendChild(tracker);
+    
     const btnContainer = document.createElement("div");
     btnContainer.className = "buttons is-centered";
 
