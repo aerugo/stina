@@ -275,3 +275,11 @@
   font-family: monospace;
   white-space: pre-wrap;
 }
+/* Fade-in animation for tutorial content */
+.fade-in {
+  animation: fadeInContent 0.3s ease-in-out;
+}
+@keyframes fadeInContent {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}

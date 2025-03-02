@@ -302,6 +302,10 @@ const TutorialModule = (function() {
     
     contentHtml += `</div>`;
     modalBody.innerHTML = contentHtml;
+    modalBody.classList.add("fade-in");
+    setTimeout(function() {
+      modalBody.classList.remove("fade-in");
+    }, 300);
 
     // Add event listeners to the tabs
     modalBody.querySelectorAll('.tabs li a').forEach(tab => {
@@ -313,10 +317,22 @@ const TutorialModule = (function() {
       });
     });
 
-    // Footer navigation buttons
+    // Footer navigation buttons using Bulma level layout
+    const closeBtn = modalFooter.querySelector("#close-tutorial-btn");
+    modalFooter.innerHTML = "";
+    const level = document.createElement("nav");
+    level.className = "level";
+    const levelLeft = document.createElement("div");
+    levelLeft.className = "level-left";
+    const leftItem = document.createElement("div");
+    leftItem.className = "level-item";
+    leftItem.appendChild(closeBtn);
+    levelLeft.appendChild(leftItem);
+    const levelRight = document.createElement("div");
+    levelRight.className = "level-right";
     const navButtons = document.createElement("div");
-    navButtons.className = "buttons";
-
+    navButtons.className = "buttons level-item";
+    
     const prevBtn = document.createElement("button");
     prevBtn.classList.add("button", "is-link", "is-outlined");
     prevBtn.innerHTML = `<span class="icon"><i class="fas fa-arrow-left"></i></span><span>${TranslationModule.translate("previous")}</span>`;
@@ -326,7 +342,7 @@ const TutorialModule = (function() {
       renderCurrentLesson();
     });
     navButtons.appendChild(prevBtn);
-
+    
     const nextBtn = document.createElement("button");
     nextBtn.classList.add("button", "is-primary");
     const isLastPage = currentPageIndex >= lesson.pages.length - 1;
@@ -353,25 +369,21 @@ const TutorialModule = (function() {
           currentPageIndex = 0;
           await saveTutorialState();
           updateHelpButtonHighlight();
-          renderLessonList(); // This will also update the progress bar
+          renderLessonList();
           renderCurrentLesson();
         }
       }
     });
     navButtons.appendChild(nextBtn);
-
-    // Clear existing navigation buttons but keep the close button
-    const closeBtn = modalFooter.querySelector("#close-tutorial-btn");
-    modalFooter.innerHTML = "";
-    modalFooter.appendChild(closeBtn);
     
-    // Add a spacer
-    const spacer = document.createElement("div");
-    spacer.className = "is-flex-grow-1";
-    modalFooter.appendChild(spacer);
+    const levelRightItem = document.createElement("div");
+    levelRightItem.className = "level-item";
+    levelRightItem.appendChild(navButtons);
+    levelRight.appendChild(levelRightItem);
     
-    // Add the navigation buttons
-    modalFooter.appendChild(navButtons);
+    level.appendChild(levelLeft);
+    level.appendChild(levelRight);
+    modalFooter.appendChild(level);
   }
 
   async function saveTutorialState() {
