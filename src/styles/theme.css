@@ -108,10 +108,36 @@ body {
   box-shadow: none;
 }
 
-.current-lesson {
-  background-color: var(--active-item-color); /* e.g., a light shade from Bulma */
-  font-weight: var(--font-weight-bold);
-  border-left: 3px solid var(--primary-color);
-  padding-left: 0.5rem; /* Adds some spacing to account for the border */
+/* Tutorial styling */
+.menu-list a.is-active {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.menu-list a:hover {
+  background-color: var(--hover-item-color);
+}
+
+.menu-list a {
+  border-radius: var(--border-radius);
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.menu-label {
+  color: var(--placeholder-color);
+  font-size: 0.8em;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* Progress bar styling */
+.progress.is-primary::-webkit-progress-value {
+  background-color: var(--primary-color);
+}
+.progress.is-primary::-moz-progress-bar {
+  background-color: var(--primary-color);
+}
+.progress.is-primary::-ms-fill {
+  background-color: var(--primary-color);
 }
 

@@ -119,6 +119,11 @@ window.translationsData = {
     titleDomainPrompt:
       'Instructions for summary title:\n{instructions}\n\nDocument content:\n{docText}\n\nPlease provide a short summary title that follows "Summary with focus on ..." (max 50 characters).',
     markAllCompleted: "Mark All Completed",
+    tutorialLessons: "Lessons",
+    previous: "Previous",
+    next: "Next",
+    finishLesson: "Finish Lesson",
+    tutorialProgress: "Progress",
   },
   sv: {
     exportChat: "Exportera",
@@ -239,5 +244,10 @@ window.translationsData = {
     titleDomainPrompt:
       'Instruktioner för sammanfattningstitel:\n{instructions}\n\nDokumentinnehåll:\n{docText}\n\nVänligen ge en kort sammanfattningstitel som följer mönstret "Sammanfattning med fokus på ..." (max 50 tecken).',
     markAllCompleted: "Markera alla som klara",
+    tutorialLessons: "Lektioner",
+    previous: "Föregående",
+    next: "Nästa",
+    finishLesson: "Avsluta lektion",
+    tutorialProgress: "Framsteg",
   },
 };

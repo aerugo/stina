@@ -9,7 +9,7 @@ const TutorialModule = (function() {
   let currentPageIndex = 0;
 
   // References for modal elements.
-  let modalElem, modalTitle, modalBody, modalFooter;
+  let modalElem, modalTitle, modalBody, modalFooter, progressBar;
   
   function localize(field) {
     if (typeof field === "object") {
@@ -76,13 +76,37 @@ const TutorialModule = (function() {
             <p class="modal-card-title" id="tutorial-modal-title">Tutorial</p>
             <button class="delete" aria-label="close"></button>
           </header>
-          <section class="modal-card-body">
-            <div class="columns is-gapless is-mobile">
-              <div class="column is-3-desktop is-12-mobile" id="tutorial-lessons-list" style="border-right: 1px solid #ddd; padding: 1rem;">
-                <!-- Lessons list will be rendered here -->
+          <div class="progress-container" style="padding: 0 1.5rem; background-color: var(--modal-header-footer-background);">
+            <div class="columns is-mobile is-vcentered" style="margin-bottom: 0.5rem;">
+              <div class="column is-narrow">
+                <span class="has-text-weight-medium">${TranslationModule.translate("tutorialProgress")}:</span>
               </div>
-              <div class="column is-9-desktop is-12-mobile" id="tutorial-main-content" style="padding: 1rem;">
-                <!-- Lesson content will be rendered here -->
+              <div class="column">
+                <progress id="tutorial-progress" class="progress is-primary" value="0" max="100">0%</progress>
+              </div>
+            </div>
+          </div>
+          <section class="modal-card-body" style="padding: 0;">
+            <div class="columns is-gapless" style="margin: 0; height: 100%;">
+              <div class="column is-3" style="border-right: 1px solid #ddd; padding: 0; height: 100%;">
+                <aside class="menu" style="padding: 1rem;">
+                  <p class="menu-label">${TranslationModule.translate("tutorialLessons")}</p>
+                  <ul class="menu-list" id="tutorial-lessons-list">
+                    <!-- Lessons list will be rendered here -->
+                  </ul>
+                  <div class="mt-4">
+                    <button id="mark-all-completed-btn" class="button is-small is-info is-fullwidth">
+                      ${TranslationModule.translate("markAllCompleted")}
+                    </button>
+                  </div>
+                </aside>
+              </div>
+              <div class="column is-9" id="tutorial-main-content-container" style="padding: 0;">
+                <div class="card" style="box-shadow: none; height: 100%; border-radius: 0;">
+                  <div class="card-content" id="tutorial-main-content">
+                    <!-- Lesson content will be rendered here -->
+                  </div>
+                </div>
               </div>
             </div>
           </section>
@@ -92,39 +116,62 @@ const TutorialModule = (function() {
       document.body.appendChild(existingModal);
       existingModal.querySelector(".modal-background").addEventListener("click", hideTutorialModal);
       existingModal.querySelector(".delete").addEventListener("click", hideTutorialModal);
+      existingModal.querySelector("#mark-all-completed-btn").addEventListener("click", markAllLessonsComplete);
     }
     modalElem = existingModal;
     modalTitle = existingModal.querySelector("#tutorial-modal-title");
     modalBody = existingModal.querySelector("#tutorial-main-content");
     modalFooter = existingModal.querySelector("#tutorial-modal-footer");
+    progressBar = existingModal.querySelector("#tutorial-progress");
   }
 
   function renderLessonList() {
     const listContainer = modalElem.querySelector("#tutorial-lessons-list");
     listContainer.innerHTML = "";
+    
     tutorialData.lessons.forEach(lesson => {
       const isCompleted = !!tutorialState.completedLessons[lesson.id];
-      const lessonItem = document.createElement("div");
-      lessonItem.style.padding = "0.5rem";
-      lessonItem.style.cursor = "pointer";
-      lessonItem.textContent = (isCompleted ? "✓ " : "") + localize(lesson.title);
-      if (lesson.id === currentLessonId) {
-        lessonItem.classList.add("current-lesson");
+      const isActive = lesson.id === currentLessonId;
+      
+      const li = document.createElement("li");
+      const a = document.createElement("a");
+      
+      if (isActive) {
+        a.classList.add("is-active");
       }
-      lessonItem.addEventListener("click", () => {
+      
+      if (isCompleted) {
+        a.innerHTML = `<span class="icon"><i class="fas fa-check"></i></span> ${localize(lesson.title)}`;
+      } else {
+        a.textContent = localize(lesson.title);
+      }
+      
+      a.addEventListener("click", () => {
         currentLessonId = lesson.id;
         currentPageIndex = 0;
         renderCurrentLesson();
+        renderLessonList(); // Re-render to update active state
       });
-      listContainer.appendChild(lessonItem);
+      
+      li.appendChild(a);
+      listContainer.appendChild(li);
     });
-    // Add a "Mark All Completed" button.
-    const markAllBtn = document.createElement("button");
-    markAllBtn.classList.add("button", "is-small", "is-info");
-    markAllBtn.textContent = TranslationModule.translate("markAllCompleted");
-    markAllBtn.style.marginTop = "1rem";
-    markAllBtn.addEventListener("click", markAllLessonsComplete);
-    listContainer.appendChild(markAllBtn);
+    
+    // Update progress bar
+    renderProgressBar();
+  }
+
+  function renderProgressBar() {
+    if (!progressBar) return;
+    
+    const totalLessons = tutorialData.lessons.length;
+    if (totalLessons === 0) return;
+    
+    const completedCount = Object.keys(tutorialState.completedLessons).length;
+    const progressPercentage = Math.round((completedCount / totalLessons) * 100);
+    
+    progressBar.value = progressPercentage;
+    progressBar.textContent = `${progressPercentage}%`;
   }
 
   async function markAllLessonsComplete() {
@@ -151,23 +198,33 @@ const TutorialModule = (function() {
       modalBody.innerHTML = "<p>No page found.</p>";
       return;
     }
-    let contentHtml = `<div style="margin-bottom: 1rem;">
-      <h3>${localize(currentPage.title)}</h3>
-      <p>${localize(currentPage.text)}</p>
-    </div>`;
+    
+    // Create content with Bulma styling
+    let contentHtml = `
+      <div class="content">
+        <h3 class="title is-4">${localize(currentPage.title)}</h3>
+        <div class="block">${localize(currentPage.text)}</div>
+    `;
+    
     if (currentPage.screenshot) {
-      contentHtml += `<img src="${currentPage.screenshot}" alt="Screenshot" style="max-width:100%; border:1px solid #ccc; margin-bottom:1rem;" />`;
+      contentHtml += `
+        <figure class="image">
+          <img src="${currentPage.screenshot}" alt="Screenshot" style="border:1px solid #ddd; border-radius:4px;">
+        </figure>
+      `;
     }
+    
+    contentHtml += `</div>`;
     modalBody.innerHTML = contentHtml;
 
-    // Footer navigation buttons.
+    // Footer navigation buttons
     modalFooter.innerHTML = "";
     const btnContainer = document.createElement("div");
     btnContainer.className = "buttons is-centered";
 
     const prevBtn = document.createElement("button");
-    prevBtn.classList.add("button");
-    prevBtn.textContent = "← Previous";
+    prevBtn.classList.add("button", "is-link", "is-outlined");
+    prevBtn.innerHTML = `<span class="icon"><i class="fas fa-arrow-left"></i></span><span>${TranslationModule.translate("previous")}</span>`;
     prevBtn.disabled = (currentPageIndex === 0);
     prevBtn.addEventListener("click", () => {
       currentPageIndex--;
@@ -177,7 +234,10 @@ const TutorialModule = (function() {
 
     const nextBtn = document.createElement("button");
     nextBtn.classList.add("button", "is-primary");
-    nextBtn.textContent = (currentPageIndex < lesson.pages.length - 1) ? "Next →" : "Finish Lesson";
+    const isLastPage = currentPageIndex >= lesson.pages.length - 1;
+    nextBtn.innerHTML = isLastPage ? 
+      `<span>${TranslationModule.translate("finishLesson")}</span><span class="icon"><i class="fas fa-check"></i></span>` : 
+      `<span>${TranslationModule.translate("next")}</span><span class="icon"><i class="fas fa-arrow-right"></i></span>`;
     nextBtn.addEventListener("click", async () => {
       if (currentPageIndex < lesson.pages.length - 1) {
         currentPageIndex++;
@@ -190,6 +250,7 @@ const TutorialModule = (function() {
           tutorialState.allCompleted = true;
           await saveTutorialState();
           updateHelpButtonHighlight();
+          renderProgressBar();
           hideTutorialModal();
         } else {
           const nextLesson = tutorialData.lessons[currentLessonIndex + 1];
@@ -197,7 +258,7 @@ const TutorialModule = (function() {
           currentPageIndex = 0;
           await saveTutorialState();
           updateHelpButtonHighlight();
-          renderLessonList();
+          renderLessonList(); // This will also update the progress bar
           renderCurrentLesson();
         }
       }
