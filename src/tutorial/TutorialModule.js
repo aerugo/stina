@@ -264,9 +264,8 @@ const TutorialModule = (function () {
                       "collapseSidebar"
                     )}">
                       <span class="icon is-small">
-                        <i class="fas fa-angle-double-left"></i>
+                        <i class="fas fa-chevron-left"></i>
                       </span>
-                      <span class="toggle-text">${TranslationModule.translate("collapse")}</span>
                     </button>
                   </div>
                   <ul class="menu-list" id="tutorial-lessons-list">
@@ -473,8 +472,7 @@ const TutorialModule = (function () {
       expandBtn.style.left = "5px";
       expandBtn.style.top = "10px";
       expandBtn.innerHTML = `
-        <span class="icon is-small"><i class="fas fa-angle-double-right"></i></span>
-        <span class="toggle-text">${TranslationModule.translate("expand")}</span>
+        <span class="icon is-small"><i class="fas fa-chevron-right"></i></span>
       `;
       expandBtn.setAttribute(
         "title",
@@ -510,8 +508,7 @@ const TutorialModule = (function () {
 
       // Update the toggle button
       toggleBtn.innerHTML = `
-        <span class="icon is-small"><i class="fas fa-angle-double-left"></i></span>
-        <span class="toggle-text">${TranslationModule.translate("collapse")}</span>
+        <span class="icon is-small"><i class="fas fa-chevron-left"></i></span>
       `;
       toggleBtn.setAttribute(
         "title",
