@@ -166,9 +166,14 @@ const TutorialModule = (function() {
         }
       }
       
-      renderLessonList();
-      renderCurrentLesson();
+      // Make the modal visible first so DOM elements are properly initialized
       modalElem.classList.add("is-active");
+      
+      // Then render content with a slight delay to ensure DOM is ready
+      setTimeout(() => {
+        renderLessonList();
+        renderCurrentLesson();
+      }, 50);
       
       // Focus on the first interactive element for accessibility
       setTimeout(() => {
@@ -579,80 +584,106 @@ const TutorialModule = (function() {
         currentPageIndex = 0;
       }
       
+      // Ensure we have a valid lesson
       const lesson = tutorialData.lessons.find(l => l.id === currentLessonId);
       if (!lesson) {
+        // If the current lesson ID doesn't exist in our data, select the first lesson
+        if (tutorialData.lessons.length > 0) {
+          currentLessonId = tutorialData.lessons[0].id;
+          currentPageIndex = 0;
+          // Try to find the lesson again with the updated ID
+          const firstLesson = tutorialData.lessons[0];
+          if (firstLesson) {
+            renderLessonContent(firstLesson);
+            return;
+          }
+        }
+        
         modalBody.innerHTML = "<div class='notification is-warning'>No lesson found.</div>";
         isRendering = false;
         return;
       }
       
-      modalTitle.textContent = `Tutorial: ${localize(lesson.title)}`;
-
-      const currentPage = lesson.pages[currentPageIndex];
-      if (!currentPage) {
-        modalBody.innerHTML = "<div class='notification is-warning'>No page found.</div>";
-        isRendering = false;
-        return;
-      }
-      
-      // Process markdown in the text content
-      const processedText = processMarkdown(localize(currentPage.text));
-      
-      // Create content with improved layout
-      let contentHtml = `
-        <div class="content" id="page-${currentPageIndex}" role="tabpanel">
-          <div class="tutorial-header">
-            <h2 class="title is-3">${localize(currentPage.title)}</h2>
-            <div class="page-indicator">
-              <span class="tag is-info is-medium">Page ${currentPageIndex + 1} of ${lesson.pages.length}</span>
-            </div>
-          </div>
-          <div class="tutorial-content">${processedText}</div>
-      `;
-      
-      if (currentPage.screenshot) {
-        contentHtml += `
-          <figure class="image tutorial-screenshot">
-            <img src="${currentPage.screenshot}" alt="Screenshot of ${localize(currentPage.title)}" 
-                 style="border:1px solid #ddd; border-radius:8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
-          </figure>
-        `;
-      }
-      
-      contentHtml += `</div>`;
-      
-      // Update the DOM with fade transition
-      modalBody.style.opacity = "0";
-      setTimeout(() => {
-        modalBody.innerHTML = contentHtml;
-        
-        // Apply syntax highlighting to code blocks if highlight.js is available
-        if (window.hljs) {
-          modalBody.querySelectorAll('pre code').forEach((block) => {
-            window.hljs.highlightElement(block);
-          });
-        }
-        
-        modalBody.style.opacity = "1";
-      }, 150);
-      
-      // Render pagination dots
-      renderPaginationDots(lesson.pages.length, currentPageIndex);
-      
-      // Render navigation buttons
-      renderNavigationButtons(lesson);
-      
-      // Save current position
-      tutorialState.lastLessonId = currentLessonId;
-      tutorialState.lastPageIndex = currentPageIndex;
-      saveTutorialState();
-      
+      // Render the lesson content
+      renderLessonContent(lesson);
     } catch (error) {
       console.error("Error rendering lesson:", error);
       modalBody.innerHTML = `<div class="notification is-danger">Error rendering lesson: ${error.message}</div>`;
     } finally {
       isRendering = false;
     }
+  }
+  
+  /**
+   * Renders the content of a specific lesson
+   * @param {Object} lesson - The lesson object to render
+   */
+  function renderLessonContent(lesson) {
+      
+    modalTitle.textContent = `Tutorial: ${localize(lesson.title)}`;
+
+    // Ensure we have a valid page index for this lesson
+    if (currentPageIndex >= lesson.pages.length) {
+      currentPageIndex = 0;
+    }
+
+    const currentPage = lesson.pages[currentPageIndex];
+    if (!currentPage) {
+      modalBody.innerHTML = "<div class='notification is-warning'>No page found.</div>";
+      return;
+    }
+    
+    // Process markdown in the text content
+    const processedText = processMarkdown(localize(currentPage.text));
+    
+    // Create content with improved layout
+    let contentHtml = `
+      <div class="content" id="page-${currentPageIndex}" role="tabpanel">
+        <div class="tutorial-header">
+          <h2 class="title is-3">${localize(currentPage.title)}</h2>
+          <div class="page-indicator">
+            <span class="tag is-info is-medium">Page ${currentPageIndex + 1} of ${lesson.pages.length}</span>
+          </div>
+        </div>
+        <div class="tutorial-content">${processedText}</div>
+    `;
+    
+    if (currentPage.screenshot) {
+      contentHtml += `
+        <figure class="image tutorial-screenshot">
+          <img src="${currentPage.screenshot}" alt="Screenshot of ${localize(currentPage.title)}" 
+               style="border:1px solid #ddd; border-radius:8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+        </figure>
+      `;
+    }
+    
+    contentHtml += `</div>`;
+    
+    // Update the DOM with fade transition
+    modalBody.style.opacity = "0";
+    setTimeout(() => {
+      modalBody.innerHTML = contentHtml;
+      
+      // Apply syntax highlighting to code blocks if highlight.js is available
+      if (window.hljs) {
+        modalBody.querySelectorAll('pre code').forEach((block) => {
+          window.hljs.highlightElement(block);
+        });
+      }
+      
+      modalBody.style.opacity = "1";
+    }, 150);
+    
+    // Render pagination dots
+    renderPaginationDots(lesson.pages.length, currentPageIndex);
+    
+    // Render navigation buttons
+    renderNavigationButtons(lesson);
+    
+    // Save current position
+    tutorialState.lastLessonId = currentLessonId;
+    tutorialState.lastPageIndex = currentPageIndex;
+    saveTutorialState();
   }
   
   /**
