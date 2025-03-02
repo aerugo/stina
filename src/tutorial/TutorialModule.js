@@ -260,12 +260,13 @@ const TutorialModule = (function () {
                     <p class="menu-label">${TranslationModule.translate(
                       "tutorialLessons"
                     )}</p>
-                    <button id="toggle-sidebar-btn" class="button is-small" aria-label="${TranslationModule.translate(
+                    <button id="toggle-sidebar-btn" class="button is-small sidebar-toggle-btn" aria-label="${TranslationModule.translate(
                       "collapseSidebar"
                     )}">
                       <span class="icon is-small">
-                        <i class="fas fa-chevron-left"></i>
+                        <i class="fas fa-angle-double-left"></i>
                       </span>
+                      <span class="toggle-text">${TranslationModule.translate("collapse")}</span>
                     </button>
                   </div>
                   <ul class="menu-list" id="tutorial-lessons-list">
@@ -463,7 +464,7 @@ const TutorialModule = (function () {
       // Create a new button to expand the sidebar
       const expandBtn = document.createElement("button");
       expandBtn.id = "expand-sidebar-btn";
-      expandBtn.className = "button is-small is-primary is-rounded";
+      expandBtn.className = "button is-small is-primary sidebar-expand-btn";
       expandBtn.setAttribute(
         "aria-label",
         TranslationModule.translate("expandSidebar")
@@ -471,7 +472,10 @@ const TutorialModule = (function () {
       expandBtn.style.position = "absolute";
       expandBtn.style.left = "5px";
       expandBtn.style.top = "10px";
-      expandBtn.innerHTML = `<span class="icon is-small"><i class="fas fa-chevron-right"></i></span>`;
+      expandBtn.innerHTML = `
+        <span class="icon is-small"><i class="fas fa-angle-double-right"></i></span>
+        <span class="toggle-text">${TranslationModule.translate("expand")}</span>
+      `;
       expandBtn.setAttribute(
         "title",
         TranslationModule.translate("expandSidebar")
@@ -505,7 +509,10 @@ const TutorialModule = (function () {
       mainContentColumn.style.width = "75%";
 
       // Update the toggle button
-      toggleBtn.innerHTML = `<span class="icon is-small"><i class="fas fa-chevron-left"></i></span>`;
+      toggleBtn.innerHTML = `
+        <span class="icon is-small"><i class="fas fa-angle-double-left"></i></span>
+        <span class="toggle-text">${TranslationModule.translate("collapse")}</span>
+      `;
       toggleBtn.setAttribute(
         "title",
         TranslationModule.translate("collapseSidebar")
