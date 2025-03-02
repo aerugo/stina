@@ -118,6 +118,7 @@ window.translationsData = {
       "Instructions for summary:\n{instructions}\n\nDocument content:\n{docText}\n\nPlease provide a comprehensive and detailed summary of the document, according to the instructions. Take care to ensure that the summary is accurate and complete. Do not include any personal opinions or additional information. Make sure that all details and facts are correct and that the summary is well-structured.",
     titleDomainPrompt:
       'Instructions for summary title:\n{instructions}\n\nDocument content:\n{docText}\n\nPlease provide a short summary title that follows "Summary with focus on ..." (max 50 characters).',
+    markAllCompleted: "Mark All Completed",
   },
   sv: {
     exportChat: "Exportera",
@@ -237,5 +238,6 @@ window.translationsData = {
       "Instruktioner för sammanfattning:\n{instructions}\n\nDokumentinnehåll:\n{docText}\n\nVänligen ge en omfattande och detaljerad sammanfattning av dokumentet, enligt instruktionerna. Se till att sammanfattningen är korrekt och fullständig. Inkludera inte några personliga åsikter eller extra information. Se till att alla detaljer och fakta är korrekta och att sammanfattningen är välstrukturerad.",
     titleDomainPrompt:
       'Instruktioner för sammanfattningstitel:\n{instructions}\n\nDokumentinnehåll:\n{docText}\n\nVänligen ge en kort sammanfattningstitel som följer mönstret "Sammanfattning med fokus på ..." (max 50 tecken).',
+    markAllCompleted: "Markera alla som klara",
   },
 };

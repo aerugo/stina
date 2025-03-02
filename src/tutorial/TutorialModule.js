@@ -117,7 +117,7 @@ const TutorialModule = (function() {
     // Add a "Mark All Completed" button.
     const markAllBtn = document.createElement("button");
     markAllBtn.classList.add("button", "is-small", "is-info");
-    markAllBtn.textContent = "Mark All Completed";
+    markAllBtn.textContent = TranslationModule.translate("markAllCompleted");
     markAllBtn.style.marginTop = "1rem";
     markAllBtn.addEventListener("click", markAllLessonsComplete);
     listContainer.appendChild(markAllBtn);
