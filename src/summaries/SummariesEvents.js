@@ -55,9 +55,10 @@ const SummariesEventsModule = (function () {
           
         } catch (e) {
           // Show error in the modal
+          const sanitizedErrorMessage = DOMPurify.sanitize(e.message);
           modalBody.innerHTML = `
             <div class="has-text-centered">
-              <p class="has-text-danger">${TranslationModule.translate("errorGeneratingSummary")}: ${e.message}</p>
+              <p class="has-text-danger">${TranslationModule.translate("errorGeneratingSummary")}: ${sanitizedErrorMessage}</p>
               <button class="button is-primary mt-4" id="summary-error-close-btn">
                 ${TranslationModule.translate("ok")}
               </button>
