@@ -904,22 +904,41 @@ const TutorialModule = (function () {
     }
 
     // Basic markdown processing as fallback
-    return (
-      text
-        // Bold text
-        .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
-        // Italic text
-        .replace(/\*(.*?)\*/g, "<em>$1</em>")
-        // Links
-        .replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2">$1</a>')
-        // Lists
-        .replace(/^\s*-\s+(.*?)$/gm, "<li>$1</li>")
-        .replace(/(<li>.*?<\/li>)/gs, "<ul>$1</ul>")
-        // Paragraphs
-        .replace(/\n\n/g, "</p><p>")
-        // Wrap in paragraph if not already
-        .replace(/^(.+)$/, "<p>$1</p>")
-    );
+    // Process lists first to handle multi-line bullet points properly
+    let processedText = text;
+    
+    // Find all bullet point sections (consecutive lines starting with - or *)
+    const bulletPointRegex = /(?:^|\n)(?:\s*[-*]\s+.+(?:\n|$))+/g;
+    const bulletPointSections = processedText.match(bulletPointRegex) || [];
+    
+    // Replace each bullet point section with HTML list
+    bulletPointSections.forEach(section => {
+      const listItems = section
+        .trim()
+        .split(/\n/)
+        .filter(line => line.trim().match(/^\s*[-*]\s+/))
+        .map(line => {
+          // Extract the content after the bullet marker
+          const content = line.trim().replace(/^\s*[-*]\s+/, '');
+          return `<li>${content}</li>`;
+        })
+        .join('');
+      
+      const htmlList = `<ul>${listItems}</ul>`;
+      processedText = processedText.replace(section, htmlList);
+    });
+    
+    return processedText
+      // Bold text
+      .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
+      // Italic text
+      .replace(/\*(.*?)\*/g, "<em>$1</em>")
+      // Links
+      .replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2">$1</a>')
+      // Paragraphs
+      .replace(/\n\n/g, "</p><p>")
+      // Wrap in paragraph if not already wrapped and not a list
+      .replace(/^(?!<ul>)(.+)$/s, "<p>$1</p>");
   }
 
   /**
