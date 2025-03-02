@@ -108,3 +108,10 @@ body {
   box-shadow: none;
 }
 
+.current-lesson {
+  background-color: var(--active-item-color); /* e.g., a light shade from Bulma */
+  font-weight: var(--font-weight-bold);
+  border-left: 3px solid var(--primary-color);
+  padding-left: 0.5rem; /* Adds some spacing to account for the border */
+}
+

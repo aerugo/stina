@@ -109,7 +109,7 @@ const TutorialModule = (function() {
       lessonItem.style.cursor = "pointer";
       lessonItem.textContent = (isCompleted ? "✓ " : "") + localize(lesson.title);
       if (lesson.id === currentLessonId) {
-        lessonItem.style.fontWeight = "bold";
+        lessonItem.classList.add("current-lesson");
       }
       lessonItem.addEventListener("click", () => {
         currentLessonId = lesson.id;
