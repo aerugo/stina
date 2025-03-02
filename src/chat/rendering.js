@@ -181,7 +181,7 @@ const RenderingModule = (function () {
           
           pill.innerHTML = `
             <span class="file-name">${DOMPurify.sanitize(pillDisplayName)}</span>
-            <span class="file-classification">${file.classification}</span>
+            <span class="file-classification">${DOMPurify.sanitize(file.classification)}</span>
           `;
           
           // Always allow toggling the "ignore" state regardless of attachmentsLocked

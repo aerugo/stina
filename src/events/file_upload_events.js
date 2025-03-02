@@ -215,7 +215,7 @@ const FileUploadEventsModule = (function () {
       
       chip.innerHTML = `
         <span class="file-chip-name">${DOMPurify.sanitize(pillDisplayName)}</span>
-        <span class="file-chip-classification">${item.classification}</span>
+        <span class="file-chip-classification">${DOMPurify.sanitize(item.classification)}</span>
         <button class="file-chip-remove">×</button>
       `;
       
