@@ -112,33 +112,38 @@ body {
 .menu-list a.is-active {
   background-color: var(--primary-color);
   color: white;
+  font-weight: 500;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .menu-list a:hover {
   background-color: var(--hover-item-color);
+  transform: translateX(2px);
 }
 
 .menu-list a {
   border-radius: var(--border-radius);
-  transition: background-color 0.2s ease, color 0.2s ease;
-}
-
-/* Tutorial tabs styling */
-.tabs.is-boxed li.is-active a {
-  background-color: var(--primary-color);
-  border-color: var(--primary-color);
-  color: white;
-}
-
-.tabs.is-boxed li a:hover {
-  background-color: var(--hover-item-color);
-  border-color: var(--border-color);
+  transition: all 0.2s ease;
+  padding: 0.75rem 1rem;
+  margin-bottom: 0.25rem;
 }
 
 /* Sidebar toggle button */
 #toggle-sidebar-btn {
   padding: 0.25rem;
   height: auto;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+#toggle-sidebar-btn:hover {
+  background-color: var(--hover-item-color);
+  transform: scale(1.1);
 }
 
 /* Transition for sidebar collapse/expand */
@@ -156,16 +161,17 @@ body {
   color: white;
   border: none;
   border-radius: 50%;
-  width: 30px;
-  height: 30px;
+  width: 32px;
+  height: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
 #expand-sidebar-btn:hover {
   transform: scale(1.1);
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
 }
 
 #expand-sidebar-btn:focus {
@@ -178,22 +184,56 @@ body {
   font-size: 0.8em;
   letter-spacing: 0.1em;
   text-transform: uppercase;
+  margin-bottom: 0.75rem;
 }
 
 /* Progress bar styling */
+.progress.is-primary {
+  height: 0.6rem;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
 .progress.is-primary::-webkit-progress-value {
   background-color: var(--primary-color);
+  transition: width 0.3s ease;
 }
 .progress.is-primary::-moz-progress-bar {
   background-color: var(--primary-color);
+  transition: width 0.3s ease;
 }
 .progress.is-primary::-ms-fill {
   background-color: var(--primary-color);
+  transition: width 0.3s ease;
 }
 
 /* Style for the page tracker tag within lessons */
-.level .tag.is-info {
+.page-indicator .tag.is-info {
   font-size: 0.9rem;
   padding: 0.4em 0.8em;
+  background-color: var(--primary-color);
+  border-radius: 16px;
+  font-weight: 500;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Mark all completed button */
+#mark-all-completed-btn {
+  transition: all 0.2s ease;
+  font-weight: 500;
+}
+
+#mark-all-completed-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Close tutorial button */
+#close-tutorial-btn {
+  transition: all 0.2s ease;
+}
+
+#close-tutorial-btn:hover {
+  background-color: #f5f5f5;
 }
 
