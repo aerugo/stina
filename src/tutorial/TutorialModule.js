@@ -1,17 +1,25 @@
 /**
  * TutorialModule
  * Manages loading and displaying an interactive tutorial with multiple lessons and pages.
+ * Provides a responsive, accessible interface with keyboard navigation and markdown support.
  */
 const TutorialModule = (function() {
+  // State management
   let tutorialData = {};
   let tutorialState = {};
   let currentLessonId = null;
   let currentPageIndex = 0;
   let sidebarCollapsed = false;
+  let isRendering = false; // Prevent concurrent rendering
 
-  // References for modal elements.
+  // DOM element references
   let modalElem, modalTitle, modalBody, modalFooter, progressBar, sidebarColumn, mainContentColumn;
   
+  /**
+   * Localizes content based on the current language setting
+   * @param {Object|string} field - The content to localize
+   * @return {string} - The localized content
+   */
   function localize(field) {
     if (typeof field === "object") {
       // Get the current language from config; default to English if not available.
@@ -21,47 +29,139 @@ const TutorialModule = (function() {
     return field;
   }
 
-  // Initialize the tutorial system.
+  /**
+   * Initializes the tutorial system
+   * Loads saved state, attaches event handlers, and shows tutorial if first time
+   */
   async function init() {
-    // Load saved tutorial state or initialize defaults.
-    const storedState = await StorageModule.loadData("tutorialState");
-    tutorialState = storedState || {
-      completedLessons: {},
-      allCompleted: false
-    };
+    try {
+      // Load saved tutorial state or initialize defaults
+      const storedState = await StorageModule.loadData("tutorialState");
+      tutorialState = storedState || {
+        completedLessons: {},
+        allCompleted: false,
+        hasOpenedOnce: false
+      };
 
-    // Get tutorial data from window.tutorialData.
-    tutorialData = window.tutorialData || { lessons: [] };
+      // Get tutorial data from window.tutorialData
+      tutorialData = window.tutorialData || { lessons: [] };
+      
+      // Validate tutorial data structure
+      if (!Array.isArray(tutorialData.lessons)) {
+        console.warn("Tutorial data is not properly formatted. Expected an array of lessons.");
+        tutorialData.lessons = [];
+      }
 
-    // Auto-show the tutorial on first open if not completed.
-    if (!tutorialState.allCompleted && !tutorialState.hasOpenedOnce) {
-      tutorialState.hasOpenedOnce = true;
-      await saveTutorialState();
-      showTutorialModal();
+      // Auto-show the tutorial on first open if not completed
+      if (!tutorialState.allCompleted && !tutorialState.hasOpenedOnce) {
+        tutorialState.hasOpenedOnce = true;
+        await saveTutorialState();
+        showTutorialModal();
+      }
+
+      // Attach click to the help button
+      const helpBtn = document.getElementById("help-btn");
+      if (helpBtn) {
+        helpBtn.addEventListener("click", showTutorialModal);
+      }
+      
+      // Update help button appearance
+      updateHelpButtonHighlight();
+      
+      // Add keyboard event listener for the document
+      document.addEventListener('keydown', handleKeyboardNavigation);
+      
+      console.log("Tutorial module initialized successfully");
+    } catch (error) {
+      console.error("Error initializing tutorial module:", error);
     }
+  }
+  
+  /**
+   * Handles keyboard navigation within the tutorial
+   * @param {KeyboardEvent} event - The keyboard event
+   */
+  function handleKeyboardNavigation(event) {
+    // Only process keyboard events when the tutorial modal is active
+    if (!modalElem || !modalElem.classList.contains('is-active')) return;
+    
+    switch(event.key) {
+      case 'Escape':
+        hideTutorialModal();
+        event.preventDefault();
+        break;
+      case 'ArrowRight':
+      case 'ArrowDown':
+        // Navigate to next page
+        const nextBtn = modalFooter.querySelector('.button.is-primary');
+        if (nextBtn && !nextBtn.disabled) {
+          nextBtn.click();
+          event.preventDefault();
+        }
+        break;
+      case 'ArrowLeft':
+      case 'ArrowUp':
+        // Navigate to previous page
+        const prevBtn = modalFooter.querySelector('.button.is-link.is-outlined');
+        if (prevBtn && !prevBtn.disabled) {
+          prevBtn.click();
+          event.preventDefault();
+        }
+        break;
+    }
+  }
 
-    // Attach click to the help button.
+  /**
+   * Shows the tutorial modal and renders content
+   */
+  function showTutorialModal() {
+    if (isRendering) return;
+    isRendering = true;
+    
+    try {
+      createOrGetModalElements();
+      
+      // Set focus trap for accessibility
+      modalElem.setAttribute('role', 'dialog');
+      modalElem.setAttribute('aria-modal', 'true');
+      
+      // Initialize to first lesson if none selected
+      if (!currentLessonId && tutorialData.lessons.length > 0) {
+        currentLessonId = tutorialData.lessons[0].id;
+        currentPageIndex = 0;
+      }
+      
+      renderLessonList();
+      renderCurrentLesson();
+      modalElem.classList.add("is-active");
+      
+      // Focus on the first interactive element for accessibility
+      setTimeout(() => {
+        const firstFocusable = modalElem.querySelector('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+        if (firstFocusable) {
+          firstFocusable.focus();
+        }
+      }, 100);
+    } catch (error) {
+      console.error("Error showing tutorial modal:", error);
+    } finally {
+      isRendering = false;
+    }
+  }
+
+  /**
+   * Hides the tutorial modal
+   */
+  function hideTutorialModal() {
+    if (!modalElem) return;
+    
+    modalElem.classList.remove("is-active");
+    
+    // Return focus to the help button for accessibility
     const helpBtn = document.getElementById("help-btn");
     if (helpBtn) {
-      helpBtn.addEventListener("click", showTutorialModal);
+      helpBtn.focus();
     }
-    updateHelpButtonHighlight();
-  }
-
-  function showTutorialModal() {
-    createOrGetModalElements();
-    renderLessonList();
-
-    if (!currentLessonId && tutorialData.lessons.length > 0) {
-      currentLessonId = tutorialData.lessons[0].id;
-      currentPageIndex = 0;
-    }
-    renderCurrentLesson();
-    modalElem.classList.add("is-active");
-  }
-
-  function hideTutorialModal() {
-    modalElem.classList.remove("is-active");
   }
 
   function createOrGetModalElements() {
@@ -145,28 +245,55 @@ const TutorialModule = (function() {
     mainContentColumn = existingModal.querySelector("#tutorial-main-content-column");
   }
 
+  /**
+   * Renders the list of lessons in the sidebar
+   */
   function renderLessonList() {
+    if (!modalElem) return;
+    
     const listContainer = modalElem.querySelector("#tutorial-lessons-list");
+    if (!listContainer) return;
+    
+    // Clear existing content
     listContainer.innerHTML = "";
     
-    tutorialData.lessons.forEach(lesson => {
+    // Create lesson items
+    tutorialData.lessons.forEach((lesson, index) => {
       const isCompleted = !!tutorialState.completedLessons[lesson.id];
       const isActive = lesson.id === currentLessonId;
       
       const li = document.createElement("li");
       const a = document.createElement("a");
       
+      // Set appropriate attributes for accessibility
+      a.setAttribute("role", "button");
+      a.setAttribute("aria-pressed", isActive ? "true" : "false");
+      
       if (isActive) {
         a.classList.add("is-active");
       }
       
+      // Add lesson number and completion status
       if (isCompleted) {
-        a.innerHTML = `<span class="icon"><i class="fas fa-check"></i></span> ${localize(lesson.title)}`;
+        a.innerHTML = `
+          <span class="icon has-text-success">
+            <i class="fas fa-check-circle"></i>
+          </span>
+          <span>${index + 1}. ${localize(lesson.title)}</span>
+        `;
       } else {
-        a.textContent = localize(lesson.title);
+        a.innerHTML = `
+          <span class="icon">
+            <i class="fas fa-circle"></i>
+          </span>
+          <span>${index + 1}. ${localize(lesson.title)}</span>
+        `;
       }
       
+      // Add click event
       a.addEventListener("click", () => {
+        if (currentLessonId === lesson.id) return; // Already on this lesson
+        
         currentLessonId = lesson.id;
         currentPageIndex = 0;
         renderCurrentLesson();
@@ -181,24 +308,35 @@ const TutorialModule = (function() {
     renderProgressBar();
   }
 
+  /**
+   * Toggles the sidebar visibility
+   */
   function toggleSidebar() {
+    if (isRendering) return;
+    
     sidebarCollapsed = !sidebarCollapsed;
     const toggleBtn = modalElem.querySelector("#toggle-sidebar-btn");
+    const columnsContainer = sidebarColumn.parentElement;
+    
+    // Ensure the container uses flexbox for proper layout
+    columnsContainer.style.display = "flex";
     
     if (sidebarCollapsed) {
-      // Collapse sidebar
-      sidebarColumn.style.width = "30px";
-      sidebarColumn.style.minWidth = "30px";
+      // Collapse sidebar with animation
+      sidebarColumn.classList.add('sidebar-collapsed');
+      sidebarColumn.style.width = "40px";
+      sidebarColumn.style.minWidth = "40px";
       sidebarColumn.querySelector("aside").style.display = "none";
       
       // Expand main content to fill the space
-      mainContentColumn.style.width = "calc(100% - 30px)";
+      mainContentColumn.style.width = "calc(100% - 40px)";
       mainContentColumn.style.flex = "1";
       
       // Create a new button to expand the sidebar
       const expandBtn = document.createElement("button");
       expandBtn.id = "expand-sidebar-btn";
       expandBtn.className = "button is-small";
+      expandBtn.setAttribute("aria-label", TranslationModule.translate("expandSidebar"));
       expandBtn.style.position = "absolute";
       expandBtn.style.left = "5px";
       expandBtn.style.top = "10px";
@@ -208,12 +346,9 @@ const TutorialModule = (function() {
       
       // Add the expand button to the sidebar column
       sidebarColumn.appendChild(expandBtn);
-      
-      // Force the columns to recalculate
-      const columnsContainer = sidebarColumn.parentElement;
-      columnsContainer.style.display = "flex";
     } else {
-      // Expand sidebar
+      // Expand sidebar with animation
+      sidebarColumn.classList.remove('sidebar-collapsed');
       sidebarColumn.style.width = "25%";
       sidebarColumn.style.minWidth = "";
       sidebarColumn.querySelector("aside").style.display = "block";
@@ -231,24 +366,25 @@ const TutorialModule = (function() {
       // Update the toggle button
       toggleBtn.innerHTML = `<span class="icon is-small"><i class="fas fa-chevron-left"></i></span>`;
       toggleBtn.setAttribute("title", TranslationModule.translate("collapseSidebar"));
-      
-      // Reset the columns container
-      const columnsContainer = sidebarColumn.parentElement;
-      columnsContainer.style.display = "";
     }
   }
 
+  /**
+   * Updates the progress bar and lesson overview label
+   */
   function renderProgressBar() {
     if (!progressBar) return;
     
     const totalLessons = tutorialData.lessons.length;
     if (totalLessons === 0) return;
     
+    // Calculate completion percentage
     const completedCount = Object.keys(tutorialState.completedLessons).length;
     const progressPercentage = Math.round((completedCount / totalLessons) * 100);
     
-    progressBar.value = progressPercentage;
-    progressBar.textContent = `${progressPercentage}%`;
+    // Update progress bar with animation
+    const currentValue = parseInt(progressBar.value, 10);
+    animateProgressBar(currentValue, progressPercentage);
     
     // Update lesson overview label
     const currentLessonIndex = tutorialData.lessons.findIndex(l => l.id === currentLessonId) + 1;
@@ -256,6 +392,44 @@ const TutorialModule = (function() {
     if (overviewLabel) {
       overviewLabel.textContent = `${TranslationModule.translate("lessonOverview")} ${currentLessonIndex} ${TranslationModule.translate("of")} ${totalLessons}`;
     }
+  }
+  
+  /**
+   * Animates the progress bar from one value to another
+   * @param {number} from - Starting percentage
+   * @param {number} to - Target percentage
+   */
+  function animateProgressBar(from, to) {
+    if (!progressBar) return;
+    
+    // Cancel any existing animation
+    if (progressBar.animation) {
+      clearInterval(progressBar.animation);
+    }
+    
+    const duration = 500; // ms
+    const steps = 20;
+    const stepValue = (to - from) / steps;
+    let currentStep = 0;
+    let currentValue = from;
+    
+    progressBar.animation = setInterval(() => {
+      currentStep++;
+      currentValue += stepValue;
+      
+      if (currentStep >= steps) {
+        currentValue = to;
+        clearInterval(progressBar.animation);
+        progressBar.animation = null;
+      }
+      
+      progressBar.value = currentValue;
+      progressBar.textContent = `${Math.round(currentValue)}%`;
+      
+      // Add aria attributes for accessibility
+      progressBar.setAttribute('aria-valuenow', Math.round(currentValue));
+      progressBar.setAttribute('aria-valuetext', `${Math.round(currentValue)}% complete`);
+    }, duration / steps);
   }
 
   async function markAllLessonsComplete() {
@@ -269,81 +443,142 @@ const TutorialModule = (function() {
     renderCurrentLesson();
   }
 
+  /**
+   * Renders the current lesson and page content
+   */
   function renderCurrentLesson() {
-    const lesson = tutorialData.lessons.find(l => l.id === currentLessonId);
-    if (!lesson) {
-      modalBody.innerHTML = "<p>No lesson found.</p>";
-      return;
-    }
-    modalTitle.textContent = `Tutorial: ${localize(lesson.title)}`;
+    if (isRendering) return;
+    isRendering = true;
+    
+    try {
+      const lesson = tutorialData.lessons.find(l => l.id === currentLessonId);
+      if (!lesson) {
+        modalBody.innerHTML = "<div class='notification is-warning'>No lesson found.</div>";
+        isRendering = false;
+        return;
+      }
+      
+      modalTitle.textContent = `Tutorial: ${localize(lesson.title)}`;
 
-    const currentPage = lesson.pages[currentPageIndex];
-    if (!currentPage) {
-      modalBody.innerHTML = "<p>No page found.</p>";
-      return;
-    }
-    
-    // Create tabs for page navigation
-    let tabsHtml = `
-      <div class="tabs is-boxed">
-        <ul>
-    `;
-    
-    lesson.pages.forEach((page, index) => {
-      const isActive = index === currentPageIndex;
-      tabsHtml += `
-        <li class="${isActive ? 'is-active' : ''}">
-          <a data-page-index="${index}" title="${TranslationModule.translate("jumpToPage")} ${index + 1}">
-            ${index + 1}
-          </a>
-        </li>
+      const currentPage = lesson.pages[currentPageIndex];
+      if (!currentPage) {
+        modalBody.innerHTML = "<div class='notification is-warning'>No page found.</div>";
+        isRendering = false;
+        return;
+      }
+      
+      // Create tabs for page navigation
+      let tabsHtml = `
+        <div class="tabs is-boxed" role="tablist">
+          <ul>
       `;
-    });
-    
-    tabsHtml += `
-        </ul>
-      </div>
-    `;
-    
-    // Create content with Bulma styling and integrated page tracker
-    let contentHtml = `
-      ${tabsHtml}
-      <div class="content">
-        <div class="level is-mobile">
-          <div class="level-left">
-            <h2 class="title is-3">${localize(currentPage.title)}</h2>
-          </div>
-          <div class="level-right">
-            <span class="tag is-info is-medium">Page ${currentPageIndex + 1} of ${lesson.pages.length}</span>
-          </div>
-        </div>
-        <div class="block">${localize(currentPage.text)}</div>
-    `;
-    
-    if (currentPage.screenshot) {
-      contentHtml += `
-        <figure class="image">
-          <img src="${currentPage.screenshot}" alt="Screenshot" style="border:1px solid #ddd; border-radius:4px;">
-        </figure>
-      `;
-    }
-    
-    contentHtml += `</div>`;
-    modalBody.innerHTML = contentHtml;
-    modalBody.classList.add("fade-in");
-    setTimeout(function() {
-      modalBody.classList.remove("fade-in");
-    }, 300);
-
-    // Add event listeners to the tabs
-    modalBody.querySelectorAll('.tabs li a').forEach(tab => {
-      tab.addEventListener('click', (e) => {
-        e.preventDefault();
-        const pageIndex = parseInt(e.currentTarget.getAttribute('data-page-index'), 10);
-        currentPageIndex = pageIndex;
-        renderCurrentLesson();
+      
+      lesson.pages.forEach((page, index) => {
+        const isActive = index === currentPageIndex;
+        tabsHtml += `
+          <li class="${isActive ? 'is-active' : ''}" role="presentation">
+            <a data-page-index="${index}" 
+               role="tab" 
+               aria-selected="${isActive ? 'true' : 'false'}"
+               aria-controls="page-${index}"
+               title="${TranslationModule.translate("jumpToPage")} ${index + 1}">
+              ${index + 1}
+            </a>
+          </li>
+        `;
       });
-    });
+      
+      tabsHtml += `
+          </ul>
+        </div>
+      `;
+      
+      // Process markdown in the text content
+      const processedText = processMarkdown(localize(currentPage.text));
+      
+      // Create content with Bulma styling and integrated page tracker
+      let contentHtml = `
+        ${tabsHtml}
+        <div class="content" id="page-${currentPageIndex}" role="tabpanel">
+          <div class="level is-mobile">
+            <div class="level-left">
+              <h2 class="title is-3">${localize(currentPage.title)}</h2>
+            </div>
+            <div class="level-right">
+              <span class="tag is-info is-medium">Page ${currentPageIndex + 1} of ${lesson.pages.length}</span>
+            </div>
+          </div>
+          <div class="block tutorial-content">${processedText}</div>
+      `;
+      
+      if (currentPage.screenshot) {
+        contentHtml += `
+          <figure class="image">
+            <img src="${currentPage.screenshot}" alt="Screenshot of ${localize(currentPage.title)}" 
+                 style="border:1px solid #ddd; border-radius:4px;">
+          </figure>
+        `;
+      }
+      
+      contentHtml += `</div>`;
+      
+      // Update the DOM
+      modalBody.innerHTML = contentHtml;
+      modalBody.classList.add("fade-in");
+      setTimeout(function() {
+        modalBody.classList.remove("fade-in");
+      }, 300);
+
+      // Add event listeners to the tabs
+      modalBody.querySelectorAll('.tabs li a').forEach(tab => {
+        tab.addEventListener('click', (e) => {
+          e.preventDefault();
+          const pageIndex = parseInt(e.currentTarget.getAttribute('data-page-index'), 10);
+          currentPageIndex = pageIndex;
+          renderCurrentLesson();
+        });
+      });
+      
+      // Apply syntax highlighting to code blocks if highlight.js is available
+      if (window.hljs) {
+        modalBody.querySelectorAll('pre code').forEach((block) => {
+          window.hljs.highlightElement(block);
+        });
+      }
+    } catch (error) {
+      console.error("Error rendering lesson:", error);
+      modalBody.innerHTML = `<div class="notification is-danger">Error rendering lesson: ${error.message}</div>`;
+    } finally {
+      isRendering = false;
+    }
+  }
+  
+  /**
+   * Processes markdown text into HTML
+   * @param {string} text - The markdown text to process
+   * @return {string} - The processed HTML
+   */
+  function processMarkdown(text) {
+    // Use marked.js if available, otherwise do basic markdown processing
+    if (window.marked) {
+      return window.marked.parse(text);
+    }
+    
+    // Basic markdown processing as fallback
+    return text
+      // Bold text
+      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+      // Italic text
+      .replace(/\*(.*?)\*/g, '<em>$1</em>')
+      // Links
+      .replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2">$1</a>')
+      // Lists
+      .replace(/^\s*-\s+(.*?)$/gm, '<li>$1</li>')
+      .replace(/(<li>.*?<\/li>)/gs, '<ul>$1</ul>')
+      // Paragraphs
+      .replace(/\n\n/g, '</p><p>')
+      // Wrap in paragraph if not already
+      .replace(/^(.+)$/, '<p>$1</p>');
 
     // Footer navigation buttons using Bulma level layout
     const closeBtn = modalFooter.querySelector("#close-tutorial-btn");
