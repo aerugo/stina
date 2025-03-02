@@ -143,7 +143,19 @@ body {
 
 /* Transition for sidebar collapse/expand */
 .sidebar-column, .main-content-column {
-  transition: width 0.3s ease;
+  transition: all 0.3s ease;
+}
+
+/* Sidebar expand button */
+#expand-sidebar-btn {
+  z-index: 10;
+  padding: 0.25rem;
+  height: auto;
+  transition: opacity 0.2s ease;
+}
+
+#expand-sidebar-btn:hover {
+  opacity: 0.9;
 }
 
 .menu-label {
