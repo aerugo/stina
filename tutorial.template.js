@@ -15,8 +15,8 @@ window.tutorialData = {
         {
           title: { en: "Basic Navigation", sv: "Grundläggande navigering" },
           text: {
-            en: "At the very top of the screen, you will see a navigation bar with buttons for: - **New Chat**: Start a new conversation - **Help**: Open or resume this tutorial - **Settings**: Configure providers, language, and more On the left, you will see the chat list, where all your previous conversations are stored. You can click on any chat to reopen it.",
-            sv: "Längst upp på skärmen ser du en navigationsrad med knappar för: - **Ny chat**: Starta en ny konversation - **Hjälp**: Öppna eller återuppta denna handledning - **Inställningar**: Konfigurera leverantörer, språk och mer Till vänster ser du en chattlista där alla dina tidigare konversationer är lagrade. Du kan klicka på vilken som helst av dem för att öppna den igen.",
+            en: "At the very top of the screen, you will see a navigation bar with buttons for:\n\n- **New Chat**: Start a new conversation\n- **Help**: Open or resume this tutorial\n- **Settings**: Configure providers, language, and more\n\nOn the left, you will see the chat list, where all your previous conversations are stored. You can click on any chat to reopen it.",
+            sv: "Längst upp på skärmen ser du en navigationsrad med knappar för:\n\n- **Ny chat**: Starta en ny konversation\n- **Hjälp**: Öppna eller återuppta denna handledning\n- **Inställningar**: Konfigurera leverantörer, språk och mer\n\nTill vänster ser du en chattlista där alla dina tidigare konversationer är lagrade. Du kan klicka på vilken som helst av dem för att öppna den igen.",
           },
           screenshot: "",
         },
