@@ -18,8 +18,17 @@
 /* Tutorial Modal - wider than standard modals */
 #tutorial-modal .modal-card {
     max-width: 1400px; /* Wider than standard modals */
+    width: 90% !important; /* Override Bulma's default width */
     background-color: var(--tutorial-background-color, var(--modal-background-color));
     border-radius: 8px; /* Slightly more rounded corners */
+}
+
+/* Override Bulma's default modal width for larger screens */
+@media screen and (min-width: 769px) {
+    #tutorial-modal .modal-card {
+        width: 90% !important; /* Force wider width */
+        max-width: 1400px;
+    }
 }
 
 @keyframes fadeInUp {
