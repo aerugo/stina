@@ -2,6 +2,18 @@
  * Rendering Module
  * Handles all UI rendering tasks
  */
+// Use Marked's plugin system to walk all tokens.
+// Convert any raw HTML tokens into code tokens so they're displayed verbatim.
+marked.use({
+  walkTokens(token) {
+    if (token.type === 'html') {
+      token.type = 'code';      // Treat it as a code block
+      token.lang = 'html';      // Set the language to html (or 'plaintext' if you prefer)
+      token.text = token.raw;   // Use the original raw HTML as the code content
+    }
+  }
+});
+
 // Create a custom renderer
 const renderer = new marked.Renderer();
 
