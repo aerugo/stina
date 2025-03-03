@@ -44,14 +44,22 @@ const CodeBlockComponent = (function () {
     }
 
     // Sanitize the highlighted code
-    const sanitizedHighlighted = DOMPurify.sanitize(highlighted);
+    let sanitizedHighlighted = DOMPurify.sanitize(highlighted);
+
+    // Remove any leading or trailing triple backticks
+    if (sanitizedHighlighted.startsWith("```")) {
+      sanitizedHighlighted = sanitizedHighlighted.slice(3);
+    }
+    if (sanitizedHighlighted.endsWith("```")) {
+      sanitizedHighlighted = sanitizedHighlighted.slice(0, -3);
+    }
 
     // Generate a unique ID for each code block
     const codeBlockId = "code-block-" + Math.random().toString(36).substr(2, 9);
 
     // Return the custom HTML for the code block with a copy button
     // If language is not specified, set it to 'plaintext'
-    const languageLabel = language || 'plaintext';
+    const languageLabel = language || "plaintext";
 
     return `
       <div class="code-block-container">
