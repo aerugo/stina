@@ -27,6 +27,76 @@ marked.setOptions({
   renderer: renderer,
 });
 
+/**
+ * Utility function to ensure that an HTML document snippet is always fenced.
+ * If an HTML snippet starting at "<!DOCTYPE html>" (followed by "<html>") is detected
+ * and is not already enclosed in triple backticks, this function adds a "```html" fence
+ * above the snippet and a closing "```" fence after the closing </html> tag.
+ */
+function ensureHtmlBlockFencing(text) {
+  // Split the text into lines.
+  const lines = text.split(/\r?\n/);
+  
+  let i = 0;
+  let insideCodeFence = false;
+  
+  while (i < lines.length) {
+    const line = lines[i].trim();
+    
+    // Flip the insideCodeFence flag on encountering a triple backtick.
+    if (/^```/.test(line)) {
+      insideCodeFence = !insideCodeFence;
+    }
+    
+    // 1) When encountering a <!DOCTYPE html> not inside a code fence:
+    if (
+      !insideCodeFence &&
+      /<!DOCTYPE html>/i.test(line)
+    ) {
+      // Look ahead for the next non-blank line to see if it starts with <html>
+      let nextNonBlankIndex = i + 1;
+      while (nextNonBlankIndex < lines.length && !lines[nextNonBlankIndex].trim()) {
+        nextNonBlankIndex++;
+      }
+      if (
+        nextNonBlankIndex < lines.length &&
+        /^<html\b/i.test(lines[nextNonBlankIndex].trim())
+      ) {
+        // Check if there's a fence above this line (ignoring blank lines)
+        let above = i - 1;
+        while (above >= 0 && !lines[above].trim()) {
+          above--;
+        }
+        if (above < 0 || !/^```/.test(lines[above].trim())) {
+          // Insert a fence line BEFORE the <!DOCTYPE html>
+          lines.splice(i, 0, '```html');
+          i++; // Advance past the newly inserted fence line.
+        }
+      }
+    }
+    
+    // 2) When encountering a closing </html> that is not inside a code fence:
+    if (
+      !insideCodeFence &&
+      /<\/html>/i.test(line)
+    ) {
+      // Look ahead to see if there's already a fence after (skip blank lines)
+      let below = i + 1;
+      while (below < lines.length && !lines[below].trim()) {
+        below++;
+      }
+      if (below >= lines.length || !/^```/.test(lines[below].trim())) {
+        // Insert a closing fence after this line.
+        lines.splice(i + 1, 0, '```');
+      }
+    }
+    
+    i++;
+  }
+  
+  return lines.join('\n');
+}
+
 const RenderingModule = (function () {
   const models = ModelsModule.getModels(); // Retrieve models
 
@@ -57,7 +127,9 @@ const RenderingModule = (function () {
                     </progress>
                 `;
       } else {
-        let htmlContent = marked.parse(message.content);
+        // Force any raw HTML snippet into a fenced code block before parsing.
+        const fencedContent = ensureHtmlBlockFencing(message.content);
+        let htmlContent = marked.parse(fencedContent);
         htmlContent = DOMPurify.sanitize(htmlContent);
 
         // Create container for assistant message
