@@ -6,12 +6,12 @@
 // Convert any raw HTML tokens into code tokens so they're displayed verbatim.
 marked.use({
   walkTokens(token) {
-    if (token.type === 'html') {
-      token.type = 'code';      // Treat it as a code block
-      token.lang = 'html';      // Set the language to html (or 'plaintext' if you prefer)
-      token.text = token.raw;   // Use the original raw HTML as the code content
+    if (token.type === "html") {
+      token.type = "code"; // Treat it as a code block
+      token.lang = "html"; // Set the language to html (or 'plaintext' if you prefer)
+      token.text = token.raw; // Use the original raw HTML as the code content
     }
-  }
+  },
 });
 
 // Create a custom renderer
@@ -20,7 +20,6 @@ const renderer = new marked.Renderer();
 renderer.code = function (code, infostring, escaped) {
   return CodeBlockComponent.renderCodeBlock(code, infostring);
 };
-
 
 // Configure marked parser to enable line breaks globally and use custom renderer
 marked.setOptions({
@@ -32,13 +31,15 @@ const RenderingModule = (function () {
   const models = ModelsModule.getModels(); // Retrieve models
 
   function createMessageElement(message) {
+    console.log("Rendering message:", message);
+
     if (message.isIgnoredDocsNotice) {
       const noticeElem = document.createElement("div");
       noticeElem.classList.add("ignored-docs-notice");
       noticeElem.textContent = message.content;
       return noticeElem;
     }
-    
+
     if (typeof message.content !== "string") {
       console.warn("message.content is not a string:", message.content);
       message.content = JSON.stringify(message.content);
@@ -164,16 +165,16 @@ const RenderingModule = (function () {
       // Create a container for user message and any attached files
       const userMessageContainer = document.createElement("div");
       userMessageContainer.classList.add("user-message-container");
-      
+
       // If there are attached files, render them as pills
       if (message.attachedFiles && message.attachedFiles.length > 0) {
         const filesContainer = document.createElement("div");
         filesContainer.classList.add("attached-files-container");
-        
-        message.attachedFiles.forEach(file => {
+
+        message.attachedFiles.forEach((file) => {
           const pill = document.createElement("div");
           pill.classList.add("file-pill");
-          
+
           // Apply appropriate classes
           if (file.ignored) {
             pill.classList.add("ignored-file");
@@ -181,48 +182,57 @@ const RenderingModule = (function () {
           if (file.selectedSummaryId) {
             pill.classList.add("summary-active");
           }
-          
+
           // Determine display name - if summary is active, show summary title instead of the file name
           let pillDisplayName = file.fileName;
           if (file.selectedSummaryId && file.summaries) {
-            const summaryObj = file.summaries.find(s => s.id === file.selectedSummaryId);
+            const summaryObj = file.summaries.find(
+              (s) => s.id === file.selectedSummaryId
+            );
             if (summaryObj) {
               pillDisplayName = summaryObj.name;
             }
           }
-          
+
           pill.innerHTML = `
-            <span class="file-name">${DOMPurify.sanitize(pillDisplayName)}</span>
-            <span class="file-classification">${DOMPurify.sanitize(file.classification)}</span>
+            <span class="file-name">${DOMPurify.sanitize(
+              pillDisplayName
+            )}</span>
+            <span class="file-classification">${DOMPurify.sanitize(
+              file.classification
+            )}</span>
           `;
-          
+
           // Always allow toggling the "ignore" state regardless of attachmentsLocked
           pill.addEventListener("click", () => {
             FileUploadEventsModule.showDocumentInfoModal(file);
           });
-          
+
           filesContainer.appendChild(pill);
         });
-        
+
         userMessageContainer.appendChild(filesContainer);
       }
-      
+
       // Add the user message content
       const contentDiv = document.createElement("div");
       contentDiv.classList.add("user-message-content");
       contentDiv.innerText = message.content;
-      
+
       userMessageContainer.appendChild(contentDiv);
-      
+
       // For user messages that include an ignore summary (set when sending), display it
       if (message.ignoredFilesSummary) {
-        console.log("[DEBUG][rendering] Rendering ignoredFilesSummary:", message.ignoredFilesSummary);
+        console.log(
+          "[DEBUG][rendering] Rendering ignoredFilesSummary:",
+          message.ignoredFilesSummary
+        );
         const ignoredInfoElem = document.createElement("div");
         ignoredInfoElem.classList.add("ignored-files-summary");
         ignoredInfoElem.innerText = message.ignoredFilesSummary;
         userMessageContainer.appendChild(ignoredInfoElem);
       }
-      
+
       messageElem.appendChild(userMessageContainer);
     }
 
