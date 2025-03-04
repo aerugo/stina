@@ -166,7 +166,8 @@ const FileUploadEventsModule = (function () {
             tokenCount: tokenCount,
             ignored: false,    // initialize ignored state to false
             summaries: [],     // array to store document summaries
-            selectedSummaryId: null  // currently active summary (if any)
+            useFullDocument: true,  // new boolean for toggling entire doc inclusion
+            selectedSummaryIds: []   // array to store all chosen summary IDs
           };
           pendingFiles.push(pendingFile);
           renderPendingFiles(pendingFiles);
@@ -200,17 +201,14 @@ const FileUploadEventsModule = (function () {
       if (item.ignored) {
         chip.classList.add("ignored-file");
       }
-      if (item.selectedSummaryId) {
+      if (item.selectedSummaryIds && item.selectedSummaryIds.length > 0) {
         chip.classList.add("summary-active");
       }
       
-      // Determine display name - if summary is active, show summary title instead of the file name
+      // Determine display name - if summaries are active, show count instead of the file name
       let pillDisplayName = item.fileName;
-      if (item.selectedSummaryId) {
-        const summaryObj = item.summaries.find(s => s.id === item.selectedSummaryId);
-        if (summaryObj) {
-          pillDisplayName = summaryObj.name;
-        }
+      if (item.selectedSummaryIds && item.selectedSummaryIds.length > 0) {
+        pillDisplayName = `${item.fileName} (${item.selectedSummaryIds.length} summaries)`;
       }
       
       chip.innerHTML = `
@@ -246,17 +244,11 @@ const FileUploadEventsModule = (function () {
         <div class="field">
           <label class="label">${TranslationModule.translate("availableSummaries")}</label>
           <div id="existing-summaries-list">
-            <div class="summary-item">
-              <label class="radio">
-                <input type="radio" name="document-summary" value="" ${!file.selectedSummaryId ? "checked" : ""}>
-                <span>${TranslationModule.translate("noSummary")}</span>
-              </label>
-            </div>
             ${file.summaries.map(summary => `
               <div class="summary-item">
-                <label class="radio">
-                  <input type="radio" name="document-summary" value="${summary.id}" 
-                    ${file.selectedSummaryId === summary.id ? "checked" : ""}>
+                <label class="checkbox">
+                  <input type="checkbox" name="document-summary" value="${summary.id}"
+                    ${file.selectedSummaryIds && file.selectedSummaryIds.includes(summary.id) ? "checked" : ""}>
                   <span class="summary-name">${DOMPurify.sanitize(summary.name)}</span>
                 </label>
                 <button class="button is-small view-summary-btn" data-summary-id="${summary.id}">
@@ -265,6 +257,12 @@ const FileUploadEventsModule = (function () {
               </div>
             `).join('')}
           </div>
+        </div>
+        <div class="field" style="margin-top:1rem;">
+          <label class="checkbox">
+            <input type="checkbox" id="use-full-doc-checkbox" ${file.useFullDocument ? "checked" : ""}>
+            <span>${TranslationModule.translate("useFullDocument") || "Include Entire Document"}</span>
+          </label>
         </div>`;
     } else {
       summariesHTML = `
@@ -302,14 +300,18 @@ const FileUploadEventsModule = (function () {
           console.log("[DEBUG][file_upload] File", file.fileName, "ignored state set to:", file.ignored);
         }
         
-        // Handle summary selection
-        const selectedSummaryRadio = document.querySelector('input[name="document-summary"]:checked');
-        if (selectedSummaryRadio) {
-          file.selectedSummaryId = selectedSummaryRadio.value || null;
-          console.log("[DEBUG][file_upload] Selected summary:", file.selectedSummaryId);
-        } else {
-          file.selectedSummaryId = null;
-        }
+        // Handle multiple summary selections from checkboxes
+        const summaryCheckboxes = document.querySelectorAll('input[name="document-summary"]');
+        const chosenSummaries = [];
+        summaryCheckboxes.forEach(cb => {
+          if (cb.checked) chosenSummaries.push(cb.value);
+        });
+        file.selectedSummaryIds = chosenSummaries;
+        console.log("[DEBUG][file_upload] Selected summaries:", file.selectedSummaryIds);
+        
+        // Handle "Use Full Document" checkbox
+        const fullDocCheckbox = document.getElementById("use-full-doc-checkbox");
+        file.useFullDocument = fullDocCheckbox && fullDocCheckbox.checked;
         
         // If this is a file in a chat message, update the chat
         if (!pendingFiles.some(pf => pf.id === file.id)) {
@@ -330,7 +332,8 @@ const FileUploadEventsModule = (function () {
         generateSummaryBtn.addEventListener("click", () => {
           SummariesEventsModule.showSummarizationModal(file, (newSummary) => {
             file.summaries.push(newSummary);
-            file.selectedSummaryId = newSummary.id;
+            if (!file.selectedSummaryIds) file.selectedSummaryIds = [];
+            file.selectedSummaryIds.push(newSummary.id);
             showDocumentInfoModal(file); // Re-open the modal with updated summaries
           });
         });

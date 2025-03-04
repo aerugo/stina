@@ -111,29 +111,39 @@ const MessageModule = (function () {
     };
     currentState.conversation.push(newMessage);
 
-    // Build lists of ignored documents and documents using summaries from the conversation
+    // Build lists of ignored documents, documents using summaries, and documents using full text
     function getIgnoredAndSummaryDocs(conversation) {
       const ignoredDocs = [];
       const summaryDocs = [];
+      const fullDocs = [];
       conversation.forEach(msg => {
         if (msg.role === "user" && Array.isArray(msg.attachedFiles)) {
           msg.attachedFiles.forEach(file => {
             if (file.ignored) {
               ignoredDocs.push(file.fileName);
-            } else if (file.selectedSummaryId && file.summaries && file.summaries.length > 0) {
-              const summaryObj = file.summaries.find(s => s.id === file.selectedSummaryId);
-              if (summaryObj) {
-                summaryDocs.push(`${file.fileName} (summary: ${summaryObj.name})`);
+            } else {
+              // Check for summaries
+              if (file.selectedSummaryIds && file.selectedSummaryIds.length > 0 && file.summaries && file.summaries.length > 0) {
+                const summaryNames = file.selectedSummaryIds.map(id => {
+                  const summaryObj = file.summaries.find(s => s.id === id);
+                  return summaryObj ? summaryObj.name : "unknown";
+                }).join(", ");
+                summaryDocs.push(`${file.fileName} (summaries: ${summaryNames})`);
+              }
+              
+              // Check for full document usage
+              if (file.useFullDocument) {
+                fullDocs.push(file.fileName);
               }
             }
           });
         }
       });
-      return { ignoredDocs, summaryDocs };
+      return { ignoredDocs, summaryDocs, fullDocs };
     }
 
-    const { ignoredDocs, summaryDocs } = getIgnoredAndSummaryDocs(currentState.conversation);
-    if (ignoredDocs.length > 0 || summaryDocs.length > 0) {
+    const { ignoredDocs, summaryDocs, fullDocs } = getIgnoredAndSummaryDocs(currentState.conversation);
+    if (ignoredDocs.length > 0 || summaryDocs.length > 0 || fullDocs.length > 0) {
       let noticeMsgContent = "";
       if (ignoredDocs.length > 0) {
         noticeMsgContent += TranslationModule.translate("ignoredDocuments") + ": " + ignoredDocs.join(", ");
@@ -141,6 +151,10 @@ const MessageModule = (function () {
       if (summaryDocs.length > 0) {
         if (noticeMsgContent) noticeMsgContent += "; ";
         noticeMsgContent += TranslationModule.translate("documentsUsingSummaries") + ": " + summaryDocs.join(", ");
+      }
+      if (fullDocs.length > 0) {
+        if (noticeMsgContent) noticeMsgContent += "; ";
+        noticeMsgContent += TranslationModule.translate("documentsUsingFullText") + ": " + fullDocs.join(", ");
       }
       const noticeMsg = {
         role: "system",
@@ -220,20 +234,27 @@ const MessageModule = (function () {
         msg.attachedFiles.forEach(file => {
           if (!file.ignored) {  // Only merge if not ignored
             console.log("Merging file:", file.fileName);
-            
-            // Determine which content to use - summary or full content
-            let textToUse = file.content;
-            if (file.selectedSummaryId) {
-              const summaryObj = file.summaries.find(s => s.id === file.selectedSummaryId);
-              if (summaryObj) {
-                console.log("Using summary instead of full content for:", file.fileName);
-                textToUse = `[SUMMARY: ${summaryObj.name}]\n\n${summaryObj.content}`;
-              }
+            let fileContent = "";
+
+            // If the user has chosen to include the full document text:
+            if (file.useFullDocument) {
+              // Normalize newlines to LF for consistency
+              const normalizedContent = file.content.replace(/\r\n/g, "\n").replace(/\r/g, "\n");
+              fileContent += `=== ${file.fileName} (FULL) ===\n${normalizedContent}\n\n----------\n`;
             }
-            
-            // Normalize newlines to LF for consistency
-            const normalizedContent = textToUse.replace(/\r\n/g, "\n").replace(/\r/g, "\n");
-            mergedContent += `${file.fileName}\n\n${normalizedContent}\n\n----------\n`;
+
+            // Gather each selected summary, if any:
+            if (Array.isArray(file.selectedSummaryIds) && file.selectedSummaryIds.length > 0) {
+              file.selectedSummaryIds.forEach(summaryId => {
+                const summaryObj = file.summaries.find(s => s.id === summaryId);
+                if (summaryObj) {
+                  console.log("Including summary for:", file.fileName, "Summary:", summaryObj.name);
+                  fileContent += `=== ${file.fileName} [SUMMARY: ${summaryObj.name}] ===\n${summaryObj.content}\n\n----------\n`;
+                }
+              });
+            }
+
+            mergedContent += fileContent;
           } else {
             console.log("Skipping ignored file:", file.fileName);
           }
