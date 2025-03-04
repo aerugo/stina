@@ -83,6 +83,12 @@ const ChatModule = (function () {
         selectedInstructionId: chat.selectedInstructionId,
       });
       saveCurrentChatId();
+      
+      // Update model dropdown to reflect document classification requirements
+      if (typeof ModelSelectionEventsModule !== 'undefined') {
+        setTimeout(() => ModelSelectionEventsModule.populateModelDropdown(), 0);
+      }
+      
       return {
         chats,
         conversation,

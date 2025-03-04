@@ -37,7 +37,7 @@ const InitializationModule = (function () {
       RenderingModule.renderChatList(state.chats, state.currentChatId);
       RenderingModule.renderConversation(state.conversation);
       EventModule.setupEventListeners(); // Initialize all event modules
-      await ModelSelectionEventsModule.populateModelSelector(); // Populate model selector
+      await ModelSelectionEventsModule.populateModelDropdown(); // Populate model selector with classification awareness
       await ModelSelectionEventsModule.updateModelAndInstructionSelectors(); // Update selectors after initialization
       
       // Debug information about models and instructions

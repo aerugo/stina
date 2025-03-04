@@ -105,6 +105,46 @@ const MessageModule = (function () {
     console.log("[DEBUG][sendMessage] Attached Files:", attachedFiles);
 
     const currentState = ChatModule.getCurrentState();
+    const currentChat = ChatModule.getCurrentChat();
+    const selectedModelKey = currentChat.selectedModelKey || "gpt-4o";
+    const selectedModelParams = ModelsModule.getModel(selectedModelKey);
+    
+    // Determine the maximum classification level from all attached files in the current chat
+    let maxRequiredClearance = 1;
+    
+    // Check existing conversation files
+    currentState.conversation.forEach(msg => {
+      if (msg.attachedFiles && Array.isArray(msg.attachedFiles)) {
+        msg.attachedFiles.forEach(file => {
+          if (!file.ignored) { // Only consider non-ignored files
+            const fileLevel = file.classificationLevel || 1;
+            if (fileLevel > maxRequiredClearance) {
+              maxRequiredClearance = fileLevel;
+            }
+          }
+        });
+      }
+    });
+    
+    // Check new files being attached
+    attachedFiles.forEach(file => {
+      if (!file.ignored) { // Only consider non-ignored files
+        const fileLevel = file.classificationLevel || 1;
+        if (fileLevel > maxRequiredClearance) {
+          maxRequiredClearance = fileLevel;
+        }
+      }
+    });
+    
+    // Check if model has sufficient clearance
+    const modelClearance = selectedModelParams.classification_clearance || 1;
+    if (modelClearance < maxRequiredClearance) {
+      ModalModule.showCustomAlert(
+        `${TranslationModule.translate("insufficientModelClearance") || "Selected model clearance"} (${modelClearance}) ${TranslationModule.translate("insufficientForDocuments") || "is insufficient for the chat's documents"} (${TranslationModule.translate("required") || "required"}: ${maxRequiredClearance}). ${TranslationModule.translate("pleaseSelectHigherClearanceModel") || "Please select a model with higher clearance."}`
+      );
+      return; // Block sending the message
+    }
+    
     const newMessage = {
       role: "user",
       content: messageContent,

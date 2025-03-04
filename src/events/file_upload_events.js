@@ -231,6 +231,11 @@ const FileUploadEventsModule = (function () {
       
       container.appendChild(chip);
     });
+    
+    // Update model dropdown to reflect new document classification requirements
+    if (typeof ModelSelectionEventsModule !== 'undefined') {
+      setTimeout(() => ModelSelectionEventsModule.populateModelDropdown(), 0);
+    }
   }
   
   function showDocumentInfoModal(file) {
@@ -319,6 +324,11 @@ const FileUploadEventsModule = (function () {
           // This is likely a file from a chat message
           ChatModule.saveChats();
           RenderingModule.renderConversation(ChatModule.getCurrentChat().conversation);
+          
+          // Update model dropdown to reflect document classification changes
+          if (typeof ModelSelectionEventsModule !== 'undefined') {
+            setTimeout(() => ModelSelectionEventsModule.populateModelDropdown(), 0);
+          }
         } else {
           // This is a pending file
           renderPendingFiles(pendingFiles);
@@ -366,6 +376,11 @@ const FileUploadEventsModule = (function () {
   function removePendingFile(fileId) {
     pendingFiles = pendingFiles.filter(file => file.id !== fileId);
     renderPendingFiles(pendingFiles);
+    
+    // Update model dropdown after removing a file
+    if (typeof ModelSelectionEventsModule !== 'undefined') {
+      setTimeout(() => ModelSelectionEventsModule.populateModelDropdown(), 0);
+    }
   }
 
   function showProcessingModal() {
