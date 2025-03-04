@@ -133,7 +133,7 @@ const ModelSelectionEventsModule = (function () {
       modelSelect.appendChild(option);
     }
 
-    // If no model meets clearance, show a fallback option and disable the send button
+    // If no model meets clearance, show a fallback option, disable the send button, and show warning
     if (!hasAvailableModel && maxRequiredClearance > 1) {
       modelSelect.innerHTML = `<option disabled>${TranslationModule.translate("noAvailableModels")}</option>`;
       const sendBtn = document.getElementById("send-btn");
@@ -141,7 +141,21 @@ const ModelSelectionEventsModule = (function () {
         sendBtn.disabled = true;
         sendBtn.classList.add("is-disabled");
       }
+      
+      // Show classification warning message
+      const warningEl = document.getElementById("classification-warning");
+      if (warningEl) {
+        warningEl.style.display = "block";
+        warningEl.textContent = `${TranslationModule.translate("insufficientModelClearance")} ${TranslationModule.translate("insufficientForDocuments")} (${TranslationModule.translate("required")}: ${maxRequiredClearance}). ${TranslationModule.translate("pleaseSelectHigherClearanceModel")}`;
+      }
+      
       return;
+    } else {
+      // Hide warning if models are available
+      const warningEl = document.getElementById("classification-warning");
+      if (warningEl) {
+        warningEl.style.display = "none";
+      }
     }
 
     // Set the selected model
@@ -191,9 +205,22 @@ const ModelSelectionEventsModule = (function () {
       if (selectedModel && selectedModel.classification_clearance < maxRequiredClearance) {
         sendBtn.disabled = true;
         sendBtn.classList.add("is-disabled");
+        
+        // Show classification warning message for the selected model
+        const warningEl = document.getElementById("classification-warning");
+        if (warningEl) {
+          warningEl.style.display = "block";
+          warningEl.textContent = `${TranslationModule.translate("insufficientModelClearance")} (${selectedModel.classification_clearance}) ${TranslationModule.translate("insufficientForDocuments")} (${TranslationModule.translate("required")}: ${maxRequiredClearance}). ${TranslationModule.translate("pleaseSelectHigherClearanceModel")}`;
+        }
       } else {
         sendBtn.disabled = false;
         sendBtn.classList.remove("is-disabled");
+        
+        // Hide warning if selected model has sufficient clearance
+        const warningEl = document.getElementById("classification-warning");
+        if (warningEl) {
+          warningEl.style.display = "none";
+        }
       }
     }
   }

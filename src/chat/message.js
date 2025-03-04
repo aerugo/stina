@@ -139,9 +139,20 @@ const MessageModule = (function () {
     // Check if model has sufficient clearance
     const modelClearance = selectedModelParams.classification_clearance || 1;
     if (modelClearance < maxRequiredClearance) {
-      ModalModule.showCustomAlert(
-        `${TranslationModule.translate("insufficientModelClearance") || "Selected model clearance"} (${modelClearance}) ${TranslationModule.translate("insufficientForDocuments") || "is insufficient for the chat's documents"} (${TranslationModule.translate("required") || "required"}: ${maxRequiredClearance}). ${TranslationModule.translate("pleaseSelectHigherClearanceModel") || "Please select a model with higher clearance."}`
-      );
+      // Show warning in the classification warning element instead of a modal
+      const warningEl = document.getElementById("classification-warning");
+      if (warningEl) {
+        warningEl.style.display = "block";
+        warningEl.textContent = `${TranslationModule.translate("insufficientModelClearance") || "Selected model clearance"} (${modelClearance}) ${TranslationModule.translate("insufficientForDocuments") || "is insufficient for the chat's documents"} (${TranslationModule.translate("required") || "required"}: ${maxRequiredClearance}). ${TranslationModule.translate("pleaseSelectHigherClearanceModel") || "Please select a model with higher clearance."}`;
+      }
+      
+      // Disable send button
+      const sendBtn = document.getElementById("send-btn");
+      if (sendBtn) {
+        sendBtn.disabled = true;
+        sendBtn.classList.add("is-disabled");
+      }
+      
       return; // Block sending the message
     }
     

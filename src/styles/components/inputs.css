@@ -196,3 +196,21 @@ body.dark-mode .send-button {
   margin-right: 8px;
   font-size: 1.1em;
 }
+
+/* Classification Warning */
+#classification-warning {
+  color: #d9534f;
+  text-align: center;
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+  padding: 0.5rem;
+  background-color: rgba(217, 83, 79, 0.1);
+  border-radius: 4px;
+  font-weight: 500;
+}
+
+/* Disabled Send Button */
+.send-button.is-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
