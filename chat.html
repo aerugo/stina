@@ -202,9 +202,10 @@
       let instructionsLoaded = false;
       let modelsLoaded = false;
       let providersLoaded = false;
+      let tutorialLoaded = false;
       
       function initializeAppIfReady() {
-        if (instructionsLoaded && modelsLoaded && providersLoaded) {
+        if (instructionsLoaded && modelsLoaded && providersLoaded && tutorialLoaded) {
           InitializationModule.initializeApp();
         }
       }
@@ -329,11 +330,17 @@
         script.src = 'tutorial.js';
         script.onload = function() {
           console.log('tutorial.js has been loaded.');
+          tutorialLoaded = true;
+          initializeAppIfReady();
         };
         script.onerror = function() {
           console.warn('tutorial.js could not be loaded, falling back to tutorial.template.js.');
           const fallbackScript = document.createElement('script');
           fallbackScript.src = 'tutorial.template.js';
+          fallbackScript.onload = function() {
+            tutorialLoaded = true;
+            initializeAppIfReady();
+          };
           document.head.appendChild(fallbackScript);
         };
         document.head.appendChild(script);
