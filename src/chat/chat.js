@@ -67,6 +67,7 @@ const ChatModule = (function () {
     chats.push(chat);
     currentChatId = chatId;
     conversation = chat.conversation;
+    ModelSelectionEventsModule.resetClearanceNoticeDismissed();
     saveChats();
     saveCurrentChatId();
     return getCurrentState();

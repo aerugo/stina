@@ -3,6 +3,7 @@
  * Handles events related to model selection and updates.
  */
 const ModelSelectionEventsModule = (function () {
+  let clearanceNoticeDismissed = false;
   function updateModelAndInstructionSelectors() {
     const models = ModelsModule.getModels();
     const modelSelect = document.getElementById("model-select");
@@ -51,6 +52,10 @@ const ModelSelectionEventsModule = (function () {
     modelSelect.addEventListener("change", function () {
       const newModelKey = this.value;
       ConfigModule.updateConfig({ selectedModelKey: newModelKey });
+      const selectedModel = ModelsModule.getModel(newModelKey);
+      if (selectedModel && selectedModel.classification_clearance === 1) {
+        clearanceNoticeDismissed = false;
+      }
       const currentChat = ChatModule.getCurrentChat();
       if (currentChat) {
         currentChat.selectedModelKey = newModelKey;
@@ -235,15 +240,25 @@ const ModelSelectionEventsModule = (function () {
     if (modelSelect && noticeEl) {
       const selectedModelKey = modelSelect.value;
       const selectedModel = ModelsModule.getModel(selectedModelKey);
-      const clearance = selectedModel && selectedModel.classification_clearance ? selectedModel.classification_clearance : 1;
-      if (clearance === 1) {
-        noticeEl.textContent = TranslationModule.translate("openInformationModelNotice");
+      const clearance = (selectedModel && selectedModel.classification_clearance) || 1;
+      if (clearance === 1 && !clearanceNoticeDismissed) {
+        noticeEl.innerHTML = `<span>${TranslationModule.translate("openInformationModelNotice")}</span> <button id="dismiss-clearance-notice" style="background: none; border: none; font-size: 1rem; cursor: pointer;">✕</button>`;
         noticeEl.style.display = "block";
+        const dismissBtn = noticeEl.querySelector("#dismiss-clearance-notice");
+        if (dismissBtn) {
+          dismissBtn.addEventListener("click", () => {
+            noticeEl.style.display = "none";
+            clearanceNoticeDismissed = true;
+          });
+        }
       } else {
-        noticeEl.textContent = "";
         noticeEl.style.display = "none";
       }
     }
+  }
+
+  function resetClearanceNoticeDismissed() {
+    clearanceNoticeDismissed = false;
   }
 
   return {
@@ -252,5 +267,6 @@ const ModelSelectionEventsModule = (function () {
     updateModelAndInstructionSelectors,
     updateInstructionsVisibility,
     setupEventListeners,
+    resetClearanceNoticeDismissed
   };
 })();
