@@ -127,6 +127,7 @@ window.translationsData = {
     next: "Next",
     finishLesson: "Finish Lesson",
     tutorialProgress: "Progress",
+    noAvailableModels: "No available models with sufficient clearance",
     closeTutorial: "Close Tutorial",
     collapseSidebar: "Collapse Sidebar",
     expandSidebar: "Expand Sidebar",
@@ -270,5 +271,6 @@ window.translationsData = {
     next: "Nästa",
     finishLesson: "Avsluta lektion",
     tutorialProgress: "Framsteg",
+    noAvailableModels: "Inga modeller med tillräcklig klassificeringsnivå",
   },
 };
