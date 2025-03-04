@@ -4,7 +4,8 @@
  */
 const SummariesEventsModule = (function () {
   function showSummarizationModal(file, onSummaryGenerated) {
-    const modalContent = SummaryTemplates.getSummarizationModalContent();
+    const docClassificationLevel = file.classificationLevel || 1;
+    const modalContent = SummaryTemplates.getSummarizationModalContent(docClassificationLevel);
 
     ModalModule.showCustomModal(
       TranslationModule.translate("generateSummary"), 

@@ -5,8 +5,9 @@
 const SummaryTemplates = (function () {
   /**
    * Returns the HTML content for the summmarization modal.
+   * @param {number} docClassificationLevel - The classification level of the document
    */
-  function getSummarizationModalContent() {
+  function getSummarizationModalContent(docClassificationLevel = 1) {
     return `
       <div class="field">
         <label class="label">${TranslationModule.translate("summarizationInstructions")}</label>
@@ -20,7 +21,11 @@ const SummaryTemplates = (function () {
           <div class="select">
             <select id="summary-model-select">
               ${Object.entries(ModelsModule.getModels())
-                .map(([key, model]) => `<option value="${key}">${model.name || key}</option>`)
+                .map(([key, model]) => {
+                  const modelClearance = model.classification_clearance || 1;
+                  const isDisabled = modelClearance < docClassificationLevel;
+                  return `<option value="${key}" ${isDisabled ? 'disabled' : ''}>${model.name || key}${isDisabled ? ' (insufficient clearance)' : ''}</option>`;
+                })
                 .join("")}
             </select>
           </div>
