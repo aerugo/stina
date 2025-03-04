@@ -1,5 +1,6 @@
 window.translationsData = {
   en: {
+    useFullDocument: "Include Entire Document",
     exportChat: "Export Data",
     importChat: "Import Data",
     noChatSelectedToExport: "No chat selected to export.",
@@ -136,6 +137,7 @@ window.translationsData = {
     jumpToPage: "Jump to page",
   },
   sv: {
+    useFullDocument: "Inkludera hela dokumentet",
     exportChat: "Exportera",
     importChat: "Importera chat",
     closeTutorial: "Stäng handledning",
