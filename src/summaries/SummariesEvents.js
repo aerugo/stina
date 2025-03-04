@@ -16,6 +16,18 @@ const SummariesEventsModule = (function () {
       ], 
       async function(result) {
         if (result !== "generate") return;  // Only proceed for generation
+
+    // After modal is rendered, check if the model selector has a single disabled option.
+    setTimeout(() => {
+      const selectEl = document.getElementById("summary-model-select");
+      if (selectEl && selectEl.options.length === 1 && selectEl.options[0].disabled) {
+        const generateButton = document.querySelector("#custom-modal .button.is-primary");
+        if (generateButton) {
+          generateButton.setAttribute("disabled", "disabled");
+          generateButton.classList.add("is-disabled");
+        }
+      }
+    }, 50);
         const instructions = document.getElementById("summary-instructions").value;
         const modelKey = document.getElementById("summary-model-select").value;
         

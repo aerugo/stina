@@ -8,6 +8,30 @@ const SummaryTemplates = (function () {
    * @param {number} docClassificationLevel - The classification level of the document
    */
   function getSummarizationModalContent(docClassificationLevel = 1) {
+    // Build an array of model options with clearance info
+    const modelsArray = Object.entries(ModelsModule.getModels()).map(([key, model]) => {
+      const modelClearance = model.classification_clearance || 1;
+      return {
+        key,
+        label: model.name || key,
+        isDisabled: modelClearance < docClassificationLevel,
+      };
+    });
+    // Determine whether any model meets clearance
+    const availableOptions = modelsArray.filter(m => !m.isDisabled);
+    let optionsHTML = "";
+    if (availableOptions.length === 0) {
+      optionsHTML = `<option disabled>No available models with sufficient clearance</option>`;
+    } else {
+      optionsHTML = modelsArray
+        .map(m => 
+          `<option value="${m.key}" ${m.isDisabled ? "disabled" : ""}>` +
+          `${m.label}${m.isDisabled ? " (insufficient clearance)" : ""}` +
+          `</option>`
+        )
+        .join("");
+    }
+
     return `
       <div class="field">
         <label class="label">${TranslationModule.translate("summarizationInstructions")}</label>
@@ -20,13 +44,7 @@ const SummaryTemplates = (function () {
         <div class="control">
           <div class="select">
             <select id="summary-model-select">
-              ${Object.entries(ModelsModule.getModels())
-                .map(([key, model]) => {
-                  const modelClearance = model.classification_clearance || 1;
-                  const isDisabled = modelClearance < docClassificationLevel;
-                  return `<option value="${key}" ${isDisabled ? 'disabled' : ''}>${model.name || key}${isDisabled ? ' (insufficient clearance)' : ''}</option>`;
-                })
-                .join("")}
+              ${optionsHTML}
             </select>
           </div>
         </div>
