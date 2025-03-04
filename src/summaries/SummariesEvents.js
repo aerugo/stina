@@ -18,6 +18,17 @@ const SummariesEventsModule = (function () {
         const instructions = document.getElementById("summary-instructions").value;
         const modelKey = document.getElementById("summary-model-select").value;
         
+        // Retrieve model parameters and check clearance against document classification
+        const modelParams = ModelsModule.getModel(modelKey);
+        const modelClearance = modelParams.classification_clearance || 1;
+        const docLevel = file.classificationLevel || 1;
+        if (modelClearance < docLevel) {
+          ModalModule.showCustomAlert(
+            `Model clearance (${modelClearance}) is too low for document classification (${docLevel}).`
+          );
+          return; // Stop summary generation
+        }
+        
         // Replace the entire modal content with a loading indicator
         const modalBody = document.getElementById("custom-modal-body");
         modalBody.innerHTML = `

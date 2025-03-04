@@ -4,7 +4,13 @@
  */
 const ModelsModule = (function () {
   function getModels() {
-    return window.models;
+    const models = window.models;
+    Object.keys(models).forEach(key => {
+      if (!models[key].hasOwnProperty('classification_clearance')) {
+        models[key].classification_clearance = 1;  // default clearance
+      }
+    });
+    return models;
   }
 
   function getModel(key) {

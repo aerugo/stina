@@ -280,6 +280,13 @@ const MessageModule = (function () {
 
             // If the user has chosen to include the full document text:
             if (file.useFullDocument) {
+              const fileLevel = file.classificationLevel || 1;
+              const modelClearance = selectedModelParams.classification_clearance || 1;
+              if (modelClearance < fileLevel) {
+                console.warn(`Skipping file "${file.fileName}" due to insufficient model clearance.`);
+                return;  // skip merging this file
+              }
+              
               // Normalize newlines to LF for consistency
               const normalizedContent = file.content
                 .replace(/\r\n/g, "\n")
@@ -297,6 +304,13 @@ const MessageModule = (function () {
                   (s) => s.id === summaryId
                 );
                 if (summaryObj) {
+                  const fileLevel = file.classificationLevel || 1;
+                  const modelClearance = selectedModelParams.classification_clearance || 1;
+                  if (modelClearance < fileLevel) {
+                    console.warn(`Skipping summary for "${file.fileName}" due to insufficient model clearance.`);
+                    return;  // skip this summary
+                  }
+                  
                   console.log(
                     "Including summary for:",
                     file.fileName,

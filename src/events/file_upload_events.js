@@ -160,6 +160,7 @@ const FileUploadEventsModule = (function () {
             id: Date.now().toString(),  // simple unique ID
             file: file,
             classification: chosenClass,
+            classificationLevel: classificationLevel,
             fileName: file.name,
             extension: file.name.split('.').pop().toLowerCase(),
             content: content,
@@ -455,7 +456,7 @@ const FileUploadEventsModule = (function () {
           <form id="classification-form">
             ${classificationOptions.map((option, index) => `
               <label class="radio option-label">
-                <input type="radio" name="classification" value="${option}" ${index === 0 ? "checked" : ""}>
+                <input type="radio" name="classification" value="${index + 1}" ${index === 0 ? "checked" : ""}>
                 <span>${option}</span>
               </label>
             `).join('')}
@@ -491,8 +492,9 @@ const FileUploadEventsModule = (function () {
           onComplete(false);
           return;
         }
-
-        onComplete(true, chosenClass);
+        
+        const classificationLevel = parseInt(chosenClass, 10);
+        onComplete(true, classificationLevel);
       }
     );
     

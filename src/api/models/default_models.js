@@ -5,6 +5,7 @@ window.defaultModels = {
     deployment: "gpt-4o",
     system: true,
     context_length: 128000,
-    temperature: 0.7
+    temperature: 0.7,
+    classification_clearance: 3  // new property
   }
 };
