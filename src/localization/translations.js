@@ -55,6 +55,7 @@ window.translationsData = {
     chatNotFound: "Chat not found.",
     pleaseFillAllFields: "Please fill in all fields.",
     writeToAssistantPlaceholder: "Write to the AI assistant",
+    selectModel: "Select Model",
     generateTitlePrompt:
       "Provide a short (max 5 words) and descriptive chat title based on the following message:",
     endpointURL: "Endpoint URL",
@@ -201,6 +202,7 @@ window.translationsData = {
     chatNotFound: "Chatten hittades inte.",
     pleaseFillAllFields: "Vänligen fyll i alla fält.",
     writeToAssistantPlaceholder: "Skriv till AI-assistenten",
+    selectModel: "Välj modell",
     generateTitlePrompt:
       "Ge en kort (maximalt 5 ord) och beskrivande chattitel baserad på följande meddelande:",
     endpointURL: "Endpoint URL",
