@@ -56,10 +56,11 @@ const ModelSelectionEventsModule = (function () {
         currentChat.selectedModelKey = newModelKey;
         ChatModule.saveChats();
       }
-      // Ensure instruction visibility is updated
+      // Update instruction visibility and open information notice
       setTimeout(() => {
         updateInstructionsVisibility();
-        console.log("Model changed to:", newModelKey, "- Updated instruction visibility");
+        updateModelClearanceNotice();
+        console.log("Model changed to:", newModelKey, "- Updated instruction visibility and clearance notice");
       }, 0);
     });
   }
@@ -221,6 +222,26 @@ const ModelSelectionEventsModule = (function () {
         if (warningEl) {
           warningEl.style.display = "none";
         }
+      }
+    
+      // Update the open information notice
+      updateModelClearanceNotice();
+    }
+  }
+
+  function updateModelClearanceNotice() {
+    const modelSelect = document.getElementById("model-select");
+    const noticeEl = document.getElementById("model-clearance-notice");
+    if (modelSelect && noticeEl) {
+      const selectedModelKey = modelSelect.value;
+      const selectedModel = ModelsModule.getModel(selectedModelKey);
+      const clearance = selectedModel && selectedModel.classification_clearance ? selectedModel.classification_clearance : 1;
+      if (clearance === 1) {
+        noticeEl.textContent = TranslationModule.translate("openInformationModelNotice");
+        noticeEl.style.display = "block";
+      } else {
+        noticeEl.textContent = "";
+        noticeEl.style.display = "none";
       }
     }
   }

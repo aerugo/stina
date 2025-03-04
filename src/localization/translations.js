@@ -133,6 +133,7 @@ window.translationsData = {
     insufficientForDocuments: "is insufficient for the chat's documents",
     required: "required",
     pleaseSelectHigherClearanceModel: "Please select a model with higher clearance.",
+    openInformationModelNotice: "Note: This model only supports open information. Avoid sharing classified data.",
     closeTutorial: "Close Tutorial",
     collapseSidebar: "Collapse Sidebar",
     expandSidebar: "Expand Sidebar",
@@ -282,5 +283,6 @@ window.translationsData = {
     insufficientForDocuments: "är otillräcklig för chattens dokument",
     required: "krävs",
     pleaseSelectHigherClearanceModel: "Välj en modell med högre behörighet.",
+    openInformationModelNotice: "Obs: Denna modell stödjer endast öppen information. Dela inte klassificerad information.",
   },
 };
