@@ -160,7 +160,7 @@ const FileUploadEventsModule = (function () {
             id: Date.now().toString(),  // simple unique ID
             file: file,
             classification: chosenClass,
-            classificationLevel: classificationLevel,
+            classificationLevel: chosenClass,
             fileName: file.name,
             extension: file.name.split('.').pop().toLowerCase(),
             content: content,
