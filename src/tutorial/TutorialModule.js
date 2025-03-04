@@ -973,12 +973,33 @@ const TutorialModule = (function () {
     const helpBtn = document.getElementById("help-btn");
     if (!helpBtn) return;
 
+    // Calculate the remaining lesson count.
+    const totalLessons = tutorialData.lessons.length;
+    const completedCount = Object.keys(tutorialState.completedLessons).length;
+    const remainingCount = Math.max(0, totalLessons - completedCount);
+
+    // Create or update the badge element.
+    let badge = helpBtn.querySelector('.help-badge');
+    if (!badge) {
+      badge = document.createElement("span");
+      badge.className = "help-badge";
+      // Ensure the help button is relatively positioned.
+      helpBtn.style.position = "relative";
+      helpBtn.appendChild(badge);
+    }
+    badge.textContent = remainingCount;
+    badge.style.display = remainingCount > 0 ? "flex" : "none";
+
+    // Update help button appearance and tooltip.
     if (tutorialState.allCompleted) {
       helpBtn.classList.remove("help-button-highlight");
       helpBtn.setAttribute("title", "View Tutorial");
     } else {
       helpBtn.classList.add("help-button-highlight");
-      helpBtn.setAttribute("title", "Continue Tutorial");
+      helpBtn.setAttribute(
+        "title",
+        "Continue Tutorial - " + remainingCount + " lesson" + (remainingCount !== 1 ? "s" : "") + " remaining"
+      );
     }
   }
 

@@ -133,6 +133,23 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
+/* Badge for tutorial help button */
+.help-badge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background-color: var(--danger-color);
+  color: white;
+  border-radius: 50%;
+  width: 1.2em;
+  height: 1.2em;
+  font-size: 0.75em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: translate(50%, -50%);
+}
+
 /* Mark all completed button */
 #mark-all-completed-btn {
   transition: all 0.2s ease;
