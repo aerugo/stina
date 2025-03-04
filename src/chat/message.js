@@ -516,3 +516,6 @@ const MessageModule = (function () {
     sendMessage,
   };
 })();
+
+// Expose MessageModule globally so other modules can access it.
+window.MessageModule = MessageModule;
