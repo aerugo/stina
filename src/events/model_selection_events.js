@@ -248,6 +248,7 @@ const ModelSelectionEventsModule = (function () {
 
   return {
     populateModelSelector,
+    populateModelDropdown,
     updateModelAndInstructionSelectors,
     updateInstructionsVisibility,
     setupEventListeners,
