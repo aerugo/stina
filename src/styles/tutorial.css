@@ -116,6 +116,13 @@
   transition: width 0.3s ease;
 }
 
+/* Style for finished lesson checkmark icon */
+.finished-icon img {
+  width: 1em;
+  height: 1em;
+  filter: brightness(0) saturate(100%) invert(57%) sepia(83%) saturate(414%) hue-rotate(101deg) brightness(92%) contrast(91%);
+}
+
 /* Style for the page tracker tag within lessons */
 .page-indicator .tag.is-info {
   font-size: 0.9rem;

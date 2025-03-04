@@ -407,8 +407,8 @@ const TutorialModule = (function () {
       // Add lesson number and completion status with improved icons
       if (isCompleted) {
         a.innerHTML = `
-          <span class="icon has-text-success">
-            <i class="fas fa-check-circle"></i>
+          <span class="icon finished-icon has-text-success" style="margin-right: 0.5rem;">
+            <img src="src/icons/check.svg" alt="Finished" style="width: 1em; height: 1em;" />
           </span>
           <span>${index + 1}. ${localize(lesson.title)}</span>
         `;
