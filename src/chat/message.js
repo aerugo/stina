@@ -25,10 +25,12 @@ const MessageModule = (function () {
     )} ${userMessage}`;
     const titleMessage = { role: "user", content: prompt };
     const config = ConfigModule.getConfig();
-    
+
     // Get the selected model or default to 'gpt-4o', preferring a weak model if available
     const weakModelKey = findWeakModelKey();
-    const selectedModelKey = weakModelKey ? weakModelKey : (config.selectedModelKey || "gpt-4o");
+    const selectedModelKey = weakModelKey
+      ? weakModelKey
+      : config.selectedModelKey || "gpt-4o";
     let selectedModel = models[selectedModelKey];
 
     // If selectedModel is undefined, fallback to 'gpt-4o'
@@ -99,15 +101,15 @@ const MessageModule = (function () {
     // Get and clear any pending uploaded files
     const attachedFiles = FileUploadEventsModule.getAndClearPendingFiles();
     console.log("[DEBUG][sendMessage] Attached Files:", attachedFiles);
-    
+
     console.log("[DEBUG][sendMessage] Attached Files:", attachedFiles);
-    
+
     const currentState = ChatModule.getCurrentState();
-    const newMessage = { 
-      role: "user", 
+    const newMessage = {
+      role: "user",
       content: messageContent,
       attachedFiles: attachedFiles.length > 0 ? attachedFiles : undefined,
-      attachmentsLocked: true  // Mark these attachments as locked (historical)
+      attachmentsLocked: true, // Mark these attachments as locked (historical)
     };
     currentState.conversation.push(newMessage);
 
@@ -116,21 +118,32 @@ const MessageModule = (function () {
       const ignoredDocs = [];
       const summaryDocs = [];
       const fullDocs = [];
-      conversation.forEach(msg => {
+      conversation.forEach((msg) => {
         if (msg.role === "user" && Array.isArray(msg.attachedFiles)) {
-          msg.attachedFiles.forEach(file => {
+          msg.attachedFiles.forEach((file) => {
             if (file.ignored) {
               ignoredDocs.push(file.fileName);
             } else {
               // Check for summaries
-              if (file.selectedSummaryIds && file.selectedSummaryIds.length > 0 && file.summaries && file.summaries.length > 0) {
-                const summaryNames = file.selectedSummaryIds.map(id => {
-                  const summaryObj = file.summaries.find(s => s.id === id);
-                  return summaryObj ? summaryObj.name : "unknown";
-                }).join(", ");
-                summaryDocs.push(`${file.fileName} (summaries: ${summaryNames})`);
+              if (
+                file.selectedSummaryIds &&
+                file.selectedSummaryIds.length > 0 &&
+                file.summaries &&
+                file.summaries.length > 0
+              ) {
+                const summaryNames = file.selectedSummaryIds
+                  .map((id) => {
+                    const summaryObj = file.summaries.find((s) => s.id === id);
+                    return summaryObj ? summaryObj.name : "unknown";
+                  })
+                  .join(", ");
+                summaryDocs.push(
+                  `${file.fileName} (${TranslationModule.translate(
+                    "summaries"
+                  )} ${summaryNames})`
+                );
               }
-              
+
               // Check for full document usage
               if (file.useFullDocument) {
                 fullDocs.push(file.fileName);
@@ -142,24 +155,39 @@ const MessageModule = (function () {
       return { ignoredDocs, summaryDocs, fullDocs };
     }
 
-    const { ignoredDocs, summaryDocs, fullDocs } = getIgnoredAndSummaryDocs(currentState.conversation);
-    if (ignoredDocs.length > 0 || summaryDocs.length > 0 || fullDocs.length > 0) {
+    const { ignoredDocs, summaryDocs, fullDocs } = getIgnoredAndSummaryDocs(
+      currentState.conversation
+    );
+    if (
+      ignoredDocs.length > 0 ||
+      summaryDocs.length > 0 ||
+      fullDocs.length > 0
+    ) {
       let noticeMsgContent = "";
       if (ignoredDocs.length > 0) {
-        noticeMsgContent += TranslationModule.translate("ignoredDocuments") + ": " + ignoredDocs.join(", ");
+        noticeMsgContent +=
+          TranslationModule.translate("ignoredDocuments") +
+          ": " +
+          ignoredDocs.join(", ");
       }
       if (summaryDocs.length > 0) {
         if (noticeMsgContent) noticeMsgContent += "; ";
-        noticeMsgContent += TranslationModule.translate("documentsUsingSummaries") + ": " + summaryDocs.join(", ");
+        noticeMsgContent +=
+          TranslationModule.translate("documentsUsingSummaries") +
+          ": " +
+          summaryDocs.join(", ");
       }
       if (fullDocs.length > 0) {
         if (noticeMsgContent) noticeMsgContent += "; ";
-        noticeMsgContent += TranslationModule.translate("documentsUsingFullText") + ": " + fullDocs.join(", ");
+        noticeMsgContent +=
+          TranslationModule.translate("documentsUsingFullText") +
+          ": " +
+          fullDocs.join(", ");
       }
       const noticeMsg = {
         role: "system",
         content: noticeMsgContent,
-        isIgnoredDocsNotice: true
+        isIgnoredDocsNotice: true,
       };
       currentState.conversation.push(noticeMsg);
     }
@@ -203,17 +231,23 @@ const MessageModule = (function () {
     if (selectedModelParams && selectedModelParams.system !== false) {
       // Get latest instruction ID and custom instructions
       const selectedInstructionId =
-        currentChat.selectedInstructionId || 
+        currentChat.selectedInstructionId ||
         config.selectedInstructionId ||
-        (window.instructions && window.instructions[0] ? window.instructions[0].id : null);
-      
+        (window.instructions && window.instructions[0]
+          ? window.instructions[0].id
+          : null);
+
       const customInstructions =
-        await StorageModule.loadData("customInstructions") || [];
+        (await StorageModule.loadData("customInstructions")) || [];
 
       // Find selected instruction
       instruction =
-        customInstructions.find((instr) => instr.id === selectedInstructionId) ||
-        window.instructions.find((instr) => instr.id === selectedInstructionId) ||
+        customInstructions.find(
+          (instr) => instr.id === selectedInstructionId
+        ) ||
+        window.instructions.find(
+          (instr) => instr.id === selectedInstructionId
+        ) ||
         (window.instructions && window.instructions[0]) ||
         null;
 
@@ -227,28 +261,48 @@ const MessageModule = (function () {
     }
 
     // Conditionally merge attached file contents into user messages, skipping ignored files.
-    conversationToSend = conversationToSend.map(msg => {
-      if (msg.role === "user" && Array.isArray(msg.attachedFiles) && msg.attachedFiles.length > 0) {
+    conversationToSend = conversationToSend.map((msg) => {
+      if (
+        msg.role === "user" &&
+        Array.isArray(msg.attachedFiles) &&
+        msg.attachedFiles.length > 0
+      ) {
         let mergedContent = "";
-        console.log("Merging attached files for message. Count:", msg.attachedFiles.length);
-        msg.attachedFiles.forEach(file => {
-          if (!file.ignored) {  // Only merge if not ignored
+        console.log(
+          "Merging attached files for message. Count:",
+          msg.attachedFiles.length
+        );
+        msg.attachedFiles.forEach((file) => {
+          if (!file.ignored) {
+            // Only merge if not ignored
             console.log("Merging file:", file.fileName);
             let fileContent = "";
 
             // If the user has chosen to include the full document text:
             if (file.useFullDocument) {
               // Normalize newlines to LF for consistency
-              const normalizedContent = file.content.replace(/\r\n/g, "\n").replace(/\r/g, "\n");
+              const normalizedContent = file.content
+                .replace(/\r\n/g, "\n")
+                .replace(/\r/g, "\n");
               fileContent += `=== ${file.fileName} (FULL) ===\n${normalizedContent}\n\n----------\n`;
             }
 
             // Gather each selected summary, if any:
-            if (Array.isArray(file.selectedSummaryIds) && file.selectedSummaryIds.length > 0) {
-              file.selectedSummaryIds.forEach(summaryId => {
-                const summaryObj = file.summaries.find(s => s.id === summaryId);
+            if (
+              Array.isArray(file.selectedSummaryIds) &&
+              file.selectedSummaryIds.length > 0
+            ) {
+              file.selectedSummaryIds.forEach((summaryId) => {
+                const summaryObj = file.summaries.find(
+                  (s) => s.id === summaryId
+                );
                 if (summaryObj) {
-                  console.log("Including summary for:", file.fileName, "Summary:", summaryObj.name);
+                  console.log(
+                    "Including summary for:",
+                    file.fileName,
+                    "Summary:",
+                    summaryObj.name
+                  );
                   fileContent += `=== ${file.fileName} [SUMMARY: ${summaryObj.name}] ===\n${summaryObj.content}\n\n----------\n`;
                 }
               });
@@ -265,7 +319,7 @@ const MessageModule = (function () {
       }
       return msg;
     });
-      
+
     // Prepare the messages normally:
     if (selectedModelParams && selectedModelParams.system !== false) {
       // Prepare messages using the provider's method with instruction
@@ -280,7 +334,9 @@ const MessageModule = (function () {
     }
 
     // Filter out any messages that are just ignored documents notices
-    conversationToSend = conversationToSend.filter(msg => !msg.isIgnoredDocsNotice);
+    conversationToSend = conversationToSend.filter(
+      (msg) => !msg.isIgnoredDocsNotice
+    );
 
     const loadingMessage = { role: "assistant", content: "", isLoading: true };
     currentState.conversation.push(loadingMessage);
@@ -334,7 +390,11 @@ const MessageModule = (function () {
               JSON.stringify(apiResponse.content),
         model: selectedModelKey,
         instructionLabel: instructionLabel,
-        usage: apiResponse.usage || { prompt_tokens: 0, completion_tokens: 0, total_tokens: 0 },
+        usage: apiResponse.usage || {
+          prompt_tokens: 0,
+          completion_tokens: 0,
+          total_tokens: 0,
+        },
       };
 
       RenderingModule.renderConversation(currentState.conversation);
