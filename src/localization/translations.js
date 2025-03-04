@@ -114,6 +114,7 @@ window.translationsData = {
     errorGeneratingSummary: "Error generating summary",
     ignoredDocuments: "Ignored documents",
     documentsUsingSummaries: "Documents using summaries",
+    documentsUsingFullText: "Documents using full text",
     summaryDomainPrompt:
       "Instructions for summary:\n{instructions}\n\nDocument content:\n{docText}\n\nPlease provide a comprehensive and detailed summary of the document, according to the instructions. Take care to ensure that the summary is accurate and complete. Do not include any personal opinions or additional information. Make sure that all details and facts are correct and that the summary is well-structured.",
     titleDomainPrompt:
