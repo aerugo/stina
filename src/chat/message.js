@@ -252,10 +252,7 @@ const MessageModule = (function () {
     // Update lastUpdated after adding user message
     ChatModule.updateChatLastUpdated(currentState.currentChatId);
 
-    // Retrieve selected model parameters from current chat
-    const currentChat = ChatModule.getCurrentChat();
-    const selectedModelKey = currentChat.selectedModelKey || "gpt-4o";
-    const selectedModelParams = ModelsModule.getModel(selectedModelKey);
+    // Use the model parameters we already retrieved earlier
     const deploymentName = selectedModelParams.deployment;
 
     // Get the provider and config
