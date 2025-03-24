@@ -102,6 +102,15 @@
                 </div>
               </div>
               <!-- Right Side of Toolbar -->
+              <!-- Documents Management Button (hidden by default) -->
+              <button 
+                id="documents-btn" 
+                class="button" 
+                aria-label="Manage Documents" 
+                style="display: none;"
+              >
+                <img src="src/icons/documents.svg" alt="Documents" />
+              </button>
               <!-- Attach File Button -->
               <button id="attach-file-btn" class="button" aria-label="Attach File">
                 <img src="src/icons/attach.svg" alt="Attach" />
@@ -191,6 +200,7 @@
     <script src="src/events/settings_events.js"></script>
     <script src="src/events/instruction_events.js"></script>
     <script src="src/events/model_selection_events.js"></script>
+    <script src="src/events/documents_manager_events.js"></script>
     <script src="src/events/events_module.js"></script>
     <script src="src/summaries/SummariesModule.js"></script>
     <script src="src/summaries/SummaryTemplates.js"></script>

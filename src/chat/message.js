@@ -108,15 +108,16 @@ const MessageModule = (function () {
     const currentChat = ChatModule.getCurrentChat();
     const selectedModelKey = currentChat.selectedModelKey || "gpt-4o";
     const selectedModelParams = ModelsModule.getModel(selectedModelKey);
-    
+
     // Determine the maximum classification level from all attached files in the current chat
     let maxRequiredClearance = 1;
-    
+
     // Check existing conversation files
-    currentState.conversation.forEach(msg => {
+    currentState.conversation.forEach((msg) => {
       if (msg.attachedFiles && Array.isArray(msg.attachedFiles)) {
-        msg.attachedFiles.forEach(file => {
-          if (!file.ignored) { // Only consider non-ignored files
+        msg.attachedFiles.forEach((file) => {
+          if (!file.ignored) {
+            // Only consider non-ignored files
             const fileLevel = file.classificationLevel || 1;
             if (fileLevel > maxRequiredClearance) {
               maxRequiredClearance = fileLevel;
@@ -125,17 +126,18 @@ const MessageModule = (function () {
         });
       }
     });
-    
+
     // Check new files being attached
-    attachedFiles.forEach(file => {
-      if (!file.ignored) { // Only consider non-ignored files
+    attachedFiles.forEach((file) => {
+      if (!file.ignored) {
+        // Only consider non-ignored files
         const fileLevel = file.classificationLevel || 1;
         if (fileLevel > maxRequiredClearance) {
           maxRequiredClearance = fileLevel;
         }
       }
     });
-    
+
     // Check if model has sufficient clearance
     const modelClearance = selectedModelParams.classification_clearance || 1;
     if (modelClearance < maxRequiredClearance) {
@@ -143,19 +145,30 @@ const MessageModule = (function () {
       const warningEl = document.getElementById("classification-warning");
       if (warningEl) {
         warningEl.style.display = "block";
-        warningEl.textContent = `${TranslationModule.translate("insufficientModelClearance") || "Selected model clearance"} (${modelClearance}) ${TranslationModule.translate("insufficientForDocuments") || "is insufficient for the chat's documents"} (${TranslationModule.translate("required") || "required"}: ${maxRequiredClearance}). ${TranslationModule.translate("pleaseSelectHigherClearanceModel") || "Please select a model with higher clearance."}`;
+        warningEl.textContent = `${
+          TranslationModule.translate("insufficientModelClearance") ||
+          "Selected model clearance"
+        } (${modelClearance}) ${
+          TranslationModule.translate("insufficientForDocuments") ||
+          "is insufficient for the chat's documents"
+        } (${
+          TranslationModule.translate("required") || "required"
+        }: ${maxRequiredClearance}). ${
+          TranslationModule.translate("pleaseSelectHigherClearanceModel") ||
+          "Please select a model with higher clearance."
+        }`;
       }
-      
+
       // Disable send button
       const sendBtn = document.getElementById("send-btn");
       if (sendBtn) {
         sendBtn.disabled = true;
         sendBtn.classList.add("is-disabled");
       }
-      
+
       return; // Block sending the message
     }
-    
+
     const newMessage = {
       role: "user",
       content: messageContent,
@@ -249,6 +262,8 @@ const MessageModule = (function () {
       currentState.conversation
     );
 
+    DocumentsManagerEventsModule.updateDocumentsButtonVisibility();
+
     // Update lastUpdated after adding user message
     ChatModule.updateChatLastUpdated(currentState.currentChatId);
 
@@ -329,12 +344,15 @@ const MessageModule = (function () {
             // If the user has chosen to include the full document text:
             if (file.useFullDocument) {
               const fileLevel = file.classificationLevel || 1;
-              const modelClearance = selectedModelParams.classification_clearance || 1;
+              const modelClearance =
+                selectedModelParams.classification_clearance || 1;
               if (modelClearance < fileLevel) {
-                console.warn(`Skipping file "${file.fileName}" due to insufficient model clearance.`);
-                return;  // skip merging this file
+                console.warn(
+                  `Skipping file "${file.fileName}" due to insufficient model clearance.`
+                );
+                return; // skip merging this file
               }
-              
+
               // Normalize newlines to LF for consistency
               const normalizedContent = file.content
                 .replace(/\r\n/g, "\n")
@@ -353,12 +371,15 @@ const MessageModule = (function () {
                 );
                 if (summaryObj) {
                   const fileLevel = file.classificationLevel || 1;
-                  const modelClearance = selectedModelParams.classification_clearance || 1;
+                  const modelClearance =
+                    selectedModelParams.classification_clearance || 1;
                   if (modelClearance < fileLevel) {
-                    console.warn(`Skipping summary for "${file.fileName}" due to insufficient model clearance.`);
-                    return;  // skip this summary
+                    console.warn(
+                      `Skipping summary for "${file.fileName}" due to insufficient model clearance.`
+                    );
+                    return; // skip this summary
                   }
-                  
+
                   console.log(
                     "Including summary for:",
                     file.fileName,

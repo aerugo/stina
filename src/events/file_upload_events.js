@@ -143,6 +143,7 @@ const FileUploadEventsModule = (function () {
       ModalModule.showCustomAlert(`${unsupportedText} ${allowedText}`);
       // Continue with next file even if this one is not allowed
       processFiles(files, index + 1);
+      DocumentsManagerEventsModule.updateDocumentsButtonVisibility();
       return;
     }
 
@@ -184,6 +185,7 @@ const FileUploadEventsModule = (function () {
             };
             pendingFiles.push(pendingFile);
             renderPendingFiles(pendingFiles);
+            DocumentsManagerEventsModule.updateDocumentsButtonVisibility();
             console.log("Pending Files:", pendingFiles);
           }
           processFiles(files, index + 1);
@@ -460,6 +462,7 @@ const FileUploadEventsModule = (function () {
     if (typeof ModelSelectionEventsModule !== "undefined") {
       setTimeout(() => ModelSelectionEventsModule.populateModelDropdown(), 0);
     }
+    DocumentsManagerEventsModule.updateDocumentsButtonVisibility();
   }
 
   function showProcessingModal() {
