@@ -6,17 +6,21 @@ const InputEventsModule = (function () {
   function checkTokenWarning() {
     const tokenWarningEl = document.getElementById("token-warning");
     if (!tokenWarningEl) return;
+
     const chat = ChatModule.getCurrentChat();
     if (!chat) {
       tokenWarningEl.style.display = "none";
       return;
     }
+
+    // Get the selected model's context length
     const selectedModelKey = chat.selectedModelKey || "gpt-4o";
     const selectedModel = ModelsModule.getModel(selectedModelKey);
     if (!selectedModel || !selectedModel.context_length) {
       tokenWarningEl.style.display = "none";
       return;
     }
+
     // Find the last assistant message with usage info
     const lastAssistantMessage = [...chat.conversation]
       .reverse()
@@ -30,33 +34,62 @@ const InputEventsModule = (function () {
       tokenWarningEl.style.display = "none";
       return;
     }
-    
-    // Calculate additional tokens from attached files (excluding ignored ones)
-    // Use the token count for the selected summary if available, otherwise use the full file token count.
+
+    // Calculate additional tokens from attached files (excluding ignored ones).
+    // - If file.useFullDocument === true, add file.tokenCount.
+    // - Else, sum up tokens for each checked summary in file.selectedSummaryIds.
+    // - If neither full doc nor any summary is selected, add 0.
     let attachedFilesTokens = 0;
-    chat.conversation.forEach(msg => {
-      if (msg.role === "user" && msg.attachedFiles && Array.isArray(msg.attachedFiles)) {
+
+    chat.conversation.forEach((msg) => {
+      if (
+        msg.role === "user" &&
+        msg.attachedFiles &&
+        Array.isArray(msg.attachedFiles)
+      ) {
         attachedFilesTokens += msg.attachedFiles.reduce((sum, file) => {
+          // Skip completely if ignored
           if (file.ignored) {
             return sum;
           }
-          if (file.selectedSummaryId && file.summaries && file.summaries.length > 0) {
-            const summaryObj = file.summaries.find(s => s.id === file.selectedSummaryId);
-            if (summaryObj) {
-              // Count tokens for the displayed summary text
-              return sum + TokenizationModule.countTokens(`[SUMMARY: ${summaryObj.name}]\n\n${summaryObj.content}`);
-            }
+
+          if (file.useFullDocument) {
+            // Count entire document
+            return sum + (file.tokenCount || 0);
+          } else if (
+            file.selectedSummaryIds &&
+            file.selectedSummaryIds.length > 0 &&
+            file.summaries
+          ) {
+            // Sum tokens of each “checked” summary
+            let summaryTokens = 0;
+            file.selectedSummaryIds.forEach((summaryId) => {
+              const summaryObj = file.summaries.find((s) => s.id === summaryId);
+              if (summaryObj) {
+                summaryTokens += TokenizationModule.countTokens(
+                  `[SUMMARY: ${summaryObj.name}]\n\n${summaryObj.content}`
+                );
+              }
+            });
+            return sum + summaryTokens;
+          } else {
+            // Neither full doc nor any summary is selected
+            return sum;
           }
-          return sum + (file.tokenCount || 0);
         }, 0);
       }
     });
-    
-    const totalTokens = lastAssistantMessage.usage.total_tokens + attachedFilesTokens;
+
+    // Now combine that with the usage from the last assistant message
+    const totalTokens =
+      lastAssistantMessage.usage.total_tokens + attachedFilesTokens;
     const remaining = selectedModel.context_length - totalTokens;
+
+    // Show warning if fewer than ~5000 tokens remain
     if (remaining <= 5000) {
       tokenWarningEl.style.display = "block";
-      tokenWarningEl.innerText = TranslationModule.translate("tokenLengthWarning");
+      tokenWarningEl.innerText =
+        TranslationModule.translate("tokenLengthWarning");
     } else {
       tokenWarningEl.style.display = "none";
     }

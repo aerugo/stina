@@ -118,7 +118,7 @@ window.translationsData = {
     documentsUsingSummaries: "Documents using summaries",
     documentsUsingFullText: "Documents using full text",
     summaryDomainPrompt:
-      "Instructions for summary:\n{instructions}\n\nDocument content:\n{docText}\n\nPlease provide a comprehensive and detailed summary of the document, according to the instructions. Take care to ensure that the summary is accurate and complete. Do not include any personal opinions or additional information. Make sure that all details and facts are correct and that the summary is well-structured.",
+      "Document content :\n{docText}\n\n --------------  \n\n -------------- \n\n  Instructions: {instructions}",
     titleDomainPrompt:
       'Instructions for summary title:\n{instructions}\n\nDocument content:\n{docText}\n\nPlease provide a short summary title that follows "Summary with focus on ..." (max 50 characters).',
     markAllCompleted: "Mark All Completed",
@@ -144,6 +144,28 @@ window.translationsData = {
     lessonOverview: "Lesson",
     of: "of",
     jumpToPage: "Jump to page",
+    manageDocumentsTitle: "Manage Documents",
+    documentsInThisChat: "Documents in this chat:",
+    noDocumentsAvailable: "No documents available.",
+    selectForNewSummary: "Select for New Summary",
+    useFullDocument: "Use Full Document",
+    availableSummaries: "Available Summaries:",
+    noExistingSummaries: "No existing summaries.",
+    pendingIndicator: "(Pending)",
+    summaryInstructions: "Summary Instructions",
+    chooseAModel: "Choose a Model",
+    summarizingSelectedDocumentsPlaceholder:
+      "Enter instructions for summarizing selected documents...",
+    generateSummaries: "Generate Summaries",
+    noDocsSelectedForSummaryGen:
+      "No documents selected for summary generation.",
+    noMatchingDocsFound: "No matching documents found.",
+    generatingSummariesForDocs:
+      "Generating summaries for {count} document(s)...",
+    failedToGenerateSummaryForDoc: "Failed to generate summary for doc:",
+    errorGeneratingSummaryForDoc:
+      "Error generating summary for {fileName}: {errorMsg}",
+    summariesGeneratedSuccessfully: "Summaries generated successfully!",
   },
   sv: {
     useFullDocument: "Inkludera hela dokumentet",
@@ -270,7 +292,7 @@ window.translationsData = {
     ignoredDocuments: "Ignorerade dokument",
     documentsUsingSummaries: "Dokument som använder sammanfattningar",
     summaryDomainPrompt:
-      "Instruktioner för sammanfattning:\n{instructions}\n\nDokumentinnehåll:\n{docText}\n\nVänligen ge en omfattande och detaljerad sammanfattning av dokumentet, enligt instruktionerna. Se till att sammanfattningen är korrekt och fullständig. Inkludera inte några personliga åsikter eller extra information. Se till att alla detaljer och fakta är korrekta och att sammanfattningen är välstrukturerad.",
+      "Dokumentinnehåll:\n{docText}\n\n --------------  \n\n -------------- \n\n  Instruktioner: {instructions}",
     titleDomainPrompt:
       'Instruktioner för sammanfattningstitel:\n{instructions}\n\nDokumentinnehåll:\n{docText}\n\nVänligen ge en kort titel på sammanfattningen som följer mönstret "Sammanfattning med fokus på ..." (max 50 tecken).',
     markAllCompleted: "Markera alla som klara",
@@ -287,5 +309,28 @@ window.translationsData = {
     pleaseSelectHigherClearanceModel: "Välj en modell med högre behörighet.",
     openInformationModelNotice:
       "Obs: Denna modell ligger hos tredjepart och får endast användas med öppen information.",
+    manageDocumentsTitle: "Hantera dokument",
+    documentsInThisChat: "Dokument i denna chatt:",
+    noDocumentsAvailable: "Inga dokument tillgängliga.",
+    selectForNewSummary: "Välj för ny sammanfattning",
+    useFullDocument: "Använd hela dokumentet",
+    availableSummaries: "Tillgängliga sammanfattningar:",
+    noExistingSummaries: "Inga befintliga sammanfattningar.",
+    pendingIndicator: "(Väntar)",
+    summaryInstructions: "Sammanfattningsinstruktioner",
+    chooseAModel: "Välj en modell",
+    summarizingSelectedDocumentsPlaceholder:
+      "Ange instruktioner för sammanfattning av valda dokument...",
+    generateSummaries: "Generera sammanfattningar",
+    noDocsSelectedForSummaryGen:
+      "Inga dokument valda för sammanfattningsgenerering.",
+    noMatchingDocsFound: "Inga matchande dokument hittades.",
+    generatingSummariesForDocs:
+      "Genererar sammanfattningar för {count} dokument...",
+    failedToGenerateSummaryForDoc:
+      "Kunde inte generera sammanfattning för dokument:",
+    errorGeneratingSummaryForDoc:
+      "Fel vid generering av sammanfattning för {fileName}: {errorMsg}",
+    summariesGeneratedSuccessfully: "Sammanfattningar genererade!",
   },
 };

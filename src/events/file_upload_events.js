@@ -256,116 +256,112 @@ const FileUploadEventsModule = (function () {
     }
   }
 
+  /**
+   * Shows a modal displaying file information (classification, token count, summaries, etc.)
+   * Also allows the user to generate a new summary or view existing summaries in a sub-modal.
+   */
   function showDocumentInfoModal(file) {
     // Ensure file has required properties
     if (!file.summaries) file.summaries = [];
-    if (file.selectedSummaryId === undefined) file.selectedSummaryId = null;
+    if (file.selectedSummaryIds === undefined) file.selectedSummaryIds = [];
 
     // Build summaries section HTML
     let summariesHTML = "";
-    if (file.summaries && file.summaries.length > 0) {
+    if (file.summaries.length > 0) {
       summariesHTML = `
-        <div class="field">
-          <label class="label">${TranslationModule.translate(
-            "availableSummaries"
-          )}</label>
-          <div id="existing-summaries-list">
-            ${file.summaries
-              .map(
-                (summary) => `
-              <div class="summary-item">
-                <label class="checkbox">
-                  <input type="checkbox" name="document-summary" value="${
-                    summary.id
-                  }"
-                    ${
-                      file.selectedSummaryIds &&
-                      file.selectedSummaryIds.includes(summary.id)
-                        ? "checked"
-                        : ""
-                    }>
-                  <span class="summary-name">${DOMPurify.sanitize(
-                    summary.name
-                  )}</span>
-                </label>
-                <button class="button is-small view-summary-btn" data-summary-id="${
+      <div class="field">
+        <label class="label">${TranslationModule.translate(
+          "availableSummaries"
+        )}</label>
+        <div id="existing-summaries-list">
+          ${file.summaries
+            .map(
+              (summary) => `
+            <div class="summary-item">
+              <label class="checkbox">
+                <input type="checkbox" name="document-summary" value="${
                   summary.id
-                }">
-                  ${TranslationModule.translate("viewSummary")}
-                </button>
-              </div>
-            `
-              )
-              .join("")}
-          </div>
+                }"
+                  ${
+                    file.selectedSummaryIds.includes(summary.id)
+                      ? "checked"
+                      : ""
+                  }>
+                <span class="summary-name">${DOMPurify.sanitize(
+                  summary.name
+                )}</span>
+              </label>
+              <button 
+                class="button is-small view-summary-btn" 
+                data-summary-id="${summary.id}"
+              >
+                ${TranslationModule.translate("viewSummary")}
+              </button>
+            </div>
+          `
+            )
+            .join("")}
         </div>
-        <div class="field" style="margin-top:1rem;">
-          <label class="checkbox">
-            <input type="checkbox" id="use-full-doc-checkbox" ${
-              file.useFullDocument ? "checked" : ""
-            }>
-            <span>${
-              TranslationModule.translate("useFullDocument") ||
-              "Include Entire Document"
-            }</span>
-          </label>
-        </div>`;
+      </div>
+      <div class="field" style="margin-top:1rem;">
+        <label class="checkbox">
+          <input type="checkbox" id="use-full-doc-checkbox" ${
+            file.useFullDocument ? "checked" : ""
+          }>
+          <span>${TranslationModule.translate("useFullDocument")}</span>
+        </label>
+      </div>`;
     } else {
       summariesHTML = `
-        <div class="field">
-          <label class="label">${TranslationModule.translate(
-            "summaries"
-          )}</label>
-          <p>${TranslationModule.translate("noSummariesAvailable")}</p>
-        </div>`;
+      <div class="field">
+        <label class="label">${TranslationModule.translate("summaries")}</label>
+        <p>${TranslationModule.translate("noSummariesAvailable")}</p>
+      </div>`;
     }
 
+    const modalTitle = TranslationModule.translate("documentInfoTitle");
+    const modalBodyHtml = `
+    <p><strong>${TranslationModule.translate("fileName")}:</strong> 
+      ${DOMPurify.sanitize(file.fileName)}</p>
+    <p><strong>${TranslationModule.translate("classification")}:</strong> 
+      ${file.classification}</p>
+    <p><strong>${TranslationModule.translate("tokenCount")}:</strong> 
+      ${file.tokenCount || 0}</p>
+    <hr>
+    <div class="file-content-preview">${DOMPurify.sanitize(file.content)}</div>
+    <hr>
+    ${summariesHTML}
+    <div class="field">
+      <button id="generate-summary-btn" class="button is-primary">
+        ${TranslationModule.translate("generateSummary")}
+      </button>
+    </div>
+    <hr>
+    <label class="checkbox" style="margin-top: 1em;">
+      <input type="checkbox" id="ignore-file-checkbox" ${
+        file.ignored ? "checked" : ""
+      } />
+      <span style="margin-left: 0.5rem;">
+        ${TranslationModule.translate("ignoreThisDocument")}
+      </span>
+    </label>`;
+
     ModalModule.showCustomModal(
-      TranslationModule.translate("documentInfoTitle"),
-      `<p><strong>${TranslationModule.translate(
-        "fileName"
-      )}:</strong> ${DOMPurify.sanitize(file.fileName)}</p>
-       <p><strong>${TranslationModule.translate("classification")}:</strong> ${
-        file.classification
-      }</p>
-       <p><strong>${TranslationModule.translate("tokenCount")}:</strong> ${
-        file.tokenCount
-      }</p>
-       <hr>
-       <div class="file-content-preview">${DOMPurify.sanitize(
-         file.content
-       )}</div>
-       <hr>
-       ${summariesHTML}
-       <div class="field">
-         <button id="generate-summary-btn" class="button is-primary">
-           ${TranslationModule.translate("generateSummary")}
-         </button>
-       </div>
-       <hr>
-       <label class="checkbox" style="margin-top: 1em;">
-         <input type="checkbox" id="ignore-file-checkbox" ${
-           file.ignored ? "checked" : ""
-         } />
-         <span style="margin-left: 0.5rem;">${TranslationModule.translate(
-           "ignoreThisDocument"
-         )}</span>
-       </label>`,
-      [{ label: TranslationModule.translate("ok"), value: true }],
+      modalTitle,
+      modalBodyHtml,
+      [
+        {
+          label: TranslationModule.translate("ok"),
+          value: true,
+        },
+      ],
       () => {
-        // Handle ignore checkbox
+        // When the user closes the Document Info modal:
         const ignoreCheckbox = document.getElementById("ignore-file-checkbox");
         if (ignoreCheckbox) {
           file.ignored = ignoreCheckbox.checked;
-          console.log(
-            "[DEBUG][file_upload] File",
-            file.fileName,
-            "ignored state set to:",
-            file.ignored
-          );
         }
-
-        // Handle multiple summary selections from checkboxes
+        // Collect all checked summary IDs
         const summaryCheckboxes = document.querySelectorAll(
           'input[name="document-summary"]'
         );
@@ -374,26 +370,21 @@ const FileUploadEventsModule = (function () {
           if (cb.checked) chosenSummaries.push(cb.value);
         });
         file.selectedSummaryIds = chosenSummaries;
-        console.log(
-          "[DEBUG][file_upload] Selected summaries:",
-          file.selectedSummaryIds
-        );
 
-        // Handle "Use Full Document" checkbox
+        // "Use Full Document" toggle
         const fullDocCheckbox = document.getElementById(
           "use-full-doc-checkbox"
         );
-        file.useFullDocument = fullDocCheckbox && fullDocCheckbox.checked;
+        if (fullDocCheckbox) {
+          file.useFullDocument = fullDocCheckbox.checked;
+        }
 
-        // If this is a file in a chat message, update the chat
+        // If the file is already in the conversation, update it
         if (!pendingFiles.some((pf) => pf.id === file.id)) {
-          // This is likely a file from a chat message
           ChatModule.saveChats();
           RenderingModule.renderConversation(
             ChatModule.getCurrentChat().conversation
           );
-
-          // Update model dropdown to reflect document classification changes
           if (typeof ModelSelectionEventsModule !== "undefined") {
             setTimeout(
               () => ModelSelectionEventsModule.populateModelDropdown(),
@@ -401,13 +392,13 @@ const FileUploadEventsModule = (function () {
             );
           }
         } else {
-          // This is a pending file
+          // Else it's a pending file
           renderPendingFiles(pendingFiles);
         }
       }
     );
 
-    // Add event listener for the generate summary button
+    // Once the modal is rendered, wire up the "Generate Summary" button
     setTimeout(() => {
       const generateSummaryBtn = document.getElementById(
         "generate-summary-btn"
@@ -415,40 +406,66 @@ const FileUploadEventsModule = (function () {
       if (generateSummaryBtn) {
         generateSummaryBtn.addEventListener("click", () => {
           SummariesEventsModule.showSummarizationModal(file, (newSummary) => {
+            // When a new summary is generated, push it to file.summaries
             file.summaries.push(newSummary);
+            // By default, set "useFullDocument" = false and auto-select the new summary
             file.useFullDocument = false;
             if (!file.selectedSummaryIds) file.selectedSummaryIds = [];
             file.selectedSummaryIds.push(newSummary.id);
-            showDocumentInfoModal(file); // Re-open the modal with updated summaries
+            // Re-open the doc info modal with the updated summaries
+            showDocumentInfoModal(file);
           });
         });
       }
 
-      // Add event listeners for view summary buttons
+      // Wire up the "View Summary" buttons to show the sub-modal
       const viewSummaryBtns = document.querySelectorAll(".view-summary-btn");
       viewSummaryBtns.forEach((btn) => {
         btn.addEventListener("click", (e) => {
           e.preventDefault();
           const summaryId = btn.dataset.summaryId;
           const summary = file.summaries.find((s) => s.id === summaryId);
-          if (summary) {
-            ModalModule.showCustomModal(
-              "Summary: " + summary.name,
-              `<div class="summary-content">
-                <p><strong>Instructions:</strong> ${DOMPurify.sanitize(
-                  summary.instructions
-                )}</p>
-                <hr>
-                <p>${DOMPurify.sanitize(summary.content)}</p>
-              </div>`,
-              [
-                {
-                  label: TranslationModule.translate("ok") || "OK",
-                  value: true,
-                },
-              ]
-            );
-          }
+          if (!summary) return;
+
+          // We do NOT want to close the entire doc info modal.
+          // Instead, replicate the "back" approach from the Documents Manager:
+          const safeSummaryContent = DOMPurify.sanitize(summary.content);
+          const safeSummaryName = DOMPurify.sanitize(summary.name);
+          const subModalTitle = `Summary: ${safeSummaryName}`;
+          const subModalBodyHtml = `
+          <div class="summary-content">
+            <p>
+              <strong>${TranslationModule.translate(
+                "summarizationInstructions"
+              )}:</strong> 
+              ${DOMPurify.sanitize(summary.instructions || "")}
+            </p>
+            <hr>
+            <p>${safeSummaryContent}</p>
+          </div>`;
+
+          // Use a single "Back" button that re-opens showDocumentInfoModal
+          ModalModule.showCustomModal(
+            subModalTitle,
+            subModalBodyHtml,
+            [
+              {
+                label: TranslationModule.translate("ok") || "OK",
+                value: "back",
+              },
+            ],
+            (action) => {
+              // If user clicks "Back", just re-open the doc info
+              if (action === "back") {
+                showDocumentInfoModal(file);
+              }
+            },
+            {
+              // Prevent accidental backdrop or X-click from closing everything
+              preventCloseOnBackdrop: true,
+              hideCloseButton: true,
+            }
+          );
         });
       });
     }, 0);

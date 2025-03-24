@@ -38,6 +38,7 @@ const ChatListEventsModule = (function () {
         ModalModule.showCustomAlert("Chat not found.");
       }
     }
+    DocumentsManagerEventsModule.updateDocumentsButtonVisibility();
   }
 
   function setupEventListeners() {

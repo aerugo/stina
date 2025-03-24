@@ -3,6 +3,9 @@
  * Handles the "Manage Documents" button click and modal logic.
  */
 const DocumentsManagerEventsModule = (function () {
+  // Helper alias for translate
+  const t = TranslationModule.translate;
+
   /**
    * Gathers:
    *  - All attached documents in the current chat conversation (not ignored)
@@ -55,6 +58,7 @@ const DocumentsManagerEventsModule = (function () {
    * Allows the user to:
    *  - Toggle full-document vs. specific summaries
    *  - Generate new summaries for one or more docs (in parallel).
+   *  - View existing summaries in a read-only modal.
    */
   function showDocumentsModal() {
     const docs = getAllDocuments();
@@ -62,12 +66,12 @@ const DocumentsManagerEventsModule = (function () {
     // Build the modal content
     let modalContent = `<div class="documents-manager-container">`;
 
-    modalContent += `<p><strong>Documents in this chat:</strong></p>`;
+    modalContent += `<p><strong>${t("documentsInThisChat")}</strong></p>`;
     if (docs.length === 0) {
-      modalContent += `<p>No documents available.</p>`;
+      modalContent += `<p>${t("noDocumentsAvailable")}</p>`;
       modalContent += `</div>`;
-      ModalModule.showCustomModal("Manage Documents", modalContent, [
-        { label: "OK", value: true },
+      ModalModule.showCustomModal(t("manageDocumentsTitle"), modalContent, [
+        { label: t("ok"), value: true }, // <-- renamed from "cancel" to "ok"
       ]);
       return;
     }
@@ -78,10 +82,19 @@ const DocumentsManagerEventsModule = (function () {
       const docName = DOMPurify.sanitize(doc.fileName || "Untitled Document");
       const checkedFull = doc.useFullDocument ? "checked" : "";
       const isPending = FileUploadEventsModule.getPendingFiles().includes(doc)
-        ? `<span style="color: orange;">(Pending)</span>`
+        ? `<span style="color: orange;">${t("pendingIndicator")}</span>`
         : "";
 
-      // Summaries checkboxes
+      const docClassification = doc.classificationLevel
+        ? `<p><strong>${t("classification")}:</strong> ${
+            doc.classificationLevel
+          }</p>`
+        : "";
+      const docTokenCount = doc.tokenCount
+        ? `<p><strong>${t("tokenCount")}:</strong> ${doc.tokenCount}</p>`
+        : "";
+
+      // Summaries checkboxes + "View" button
       let summariesHtml = "";
       if (doc.summaries && doc.summaries.length > 0) {
         summariesHtml = doc.summaries
@@ -91,74 +104,102 @@ const DocumentsManagerEventsModule = (function () {
               doc.selectedSummaryIds.includes(summary.id)
                 ? "checked"
                 : "";
+            const summaryName = DOMPurify.sanitize(summary.name || "Unnamed");
+
             return `
-              <label class="checkbox">
-                <input type="checkbox" class="doc-summary-cb" 
-                       data-doc-id="${docId}" data-summary-id="${summary.id}" 
-                       ${isChecked}/>
-                <span>${DOMPurify.sanitize(summary.name)}</span>
-              </label>
-            `;
+            <label class="checkbox" style="display: flex; align-items: center; margin-bottom: 0.25rem;">
+              <input type="checkbox" class="doc-summary-cb"
+                     data-doc-id="${docId}" data-summary-id="${summary.id}"
+                     ${isChecked}/>
+              <span style="margin-left: 0.5rem;">${summaryName}</span>
+              <!-- "View Summary" button -->
+              <button type="button"
+                      class="button is-small doc-view-summary-btn"
+                      style="margin-left: auto;"
+                      data-doc-id="${docId}"
+                      data-summary-id="${summary.id}">
+                ${t("viewSummary")}
+              </button>
+            </label>
+          `;
           })
-          .join("<br>");
+          .join("");
       } else {
-        summariesHtml = `<em>No existing summaries.</em>`;
+        summariesHtml = `<em>${t("noExistingSummaries")}</em>`;
       }
 
       modalContent += `
-        <div class="document-item" style="margin-bottom: 1rem; border-bottom: 1px solid #ccc; padding-bottom: 1rem;">
-          <p><strong>${docName}</strong> ${isPending}</p>
-          <label class="checkbox">
-            <input type="checkbox" class="doc-full-cb" data-doc-id="${docId}" ${checkedFull}/>
-            <span>Use Full Document</span>
-          </label>
-          <br>
-          <p style="margin-top: 0.5rem;"><strong>Available Summaries:</strong></p>
-          ${summariesHtml}
-          <hr>
-          <label class="checkbox">
-            <input type="checkbox" class="doc-select-cb" data-doc-id="${docId}"/>
-            <span>Select for New Summary</span>
-          </label>
-        </div>
-      `;
+      <div class="document-item" style="margin-bottom: 1rem; border-bottom: 1px solid #ccc; padding-bottom: 1rem;">
+        <p><strong>${docName}</strong> ${isPending}</p>
+        ${docClassification}
+        ${docTokenCount}
+        <label class="checkbox">
+          <input type="checkbox" class="doc-full-cb" data-doc-id="${docId}" ${checkedFull}/>
+          <span>${t("useFullDocument")}</span>
+        </label>
+        <br>
+        <p style="margin-top: 0.5rem;"><strong>${t(
+          "availableSummaries"
+        )}</strong></p>
+        ${summariesHtml}
+        <hr>
+        <label class="checkbox">
+          <input type="checkbox" class="doc-select-cb" data-doc-id="${docId}"/>
+          <span>${t("selectForNewSummary")}</span>
+        </label>
+      </div>
+    `;
     });
     modalContent += `</div>`; // end documents-list
 
     // Summaries generation options
     modalContent += `
     <div class="field" style="margin-top:1rem;">
-      <label class="label">Summary Instructions</label>
+      <label class="label">${t("summaryInstructions")}</label>
       <div class="control">
         <textarea id="multi-doc-summary-instructions" class="textarea" rows="3"
-          placeholder="Enter instructions for summarizing selected documents..."></textarea>
+          placeholder="${t(
+            "summarizingSelectedDocumentsPlaceholder"
+          )}"></textarea>
       </div>
     </div>
     <div class="field">
-      <label class="label">Choose a Model</label>
+      <label class="label">${t("chooseAModel")}</label>
       <div class="control">
         <div class="select">
-          <select id="multi-doc-summary-model-select">
-          </select>
+          <select id="multi-doc-summary-model-select"></select>
         </div>
       </div>
+    </div>
+    <!-- Moved the "Generate Summaries" button inside the modal, near the summary input -->
+    <div class="field" style="margin-top:1rem;">
+      <button 
+        id="multi-doc-generate-btn" 
+        class="button is-primary"
+        style="margin-right: 1rem;"
+      >
+        ${t("generateSummaries")}
+      </button>
     </div>
     `;
 
     modalContent += `</div>`; // close .documents-manager-container
 
-    // Show the modal with a "Generate Summaries" button
+    // Show the modal with only an "Ok" button in the footer
     ModalModule.showCustomModal(
-      "Manage Documents",
+      t("manageDocumentsTitle"),
       modalContent,
       [
-        { label: "Cancel", value: "cancel" },
-        { label: "Generate Summaries", value: "generate", class: "is-primary" },
+        {
+          // Rename "cancel" to "ok":
+          label: t("ok"),
+          value: "ok",
+        },
       ],
-      async function (action) {
-        if (action === "generate") {
-          handleGenerateSummaries(docs);
-        }
+      function (action) {
+        // If the user clicks "Ok", we simply close the modal.
+        // The actual summary generation is now triggered by the
+        // "Generate Summaries" button we added inside the modal content.
       }
     );
 
@@ -168,7 +209,7 @@ const DocumentsManagerEventsModule = (function () {
       0
     );
 
-    // Attach event listeners for the checkboxes
+    // Attach event listeners for doc checkboxes & summary "View" buttons
     setTimeout(() => {
       const fullCheckboxes = document.querySelectorAll(".doc-full-cb");
       fullCheckboxes.forEach((cb) => {
@@ -186,12 +227,28 @@ const DocumentsManagerEventsModule = (function () {
           toggleDocSummary(docId, summaryId, ev.target.checked, docs);
         });
       });
+
+      const viewBtns = document.querySelectorAll(".doc-view-summary-btn");
+      viewBtns.forEach((btn) => {
+        btn.addEventListener("click", (ev) => {
+          const docId = ev.target.getAttribute("data-doc-id");
+          const summaryId = ev.target.getAttribute("data-summary-id");
+          viewDocumentSummary(docId, summaryId, docs);
+        });
+      });
+
+      // NEW: Hook up the "Generate Summaries" button we placed inside the modal
+      const generateBtn = document.getElementById("multi-doc-generate-btn");
+      if (generateBtn) {
+        generateBtn.addEventListener("click", async () => {
+          await handleGenerateSummaries(docs);
+        });
+      }
     }, 0);
   }
 
   /**
    * Populates a <select> element with models that can be used for summary generation.
-   * Re-uses logic from ModelSelectionEventsModule if desired, or just do a quick fill:
    */
   function populateModelDropdown(selectId) {
     const selectEl = document.getElementById(selectId);
@@ -218,7 +275,7 @@ const DocumentsManagerEventsModule = (function () {
     if (!doc) return;
     doc.useFullDocument = checked;
 
-    // If user checks "Use Full Document", typically we’d clear doc.selectedSummaryIds
+    // If user checks "Use Full Document", clear doc.selectedSummaryIds
     if (checked) {
       doc.selectedSummaryIds = [];
     }
@@ -234,7 +291,7 @@ const DocumentsManagerEventsModule = (function () {
     if (!doc.selectedSummaryIds) doc.selectedSummaryIds = [];
 
     if (isChecked) {
-      // If user selects any summary, turn off useFullDocument
+      // Turn off useFullDocument if a summary is checked
       doc.useFullDocument = false;
       const fullCb = document.querySelector(
         `.doc-full-cb[data-doc-id="${docId}"]`
@@ -252,11 +309,68 @@ const DocumentsManagerEventsModule = (function () {
   }
 
   /**
+   * Opens a modal to view a particular summary's content in a read-only fashion.
+   */
+  function viewDocumentSummary(docId, summaryId, docs) {
+    const doc = docs.find((d) => (d.id || "doc_" + docs.indexOf(d)) === docId);
+    if (!doc) return;
+
+    const summary = doc.summaries?.find((s) => s.id === summaryId);
+    if (!summary) return;
+
+    const safeSummaryContent = DOMPurify.sanitize(summary.content);
+    const safeSummaryName = DOMPurify.sanitize(summary.name);
+
+    const modalTitle = t("availableSummaries");
+    const modalBodyHtml = `
+    <div class="summary-view-modal-content">
+      <p><strong>${safeSummaryName}</strong></p>
+      <div style="white-space: pre-wrap; margin-top: 0.75rem;">
+        ${safeSummaryContent}
+      </div>
+    </div>
+  `;
+
+    ModalModule.showCustomModal(
+      modalTitle,
+      modalBodyHtml,
+      [
+        {
+          label: t("ok"),
+          value: "back",
+        },
+      ],
+      function (action) {
+        if (action === "back") {
+          // Re-render the Documents Manager content inside the same modal
+          showDocumentsModal();
+        }
+      },
+      { preventCloseOnBackdrop: true, hideCloseButton: true }
+    );
+  }
+
+  /**
    * Called when user clicks "Generate Summaries" in the modal.
-   * Gathers which docs are selected for new summaries, then calls SummariesEventsModule or SummariesModule to generate.
-   * If multiple docs are selected, we run them in parallel.
+   * Uses a simple loading indicator rather than a "fake" progress bar.
    */
   async function handleGenerateSummaries(docs) {
+    // Utility function for sub-modal with "Back" if needed
+    const showBackModal = (title, bodyMessage) => {
+      const safeBody = DOMPurify.sanitize(bodyMessage);
+      ModalModule.showCustomModal(
+        title || t("alertTitle"),
+        safeBody,
+        [{ label: t("ok"), value: "back" }],
+        function (action) {
+          if (action === "back") {
+            showDocumentsModal();
+          }
+        },
+        { preventCloseOnBackdrop: true, hideCloseButton: true }
+      );
+    };
+
     const instructions =
       document.getElementById("multi-doc-summary-instructions")?.value || "";
     const modelSelect = document.getElementById(
@@ -264,16 +378,13 @@ const DocumentsManagerEventsModule = (function () {
     );
     const selectedModelKey = modelSelect?.value || "gpt-4o";
 
-    // Gather the docs that have "doc-select-cb" checked
+    // 1) Collect docs that are selected
     const checkboxes = document.querySelectorAll(".doc-select-cb:checked");
     if (checkboxes.length === 0) {
-      ModalModule.showCustomAlert(
-        "No documents selected for summary generation."
-      );
+      showBackModal(null, t("noDocsSelectedForSummaryGen"));
       return;
     }
 
-    // Prepare an array of docs to summarize
     const docsToSummarize = [];
     checkboxes.forEach((cb) => {
       const docId = cb.getAttribute("data-doc-id");
@@ -286,28 +397,33 @@ const DocumentsManagerEventsModule = (function () {
     });
 
     if (docsToSummarize.length === 0) {
-      ModalModule.showCustomAlert("No matching documents found.");
+      showBackModal(null, t("noMatchingDocsFound"));
       return;
     }
 
-    // Show a quick "Generating Summaries" message
+    // 2) Show a "Generating Summaries..." message with a spinner (or any loading indicator).
     const modalBody = document.getElementById("custom-modal-body");
     modalBody.innerHTML = `
-      <div style="text-align:center;">
-        <p>Generating summaries for ${docsToSummarize.length} document(s)...</p>
-        <progress class="progress is-small is-primary" max="100">Loading</progress>
-      </div>
-    `;
+    <div style="text-align: center;">
+      <p>${t("generatingSummariesForDocs").replace(
+        "{count}",
+        docsToSummarize.length
+      )}</p>
+      <!-- Example: a simple loading spinner. 
+           You could also use a Bulma loader, or your own custom CSS spinner. -->
+      <div class="loading-spinner" style="margin-top: 1rem;"></div>
+    </div>
+  `;
 
-    // Generate in parallel
-    const promises = docsToSummarize.map((doc) => {
-      return SummariesModule.generateSummary({
+    // Summaries call in parallel
+    const promises = docsToSummarize.map((doc) =>
+      SummariesModule.generateSummary({
         docText: doc.content,
         instructions,
         selectedModelKey,
       })
         .then(({ summaryText, summaryName }) => {
-          // Insert the new summary into doc.summaries
+          // Create summary object
           if (!doc.summaries) doc.summaries = [];
           const newSummary = {
             id:
@@ -322,37 +438,62 @@ const DocumentsManagerEventsModule = (function () {
           };
           doc.summaries.push(newSummary);
 
-          // By default, we can auto-select this new summary
+          // Disable 'useFullDocument' and uncheck the UI box
+          doc.useFullDocument = false;
           if (!doc.selectedSummaryIds) doc.selectedSummaryIds = [];
           doc.selectedSummaryIds.push(newSummary.id);
+
+          const docId = doc.id || "doc_" + docs.indexOf(doc);
+          const fullCb = document.querySelector(
+            `.doc-full-cb[data-doc-id="${docId}"]`
+          );
+          if (fullCb) {
+            fullCb.checked = false;
+          }
         })
         .catch((err) => {
-          console.error(
-            "Failed to generate summary for doc:",
-            doc.fileName,
-            err
+          console.error(t("failedToGenerateSummaryForDoc"), doc.fileName, err);
+          // Show an error sub-modal but do *not* block other docs from generating
+          ModalModule.showCustomModal(
+            t("errorGeneratingSummaryForDoc").replace(
+              "{fileName}",
+              doc.fileName
+            ),
+            DOMPurify.sanitize(err.message),
+            [{ label: t("ok"), value: "back" }],
+            function (action) {
+              if (action === "back") {
+                showDocumentsModal();
+              }
+            },
+            { preventCloseOnBackdrop: true, hideCloseButton: true }
           );
-          // We won't fail the entire batch; just show an alert for each error
-          ModalModule.showCustomAlert(
-            `Error generating summary for ${doc.fileName}: ${err.message}`
-          );
-        });
-    });
+        })
+    );
 
+    // Wait for all summaries to finish
     await Promise.all(promises);
 
-    // Once done, close the modal and re-render the conversation if needed
-    const modal = document.getElementById("custom-modal");
-    if (modal) modal.classList.remove("is-active");
-
-    // Save conversation changes if any docs are part of the current chat
+    // Once all documents are summarized, save them
     ChatModule.saveChats();
 
-    // If you want to re-open the modal so user can see newly added summaries:
-    // showDocumentsModal();
-
-    // Or just show a quick alert
-    ModalModule.showCustomAlert("Summaries generated successfully!");
+    // Show final success sub-modal with "OK → back"
+    ModalModule.showCustomModal(
+      t("manageDocumentsTitle"),
+      t("summariesGeneratedSuccessfully"),
+      [
+        {
+          label: t("ok"),
+          value: "back",
+        },
+      ],
+      function (action) {
+        if (action === "back") {
+          showDocumentsModal();
+        }
+      },
+      { preventCloseOnBackdrop: true, hideCloseButton: true }
+    );
   }
 
   /**
